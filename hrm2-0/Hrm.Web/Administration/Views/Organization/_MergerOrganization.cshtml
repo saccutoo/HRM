@@ -1,0 +1,156 @@
+﻿@model Hrm.Admin.ViewModels.OrganizationViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using System.Linq
+@using Newtonsoft.Json;
+@using Hrm.Common
+@{
+    ViewBag.Title = "MergerOrganization";
+}
+<style>
+    .merger-organization .notification {
+        height: 40px;
+        border: 1px solid #ccc;
+        line-height: 40px;
+        border-radius: 5px;
+        text-align:left;
+    }
+
+        .merger-organization .notification span {
+            margin-left: 10px;
+        }
+
+    .merger-organization .header {
+        height: 60px;
+        text-align:left;
+
+    }
+
+      .merger-organization .header .header-left{
+        padding:0px;
+        width:40%;
+        height:100%;
+        padding:0px;
+    }
+        .merger-organization .header .header-right{
+        height: 60px;
+        padding:0px;
+        width:60%;
+        height:100%;
+        padding:0px;
+    }
+    .merger-organization .header .header-right .header-right-radio{
+       height:50%;
+    }
+     .merger-organization .header .header-right .header-right-radio input{
+        float:left;
+    }
+     .merger-organization .header .header-right .header-right-radio span{
+        margin-left:10px;
+    }
+     .padding{
+         padding:0px;
+     }
+     .merger-organization .header-right-radio span{
+         font-size:13px;
+     }
+      .merger-organization .header-left{
+         font-size:13px;
+     }
+       .merger-organization .notification{
+         font-size:13px;
+     }
+</style>
+<div >
+    <form class="merger-organization" id="frm-merger-organization">
+        <div class="col-md-12 notification form-group">
+            <i class="fa fa-info-circle"></i>
+            <span >
+                @T("Organization.MergerOrganizationNotification")
+            </span>
+        </div>
+        <div class="form-group">
+            <div class="header">
+                <div class="col-md-6 header-left" >
+                    @T("Organization.SelectMethod")
+                </div>
+                <div class="col-md-6 header-right" >
+                    @if (Model.IsOrganizationOld == true)
+                    {
+                        <div class="header-right-radio">
+                            <input type="radio" name="checkRadio" value="1" onclick="ClickRadio(1)" checked />
+                            <span>@T("Organization.MergeOrganizationOld")</span>
+                        </div>
+                    }             
+                    <div class="header-right-radio" onclick="ClickRadio(2)">
+                        <input type="radio" name="checkRadio" value="2"/>
+                        <span style="font-size:13px;">@T("Organization.MergeOrganizationNew")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*old*@
+        <div class="merger-organization-body">
+            @if (Model.CheckRadio == 1)
+            {
+                @Html.Partial("~/Administration/Views/Organization/_MergerOrganizationOld.cshtml")
+            }
+            else
+            {
+                @*//new*@
+                @Html.Partial("~/Administration/Views/Organization/_MergerOrganizationNew.cshtml")
+            }           
+        </div>   
+        <div style="clear:both;display:inline-block;float:right">
+            <div style="float:left;margin-right: 10px;">
+                @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Organization.Close", Style = "width:100px;height:38px;",ClassName="hrm-v2-btn-close" })
+            </div>
+            <div style="float:left;margin-right: 10px;">
+                @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-organization", OnClick = "saveMergerOrganization()", Value = "Organization.Save", Style = "width:100px;height:38px;", Type = "button", ClassName = "hrm-v2-btn-save" })
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    var checkRadio=1;
+    function ClickRadio(item) {
+        $(".merger-organization-body").load('/Admin/Organization/ReloadFormMergerOrganization', { check: item, parentId:@Model.ParentId });
+        checkRadio=2;
+    }
+    function saveMergerOrganization(){
+        var data=[];
+        $("#frm-merger-organization span[name*='-error']").text("");
+        data=$('#frm-merger-organization').serializeArray();
+        var list=document.getElementsByName("chk-column-row");
+
+        for (var i = 0; i < list.length; i++) {
+            if(list[i].checked){
+                data.push({name:"listData["+i+"].Id",value:list[i].value});
+            }
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Organization/saveMergerOrganization",
+            data: data,
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-merger-organization");
+                }
+                else {
+                    if (response.result.Success == true) {
+                        ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                        changeItemsPerpage('table-organization');
+                        $("#myModal").modal("hide");
+                    }
+                    else {
+                        ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    }
+
+                }
+            }
+        });
+    }
+
+</script>

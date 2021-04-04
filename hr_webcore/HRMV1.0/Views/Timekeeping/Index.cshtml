@@ -1,0 +1,15 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = "Index";
+
+}
+<script>
+    var errorFile= @Html.Raw(Json.Encode(AppRes.ErrorWork));
+</script>
+@*<link href="~/Scripts/Extention/BeautifulCheckBox/Bcheckbox.css" rel="stylesheet" />*@
+<div class="row" ng-controller="TimeKeeping">
+        @Html.Action("TimeKeepingServerSide", "Common")
+    <div style="display: none;">
+        @Html.Action("SaveTimeKeeping", "TimeKeeping")
+    </div>
+</div>

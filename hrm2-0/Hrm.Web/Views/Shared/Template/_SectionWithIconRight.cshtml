@@ -1,0 +1,31 @@
+﻿@model Hrm.Framework.Models.SectionWithIconRight
+    <style>
+        .section-icon-right i{
+            float: right;
+            font-size: 16px;
+            color: #2CA01C;
+            width: 30px;
+            text-align: center;
+            cursor:pointer;
+        }
+    </style>
+@{
+    <div class="col-md-12 pd-0 section section-template">
+        <div class="section-title pull-left" style="width: @Model.WidthSecitonName ">
+            <span>@Model.SectionName</span>
+        </div>
+        <div class="line-title pull-left" style="width:calc(100% - @Model.WidthSecitonName - @Model.WidthSectionIconRight)"></div>
+        <div class="pull-right section-icon-right" style="width:@Model.WidthSectionIconRight">
+            @{
+                if (Model.ListIcon != null)
+                {
+                    for (var icon = 0; icon < Model.ListIcon.Count(); icon++)
+                    {
+                        <i onclick="@Model.ListIcon[icon].Action" class="@Model.ListIcon[icon].Icon"></i>
+                        }
+                    }
+            }
+        </div>
+ </div>
+}
+  

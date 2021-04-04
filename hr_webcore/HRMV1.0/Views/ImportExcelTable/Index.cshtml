@@ -1,0 +1,82 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.ImportExcelTable;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div id="AttendanceManagement" class="container-fluid" ng-app="tableApp">
+    <div class="row" id="PerformanceReport">
+        <div class="col-md-12" id="PerformanceReport" ng-controller="ImportExcelTable" ng-init="init()">
+            <br />
+            <div class="col-md-6" style="margin-left:12px;">
+                <input type="radio" ng-model="type" ng-checked="true" ng-click="CallClick(0)" value="0"> @AppRes.RewardInformation
+                <input type="radio" ng-model="type"  ng-click="CallClick(1)" value="1"> @AppRes.DisciplinaryInformation
+                <input type="radio" ng-model="type"  ng-click="CallClick(2)" value="2"> @AppRes.RelativeInformation
+                <input type="radio" ng-model="type"  ng-click="CallClick(3)" value="3"> @AppRes.DisciplinaryInformation
+                <input type="radio" ng-model="type"  ng-click="CallClick(4)" value="4"> @AppRes.RelativeInformation
+            </div>
+            <div>
+                <div ng-if="type==0?true:false">
+                    <build-table table-url="'@(ViewBag.url)'"
+                                       table-param-filter="employeeFilter"
+                                       table-model="DetailAccountReportData"
+                                       table-excel-click="ExcelExtensionClick"
+                                       table-upload="ImportExcel"
+                                       notification="'@(AppRes.Notification)'"
+                                       validate-datetime="'@(AppRes.ValidateFromDateToDate)'">
+                    </build-table>
+                </div>
+                <div ng-if="type==1?true:false">
+                    <build-table table-url="'@(ViewBag.url1)'"
+                                       table-param-filter="employeeFilter"
+                                       table-model="DetailAccountReportData"
+                                       table-excel-click="ExcelExtensionClick"
+                                       table-upload="ImportExcel"
+                                       notification="'@(AppRes.Notification)'"
+                                       validate-datetime="'@(AppRes.ValidateFromDateToDate)'">
+                    </build-table>
+                </div>
+                <div ng-if="type==2?true:false">
+                    <build-table table-url="'@(ViewBag.url2)'"
+                                 table-param-filter="employeeFilter"
+                                 table-model="DetailAccountReportData"
+                                 table-excel-click="ExcelExtensionClick"
+                                 table-upload="ImportExcel"
+                                 notification="'@(AppRes.Notification)'"
+                                 validate-datetime="'@(AppRes.ValidateFromDateToDate)'">
+                    </build-table>
+                </div>
+                <div ng-if="type==3?true:false">
+                    <build-table table-url="'@(ViewBag.url3)'"
+                                 table-param-filter="employeeFilter"
+                                 table-model="DetailAccountReportData"
+                                 table-excel-click="ExcelExtensionClick"
+                                 table-upload="ImportExcel"
+                                 notification="'@(AppRes.Notification)'"
+                                 validate-datetime="'@(AppRes.ValidateFromDateToDate)'">
+                    </build-table>
+                </div>
+                <div ng-if="type==4?true:false">
+                    <build-table table-url="'@(ViewBag.url4)'"
+                                 table-param-filter="employeeFilter"
+                                 table-model="DetailAccountReportData"
+                                 table-excel-click="ExcelExtensionClick"
+                                 table-upload="ImportExcel"
+                                 notification="'@(AppRes.Notification)'"
+                                 validate-datetime="'@(AppRes.ValidateFromDateToDate)'">
+                    </build-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/ImportExcelTable/ImportExcelTable.js"></script>
+
+<script>
+    BuildTable('tableApp', 'ImportExcelTable', '@(ViewBag.url)', '@(ViewBag.url1)', '@(ViewBag.url2)','@(ViewBag.url3)','@(ViewBag.url4)','@AppRes.Notification','@AppRes.Error');
+</script>
+<script src="~/Scripts/directive/datePicker(NewDate)/datePicker.js"></script>

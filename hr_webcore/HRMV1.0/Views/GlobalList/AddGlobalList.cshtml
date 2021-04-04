@@ -1,0 +1,154 @@
+﻿@using HRM.App_LocalResources;
+<div class="container-fluid">
+    <div id="AddContent" class="row" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-heading">
+                    @*<h3 ng-hide=is_add>Chi tiết danh mục chung</h3>*@
+                    <h3 ng-show=is_add>@AppRes.GeneralCatalog</h3>
+                </div>
+                <hr />
+                <div class="panel-body">
+                    <form role="form" name="SaveForm" ng-submit="SaveAction(tableInfo.AddUrl,SaveForm)" novalidate>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.ContactTypeID@*<span style="color: red">(*)</span>*@</label>
+                                    </div>
+                                    <div class="col-md-4 no-padding">
+                                        <select  chosen options="sourceOrganizationUnit"  on-no-result="doStuff"  ng-model="editData.model" ng-options="list.id as list.Name for list in sourceOrganizationUnit" ng-change="onParantChange()">
+                                            <option value="" selected>--@AppRes.Select--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Status<span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4 no-padding">
+                                        <select  chosen options="getListStatus" on-no-result="doStuff" ng-readonly="!tablePermission.isEdit" required="required" class="form-control" name="status" ng-model="editData.IsActive" ng-options="list.Value as list.Name for list in getListStatus">
+                                            <option value="" disabled selected>@AppRes.Select</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;" ng-show="SaveForm.$submitted && SaveForm.status.$error.required">@AppRes.ErrorStatus</span>
+                                    </div>
+                                </div>
+                                <div class="space"></div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.TittleNumber</label>
+                                    </div>
+                                    <div class="col-md-4 no-padding">
+                                        <input ng-pattern="/^[0-9]*$/" ng-readonly="!tablePermission.isEdit" class="form-control" name="isOld" type="text" ng-model="editData.OrderNo" />
+                                        <span style="color:red" ng-show="SaveForm.isOld.$error.pattern">
+                                            @AppRes.ErrorNaturalNumber
+                                        </span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.MenuParent@*<span style="color: red">(*)</span>*@</label>
+                                    </div>
+                                    <div class="col-md-4 no-padding">
+                                        <select chosen options="getCategoryList" on-no-result="doStuff"  ng-readonly="!tablePermission.isEdit || check_click"  class="form-control" ng-model="editData.ParentID" ng-options="list.GlobalListID as list.Name for list in getCategoryList">
+                                            <option  value=""  selected>@AppRes.Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="space"></div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.NameVi<span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4 no-padding">
+                                        <input ng-readonly="!tablePermission.isEdit" required class="form-control" name="Name" type="text" ng-model="editData.Name" />
+                                        <span ng-show=is_TenPBSpecial style="color: red;line-height:30px;">
+                                            @AppRes.ErrorInputwebsite
+                                        </span>
+                                        <span style="color:red;line-height:30px;" ng-show="SaveForm.$submitted && SaveForm.Name.$error.required">@AppRes.ErrorVietnamese</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.CreatedDate</label>
+                                    </div>
+                                    <div class="col-md-4 no-padding">
+                                        <input ng-readonly="!tablePermission.isEdit" class="form-control" name="CreatedDate" type="date" ng-model="editData.CreatedDate" />
+                                    </div>
+                                </div>
+                                <div class="space"></div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.NameEn<span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4 no-padding">
+                                        <input ng-pattern="/^[0-9a-zA-Z\.\-\s]*$/" ng-readonly="!tablePermission.isEdit" required class="form-control" name="NameEN" type="text" ng-model="editData.NameEN" />
+                                        <span style="color:red;line-height:30px;" ng-show="SaveForm.NameEN.$error.pattern">
+                                            @AppRes.ErrorInputwebsite
+                                        </span>
+                                        <span style="color:red;line-height:30px;" ng-show="SaveForm.$submitted && SaveForm.NameEN.$error.required">@AppRes.ErrorEnglish</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.CreatedBy</label>
+                                    </div>
+                                    <div class="col-md-4 no-padding">
+                                        <input disabled class="form-control" name="CreatedBy" type="text" ng-model="editData.CreatedBy1" />
+                                    </div>
+                                </div>
+                                <div class="space"></div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.ValueVi</label>
+                                    </div>
+                                    <div class="col-md-4 no-padding"><input ng-readonly="!tablePermission.isEdit" class="form-control" name="Value" type="text" ng-model="editData.Value" /></div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.ModifiedDate</label>
+                                    </div>
+                                    <div class="col-md-4 no-padding">
+                                        <input class="form-control" ng-readonly="is_add || !tablePermission.isEdit" name="ModifiedDate" type="date" ng-model="editData.ModifiedDate" />
+                                    </div>
+                                </div>
+                                <div class="space"></div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.ValueEn</label>
+                                    </div>
+                                    <div class="col-md-4 no-padding"><input ng-readonly="!tablePermission.isEdit" class="form-control" name="ValueEN" type="text" ng-model="editData.ValueEN" /></div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.ModifiedBy</label>
+                                    </div>
+                                    <div class="col-md-4 no-padding">
+                                        <input disabled class="form-control" name="ModifiedBy" type="text" ng-model="editData.ModifiedBy1" />
+                                    </div>
+                                </div>
+                                <div class="space"></div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Note</label>
+                                    </div>
+                                    <div class="col-md-10 no-padding">
+                                        <textarea ng-readonly="!tablePermission.isEdit" rows="4" class="form-control" ng-model="editData.Descriptions"></textarea>
+                                    </div>
+                                </div>
+                                <!-- /.container -->
+                                <div class="space"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-5 col-md-push-5">
+                                <button ng-show="tablePermission.isEdit && !chitietshow" type="submit" class="btn btn-labeled btn-success">
+                                    <span class="btn-label">
+                                        <i class="fa fa-save"></i>
+                                    </span>@AppRes.btnUpdate
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CloseForm(SaveForm)">
+                                    <span class="btn-label">
+                                        <i class="fa fa-close"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>

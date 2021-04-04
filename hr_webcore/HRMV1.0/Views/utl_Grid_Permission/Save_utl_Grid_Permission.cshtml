@@ -1,0 +1,233 @@
+﻿@using HRM.App_LocalResources;
+<div class="container-fluid">
+    <div class="row" id="Save_utl_Grid_Permission" style="margin: 0px;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;"> Grid Permission</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:35px;">@AppRes.TableName <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" chosen options="GetListTable" on-no-result="doStuff" required data-modal="modal" ng-model="EditData.GridId" ng-options="list.id as list.Note for list in GetListTable" ng-change="ChangeGrid()">
+                                            <option value="" selected>@AppRes.Select</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorGrid}}</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:35px;">@AppRes.Permission <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" chosen options="GetListTable" on-no-result="doStuff" required data-modal="modal" ng-model="EditData.PermissionType" ng-change="ChangePermissionType()">
+                                            <option value="User">User</option>
+                                            <option value="Role">Role</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorPermissionType}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6" ng-show="(EditData.PermissionType=='User')?true:false">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:35px;">@AppRes.Staff <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" chosen options="ListEmployees" on-no-result="doStuff" required data-modal="modal" ng-model="EditData.PermissionId" ng-options="list.UserID as list.FullName for list in ListEmployees" ng-change="ChangePermissionId()">
+                                            <option value="" selected>@AppRes.Select</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorPermissionId}}</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6" ng-show="(EditData.PermissionType=='Role')?true:false">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:35px;">@AppRes.Role <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" chosen options="ListSecRole" on-no-result="doStuff" required data-modal="modal" ng-model="EditData.PermissionId" ng-options="list.RoleID as list.Name for list in ListSecRole" ng-change="ChangePermissionId()">
+                                            <option value="" selected>@AppRes.Select</option>
+
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorPermissionId}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.btnCopy </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsCopy" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsCopy}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.IsAdd </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsAdd" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsAdd}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.IsEdit </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsEdit" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsEdit}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.Timekeeping_DelTitle </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsDelete" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsDelete}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.isAction </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsActive" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsActive}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.Search </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsFilterButton" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsFilterButton}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;">@AppRes.btnExcel </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsExportExcel" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsExportExcel}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.btnImportExcel </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsImportExcel" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsImportExcel}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;">@AppRes.Timekeeping_SubmitTitle </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsSubmit" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsSubmit}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.IsApproval </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsApproval" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsApproval}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;">@AppRes.IsDisApproval </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsDisApproval" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsDisApproval}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- END panel-->
+                <center>
+                    <button type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>@AppRes.btnUpdate
+                    </button>
+                    <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                        <span class="btn-label">
+                            <i class="fa fa-close"></i>
+                        </span>@AppRes.btnCancel
+                    </button>
+                </center>
+            </div>
+        </form>
+    </div>
+</div>

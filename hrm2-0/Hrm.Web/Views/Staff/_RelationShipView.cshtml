@@ -1,0 +1,69 @@
+﻿
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@{
+    Layout = null;
+}
+<style>
+    .info-allowances{
+        font-size: 14px;
+        text-transform: UPPERCASE;
+        font-family: Roboto-Bold;
+        margin: 10px 0px;
+    }
+</style>
+<div class="relationship-container">
+    <div class="hrm-v2-modal-header">Nguyễn văn A</div>
+    <div class="hrm-v2-modal-body" style="margin-top:0px">
+       <div class="col-md-12 pd-0 display-inline-block">
+           <div class="col-md-7 pd-0 display-inline-block">
+               @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = "Quan hệ", Text ="Bố" })
+           </div>
+           <div class="col-md-5 pd-0 display-inline-block">
+               @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = "Ngày sinh", Text = "20/12/2018" })
+           </div>
+       </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-7 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = "Quan hệ", Text = "Bố" })
+            </div>
+            <div class="col-md-5 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = "Ngày sinh", Text = "20/12/2018" })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-7 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = "Số điện thoại", Text = "039686868" })
+            </div>
+            <div class="col-md-5 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = "Ghi chú thân nhân", Text = "Bản nháp" })
+            </div>
+        </div>
+        <h3 class="info-allowances">Thông tin giảm trừ gia cảnh</h3>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-7 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = "Trạng thái", Text = "Đã duyệt" })
+            </div>
+            <div class="col-md-5 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = "Mã giảm trừ gia cảnh", Text = "GTGC18323" })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-7 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = "Thời gian áp dụng", Text = "01/01/2019 - 31/12/2019" })
+            </div>
+            <div class="col-md-5 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = "Ghi chú giảm trừ", Text = "Nội dung ghi chú" })
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <div class="footer-login">
+        <div class="pull-right">
+            <button type="button" class="btn btn-primary hrm-v2-btn-close close-popup" data-dismiss="modal">
+                @T("Staff.Close")
+            </button>
+        </div>
+    </div>
+</div>

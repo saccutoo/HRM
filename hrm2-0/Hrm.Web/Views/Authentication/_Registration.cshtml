@@ -1,0 +1,129 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@{
+    ViewBag.Title = G("Registration.Title");
+    Layout = "~/Views/Shared/_MenuHome.cshtml";
+}
+<style>
+
+
+    .btn-free-trial {
+        display: none !important;
+    }
+
+    .registration-container {
+        display: block;
+        width: 80%;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+        .registration-container .header-body {
+            font-size: 36px;
+            font-family: Roboto-bold;
+            padding: 18px 0px;
+        }
+
+        .registration-container .registration-body {
+            width: 555px;
+            margin: 0 auto;
+            padding: 60px;
+            padding-bottom: 0px;
+            border-radius: 5px;
+            /*border: 1px solid rgba(0,0,0,.2);*/
+            display: inline-block;
+        }
+
+    .btn-registration {
+        background-color: #2ca01c !important;
+        border-radius: 5px !important;
+        border: none !important;
+        min-width: 80px;
+        color: #fff !important;
+        height: 40px !important;
+        font-size: 15px;
+        font-weight: 400;
+        cursor: pointer !important;
+        line-height: 40px;
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        font-family: Roboto-Bold;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .registration-footer p {
+        font-family: Roboto-regular;
+        font-size: 13px;
+    }
+
+        .registration-footer p:first-child {
+            margin-top: 20px;
+        }
+
+    .registration-footer .rule {
+        color: #f6636b;
+        cursor: pointer;
+    }
+</style>
+<form id="registration-frm" class="registration-container">
+    <div class="registration-body">
+        <h4 class="header-body">Đăng kí dùng thử miễn phí</h4>
+        <section class="hrmv2-section">
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = G("Tên công ty").ToString(), IsRequired = true, IsAnimationLabel = true, Name = "Name" })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <span style="width: 70%;float:left"> @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = G("Tên miền").ToString(), IsRequired = true, IsAnimationLabel = true, Name = "DbName" })</span> <span style="height:50px;line-height:60px;font-size:13px">.onpeople.asia</span>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = G("Số điện thoại").ToString(), IsRequired = true, IsAnimationLabel = true, Name = "Phone" })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = G("Email").ToString(), IsRequired = true, IsAnimationLabel = true, Name = "Email" })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = G("Tài khoản Admin").ToString(), IsRequired = true, IsAnimationLabel = true, Name = "UserName" })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = G("Mật khẩu").ToString(), IsRequired = true, IsAnimationLabel = true, Name = "Password",Type = "password" })
+            </div>
+            <button type="button" class="btn-registration" style="width:100%" onclick="registrationOnpeople()">Đăng ký</button>
+            <span class="hrm-v2-font-13">Bạn đã có tài khoản ? <a href="/Authentication/Index">Đăng nhập</a></span>
+        </section>
+    </div>
+    <div class="registration-footer">
+        <p>Bằng việc click nút đăng ký phía trên, bạn đã đồng ý với</p>
+        <p class="rule">Điều khoản & Chính sách của Onpeople</p>
+    </div>
+</form>
+
+<script>
+    function registrationOnpeople() {
+        $("#registration-frm" + " span[name*='-error']").text("");
+        $.ajax(
+           {
+               url: "/Authentication/SaveRegistration",
+               type: "POST",
+               data: {
+                   model: $('form#registration-frm').serializeObject()
+               },
+               success: function (response) {
+                   if (response.Invalid) {
+                       var validations = response.Result;
+                       RenderError(validations, "registration-frm");
+                   }
+                   else if (response.IsDuplicate) {
+                       ShowMessage(false, "Error", "Tên miền này đã tồn tại trong hệ thống vui lòng nhập tên miền khác!", 0, 4000, 0);
+                   }
+                   else {
+                       window.location.href = $('form#registration-frm').serializeObject().DbName + '.onpeople.asia';
+                   }
+               }
+           });
+    }
+    $(document).ready(function () {
+        $('.wapper-footer').css('display', 'none');
+    });
+</script>

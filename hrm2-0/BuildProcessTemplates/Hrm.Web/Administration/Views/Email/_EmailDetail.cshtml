@@ -1,0 +1,71 @@
+﻿@model Hrm.Admin.ViewModels.EmailDetailViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@{
+    Layout = null;
+}
+@{
+    var email= Model.Email;
+    if (email != null && email.Id != 0)
+    {
+        <div class="email-right-top">
+            <div class="email-right-top-right">
+                <div class="title-email">
+                    @email.Name
+                </div>
+                <div class="list-receiver">
+                    <div class="list-receiver-right">
+                        <span>@T("Email.MailTo")</span>
+                    </div>
+                    <div class="list-receiver-left">
+                        <span>@email.MailTo</span>
+                    </div>
+                </div>
+                @if (email.MailCc != null)
+                {
+                    <div class="list-receiver">
+                        <div class="list-receiver-right">
+                            <span>@T("Email.MailCc")</span>
+                        </div>
+                        <div class="list-receiver-left">
+                            <span>@email.MailCc</span>
+                        </div>
+                    </div>
+                }
+                @if (email.MailBcc != null)
+                {
+                    <div class="list-receiver">
+                        <div class="list-receiver-right">
+                            <span>@T("Email.MailBcc")</span>
+                        </div>
+                        <div class="list-receiver-left">
+                            <span>@email.MailBcc</span>
+                        </div>
+                    </div>
+                }
+               
+            </div>
+            <div class="email-top-left">
+                <div class="top-left-icon">
+                    <a class="fas fa-trash-alt" style="color:red;margin-right:50px;"></a>
+                </div>
+                <div class="top-left-icon">
+                    <a class="fas fa-pencil-alt"></a>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <div class="email-right-body">
+            @email.ContentTemplate
+        </div>
+
+        <hr />
+        <div class="email-right-footer">
+            <div class="attackment-bottom" id="list-attackment">
+                @Html.Partial(UrlHelpers.TemplateAdmin("Email", "_ListAttackment.cshtml"), Model.Attachments)
+            </div>
+            
+        </div>
+    }
+}

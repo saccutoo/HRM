@@ -1,0 +1,68 @@
+﻿@model  Hrm.Framework.Models.DashboardSummaryModel
+@{
+    Layout = null;
+}
+<div class="item">
+    <div class="left positon-shedule-chart col-md-12 pull-left" style="padding: 10px">
+        <span style="font-size: 16px">
+            @M("510;MasterData;Name")
+            @if (Model.Total >= Model.TotalOffPeriod)
+            {
+                <span class="hrm-v2-color-green" style="margin-left: 18px;font-size: 14px"><i class="fas fa-arrow-up" style="font-size:18px;"></i> @Math.Ceiling((Model.Total - Model.TotalOffPeriod) / (Model.TotalOffPeriod))%</span>
+            }
+            else
+            {
+                <span class="hrm-v2-color-red" style="margin-left: 18px;font-size: 14px"><i class="fas fa-arrow-down" style="font-size:18px;"></i>@Math.Ceiling((Model.TotalOffPeriod - Model.Total) / (Model.TotalOffPeriod))%</span>
+            }
+        </span>
+        <p class="shedule-chart total">@Model.Total <i class="fas fa-user" style="color: #D7D7D7;opacity: 0.6;margin-left: 14px;"></i></p>
+    </div>
+</div>
+<div class="item in-background first">
+    <div class="left positon-shedule-chart col-md-6 pull-left">
+        <span class="label-titel">
+            @M("55;MasterData;Name")
+            @if (Model.Onboard >= Model.OnboardPeriod)
+            {
+                <span class="arrow-up hrm-v2-color-green total-icon" style="margin-left: 18px;font-size: 14px"><i class="fas fa-arrow-up" style="font-size:18px;"></i> @Math.Ceiling((Model.Onboard - Model.OnboardPeriod) / (Model.OnboardPeriod))%</span>
+            }
+            else
+            {
+                <span class="hrm-v2-color-red" style="margin-left: 18px;font-size: 14px"><i class="fas fa-arrow-down" style="font-size:18px;"></i> @Math.Ceiling((Model.OnboardPeriod - Model.Onboard) / (Model.OnboardPeriod))%</span>
+            }
+        </span>
+        <p class="shedule-chart">@Model.Onboard <i class="fas fa-user"></i></p>
+    </div>
+    <div class="left positon-shedule-chart col-md-6 pull-left">
+        <span class="label-titel">
+            @M("10514;MasterData;Name")
+            @if (Model.Official >= Model.OfficialPeriod)
+            {
+                <span class="arrow-up hrm-v2-color-green total-icon" style="margin-left: 18px;font-size: 14px"><i class="fas fa-arrow-up" style="font-size:18px;"></i> @Math.Ceiling((Model.Official - Model.OfficialPeriod) / (Model.OfficialPeriod))%</span>
+            }
+            else
+            {
+                <span class="hrm-v2-color-red" style="margin-left: 18px;font-size: 14px"><i class="fas fa-arrow-down" style="font-size:18px;"></i> @Math.Ceiling((Model.OfficialPeriod - Model.Official) / (Model.OfficialPeriod))%</span>
+            }
+        </span>
+        <p class="shedule-chart">@Model.Official <i class="fas fa-user"></i></p>
+    </div>
+</div>
+<div class="item in-background">
+    <div class="left positon-shedule-chart col-md-6 pull-left">
+        <span class="label-titel" style="height:100%">
+            @M("9;MasterData;Name")
+            @if (Model.TotalOff >= Model.TotalOffPeriod)
+            {
+                <span class="arrow-up hrm-v2-color-red total-icon" style="margin-left: 18px;font-size: 14px"><i class="fas fa-arrow-up" style="font-size:18px;"></i> @Math.Ceiling((Model.TotalOff - Model.TotalOffPeriod) / (Model.TotalOffPeriod))%</span>
+            }
+            else
+            {
+                <span class="hrm-v2-color-green" style="margin-left: 18px;font-size: 14px"><i class="fas fa-arrow-down" style="font-size:18px;"></i> @Math.Ceiling((Model.TotalOffPeriod - Model.TotalOff) / (Model.TotalOffPeriod))%</span>
+            }
+        </span>
+    </div>
+    <div class="left positon-shedule-chart col-md-6 pull-left">
+        <p class="shedule-chart">@Model.TotalOff <i class="fas fa-user"></i></p>
+    </div>
+</div>

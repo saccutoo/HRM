@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Bootstrap Admin App + jQuery">
+    <meta name="keywords" content="app, responsive, jquery, bootstrap, dashboard, admin">
+    <title>Novaon AutoAds</title>
+
+    <!-- =============== VENDOR STYLES ===============-->
+    @Styles.Render("~/bundles/fontawesome")
+    @Styles.Render("~/bundles/simpleLineIcons")
+    @Styles.Render("~/bundles/animatecss")
+    @Styles.Render("~/bundles/whirl")
+    <!-- =============== PAGE VENDOR STYLES =============== -->
+    @if (IsSectionDefined("Styles"))
+    {
+        @RenderSection("Styles", required: false)
+    }
+   
+    <!-- =============== BOOTSTRAP STYLES ===============-->
+    <link href="@Styles.Url("~/Content/app/css/bootstrap.css")" rel="stylesheet" type="text/css" id="bscss"/>
+    <!-- =============== APP STYLES ===============-->
+    <link href="@Styles.Url("~/Content/app/css/app.css")" rel="stylesheet" type="text/css" id="maincss"/>
+    @*    <link href="@Styles.Url("~/Content/mvc-override.css")" rel="stylesheet" type="text/css"/>*@
+    <link href="~/Scripts/MyScript/tree-dropdown.css" rel="stylesheet" />
+    <!-- =============== VENDOR SCRIPTS ===============-->
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/matchMedia")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/storage")
+    @Scripts.Render("~/bundles/jqueryEasing")
+    @Scripts.Render("~/bundles/animo")
+    @Scripts.Render("~/bundles/slimscroll")
+    @Scripts.Render("~/bundles/screenfull")
+    @Scripts.Render("~/bundles/localize")
+    @Scripts.Render("~/bundles/demoRTL")
+    <!-- =============== PAGE VENDOR SCRIPTS ===============-->
+    @RenderSection("scripts", required: false)
+    <!-- =============== APP SCRIPTS ===============-->
+    @Scripts.Render("~/bundles/HRM")
+    @*    <script src="~/Scripts/angular.min.js"></script>*@
+    @*    <script src="~/Scripts/dirPagination.js"></script>*@
+    @Scripts.Render("~/bundles/angularjs2")
+    @*    <script src="/Scripts/ui-bootstrap-tpls-2.5.0.min.js"></script>*@
+
+
+    <script src="~/Scripts/mycustom/mycustom.js"></script>
+    <link href="~/Content/hint-custom.css" rel="stylesheet" type="text/css"/>
+    <script src="~/Scripts/mycustom/toastr/toastr.min.js"></script>
+    <link href="~/Scripts/mycustom/toastr/toastr.min.css" rel="stylesheet" type="text/css"/>
+    <link href="~/Content/my-custom.css" rel="stylesheet" type="text/css"/>
+    <link href="~/Scripts/Colorbox/colorbox.css" rel="stylesheet" type="text/css"/>
+    <script src="~/Scripts/Colorbox/jquery.colorbox-min.js"></script>
+    <link href="~/Scripts/boostrap-dialog/bootstrap-dialog.css" rel="stylesheet" type="text/css"/>
+    <script src="~/Scripts/boostrap-dialog/bootstrap-dialog.js"></script>
+    <link href="~/Vendor/loaders.css/loaders.css" rel="stylesheet" type="text/css"/>
+    <script type='text/javascript' src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+    @*<link href="~/Scripts/MyScript/select.css" rel="stylesheet" />
+    <script src="~/Scripts/MyScript/selectjs.js"></script>*@
+
+
+  
+</head>
+<body>
+@*<div class="loader">*@
+@*    <div class="col-md-3">*@
+@*        <div class="panel-body loader-demo">*@
+@*            <div class="pacman">*@
+@*                <div></div>*@
+@*                <div></div>*@
+@*                <div></div>*@
+@*                <div></div>*@
+@*                <div></div>*@
+@*            </div>*@
+@*        </div>*@
+@*    </div>*@
+@*</div>*@
+<div class="wrapper">
+    <div class="loader">
+        <div class="loader-content">
+            <div class="panel-body loader-demo">
+                <div class="ball-grid-pulse">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <h5>Please wait...</h5>
+            </div>
+        </div>
+    </div>
+    <!-- top navbar-->
+    <header class="topnavbar-wrapper">
+        @Html.Partial("_TopNavbar")
+    </header>
+    <!-- sidebar-->
+    <aside class="aside">
+        @Html.Partial("_Sidebar")
+    </aside>
+    <!-- offsidebar-->
+    <aside class="offsidebar hide">
+        @Html.Partial("_Offsidebar")
+    </aside>
+    <!-- Main section-->
+    <section>
+        <!-- Page content-->
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+    </section>
+    <!-- Page footer-->
+    <footer>
+        @Html.Partial("_Footer")
+    </footer>
+</div>
+@if (IsSectionDefined("BodyArea"))
+{
+    @RenderSection("BodyArea", required: false)
+}
+
+</body>
+</html>

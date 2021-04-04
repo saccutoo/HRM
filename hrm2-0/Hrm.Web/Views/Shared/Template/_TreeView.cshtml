@@ -1,0 +1,319 @@
+﻿@model Hrm.Framework.Models.TreeViewModel
+@using System.Linq
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common;
+@{
+    Layout = null;
+}
+<style>
+    .tree-root, ul {
+        list-style-type: none;
+    }
+
+    .tree-root {
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+        width: 400px;
+    }
+
+    .tree-caret {
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        position:relative;
+        padding: 9px 9px;
+        float:left
+    }
+
+        .tree-caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+    .tree-caret-down::before {
+        -ms-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .nested {
+        display: none;
+    }
+
+    .active {
+        display: block;
+    }
+
+    .tree-root li {
+        cursor: pointer;
+    }
+    .spanClick{
+        width: 100%;
+        display: block;
+        padding-left: 30px;
+        height: 40px;
+        line-height: 40px;
+        font-size:14px;
+        font-family:Roboto-Regular;
+
+    }
+    .spanClick:hover{
+        background-image:linear-gradient(45deg, #1DAB8C, #4DAF3C);
+    }
+    .spanClick.active{
+         background-image:linear-gradient(45deg, #1DAB8C, #4DAF3C);
+    }
+    .category-body-li-icon{
+        float:right;
+    }
+     .category-body-li-icon .category-body-icon{
+        float: left;
+        margin-right: 5px;
+    }
+    .category-body-li-icon .category-body-icon .fa-pencil-alt{
+        float: left;
+        margin-right: 5px;
+        line-height:40px;
+    }
+    .category-body-li-icon .category-body-icon .fa-trash-alt{
+        float: left;
+        margin-right: 5px;
+        line-height:40px;
+    }
+    .tree-root .category-body-li-icon{
+        display:none;
+    }
+    .spanClick:hover .category-body-li-icon{
+        display:block;
+    }
+</style>
+@helper RenderTree(int parentId)
+{
+var data = Model.TreeData.ToList();
+if (data != null)
+{
+    var listNode = data.Where(x => x.ParentId == parentId).ToList();
+    foreach (var node in listNode)
+    {
+        var listChildNode = data.Where(x => x.ParentId == node.Id).ToList();
+        if (listChildNode.Count() > 0)
+        {
+                <li >
+                    <span class="tree-caret"></span>
+                        <span class="spanClick" item-value="@node.Id" onclick="ClickTree(@node.Id)">                          
+                            @{
+                                var check = M(node.Id.ToString() + ";" + DataType.Organization + ";OrganizationName");
+                                if (check.Text.IndexOf(';') < 0)
+                                {
+                                    @M(node.Id.ToString() + ";" + DataType.Organization + ";OrganizationName");
+                                }
+                                else
+                                {
+                                    @node.OrganizationName
+                                }
+                                long Id = node.Id;
+                                Model.TreeData.Remove(node);
+                            }
+                            <div class="category-body-li-icon">
+
+                                @if (FunctionHelpers.ControlPermission(ActionName.Update, TableConfig.Organization))
+                                {
+                                    <div class="category-body-icon" onclick="ShowFormEditOrganization(@node.Id)">
+                                        <i class="fas fa-pencil-alt" style="color:blue"></i>
+                                    </div>
+                                }
+                                @if (FunctionHelpers.ControlPermission(ActionName.Delete, TableConfig.Organization))
+                                {
+                                    <div class="category-body-icon" onclick="DeleteOrganization(@node.Id)">
+                                        <i class="fas fa-trash-alt" style="color:red"></i>
+                                    </div>
+                                }
+                                                               
+                            </div>
+                        </span>
+                    
+                    <ul class="nested">
+                        @RenderTree(int.Parse(Id.ToString()))
+                    </ul>
+                </li>
+        }
+        else
+        {
+                <li  onclick="ClickTree(@node.Id)" class="spanClick" item-value="@node.Id">
+                    <span  >
+                        @{
+                            var check = M(node.Id.ToString() + ";" + DataType.Organization + ";OrganizationName");
+                            if (check.Text.IndexOf(';') < 0)
+                            {
+                                @M(node.Id.ToString() + ";" + DataType.Organization + ";OrganizationName");
+                            }
+                            else
+                            {
+                                @node.OrganizationName
+                            }
+                            long Id = node.Id;
+                            Model.TreeData.Remove(node);
+                        }
+                        <div class="category-body-li-icon">
+                            @if (FunctionHelpers.ControlPermission(ActionName.Update, TableConfig.Organization))
+                            {
+                                <div class="category-body-icon" onclick="ShowFormEditOrganization(@node.Id)">
+                                    <i class="fas fa-pencil-alt" style="color:blue"></i>
+                                </div>
+                            }
+                            @if (FunctionHelpers.ControlPermission(ActionName.Delete, TableConfig.Organization))
+                            {
+                                <div class="category-body-icon" onclick="DeleteOrganization(@node.Id)">
+                                    <i class="fas fa-trash-alt" style="color:red"></i>
+                                </div>
+                            }
+                        </div>
+                    </span>
+                </li>
+
+                            if ( Model.TreeData.Count()>0 && Model.IsFilter==true && listNode.Count<=1)
+                            {
+                                data=Model.TreeData.ToList();
+                                foreach (var item in data)
+                                {
+                                    
+                                    var listNodeFilter = Model.TreeData.Where(x => x.ParentId == item.Id).ToList();
+                                    if (listNodeFilter.Count==0)
+                                    {
+                                        <li  onclick="ClickTree(@item.Id)" class="spanClick" item-value="@item.Id">
+                                        <span  >
+                                            @{
+                                                 check = M(item.Id.ToString() + ";" + DataType.Organization + ";OrganizationName");
+                                                if (check.Text.IndexOf(';') < 0)
+                                                {
+                                                    @M(item.Id.ToString() + ";" + DataType.Organization + ";OrganizationName");
+                                                }
+                                                else
+                                                {
+                                                    @item.OrganizationName
+                                                }
+                                                Id = item.Id;
+                                                Model.TreeData.Remove(item);
+                                            }
+                                        </span>
+                                        </li>
+                                      }
+                                      else
+                                      {
+                                         <li >
+                                            <span class="tree-caret"></span>
+                                                <span class="spanClick" item-value="@item.Id" onclick="ClickTree(@item.Id)">
+                           
+                                                    @{
+                                                        check = M(item.Id.ToString() + ";" + DataType.Organization + ";OrganizationName");
+                                                        if (check.Text.IndexOf(';') < 0)
+                                                        {
+                                                            @M(item.Id.ToString() + ";" + DataType.Organization + ";OrganizationName");
+                                                        }
+                                                        else
+                                                        {
+                                                            @item.OrganizationName
+                                                        }
+                                                        Id = item.Id;
+                                                        Model.TreeData.Remove(item);
+                                                    }
+                                                   
+                                                </span>                    
+                                            <ul class="nested">
+                                                @RenderTree(int.Parse(Id.ToString()))
+                                            </ul>
+                                        </li>
+                                          break;
+                                      }  
+                                                        
+                                }
+                                
+                    }
+            }
+      }
+  }
+}
+<ul  class="tree-root">
+    @RenderTree(Model.MinParent)
+</ul>
+
+<script type="text/javascript">
+    var toggler = document.getElementsByClassName("tree-caret");
+    for (var i = 0; i < toggler.length; i++) {
+        toggler[i].addEventListener("click", function () {
+            this.parentElement.querySelector(".nested").classList.toggle("active");
+            this.classList.toggle("tree-caret-down");
+        });
+    }
+
+    //var toggler1 = document.getElementsByClassName("spanClick");
+    //for (var x = 0; x < toggler1.length; x++) {
+    //    toggler1[i].addEventListener("click", function () {
+    //        //var id = $(toggler1).attr("item-value");
+    //        alter('ok')
+    //    });
+    //}
+
+    $(document).on('click', '.spanClick', function () {
+        $('.spanClick').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    function ShowFormEditOrganization(item) {
+        var options = {
+            id: 'add-organization',
+            url: '/Admin/Organization/ShowFormAddOrganization',
+            isNotificationPoup: true,
+            align: "center",
+            data: '{id: ' + item + '}',
+            idform: 'frm-add-Organization',
+        };
+        CreatePopup(options);
+    }
+   
+    function DeleteOrganization(item) {
+        bootbox.confirm({
+            message: '@T("Message.Delete.QuestionDelete")',
+            buttons: {
+                confirm: {
+                    label: '@T("Checklist.Save")',
+                    className: 'hrm-v2-btn-save'
+                },
+                cancel: {
+                    label: '@T("Checklist.Close")',
+                    className: 'hrm-v2-btn-close'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax(
+                    {
+                        type: "POST",
+                        url: "/Admin/Organization/DeleteOrganization",
+                        data: {
+                            id:item
+                        },
+                        success: function (response) {
+                            if (response.IsSucces == true) {
+                                var tableName = "table-organization";
+                                var currentPage = $('#table-organization-paging-current-page').val();
+                                var itemsPerPage = $('#table-organization-paging-items-per-page').val();
+                                var dataUrl = "/Admin/Organization/GetDataOrganization";
+                                var currentPageNew = parseInt(currentPage);
+                                reloadTable(tableName, dataUrl, currentPageNew, itemsPerPage, filterStr, referenceId);
+                            }
+                            alert(response.ResponeseResources);
+                        }
+                    });
+                }
+            }
+        });
+    }
+</script>
+

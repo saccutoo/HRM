@@ -1,0 +1,278 @@
+﻿@model Hrm.Web.ViewModels.WorkingdaySupplementViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@using Hrm.Framework.Context
+@using Hrm.Common
+@using Newtonsoft.Json
+@{
+    Layout = null;
+    WorkingdaySupplementModel data = new WorkingdaySupplementModel();
+    var id = 0;
+}
+<style>
+    .hrmv2-section .my-request-header .my-request-header-filter{
+        width: 20%;
+        height: 37px;
+        float: left;
+    }
+    .hrmv2-section .my-request-header .my-request-header-filter .icon-left{
+        height: 100%;
+        width: 30px;
+        float: left;
+        text-align: center;
+        margin-left: 10px;
+    }
+    .hrmv2-section .my-request-header .my-request-header-filter .icon-left span{
+        float: left;
+        line-height: 50px;
+    }
+     .hrmv2-section .my-request-header .my-request-header-filter .filter-right{
+         height: 100%;
+        border-bottom: 1px solid #ccc;
+     }
+     .hrmv2-section .my-request-header .my-request-header-filter .filter-right input{
+        width: 89%;
+        margin-top: 14px;
+        border: none;
+     }
+     .hrmv2-section .my-request-header .my-request-header-filter .filter-right input:focus{
+        outline:none
+     }
+      .hrmv2-section .my-request-header .my-request-header-date {
+        float:right;
+        margin-right:20px;
+     }
+     .hrmv2-section .my-request-header .my-request-header-date #month-my-request-datetimepicker{
+        margin-top:10px;
+     }
+     .hrmv2-section .my-request-header .my-request-header-date .option-list.request-option.hrm-v2-font-13{
+       float: left;
+       margin-right: 30px;
+     }
+     .hrmv2-section .my-request-header .my-request-header-date .fas.fa-columns{
+        float: left;
+        line-height: 48px;
+        color: #2CA01C;
+        cursor:pointer;
+     }
+     .hrmv2-section #list-workingday-supplement{
+        overflow: auto;
+        display: block;
+        max-height: 650px;
+     }
+     .hrmv2-section .request-container .request-other{
+            max-height: 285px;
+            overflow: auto;
+        }
+</style>
+@if (Model.ViewType == Hrm.Common.ViewType.List)
+{
+    <div>
+
+    </div>
+    <section class="hrmv2-section">
+
+        <div class="my-request-header">
+            @*<div class="my-request-header-filter">
+                <div class="icon-left">
+                    <span class="fas fa-search"></span>
+                </div>
+                <div class="filter-right">
+                    <input placeholder="Tìm kiếm đền nghị" />
+                </div>
+            </div>*@
+            <div class="my-request-header-date">
+                <span class="option-list request-option hrm-v2-font-13">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "month-my-request", DateFormat = "MM/yyyy", Value = Convert.ToDateTime(Model.Month.ToString() + "/" + Model.Year.ToString()) })
+                </span>
+                <span class="fas fa-columns" onclick="changeView(true)"></span>
+
+            </div>
+        </div>
+
+        <div class="list-supplement-workingday" style="margin-top:45px;">
+            <form id="frm-table-supplement">
+                <div class="table-workingday-supplement" id="table-workingday-supplement">
+                    @{
+                        var table = Model.Table;
+                        table.ItemsPerPage = Model.Table.ItemsPerPage;
+                        table.CurrentPage = Model.Table.CurrentPage;
+                    }
+                    @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+                </div>
+            </form>
+        </div>             
+    </section>
+}
+else
+{
+    <section class="hrmv2-section">
+        <div class="my-request-tab">
+            <div class="my-request-box-left pull-left">
+                <div class="my-request-filter">
+                    <div class="my-request-icon-search">
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <div class="my-request-input-search">
+                        <input placeholder="@T("Workingday.TitleFillterWorkingday")"  onkeyup="searchWorkingdaySupplement($(this).val())"/>
+                    </div>
+                    <div class="my-request-input-date">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "current-month-request-approvel", DateFormat = "MM/yyyy", Value = Convert.ToDateTime(Model.Month.ToString() + "/" + Model.Year.ToString()) })
+                    </div>
+                    <div class="my-request-icon-filter" onclick="">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                </div>
+                @*<div class="option-filter hrm-v2-font-13">
+                    <span class="view-all request-option" onclick="changeView(true)">@T("Workingday.Label.ViewAll")</span>
+
+                    <span class="view-suggest request-option">@T("Workingday.Label.Request")</span>
+
+                    <span class="option-list request-option hrm-v2-font-13">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "month-my-request", DateFormat = "MM/yyyy", Value = Convert.ToDateTime(Model.Month.ToString() + "/" + Model.Year.ToString()) })
+                    </span>
+
+                </div>*@
+                
+                <div id="list-workingday-supplement" class="hrm-v2-scroll">
+                    @if (Model.WorkingdaySupplements.Count() > 0)
+                    {
+                        @Html.Partial(UrlHelpers.View("~/Views/Workingday/_ListWorkingdaySupplenment.cshtml"), Model)
+                    }
+                </div>
+               
+            </div>
+            @{
+                if (Model.WorkingdaySupplementDetail.WorkingdaySupplement!=null && Model.WorkingdaySupplementDetail.WorkingdaySupplement.Id!=0)
+                {
+                    <div id="my-request-box-right-body">
+                        @Html.Partial(UrlHelpers.View("~/Views/Workingday/_WorkingdaySupplenmentDetail.cshtml"), Model.WorkingdaySupplementDetail)
+                    </div>
+                }
+
+            }
+        </div>
+    </section>
+}
+
+<script>
+    function Approved() {
+        var listId = [];
+        var list = document.getElementsByName('chk-working-supplement');
+
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].checked==true) {
+                listId.push({ RequestId: list[i].value, RequestStatusId:323,RequestActionId:@MasterDataId.Submit })
+            }
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Workingday/SaveSubmitApproval",
+            data: {
+                listModel: listId,
+                isApproval:false,
+
+            },
+            success: function (response) {
+                if (response.result.Success==true) {
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    window.location.reload();
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                }
+            }
+        });
+    }
+
+    function deleteListWorkingDaySupplement(){
+        var listId=[];
+        var list=document.getElementsByName('chk-column-row');
+        for (var i = 0; i < list.length; i++) {
+            if(list[i].checked==true){
+                listId.push(list[i].value);
+            }
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Workingday/DeleteListWorkingDaySupplement",
+            data: {
+                listId: listId,
+            },
+            success: function (response) {
+                if (response.result.Success==true) {
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    window.location.reload();
+                }
+                else{
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                }
+            }
+        });
+    }
+
+    function DeleteWorkingdaySuplement(id){
+        var listId=[];
+        listId.push(id);
+        $.ajax({
+            type: "POST",
+            url: "/Workingday/DeleteListWorkingDaySupplement",
+            data: {
+                listId: listId,
+            },
+            success: function (response) {
+                if (response.result.Success==true) {
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    window.location.reload();
+                }
+                else{
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                }
+            }
+        });
+    }
+
+    function showFormEditWorkingdaySuplement(id){
+
+        var options = {
+            id: 'frmAddWorkingdaySupplement',
+            isNotificationPoup: false,
+            align: "center",
+            url: '/Workingday/EditWorkingdaySupplement',
+            isDataTypeJson:true,
+            width: 600,
+            data: {id:id},
+            idform: 'frm-working-day-supplement',
+        };
+        CreatePopup(options);
+    }
+
+    function sendApproval() {
+        var listId = [];
+        var list = document.getElementsByName('chk-column-row');
+
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].checked==true) {
+                listId.push({ RequestId: list[i].value, RequestStatusId:323,RequestActionId:@MasterDataId.Submit })
+            }
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Workingday/SaveSubmitApproval",
+            data: {
+                listModel: listId,
+                isApproval:false,
+            },
+            success: function (response) {
+                if (response.result.Success==true) {
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    window.location.reload();
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                }
+            }
+        });
+    }
+</script>

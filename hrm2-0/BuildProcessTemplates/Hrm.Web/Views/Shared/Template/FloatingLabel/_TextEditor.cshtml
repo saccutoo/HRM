@@ -1,0 +1,47 @@
+﻿@model Hrm.Framework.Models.TextEditorModel
+@{
+    Layout = null;
+}
+<div class="hrm-v2-floating-form">
+    <div class="floating-label">
+
+        @if (Model.IsAnimationLabel)
+        {
+            if (Model.Type == "Number")
+            {
+                <input class="floating-input number-only" id="@Model.Name.ToLower().Replace(".","-").Replace("[", "").Replace("]", "")" value="@Model.Value" style="@Model.Style" name="@Model.Name" type="text" placeholder="@string.Format("{0}", " ")" onkeyup="@Model.OnChange" onfocus="@Model.OnFocus" onblur="@Model.OnBlur" @Model.Attribute>
+                <label for="@Model.Name">
+                    @Model.LabelName @if (Model.IsRequired)
+                    {<span class="star"> *</span> }
+                </label>
+            }
+            else
+            {
+                <input class="floating-input" id="@Model.Name.ToLower().Replace(".","-").Replace("[", "").Replace("]", "")" value="@Model.Value" style="@Model.Style" name="@Model.Name" type="@Model.Type" placeholder="@string.Format("{0}", " ")" onkeyup="@Model.OnChange" onfocus="@Model.OnFocus"  onblur="@Model.OnBlur" @Model.Attribute>
+                <label for="@Model.Name">
+                    @Model.LabelName @if (Model.IsRequired)
+                    {<span class="star"> *</span> }
+                </label>
+            }
+        }
+        else
+        {
+            if (Model.Type == "Number")
+            {
+                <input class="floating-input number-only" id="@Model.Name.ToLower().Replace(".","-").Replace("[", "").Replace("]", "")" name="@Model.Name" value="@Model.Value" style="@Model.Style" type="text" placeholder="@Model.PlaceHolder" onfocus="@Model.OnFocus" onblur="@Model.OnBlur" @Model.Attribute>
+            }
+            else
+            {
+                <input class="floating-input" id="@Model.Name.ToLower().Replace(".","-").Replace("[", "").Replace("]", "")" name="@Model.Name" value="@Model.Value" style="@Model.Style" type="@Model.Type" placeholder="@Model.PlaceHolder" onfocus="@Model.OnFocus"  onblur="@Model.OnBlur" @Model.Attribute>
+            }
+        }
+
+        <span name="@Model.Name-error" class="hrm-v2-error" label-name="@Model.LabelName"></span>
+    </div>
+</div>
+<script>
+    $(".number-only").inputFilter(function (value) {
+        return /^-?\d*[.,]?\d*$/.test(value);
+    });
+    $(".number-only").text("0")
+</script>

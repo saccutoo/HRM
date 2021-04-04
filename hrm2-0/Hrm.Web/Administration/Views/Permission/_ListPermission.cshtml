@@ -1,0 +1,295 @@
+﻿@model Hrm.Admin.ViewModels.MenuPermissionViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using System.Linq
+@using Hrm.Common;
+
+@{
+    Layout = null;
+}
+<style>
+    .permission-role-right-header .permission-role-right-header-right-icon {
+        cursor: pointer;
+    }
+
+    .tree-root, ul {
+        list-style-type: none;
+    }
+
+    .tree-root {
+        margin: 0;
+        padding: 0;
+    }
+
+    .tree-caret {
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        position: absolute;
+        left: -20px;
+        z-index: 999;
+        line-height: 43px;
+    }
+
+        .tree-caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+    .tree-caret-down::before {
+        -ms-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .nested {
+        display: none;
+    }
+
+    .active {
+        display: block;
+    }
+
+    .tree-root li {
+        cursor: pointer;
+    }
+</style>
+@helper RenderTree(long menuId)
+{
+var menus = Model.Menus.Where(s => s.ParentId == menuId).ToList();
+if (menus != null && menus.Count() > 0)
+{
+    foreach (var item in menus)
+    {
+        var menu = item;
+        var variableMenu = "M" + menu.ParentId.ToString();
+        var menuPermissions = Model.MenuPermissions;
+        bool check = true;
+        List<dynamic> listNode = new List<dynamic>();
+        var totalChild = 0;
+        var completed = 0;
+        if (menuPermissions != null)
+        {
+            listNode = menuPermissions.Where(x => x.MenuId == menu.Id).ToList();
+
+            if (listNode.Count() > 0)
+            {
+                totalChild = listNode.Count();
+                completed = listNode.Where(x => x.IsCheck).ToList().Count();
+            }
+        }
+        if (menu != null)
+        {
+                <li>
+                    <span class="tree-caret"></span>
+                    <div class="input-checkbox">
+                        @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-M" + menu.Id.ToString(), Value = "M" + menu.Id.ToString(), Attribute = "parent-id=" + variableMenu + (completed == totalChild && listNode.Count() > 0 ? " checked" : ""), OnClick = "check(this, " + "'M" + menu.Id + "', 'M" + menu.ParentId + "')" })
+                    </div>
+                    <div class="checkbox-title">
+                        <span class="hrm-v2-bold">@M(menu.Id.ToString() + ";" + DataType.Menu + ";MenuName").ToString().ToUpper()</span>
+                    </div>
+                    @if (listNode.Count() > 0)
+                    {
+                        <ul class="nested">
+                            @foreach (var node in listNode)
+                                {
+                                    if (node.PermissionId.Value != 0)
+                                    {
+
+                                    <li>
+                                        @{
+                                            var variablePermission = "M" + menu.Id.ToString();
+                                        }
+                                        <div class="input-checkbox">
+                                            @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-P" + node.Id.ToString(), Value = "P" + node.Id.ToString(), Attribute = "parent-id=" + variablePermission , OnClick = "check(this, 'P" + node.Id + "', 'M" + menu.Id + "')", Id = "cb-checklist-permission-user", AttributeValue = "value-id=" + node.Id, AttributeMenuValue = "menu-id=" + menu.Id ,AttributeCheck=(node.IsCheck == true ? " checked" : ""), })
+                                        </div>
+                                        <div class="checkbox-title">
+                                            <span>
+                                                @M(node.PermissionId.ToString() + ";" + DataType.Permission + ";PermissionName")
+                                            </span>
+                                        </div>
+                                        @{
+                                            var miniMenu = Model.Menus.Where(s => s.ParentId == menu.Id).ToList();
+                                            if (miniMenu != null && miniMenu.Count > 0)
+                                            {
+                                                @RenderTree(menu.Id.Value);
+                                            }
+                           }
+                                    </li>
+                               }
+                               else
+                                {
+
+                                    var miniMenu = Model.Menus.Where(s => s.ParentId == menu.Id).ToList();
+                                    if (miniMenu != null && miniMenu.Count > 0)
+                                    {
+                                        @RenderTree(menu.Id.Value);
+                                    }
+
+                               }
+
+                        }
+                        </ul>
+                    }
+
+                </li>
+          }
+    }
+
+}
+}
+
+@{
+    var staff = Model.Staff;
+    if (staff != null && Model.isView == true)
+    {
+        <div class="permission-role-right-header">
+            <div class="permission-role-right-header-left">
+                <span style="float:left;color: black;">@staff.Name</span>
+                <span style="float:left;font-size:12px;color: black;font-family: Roboto;line-height: 62px;margin-left:15px;">
+                    @M(staff.OrganizationId.ToString() + ";" + DataType.Organization + ";OrganizationName")
+                </span>
+            </div>
+            <div class="permission-role-right-header-right">
+                <div class="permission-role-right-header-right-icon" onclick="EditPermissionUser(@staff.Id)">
+                    <span class="fas fa-pencil-alt"></span>
+                </div>
+                <div class="permission-role-right-header-right-icon" onclick="DeletePermissionUser(@staff.Id)">
+                    <span class="fas fa-trash-alt" style="color:red"></span>
+                </div>
+            </div>
+        </div>
+    }
+}
+@{
+    var role = Model.Role;
+    if (role != null && Model.isView == true)
+    {
+        <div class="permission-role-right-header">
+            <div class="permission-role-right-header-left">
+                <span>@role.Name</span>
+            </div>
+            <div class="permission-role-right-header-right">
+                <div class="permission-role-right-header-right-icon" onclick="EditPermissionRole(@role.Id)">
+                    <span class="fas fa-pencil-alt"></span>
+                </div>
+                <div class="permission-role-right-header-right-icon" onclick="DeletePermissionRole(@role.Id)">
+                    <span class="fas fa-trash-alt" style="color:red"></span>
+                </div>
+            </div>
+        </div>
+        <div class="permission-role-right-description">
+            <span>@role.Description</span>
+        </div>
+        <div class="permission-role-right-title-permission">
+            <span>@T("Permission.ListPermission")</span>
+        </div>
+    }
+}
+<div class="permission-role-right-body checkbox-tree hrm-v2-scroll tree-root">
+    @{
+        var menus = Model.Menus;
+        if (menus != null && menus.Count > 0)
+        {
+            var menuParents = menus.Where(s => s.ParentId == 0).ToList();
+            foreach (var menu in menuParents)
+            {
+                <div class="permission-role-right-body-content">
+                    <div class="permission-role-right-body-list-content">
+                        @*<div class="title-list-content">
+                                <span>@M(menu.Id.ToString() + ";" + DataType.Menu + ";MenuName").ToString().ToUpper()</span>
+                            </div>*@
+                        <div class="title-list-content-ul">
+                            <ul>
+                                <li>
+                                    @{
+                                        var variableMenu = "M" + menu.ParentId.ToString();
+                                        var menuPermissions = Model.MenuPermissions;
+                                        List<dynamic> listNode = new List<dynamic>();
+                                        var totalChild = 0;
+                                        var completed = 0;
+                                        if (menuPermissions != null)
+                                        {
+                                            listNode = menuPermissions.Where(x => x.MenuId == menu.Id).ToList();
+                                            if (listNode.Count() > 0)
+                                            {
+                                                totalChild = listNode.Count();
+                                                completed = listNode.Where(x => x.IsCheck).ToList().Count();
+                                            }
+                                        }
+                                    }
+                                          
+                                    <span class="tree-caret"></span>                
+                                    <div class="input-checkbox">
+                                        @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-M" + menu.Id.ToString(), Value = "M" + menu.Id.ToString(), Attribute = "parent-id=" + variableMenu , OnClick = "check(this, " + "'M" + menu.Id + "', 'M" + menu.ParentId + "')" })
+                                    </div>
+                                    <div class="checkbox-title">
+                                        <span class="hrm-v2-bold">@M(menu.Id.ToString() + ";" + DataType.Menu + ";MenuName").ToString().ToUpper()</span>
+                                    </div>
+                                    @if(listNode!=null && listNode.Count()>0)
+                                    {
+                                        <ul class="nested">
+                                            @foreach (var node in listNode)
+                                            {
+                                                if (node.PermissionId.Value != 0)
+                                                {
+                                                    <li>
+                                                        @{
+                                                            var variablePermission = "M" + menu.Id.ToString();
+                                                        }
+                                                        <div class="input-checkbox">
+                                                            @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-P" + node.Id.ToString(), Value = "P" + node.Id.ToString(), Attribute = "parent-id=" + variablePermission + (node.IsCheck == true ? " checked" : ""), OnClick = "check(this, 'P" + node.Id + "', 'M" + menu.Id + "')", Id = "cb-checklist-permission-user", AttributeValue = "value-id=" + node.Id, AttributeMenuValue = "menu-id=" + menu.Id })
+                                                        </div>
+                                                        <div class="checkbox-title">
+                                                            <span>
+                                                                @M(node.PermissionId.ToString() + ";" + DataType.Permission + ";PermissionName")
+                                                            </span>
+                                                        </div>
+                                                       
+                                                    </li>
+                                               }                                            
+                                          }
+                                            @{
+                                                var miniMenu = Model.Menus.Where(s => s.ParentId == menu.Id).ToList();
+                                                if (miniMenu != null && miniMenu.Count > 0)
+                                                {
+                                                    @RenderTree(menu.Id.Value)
+                                                }
+                                            }
+                                        </ul>
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+             }
+          }
+    }
+
+</div>
+<script>
+    var toggler = document.getElementsByClassName("tree-caret");
+    for (var i = 0; i < toggler.length; i++) {
+        toggler[i].addEventListener("click", function () {
+            this.parentElement.querySelector(".nested").classList.toggle("active");
+            this.classList.toggle("tree-caret-down");
+        });
+    }
+    $(document).ready(function () {
+        debugger
+        var listInput = $('.chk_column');
+        for (var i = 0; i < listInput.length; i++) {
+            if (listInput[i].checked == true) {
+                var id = listInput[i].getAttribute('id');
+                var value = listInput[i].getAttribute('value');
+                var parentId = listInput[i].getAttribute('parent-id');
+                check($('#' + id), value, parentId);
+            }          
+        }
+    })
+</script>

@@ -1,0 +1,8 @@
+﻿@model Hrm.Framework.Models.PropertyField
+@{
+    <div class="hrmv2-property-field width-100-percent">
+        <div class="width-100-percent property-label">@Model.Label &emsp; @Html.Raw(Model.LabelIcon ?? "")</div>
+        <div class="width-100-percent property-text" style="@Model.StyleValue">@Model.Text</div>
+        
+    </div>
+}

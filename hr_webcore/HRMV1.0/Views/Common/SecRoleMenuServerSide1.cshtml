@@ -1,0 +1,50 @@
+﻿<style>
+    table tr td {
+        text-align: center;
+    }
+
+    table th {
+        text-align: center;
+    }
+
+    .show-total {
+        color: blue;
+    }
+</style>
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.3.911/styles/kendo.-material.min.css" />
+<link href="~/js/Kendo UI/kendo.common-material.min.css" rel="stylesheet" />
+<link href="~/js/Kendo UI/kendo.material.min.css" rel="stylesheet" />
+<link href="~/js/Kendo UI/kendo.material.mobile.min.css" rel="stylesheet" />
+<script src="~/js/Kendo UI/jquery.min.js"></script>
+<script src="~/js/Kendo UI/kendo.all.min.js"></script>
+<script src="~/js/Kendo UI/jquery.easing.min.js"></script>
+<style>
+    .demo-section {
+        display: block;
+        border: 1px solid none;
+        padding: 5px;
+        margin-top: 5px;
+        width: auto;
+        height: 500px;
+        overflow: scroll;
+    }
+</style>
+<div class="col-lg-12">
+    <div class="col-md-12">
+        <h3 style="text-transform: none; margin-top:5px;">Lựa chọn Menu</h3>
+        <div class="demo-section k-content">
+            <div class="demo1" id="demo">
+                <div id="treeview" data-collapsed="true"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<button type="button" class="btn btn-danger" onclick="tai_lai_trang()" style="margin-left:0px; margin-top:20px;">Bỏ qua</button>
+
+<script>
+        function tai_lai_trang(){
+            location.reload();
+        }
+</script>

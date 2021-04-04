@@ -1,0 +1,47 @@
+﻿@model List<Hrm.Framework.Models.EmailModel>
+
+@{
+    Layout = null;
+}
+
+@{
+    var datas = Model;
+    if (datas.Count > 0 && datas != null)
+    {
+        foreach (var item in datas)
+        {
+            <div class="category-email" onclick="clickEmail(@item.Id)">
+                <div class="category-email-name">
+                    <span>@item.Name</span>
+                </div>
+                <div class="category-email-content">
+                    <span>
+                        @{
+                            var content = item.ContentTemplate;
+                            if (item.ContentTemplate != null)
+                            {
+                                if (item.ContentTemplate.Length > 20)
+                                {
+                                    content = item.ContentTemplate.Substring(0, 20);
+                                }
+
+                            }
+                        }
+                        @content
+                    </span>
+                </div>
+                @if (item.CountAttach > 0)
+                {
+                    <div class="category-email-attchment">
+                        <div class="count-file">
+                            @item.CountAttach
+                        </div>
+                        <div class="icon-attch">
+                            <span class="fas fa-paperclip"></span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+}  

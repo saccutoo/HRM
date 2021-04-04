@@ -1,0 +1,96 @@
+﻿@model Hrm.Admin.ViewModels.WelcomeKitViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@using Hrm.Framework.Context
+@{
+    ViewBag.Title = "WelcomeKit";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+} 
+<!--Add Css View-->
+<link href="@Url.Content("~/Content/hrm-v2/_staffdetails.css?v=" + timeVersion)" rel="stylesheet" type="text/css" />
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><a href="/Admin/Checklist/List" class="bread-crumb-item">@T("Checklist.ProbationaryReception")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><span class="bread-crumb-item">@T("Checklist.WelcomKit")</span>
+    @if (Model.isSendWelcomeKit == true && Model.ActiveTab==0)
+    {
+        <span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><span class="bread-crumb-item">@T("Checklist.SendWelcomeKit")</span>
+    }
+    else if(Model.isSendWelcomeKit == false && Model.ActiveTab == 0)
+    {
+        <span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><span class="bread-crumb-item">@T("Setting.Email")</span>
+    }
+    
+    @if (Model.ActiveTab == 1)
+    {
+        <span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><span class="bread-crumb-item">@T("Checklist.Document")</span>
+    }
+    <div class="pull-right" style="padding:15px 0px;">
+        @if (Model.isSendWelcomeKit)
+        {
+            <a type="button" class="hrm-v2-btn-save pull-left" href="/staff-onboarding?viewtype=list" style="display:block;text-align:center">@T("WelcomeKit.Button.ComeBack")</a>
+        }
+        else
+        {
+            <a class="hrm-v2-btn-save pull-left" style="display:block;text-align:center" onclick="showFormAddocument()">@T("System.Button.Add")</a>
+        }
+    </div>
+</div>
+<div class="col-md-12 hrm-v2-inline-block pd-l-0">
+    <div id="welcom-kit-view">
+        <div class="hrmv2-tab">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                @if (Model.ActiveTab == 0)
+                {
+                    <li class="nav-item active in" index="0" onclick="changeView(0)">
+                        <a class="nav-link" id="send-wellcome-kit-tab" data-toggle="tab" data-target="#send-wellcome-kit" role="tab" aria-controls="send-wellcome-kit" aria-selected="true">@T("Checklist.EmailWelcome")</a>
+                    </li>
+                    <li class="nav-item" index="1">
+                        <a class="nav-link" id="document-tab" data-toggle="tab" data-target="#document" role="tab" aria-controls="document" aria-selected="false" onclick="changeView(1)">@T("Checklist.Document")</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item " index="0" onclick="changeView(0)">
+                        <a class="nav-link" id="send-wellcome-kit-tab" data-toggle="tab" data-target="#send-wellcome-kit" role="tab" aria-controls="send-wellcome-kit" aria-selected="true">@T("Checklist.EmailWelcome")</a>
+                    </li>
+                    <li class="nav-item active in" index="1">
+                        <a class="nav-link" id="document-tab" data-toggle="tab" data-target="#document" role="tab" aria-controls="document" aria-selected="false" onclick="changeView(1)">@T("Checklist.Document")</a>
+                    </li>
+                }
+
+            </ul>
+            <div class="tab-content pd-0" id="myTabContent-add">
+                    @if (Model.ActiveTab == 0)
+                    {
+                        <div  id="send-wellcome-kit" role="tabpanel" aria-labelledby="send-wellcome-kit-tab">
+                            <div style="width:80%;padding:30px;padding-top:15px">
+                                @Html.Partial(UrlHelpers.Template("_SendMail.cshtml"), Model.EmailDetail)
+                            </div>
+                        </div>
+                    }
+                    else if (Model.ActiveTab == 1)
+                    {
+                        <div  id="attachment-document" role="tabpanel" aria-labelledby="document-tab">
+                            <div style="width:80%;padding:30px;padding-top:15px">
+                                @{ 
+                                    Model.Attachment.ActiveTab = Model.ActiveTab;
+                                }
+                                @Html.Partial(UrlHelpers.TemplateAdmin("Checklist", "_Document.cshtml"), Model.Attachment)
+                            </div>
+                        </div>
+                    }
+                   
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function changeView(activeTab) {
+        window.location = "/Admin/Checklist/AddWelcomeKit?activeTab=" + activeTab;
+    }
+    function showFormAddocument() {
+        window.location = "/Admin/Checklist/AddWelcomeKit?activeTab=" + activeTab +"&isAdd=true";
+    }
+</script>
+

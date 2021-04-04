@@ -1,0 +1,82 @@
+﻿@using Hrm.Admin.ViewModels
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@{
+    ViewBag.Title = "PersonnelTransfer";
+}
+<style>
+    .personnel-transfer .notification {
+        height: 40px;
+        border: 1px solid #ccc;
+        line-height: 40px;
+        border-radius: 5px;
+        text-align:left
+    }
+
+        .personnel-transfer .notification span {
+            margin-left: 10px;
+        }
+     .padding{
+         padding:0px;
+     }
+
+     .notification{
+         height: 55px;
+         border: 1px solid #ccc;
+     }
+
+     .notification .left-icon{
+         float:left;
+         width:40px;
+         margin-top: 11px;
+     }
+    
+     .notification .right-lable{
+         float:left;
+         width:455px;
+         text-align:left;
+         margin-top: 8px;
+     }
+</style>
+
+<div>
+    <div class="hrm-v2-modal-header">@T("Organization.PersonnelTransfer")</div>
+    <div class="hrm-v2-modal-body">
+        <div >
+            <form class=".personnel-transfer" style="text-align:center">
+                <div class="col-md-12 notification form-group padding">
+                    <div class="left-icon">
+                        <i class="fa fa-info-circle"></i>
+                    </div>
+                    <div class="right-lable">
+                        <span>
+                            @T("Organization.NotificationPersonnelTransfer")
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-12 padding">
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.Template("_DropdownList.cshtml"), new DropdownListModel() { Name = "personnel-transfer-status", IsUseImage = false, ValueField = "Id", Style = "width:239px; ", DisplayField = "OrganizationName", Data = Model.Organizations, AngularModel = "PersonnelTransfer.OrganizationId" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.Template("_TextEditor.cshtml"), new TextEditorModel() { Name = "Note", PlaceHolder = "Organization.Note", Style = "padding: 4px;width:100%; ", AngularModel = "PersonnelTransfer.Note" })
+                        </div>
+                    </div>
+                </div>
+                <div style="clear:both;display:inline-block">
+                    <div style="float:left;margin-right: 10px;">
+                        @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Organization.Close", Style = "width:100px;height:38px;" })
+                    </div>
+                    <div style="float:left;margin-right: 10px;">
+                        @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-organization", NgClick = "SavePersonnelTransfer()", Value = "Organization.Save", Style = "width:100px;height:38px;", Type = "button" })
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+

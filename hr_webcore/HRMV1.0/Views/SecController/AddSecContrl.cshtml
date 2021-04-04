@@ -1,0 +1,27 @@
+﻿
+<div class="container-fluid">
+
+    <div id="AddContent" class="row" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel panel-default">
+                <div class="panel-heading">Thêm mới</div>
+                <div class="panel-body">
+                    <form role="form" name="SaveForm" ng-submit="AddAction(tableInfo.AddUrl)">
+                        <div class="form-group {{(SaveForm.controllername.$dirty && SaveForm.controllername.$invalid) ? 'has-error' : ''}}">
+                            <label>Controller Name <span style="color: red">*</span></label>
+                            <input required type="text" data-modal="modal" name="controllername" placeholder="Enter controller name" class="form-control" ng-pattern="/^[a-zA-Z]{1,25}$/" ng-model="editData.ControllerName" />
+                        </div>
+                       
+                        <button type="submit" class="btn btn-labeled btn-success">
+                            <span class="btn-label">
+                                <i class="fa fa-save"></i>
+                            </span>Thêm mới
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>

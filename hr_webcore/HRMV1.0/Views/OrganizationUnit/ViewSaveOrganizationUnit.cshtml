@@ -1,0 +1,264 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common;
+<div class="container-fluid">
+    <div id="SaveContent" class="row" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-body">
+                    <h3 ng-hide=is_add>@AppRes.OrganizationUnitDetail</h3>
+                    <h3 ng-show=is_add>@AppRes.OrganizationUnitAdd</h3>
+                    <hr />
+                    <form role="form" name="SaveForm" ng-submit="SaveAction(tableInfo.AddUrl,SaveForm)">
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>@AppRes.OrganazationUnitCode <span style="color: red"> (*)</span></label>
+                                </div>
+                                <div class="col-md-4 no-padding">
+                                    <input ng-readonly=is_edit type="text" name="OrganizationUnitCode" class="form-control" ng-model="editData.OrganizationUnitCode" ng-pattern="/^[a-zA-Z0-9\.]*$/" required ng-trim="false" />
+                                    <span style="color:red" ng-show="SaveForm.OrganizationUnitCode.$dirty&&SaveForm.OrganizationUnitCode.$error.pattern">
+                                        Do not contain special characters!
+                                    </span>
+                                    <span ng-show=is_MaPB style="color: red">
+                                        Coincident OrganazationUnitCode!
+                                    </span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>@AppRes.ContactTypeID <span ng-hide=is_edit style="color: red"> (*)</span></label>
+                                </div>
+                                <div class="col-md-4 no-padding">
+                                    <select chosen options="getListDS_BUID" on-no-result="doStuff" required ng-readonly=is_edit class="form-control" ng-model="editData.Type" ng-options="list.GlobalListID as list.Name for list in getListDS_BUID">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <option value="" disabled selected>--Chọn--</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="" disabled selected>--Select</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="padding-bottom:10px"></div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>@AppRes.DecentralizationOfCustomer<span ng-hide=is_edit style="color: red"> (*)</span></label>
+                                </div>
+                                <div class="col-md-4 no-padding">
+                                    <select chosen options="getListCompany" on-no-result="doStuff" required ng-readonly=is_edit class="form-control" ng-model="editData.CompanyType" ng-options="list.GlobalListID as list.Name for list in getListCompany">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <option value="" disabled selected>--Chọn--</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="" disabled selected>--Select</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>@AppRes.TitleUnder</label>
+                                </div>
+                                <div class="col-md-4 no-padding">
+                                    <select chosen options="getListOrganizationUnit" on-no-result="doStuff" ng-readonly=is_edit class="form-control" ng-model="editData.ParentID" ng-options="list.OrganizationUnitID as list.Name for list in getListOrganizationUnit">
+                                       @if (Global.CurrentLanguage == 5)
+                                       {
+                                        <option value="" disabled selected>--Chọn--</option>
+                                       }
+                                       else
+                                       {
+                                        <option value="" disabled selected>--Select</option>
+                                       }
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="padding-bottom:10px"></div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>@AppRes.Company<span ng-hide=is_edit style="color: red"> (*)</span></label>
+                                </div>
+                                <div class="col-md-4 no-padding">
+                                    <select chosen options="getCompany" on-no-result="doStuff" required ng-readonly=is_edit class="form-control" ng-model="editData.DS_CompanyID" ng-options="list.OrganizationUnitID as list.Name for list in getCompany">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <option value="" disabled selected>--Chọn--</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="" disabled selected>--Select</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>@AppRes.Email</label>
+                                </div>
+                                <div class="col-md-4 no-padding">
+                                    <input ng-readonly=is_edit class="form-control" ng-pattern="emailValid" name="Email" type="text" ng-model="editData.Email" />
+                                    <span style="color:red" ng-show="SaveForm.Email.$error.pattern">
+                                        Please Enter Valid Email!
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div style="padding-bottom:10px"></div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>@AppRes.StatusName<span style="color: red"> (*)</span></label>
+                                </div>
+                                <div class="col-md-4 no-padding">
+                                    
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select chosen options="getListStatus" on-no-result="doStuff" ng-readonly=is_edit required="required" class="form-control" ng-model="editData.Status" ng-options="list.Value as list.Name for list in getListStatus">
+                                            <option value="" disabled selected>--Chọn--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select chosen options="getListStatus" on-no-result="doStuff" ng-readonly=is_edit required="required" class="form-control" ng-model="editData.Status" ng-options="list.Value as list.NameEN for list in getListStatus">
+                                            <option value="" disabled selected>--Select--</option>
+                                        </select>
+                                    }
+                                </div>
+                                <div class="col-md-2">
+                                    <label>@AppRes.Mobile</label>
+                                </div>
+                                <div class="col-md-4 no-padding">
+                                    <input ng-readonly=is_edit class="form-control" maxlength="12" ng-pattern="/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/" name="Phone" type="text" ng-model="editData.Phone" />
+                                    <span style="color:red" ng-show="SaveForm.Phone.$error.pattern">
+                                        Please Enter Valid Phone Number!
+                                    </span>
+                                    <span style="color:red" ng-show="isphone">
+                                        Please Enter Valid Phone Number!
+                                    </span>
+                                </div>
+                            </div>
+                            <div style="padding-bottom:10px"></div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>@AppRes.NameVi</label><span style="color: red"> (*)</span>
+                                </div>
+                                <div class="col-md-4 no-padding">
+                                    <input ng-readonly=is_edit required class="form-control" name="Name" type="text" ng-model="editData.Name" />
+                                    <span ng-show=is_TenPBSpecial style="color: red">
+                                        Do not contain special characters!
+                                    </span>
+                                    <span ng-show=is_TenPB style="color: red">
+                                        Coincident NameVi!
+                                    </span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>
+                                        @AppRes.CommitmentBudgetLimit
+                                        <i class="fa fa-question-circle" data-toggle="tooltip" title="@AppRes.CommitmentBudgetLimitToolTip" style="font-size:18px;color:blue"></i>
+                                        <script>
+                                            $(document).ready(function () {
+                                                $('[data-toggle="tooltip"]').tooltip();
+                                            });
+                                        </script>
+                                    </label>
+                                </div>
+                                <div class="col-md-4 no-padding"><input ng-disabled="currentRoleId!=1" class="form-control" name="CommitmentBudgetLimit" type="text" ng-model="editData.CommitmentBudgetLimit" /></div>
+                            </div>
+                            <div style="padding-bottom:10px"></div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>@AppRes.NameEn</label><span style="color: red"> (*)</span>
+                                </div>
+                                <div class="col-md-4 no-padding">
+                                    <input ng-readonly=is_edit required class="form-control" name="NameEN" type="text" ng-pattern="/^[0-9a-zA-Z.\s]*$/" ng-model="editData.NameEN" />
+                                    <span style="color:red" ng-show="SaveForm.NameEN.$error.pattern">
+                                        Do not contain special characters!
+                                    </span>
+                                    <span ng-show=is_TenENPB style="color: red">
+                                        Coincident NameEn!
+                                    </span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>@AppRes.CurrencyType</label>
+                                </div>
+                                <div class="col-md-4 no-padding">
+                                    
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select chosen options="getListCurrencyType" on-no-result="doStuff" class="form-control" ng-model="editData.CurrencyTypeID" ng-options="list.GlobalListID as list.Name for list in getListCurrencyType">
+                                            <option value="" disabled selected>--Chọn--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select chosen options="getListCurrencyType" on-no-result="doStuff" class="form-control" ng-model="editData.CurrencyTypeID" ng-options="list.GlobalListID as list.NameEN for list in getListCurrencyType">
+                                            <option value="" disabled selected>--Select--</option>
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                            <div style="padding-bottom:10px"></div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>@AppRes.ByUnit<span style="color: red"> (*)</span></label>
+                                </div>
+                                <div class="col-md-4 no-padding">
+
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select chosen options="getListUnit" on-no-result="doStuff" ng-readonly=is_edit required="required" class="form-control" ng-model="editData.DS_UnitID" ng-options="list.GlobalListID as list.Name for list in getListUnit">
+                                            <option value="" disabled selected>--Chọn--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select chosen options="getListUnit" on-no-result="doStuff" ng-readonly=is_edit required="required" class="form-control" ng-model="editData.DS_UnitID" ng-options="list.GlobalListID as list.NameEN for list in getListUnit">
+                                            <option value="" disabled selected>--Select--</option>
+                                        </select>
+                                    }
+                                </div>
+                                <div class="col-md-2">
+                                    <label>@AppRes.decentralization<span style="color: red"> (*)</span></label>
+                                </div>
+                                <div class="col-md-4 no-padding">
+
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select chosen options="getListRole" on-no-result="doStuff" ng-readonly=is_edit required="required" class="form-control" ng-model="editData.RoleId" ng-options="list.RoleID as list.Name for list in getListRole">
+                                            <option value="" disabled selected>--Chọn--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select chosen options="getListRole" on-no-result="doStuff" ng-readonly=is_edit required="required" class="form-control" ng-model="editData.RoleId" ng-options="list.RoleID as list.NameEN for list in getListRole">
+                                            <option value="" disabled selected>--Select--</option>
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                            <div style="padding-bottom:10px"></div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="checkbox" name="vehicle1" value="Bike" ng-checked="editData.IsImplementationReport" ng-model="editData.IsImplementationReport"> @AppRes.report<br>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:20px">
+                                <div class="col-md-5 col-md-push-5">
+                                    <button type="submit" class="btn btn-labeled btn-success" ng-if="results === '1'">
+                                        <span class="btn-label">
+                                            <i class="fa fa-save"></i>
+                                        </span>@AppRes.btnUpdate
+                                    </button>
+                                    <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                        <span class="btn-label">
+                                            <i class="fa fa-close"></i>
+                                        </span>@AppRes.btnCancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- END panel-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

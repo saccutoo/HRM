@@ -1,0 +1,22 @@
+﻿@model Hrm.Framework.Models.TagsInputModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@{
+    Layout = null;
+    var cssName = Model.Name.Replace(".", "-").Replace("[", "").Replace("]", "-");
+}
+<div class="hrm-v2-floating-form">
+    <div class="floating-label">
+        <input id="@cssName" name="@cssName" type="text"  value = '@Model.Value' >
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#@cssName').tagsInput({
+            placeholder: 'Add a tag',
+            delimiter: ','
+        });
+    });
+</script>

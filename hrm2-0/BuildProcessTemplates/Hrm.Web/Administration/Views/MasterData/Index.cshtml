@@ -1,0 +1,298 @@
+﻿@model Hrm.Admin.ViewModels.MasterDataViewModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@{
+    ViewBag.Title = "Master data";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    //var timeVersion = "140320181446";
+    var str = string.Empty;
+}
+<style>
+    .table-content tr td {
+        max-width: 150px;
+    }
+
+    .pull-right #language-list {
+        float: left;
+        margin-top: 15px;
+    }
+
+    .table-master-data .hrmv2-scroll .Action.ellipsis {
+        z-index: 10;
+        top: 5px;
+    }
+
+    .system-table-tbody-MasterData {
+    }
+    /*<LONGDT>*/
+
+    .gereral-right .position {
+        margin: 0;
+        height: 60px;
+        line-height: 60px;
+    }
+
+    .table-master-data {
+        height: calc(100% - 60px);
+    }
+
+        .table-master-data .col-md-12 {
+            height: 88%;
+        }
+
+    .category-body {
+        height: calc(100% - 50px);
+    }
+
+    .category-body-ul.hrm-v2-scroll {
+        position: relative;
+    }
+
+    .table-master-data .col-md-12 {
+        height: 88%;
+        overflow: unset;
+    }
+
+    .table-master-data .table-content.hrm-v2-table {
+        height: 100%;
+    }
+    /*.table-content.hrm-v2-table tr.system-table-tr{
+        position: relative;
+    }
+    .table-content.hrm-v2-table tr td{
+        position: absolute;
+    }*/
+    /*td .action-table {
+        position: fixed;
+        right: 30px;
+    }*/
+
+    .table-content.hrm-v2-table tr:hover .action-table {
+        display: block;
+    }
+
+    @@media only screen and (max-width: 1366px) {
+        .table-master-data .col-md-12 {
+            height: 50%;
+            overflow: unset;
+        }
+
+        .category-body-ul {
+            height: 54%;
+        }
+    }
+
+    .Action .action-grid {
+        margin: 5px 5px;
+    }
+    /*</LONGDT>*/
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Setting.Category")</span>
+    <div class="pull-right">
+
+        @*@Html.Partial(UrlHelpers.Template("_DropdownList.cshtml"), new DropdownListModel() { Name = "language-list", IsUseImage = true, ValueField = "Id", Style = "width:160px;height:32px", DisplayField = "Name", Data = Model.Languages })*@
+
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + Html.Raw(Json.Encode(Model.Table.TableConfigName)) + "," + Html.Raw(Json.Encode(Model.Table.TableName)) + ", 0, masterDataId)" })
+
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + Html.Raw(Json.Encode(Model.Table.TableConfigName)) + "," + Html.Raw(Json.Encode(Model.Table.TableName)) + ", 1, masterDataId)" })
+
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormAddMasterData()" })
+    </div>
+</div>
+<div class="col-md-12" style="padding: 12px 37px 12px 30px;">
+    @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("MasterData.Category").ToString(), WidthSecitonName = "150px", WidthSectionIconRight = "0px" })
+</div>
+<div class="gereral">
+    <div class="gereral-left">
+        <div class="category-right-serach">
+            <div class="category-right-icon-search">
+                <i class="fa fa-search"></i>
+            </div>
+            <div class="category-right-input-search">
+                <input placeholder="@T("MasterData.CategorySearch")" type="text" onkeypress="searchCategory($(this).val())" onkeyup="searchCategory($(this).val())" />
+            </div>
+
+        </div>
+        <button class="button-add" onclick="ShowFormAddMasterDataFarther()">@T("Organization.Add")</button>
+        <div class="category-body">
+            <div class="category-body-ul hrm-v2-scroll">
+                <div id="category-body-ul-id">
+                    @Html.Partial("~/Administration/Views/MasterData/_CategoryMasterData.cshtml", Model.MasterDatas)
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="gereral-right">
+        <h3 class="position" id="position">
+            @M(Model.MasterDatas[0].Id.ToString() + ";" + DataType.MasterData + ";Name")
+        </h3>
+        <div class="table-master-data" id="table-master-data">
+            @{
+                var table = Model.Table;
+                table.ItemsPerPage = 20;
+                table.CurrentPage = 1;
+                table.TableDataUrl = "Admin/MasterData/GetData";
+            }
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), table)
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var checkAdd=true;
+    var masterDataId =@Html.Raw(Model.GroupId); //51 //56
+    filterStr='AND GroupId='+masterDataId;
+
+    var tableName='@Html.Raw(Model.Table.TableName)';
+    $('.category-body-ul li:first').addClass('active');
+    $(document).on('click', '.category-body-ul li', function () {
+        $('.category-body-ul li').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    function ClickCategory(Id){ //56
+        masterDataId=Id;
+        filterStr='AND GroupId='+masterDataId;
+        $.ajax(
+      {
+          type: "POST",
+          url: "/Admin/MasterData/GetAllMasterData",
+          data: {
+              PageNumber:$("#" + tableName + "-paging-current-page").val(),
+              PageSize: $("#" + tableName + "-paging-items-per-page").val(),
+              GroupId:Id,
+              FilterField:''
+          },
+          success: function (response) {
+              $("#table-master-data").html(response);
+              var str=Id+";"+'@DataType.MasterData'+";Name";
+              $.ajax(
+              {
+                  type: "POST",
+                  url: "/Admin/MasterData/GetLocalizedData",
+                  data: {
+                      str:str
+                  },
+                  success: function (response) {
+                      $(".gereral-right #position").text(response.response);
+                  }
+              });
+          }
+      });
+    }
+    function ShowFormAddMasterData(){
+        checkAdd=true;
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/MasterData/ShowFormAddMasterData',
+            width: 600,
+            isNotificationPoup: true,
+            align: "center",
+            data: '{groupId: ' + masterDataId + '}',
+            idform: 'frmAddOrEditContract',
+            //urlback: '/Contract/GetContractCoaInfoList',
+            //databack: '{contractId:' + contractId + '}',
+            //divload: 'GridContractCoaInfo',
+            //fnNameReload: 'ResetSelectCoaInfo'
+        };
+        CreatePopup(options);
+    }
+
+    function ShowFormAddMasterDataFarther(){
+        checkAdd=true;
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/MasterData/ShowFormAddMasterData',
+            width: 600,
+            isNotificationPoup: true,
+            align: "center",
+            idform: 'frmAddOrEditContract',
+            //urlback: '/Contract/GetContractCoaInfoList',
+            //databack: '{contractId:' + contractId + '}',
+            //divload: 'GridContractCoaInfo',
+            //fnNameReload: 'ResetSelectCoaInfo'
+        };
+        CreatePopup(options);
+    }
+
+    function ShowEditFormEditMasterData(Id){
+        checkAdd=false;
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/MasterData/ShowFormEditMasterData',
+            width: 600,
+            isNotificationPoup: true,
+            align: "center",
+            data: '{id: ' + Id + '}',
+            idform: 'frmAddOrEditContract',
+        };
+        CreatePopup(options);
+    }
+
+    function DeleteMasterData(Id){
+        bootbox.confirm({
+            message: '@T("Message.Delete.QuestionDelete")',
+            buttons: {
+                confirm: {
+                    label: '@T("Message.Delete.Yes")',
+                    className: 'hrm-v2-btn-save'
+                },
+                cancel: {
+                    label: '@T("Message.Delete.No")',
+                    className: 'hrm-v2-btn-close'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax(
+                     {
+                         type: "POST",
+                         url: "/Admin/MasterData/DeleteMasterData",
+                         data: {
+                             id:Id
+                         },
+                         success: function (response) {
+                             if (response.Success==true) {
+                                 if (@Model.GroupId!=0) {                                   
+                                     ClickCategory(masterDataId);
+                                 }
+                                 else{
+                                     $("#category-body-ul-id").load('/Admin/MasterData/ReloadCategory');
+                                 }
+                                 ShowMessage(response.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                             }
+                             else {
+                                 ShowMessage(response.Success, msgFalse, response.responeseResources, 500, 3000);
+                             }
+                         }
+                     });
+                }
+            }
+        });
+
+    }
+
+    var timeout;
+    function searchCategory(searchKey)
+    {
+        if (event.which == 13)
+        {
+            Search("/Search/SearchMasterDataCategory", searchKey, "category-body-ul-id");
+        }
+        else
+        {
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                Search("/Search/SearchMasterDataCategory", searchKey, "category-body-ul-id");
+            }, 500);
+        }
+    }
+</script>
+
+

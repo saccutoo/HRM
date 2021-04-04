@@ -1,0 +1,304 @@
+﻿@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Admin.ViewModels.WorkingdaySupplementConfigurationViewModel
+
+@{
+    ViewBag.Title = "Luồng duyệt";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+
+<style>
+    #mySETab {
+        padding: 0px 37px 0px 26px;
+    }
+
+        #mySETab .nav-item {
+            width: 9%;
+            text-align: center;
+        }
+
+        #mySETab .nav-link {
+            color: #000;
+        }
+
+        #mySETab .active a, #mySETab .active a:active, #mySETab .active a:focus, #mySETab .active a:hover {
+            background: none;
+            color: #2CA01C;
+            border-radius: 0;
+            border-bottom: 5px solid #2CA01C;
+        }
+
+    .gereral-left {
+        text-align: left;
+    }
+
+    .gereral-right .permission-role-content {
+        text-align: left;
+    }
+
+    #permission-role-content {
+        width: 91%;
+    }
+
+    .permission-role-filter, .permission-role-header {
+        margin: 0;
+    }
+
+    .checkbox-tree {
+        max-height: 730px;
+        overflow: auto;
+        border: 1px solid #7C7C7C;
+        border-radius: 5px;
+    }
+
+    .gereral-right {
+        background-color: whitesmoke;
+        padding: 0px;
+    }
+
+        .gereral-right .permission-role-right-body {
+            background-color: whitesmoke;
+            border: none;
+            background: white;
+        }
+
+    .permission-role-list-content {
+        height: 55px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .system-table-tbody-WorkingdaySupplementConfigurationException, .system-table-tbody-WorkingdaySupplementConfiguration {
+        display: inherit;
+    }
+
+    #table-workingday-supplement-configuration-exception-row-0 .hrm-v2-td-template span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item" style="color: #888;"> @T("Setting.Setting")</a>
+    <span class="bread-crumb-item" style="color: #888;">
+        &nbsp; &gt; &nbsp;
+    </span>
+    <a href="/admin" class="bread-crumb-item" style="color: #888;"> @T("WorkingDay.BreadCrumb.ApprovalFlow")</a>
+    <span class="bread-crumb-item">&nbsp; &gt; &nbsp;@T("Table.Title.WorkingdaySupplement")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormAddWorkingdaySupplementConfiguration()" })
+    </div>
+</div>
+<ul class="nav nav-pills" id="mySETab" role="tablist">
+    <li class="nav-item active" index="0" onclick="DefaultTabClick()">
+        <a class="nav-link active" data-toggle="pill" href="#default">@T("Tab.Default")</a>
+    </li>
+    <li class="nav-item" index="0" onclick="ExceptionTabClick()">
+        <a class="nav-link" data-toggle="pill" href="#exception">@T("Tab.Exception")</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div id="default" class="container tab-pane active">
+        <div class="gereral" id="nav-tabContent">
+            <div class="gereral-left">
+                <div class="category-body-ul hrm-v2-scroll">
+                    <div class="header-box">
+                        <div class="permission-role-header">
+                            <span>@T("Permission.ListRole")</span>
+                        </div>
+                        <div class="permission-role-filter">
+                            <input type="text" placeholder="@T("Permission.SearchRole")" onkeypress="SearchRole($(this).val())" onkeyup="SearchRole($(this).val())" />
+                        </div>
+                    </div>
+                    <div class="permission-role-content" id="permission-role-content">
+                        @{
+                            var data = Model.Roles;
+                            if (data != null && data.Count > 0)
+                            {
+                                foreach (var item in data)
+                                {
+                                    <div class="permission-role-list-content item-@item.Id" onclick="ClickRole(@item.Id)">
+                                        <div class="permission-role-list-content-name">
+                                            <span>@item.Name</span>
+                                        </div>
+                                        <div class="permission-role-list-content-description">
+                                            @{
+                                                var Description = item.Description.Value;
+                                                int length = 0;
+                                                if (Description != null)
+                                                {
+                                                    length = Description.Length;
+                                                }
+                                                var style = "display:none";
+                                                if (Convert.ToInt32(length) > 20)
+                                                {
+                                                    style = "display:block";
+                                                    <span class="description">@item.Description.Value.Substring(0, 20) </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="description">@item.Description </span>
+                                                }
+                                            }
+                                            @*<span class="show-more" style="@style"> <a>@T("Permission.ViewMore")</a></span>*@
+                                        </div>
+                                    </div>
+                                                    }
+                                                }
+                        }
+                    </div>
+                </div>
+            </div>
+            <h3 class="position" id="position">
+                @M(Model.RoleId.ToString() + ";" + DataType.Role + ";Name").ToString()
+            </h3>
+            <div class="gereral-right" id="tableDefault">
+                @{
+                    var table = Model.Table;
+                    table.ItemsPerPage = 20;
+                    table.CurrentPage = 1;
+                    table.TableDataUrl = "Admin/WorkingdaySupplementConfiguration/GetData";
+                }
+                @Html.Partial(UrlHelpers.Template("_Table.cshtml"), table)
+            </div>
+        </div>
+    </div>
+    <div id="exception" class="container tab-pane fade">
+        <div class="gereral" id="nav-tabContent">
+            @{
+                var tableExeption = Model.Table;
+            }
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), tableExeption)
+        </div>
+    </div>
+</div>
+<script>
+    var tableName=@Html.Raw(Json.Encode(Model.Table.TableName));
+    filterStr = 0;
+    var roleId = @Html.Raw(Json.Encode(Model.RoleId));
+    var isDefaultCase = true;
+</script>
+<script>
+    //Default Case
+    function ShowFormAddWorkingdaySupplementConfiguration() {
+        if(isDefaultCase){
+            var options = {
+                id: 'frmAddCategory',
+                url: '/Admin/WorkingdaySupplementConfiguration/AddWorkingdaySupplementConfiguration',
+                width: 600,
+                isNotificationPoup: true,
+                data:'{roleId: ' + roleId + '}',
+                align: "center",
+                idform: 'frmAddOrEditContract',
+            };
+        }else{
+            var options = {
+                id: 'frmAddCategory',
+                url: '/Admin/WorkingdaySupplementConfiguration/AddWorkingdaySupplementConfigurationException',
+                width: 600,
+                isNotificationPoup: true,
+                align: "center",
+                idform: 'frmAddOrEditContract',
+            };
+        }
+        CreatePopup(options);
+    }
+
+    function ShowFormEditWorkingdaySupplementConfiguration(id) {
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/WorkingdaySupplementConfiguration/AddWorkingdaySupplementConfiguration',
+            width: 600,
+            isNotificationPoup: true,
+            data:'{id: ' + id + ', roleId: ' + roleId + '}',
+            align: "center",
+            idform: 'frmAddOrEditContract',
+        };
+        CreatePopup(options);
+
+    }
+
+    function deleteSupplementConfiguration(id) {
+        bootbox.confirm({
+            message: '@T("Message.Delete.QuestionDelete")',
+            buttons: {
+                confirm: {
+                    label: '@T("Message.Delete.Yes")',
+                    className: 'hrm-v2-btn-save'
+                },
+                cancel: {
+                    label: '@T("Message.Delete.No")',
+                    className: 'hrm-v2-btn-close'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Admin/WorkingdaySupplementConfiguration/DeleteSupplementConfiguration",
+                        data: {
+                            id: id,
+                        },
+                        success: function (response) {
+                            if (response.result.Success == true) {
+                                ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                                var par = {};
+                                par.FilterField = roleId;
+                                par.PageNumber = $("#" + tableName + "-paging-current-page").val();
+                                par.PageSize = $("#" + tableName + "-paging-items-per-page").val();
+                                $('#tableDefault').load('/Admin/WorkingdaySupplementConfiguration/GetSupplementConfigurationById', { param: par }, function () { });
+                            }
+                            else {
+                                ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    function ClickRole(id){
+        $('#cover-spin').show();
+        filterStr = id;
+        roleId = id;
+        var par={};
+        par.FilterField=id;
+        par.PageNumber=$("#" + tableName + "-paging-current-page").val();
+        par.PageSize=$("#" + tableName + "-paging-items-per-page").val();
+        if($('.permission-role-list-content').hasClass('active')){
+            $('.permission-role-list-content').removeClass('active')
+            $('.permission-role-list-content.item-'+id).addClass('active')
+        }
+        $('.gereral-right').load('/Admin/WorkingdaySupplementConfiguration/GetSupplementConfigurationById', { param: par }, function(){
+            $('#position').text($('.permission-role-list-content.active .permission-role-list-content-description span:first-child').text());
+            $('#cover-spin').hide();
+        });
+    }
+    function DefaultTabClick(){
+        isDefaultCase = true;
+    }
+    //Exception Case
+    function ExceptionTabClick(){
+        $('#cover-spin').show();
+        isDefaultCase = false;
+        var par={};
+        par.PageNumber=$("#" + tableName + "-paging-current-page").val();
+        par.PageSize=$("#" + tableName + "-paging-items-per-page").val();
+        $('#exception').load('/Admin/WorkingdaySupplementConfiguration/GetSupplementConfigurationException', { param: par }, function(){
+            $('#cover-spin').hide();
+        });
+    }
+
+    function SearchRole(searchKey) {
+        if (event.which == 13) {
+            Search("/Admin/WorkingdaySupplementConfiguration/SearchRole", searchKey, "permission-role-content");
+        }
+    }
+
+    $(document).ready(function(){
+        $('.permission-role-list-content.item-'+roleId).addClass('active')
+    });
+</script>

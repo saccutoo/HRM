@@ -1,0 +1,321 @@
+﻿@model Hrm.Admin.ViewModels.AttachmentViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Common;
+<style>
+    .hrm-v2-multiple .select2-container {
+        width: 100% !important;
+    }
+
+    .hrm-v2-email-to {
+        position: relative;
+    }
+
+    .cc-bcc {
+        position: absolute;
+        right: 10px;
+        top: 22px;
+        font-size: 13px;
+        font-family: Roboto-Regular;
+    }
+
+        .cc-bcc span {
+            width: 30px;
+            text-align: center;
+            float: left;
+            display: block;
+            cursor: pointer;
+        }
+
+    .hrmv2-section .hrm-v2-multiple.hrm-v2-email-to ul {
+        margin-top: 4px;
+    }
+
+    .hrmv2-section .hrm-v2-multiple.cc ul {
+        margin-top: 4px;
+    }
+
+    .hrmv2-section .hrm-v2-multiple.bcc ul {
+        margin-top: 4px;
+    }
+
+    .hrmv2-section .display-inline-block #Column {
+        margin-top: 8px;
+    }
+
+    .col-md-12.pd-0.display-inline-block.upload {
+        height: 300px;
+        border-style: dashed;
+        border-color: #ccc;
+        text-align: center;
+    }
+    .hrmv2-section .list-document{
+        width: 100%;
+    }
+    .hrmv2-section .list-document .document-attachment-frames{
+        height: 120px;
+        width: 25%;
+        margin-left: 10px;
+        background-color:#f1f1f1;
+        float:left;
+        position:relative;
+    }
+    .hrmv2-section .list-document .document-attachment-frames .document-attachment-left{
+       width: 30%;
+        height: 100%;
+        text-align: center;
+        font-size: 100px;
+        float: left;
+    }
+    .hrmv2-section .list-document .document-attachment-frames .document-attachment-left span{     
+        line-height: 120px;
+    }
+    .hrmv2-section .list-document .document-attachment-frames .document-attachment-right{
+       width: calc(100% - 30%);
+       height: 100%;
+       text-align: left;
+       float: left;
+    }
+    .hrmv2-section .list-document .document-attachment-frames .document-attachment-right .document-attachment-right-top{
+        width: 100%;
+        height: 40%;
+        font-size: 16px;
+        font-family: roboto-bold;
+        line-height: 50px;
+        clear:both;
+    }
+    .hrmv2-section .list-document .document-attachment-frames .document-attachment-right .document-attachment-right-bottom{
+        width: 100%;
+        height: calc(100% - 40%);
+    }
+    .hrmv2-section .list-document .document-attachment-frames .action-top{
+        cursor:pointer;
+        position:absolute;
+        right: 0px;
+        margin-top: 10px;
+    }
+    .document-attachment-frames .action-top{
+        display: none;
+    }
+    .document-attachment-frames:hover .action-top{
+        display: block;
+    }
+</style>
+
+@if (Model.attachments.Count > 0)
+{
+    <section class="hrmv2-section">
+        <div class="list-document">
+            @Html.Partial(UrlHelpers.TemplateAdmin("Checklist", "_ListDocument.cshtml"), Model.attachments)
+        </div>
+    </section>
+}
+else if (Model.isAdd == true)
+{
+    <form id="frm-document">
+        <section class="hrmv2-section">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <input type="text" id="attachmentId" value="@Model.attachment.Id" hidden />
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Checklist.Title").ToString(), IsAnimationLabel = true, IsRequired = true, Name = "Name", Value = Model.attachment.Name })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block hrm-v2-floating-form">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("Table.Title.Content").ToString(), IsAnimationLabel = true, Name = "Description", Value = Model.attachment.Description })
+            </div>
+
+            <div class="col-md-12 pd-0 display-inline-block upload">
+                <div id="document-detail">
+                    @Html.Partial(UrlHelpers.TemplateAdmin("Checklist", "_DocumentDetail.cshtml"), Model.attachment)
+                </div>
+                <input id="file-upload" type="file" style="display:none" onchange="changeInputFile()" multiple />
+            </div>
+            <div style="float:right;margin-top: 10px;">
+                @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-master-data-continue", ClassName = "hrm-v2-btn-save", OnClick = "SaveAttachDocument()", Value = "Checklist.Save", Style = "width:100px;height:38px;", Type = "button" })
+            </div>
+            @*<div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", ClassName = "hrm-v2-btn-close", Value = "Checklist.Close", Style = "width:100px;height:38px;" })
+                </div>*@
+        </section>
+    </form>
+}
+else
+{
+    <style>
+        .hrmv2-section {
+            height: 500px;
+            text-align: center;
+        }
+
+            .hrmv2-section .add-template-weilcomekit-icon {
+                font-size: 200px;
+                margin-top: 100px;
+            }
+
+            .hrmv2-section .add-template-weilcomekit-content {
+                font-family: Rotobo-bold;
+                font-size: 30px;
+            }
+
+            .hrmv2-section .add-template-weilcomekit-button {
+                margin-top: 10px;
+            }
+    </style>
+    <section class="hrmv2-section">
+        <div class="add-template-weilcomekit-icon">
+            <span class="fas fa-paperclip"></span>
+        </div>
+        <div class="add-template-weilcomekit-content">
+            <span>@T("Checklist.NoEmailsHaveBeenAddedYet")</span>
+        </div>
+        <div class="add-template-weilcomekit-button">
+            <button class="hrm-v2-btn-save" onclick="addDocument(1)">@T("System.Button.Add")</button>
+        </div>
+    </section>
+}
+
+<script>
+
+    var FileUpload = [];
+    var JustUpload = [];
+    var activeTab = '@Model.ActiveTab';
+
+    var listAttachmentJs =@Html.Raw(JsonConvert.SerializeObject(Model.AttachmentJs));
+
+    if (listAttachmentJs!=null && listAttachmentJs.length>0) {
+        FileUpload=listAttachmentJs;
+    }
+
+    function addDocument(activeTab) {
+        window.location = "/Admin/Checklist/AddWelcomeKit?activeTab=" + activeTab + "&isAdd=true";
+    }
+    function clickNewAttach() {
+        $('#file-upload').click();
+    }
+    function changeInputFile() {
+        var fileData = [];
+        var file = $('#file-upload')[0].files;
+        var formData = new FormData();
+        for (var i = 0; i < file.length; i++) {
+            formData.append('attachment', file[i]);
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/Admin/Email/Save",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.IsSuccess) {
+                    if (response.Result != null && response.Result.length > 0) {
+                        for (var i = 0; i < response.Result.length; i++) {
+                            var current = {
+                                extension: response.Result[i].name.split(".")[1],
+                                size: response.Result[i].size,
+                                name: response.Result[i].name,
+                                realname: response.Result[i].realname,
+                                CreatedDate: response.Result[i].CreatedDate,
+                            }
+                            FileUpload.push(current);
+                        }
+                    }
+                    $('#file-upload').val('');
+                    $("#document-detail").load('/Admin/Checklist/ReloadDocument', { atchments: FileUpload });
+
+                }
+            },
+        });
+    }
+    function removeFile(realName, id) {
+        var formData = new FormData();
+        if (id == 0) {
+            formData.append('realName', realName);
+            $.ajax({
+                type: 'POST',
+                url: "/Admin/Email/Remove",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.IsSuccess) {
+                        FileUpload = FileUpload.filter(function (value) {
+                            return value.realname != realName
+                        });
+                        $("#document-detail").load('/Admin/Checklist/ReloadDocument', { atchments: FileUpload });
+                    }
+                },
+            });
+        }
+        else {
+            var listDelete = FileUpload.filter(function (value) {
+                return value.realname == realName
+            })
+            if (listDelete != null && listDelete.length > 0) {
+                for (var i = 0; i < listDelete.length; i++) {
+                    JustUpload.push(listDelete[i]);
+                }
+            }
+            FileUpload = FileUpload.filter(function (value) {
+                return value.realname != realName
+            });
+            $("#document-detail").load('/Admin/Checklist/ReloadDocument', { atchments: FileUpload });
+        }
+    }
+    function SaveAttachDocument() {
+        $("#frm-document span[name*='-error']").text("");
+        var model = {};
+        model.Name = $("#Name").val();
+        model.Description = $("#Description").val();
+        model.Id = $("#attachmentId").val();
+        if (FileUpload.length > 0) {        
+            model.FileName = FileUpload[0].realname;
+            model.DisplayFileName = FileUpload[0].name;
+            model.FileExtension = FileUpload[0].extension;
+            model.FileSize = FileUpload[0].size;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Checklist/SaveDocument",
+            data: {
+                model: model,
+                deleteAttachments: JustUpload
+            },
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-document");
+                }
+                else {
+                    if (response.result.Success == true) {
+                        ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                        window.location = "/Admin/Checklist/AddWelcomeKit?activeTab=" + activeTab;
+                    }
+                    else {
+                        ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    }
+                }
+            },
+        });
+    }
+    function editDocument(id) {
+        window.location = "/Admin/Checklist/AddWelcomeKit?activeTab=" + activeTab + "&id=" + id + "&isAdd=true";
+    }
+
+    function deleteDocument(id){
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Checklist/DeleteAttackmentById",
+            data: {
+                id:id
+            },
+            success: function (response) {
+                if (response.result.Success == true) {
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    window.location = "/Admin/Checklist/AddWelcomeKit?activeTab=" + activeTab;
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                }
+            },
+        });
+    }
+</script>

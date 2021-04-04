@@ -1,0 +1,71 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@{
+    Layout = null;
+}
+@model WorkingProcessModel
+<div class="detail-salary-container display-inline-block">
+    <div class="hrm-v2-modal-header">@T("Staff.Detail.Salary")</div>
+    <div class="hrm-v2-modal-body" style="margin-top:0px">
+        <section class="hrmv2-section">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.BasicPay").ToString(), Text = String.Format("{0:#,##0.##}", Model.BasicPay) + " " + M(Model.CurrencyId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.EfficiencyBonus").ToString(), Text = String.Format("{0:#,##0.##}", Model.EfficiencyBonus) + " " + M(Model.CurrencyId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.PaymentForm").ToString(), Text = M(Model.PaymentForm.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.PaymentMethod").ToString(), Text = M(Model.PaymentMethod.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @if (Model.StartDate != null)
+                    {
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.StartDate").ToString(), Text = Model.StartDate.Value.ToString("dd/MM/yyyy")})
+                    }
+                    else
+                    {
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.StartDate").ToString(), Text = "" })
+                    }
+
+
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @if (Model.EndDate != null)
+                    {
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.EndDate").ToString(), Text = Model.EndDate.Value.ToString("dd/MM/yyyy") })
+                    }
+                    else
+                    {
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.EndDate").ToString(), Text = "" })
+                    }
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Status").ToString(), Text = M(Model.Status.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Note").ToString(), Text = Model.SalaryNote })
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="footer">
+        <div class="footer-login">
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary hrm-v2-btn-close close-popup" data-dismiss="modal">
+                    @T("Staff.Close")
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

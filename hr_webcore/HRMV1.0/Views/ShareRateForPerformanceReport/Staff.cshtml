@@ -1,0 +1,87 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.ShareRateForPerformanceReportbyStaff;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div class="container-fluid" ng-app="tableApp">
+
+    <div id="AttendanceManagement" class="row" style="margin: 0;" ng-controller="ShareRateForPerformanceReport" ng-init="init()">
+        <div class="col-md-12" id="ShareRateForPerformanceReport">
+            <style>
+                #ReportAccountByStaff span.label-btn.col-6 {
+                    padding-right: 10px;
+                    float: left;
+                    line-height: 30px;
+                }
+
+                #ReportAccountByStaff select.form-control.col-6 {
+                    width: 50%;
+                    float: left;
+                }
+
+                #ReportAccountByStaff .col-md-1-2 {
+                    width: 15%;
+                    float: left;
+                }
+
+                #ReportAccountByStaff label.col-sm-3.col-form-label {
+                    line-height: 30px;
+                }
+
+                #ReportAccountByStaff input.form-control.col-sm-6 {
+                    width: 50px;
+                    float: left;
+                }
+
+                #ReportAccountByStaff label.col-md-2 {
+                    line-height: 30px;
+                }
+
+                label.col-sm-3.col-form-label {
+                    width: auto;
+                }
+
+                h3.ng-binding {
+                    display: none;
+                }
+
+                .col-md-12.ng-isolate-scope > .col-md-12 {
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+
+                .hide-element {
+                    display: none;
+                }
+            </style>
+            <br />
+            <div style="display: none;">
+                @*@Html.Action("Save_MCCAcountExclude", "MCC_Account_Exclude")*@
+                @Html.Partial("_Save")
+            </div>
+            <div class="row">
+                <build-fixed-table table-url="'/ShareRateForPerformanceReport/GetShareRateForPerformanceReportbyStaff'"
+                                   table-edit="editClick"
+                                   table-delete="deleteClick"
+                                   table-model="ShareRateForPerformanceReportData"
+                                   table-add="addClick"
+                                   table-excel-click="ExcelClick" notification="'@(AppRes.Notification)'" validate-datetime="'@(AppRes.ValidateFromDateToDate)'" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/ShareRateForPerformanceReport/ShareRateForPerformanceReport.js"></script>
+<script>
+    BuildTable('tableApp', 'ShareRateForPerformanceReport', '@(ViewBag.url)');
+</script>
+<script src="~/Scripts/directive/datePicker(NewDate)/datePicker.js"></script>
+
+
+

@@ -1,0 +1,35 @@
+﻿
+body {
+    position: relative !important;
+}
+
+
+
+.back-loading {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    background-color: darkgray;
+    opacity: 0.6;
+    z-index: 999;
+}
+
+.box1 {
+    border-radius: 3px;
+    background: #ffffff;
+    border-top: 3px solid #d2d6de;
+    margin-bottom: 20px;
+    width: 100%;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+
+
+.back-loading .img-content {
+    margin-top: 20%;
+    min-width: 250px;
+    content: url("/img/processing.gif");
+}
+
+

@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "SecRoleUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid" ng-app="tableApp">
+    <div ng-controller="secRole">
+        <div class="row">
+            <div class="col-sm-6 col-sm-push-6" >
+                @Html.Action("SecRoleMenuServerSide", "Common")
+            </div>
+            <div class="col-sm-6 col-sm-pull-6" ng-controller="mytable">
+                @Html.Action("SecRoleUserServerSide", "Common")
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/mycustom/SecRoleUser/SecRoleUserUntil.js"></script>
+<script src="~/Scripts/mycustom/SecRoleUser/SecRoleUserService.js"></script>
+
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+    BuildTable('tableApp', 'secRole', '@(ViewBag.url2)');
+</script>

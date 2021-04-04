@@ -1,0 +1,142 @@
+
+
+DECLARE @ListApprovedSaffs NVARCHAR(MAX) = '104';
+IF ( ( SELECT   COUNT(DISTINCT DSR.RoleId) AS CountOf
+       FROM     dbo.Data_Staff_Information DSI
+                LEFT JOIN dbo.Data_StaffRole DSR ON DSR.StaffId = DSI.Id
+       WHERE    DSI.Id IN ( SELECT  *
+                            FROM    dbo.splitstring(@ListApprovedSaffs, ',') )
+                AND DSI.IsDeleted = 0
+     ) = 1 )
+    BEGIN
+        DECLARE @RoleId BIGINT = ( SELECT TOP 1
+                                            RoleId
+                                   FROM     dbo.Data_StaffRole
+                                   WHERE    StaffId IN (
+                                            SELECT  *
+                                            FROM    dbo.splitstring(@ListApprovedSaffs,
+                                                              ',') )
+                                 );
+        DECLARE @RequestActionId BIGINT;
+        IF ( @RoleId = 4 )
+            BEGIN
+                SET @RequestActionId = 332;
+            END
+        IF ( @RoleId = 4 )
+            BEGIN
+                SET @RequestActionId = 332;
+            END
+
+        SELECT  DISTINCT
+                DSI.Id ,
+                Name = DSI.Name + IIF(SMD.Name IS NULL, '', ' - ' + SMD.Name)
+                + IIF(DR.Name IS NULL, '', ' - ' + DR.Name)
+                + IIF(DO.OrganizationName IS NULL, '', ' - '
+                + DO.OrganizationName) ,
+                Temp.CurrentRequestStatusId
+        FROM    dbo.Data_Staff_Information DSI
+                LEFT JOIN dbo.Data_Staff_WorkingProcess DSWP ON DSWP.Id = DSI.CurrentWorkingProcessId
+                LEFT JOIN dbo.System_MasterData SMD ON DSWP.PositionId = SMD.Id
+                LEFT JOIN dbo.Data_Organization DO ON DO.Id = DSWP.OrganizationId
+                LEFT JOIN dbo.Data_StaffRole DSR ON DSR.StaffId = DSI.Id
+                LEFT JOIN dbo.Data_Role DR ON DR.Id = DSR.RoleId
+                OUTER APPLY ( SELECT    DWSC.CurrentRequestStatusId
+                              FROM      dbo.Data_StaffRole DSR
+                                        LEFT JOIN Data_Workingday_Supplement_Configuration DWSC ON DWSC.RequesterId = DSR.RoleId
+                              WHERE     DSR.StaffId = ( SELECT TOP 1
+                                                              Name
+                                                        FROM  dbo.splitstring(@ListApprovedSaffs,
+                                                              ',')
+                                                      )
+                                        AND DWSC.RequestActionId = @RequestActionId
+                            ) Temp
+        WHERE   DSI.IsDeleted = 0
+                AND DSI.Id NOT IN (
+                SELECT  *
+                FROM    dbo.splitstring(@ListApprovedSaffs, ',') )
+                AND DSR.RoleId IN ( 2, 3, 5, 6, 8 ) 
+    END
+ELSE
+    BEGIN
+        PRINT ( 'fail' )
+    END
+
+	
+	
+	
+	
+	
+	
+	USE [Hrm2.0]
+GO
+/****** Object:  StoredProcedure [dbo].[Staff_Get_GetApprovedBySaff]    Script Date: 2/5/2020 4:36:29 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[Staff_Get_GetApprovedBySaff]
+    @ListApprovedSaffs NVARCHAR(500) ,
+    @DbName NVARCHAR(500)
+AS
+    BEGIN
+        DECLARE @ExeQuery NVARCHAR(MAX) ,
+            @params NVARCHAR(MAX)	   				
+															 
+        SET @ExeQuery = N'USE [Hrm_' + @DbName + ']'
+            + N'
+		        IF ( ( SELECT   COUNT(DISTINCT DSR.RoleId) AS CountOf
+				   FROM     dbo.Data_Staff_Information DSI
+							LEFT JOIN dbo.Data_StaffRole DSR ON DSR.StaffId = DSI.Id
+				   WHERE    DSI.Id IN ( SELECT  *
+										FROM    dbo.splitstring(@ListApprovedSaffs, '','') )
+							AND DSI.IsDeleted = 0
+				 ) = 1 )
+				BEGIN
+					DECLARE @RoleId BIGINT = ( SELECT TOP 1
+														RoleId
+											   FROM     dbo.Data_StaffRole
+											   WHERE    StaffId IN (
+														SELECT  *
+														FROM    dbo.splitstring(@ListApprovedSaffs,
+																		  '','') )
+											 );
+					IF ( @RoleId = 4 )
+						BEGIN
+							SELECT  DISTINCT DSI.Id, Name = DSI.Name + IIF(SMD.Name IS NULL, '''', '' - '' + SMD.Name) + IIF(DR.Name IS NULL, '''', '' - '' + DR.Name) + IIF(DO.OrganizationName IS NULL, '''', '' - '' + DO.OrganizationName),
+									Temp.CurrentRequestStatusId AS NextRequestStatusId
+							FROM    dbo.Data_Staff_Information DSI
+									LEFT JOIN dbo.Data_Staff_WorkingProcess DSWP ON DSWP.Id = DSI.CurrentWorkingProcessId
+									LEFT JOIN dbo.System_MasterData SMD ON DSWP.PositionId = SMD.Id
+									LEFT JOIN dbo.Data_Organization DO ON DO.Id = DSWP.OrganizationId
+									LEFT JOIN dbo.Data_StaffRole DSR ON DSR.StaffId = DSI.Id
+									LEFT JOIN dbo.Data_Role DR ON DR.Id = DSR.RoleId
+									OUTER APPLY ( SELECT    DWSC.CurrentRequestStatusId
+												  FROM      dbo.Data_StaffRole DSR
+															LEFT JOIN Data_Workingday_Supplement_Configuration DWSC ON DWSC.RequesterId = DSR.RoleId
+												  WHERE     DSR.StaffId = ( SELECT TOP 1
+																		  Name
+																		  FROM
+																		  dbo.splitstring(@ListApprovedSaffs,
+																		 '','')
+																		  )
+															AND DWSC.RequestActionId = 368
+												) Temp
+							WHERE   DSI.IsDeleted = 0
+									AND DSI.Id NOT IN (
+									SELECT  *
+									FROM    dbo.splitstring(@ListApprovedSaffs, '','') )
+									AND DSR.RoleId IN (2,3,5,6,8) 
+						END
+				END
+			ELSE
+				BEGIN
+					PRINT ( ''vkl'' )
+				END 
+					'
+		PRINT(@ExeQuery)
+        SET @params = ' @ListApprovedSaffs NVARCHAR(500) ,
+						@DbName NVARCHAR(500)
+						'
+        EXEC sp_executesql @ExeQuery, @params,@ListApprovedSaffs,@DbName
+	
+    END

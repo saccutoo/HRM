@@ -1,0 +1,97 @@
+﻿@using HRM.App_LocalResources;
+<style>
+    .table-responsive {
+        display: block;
+        border: 1px solid none;
+        padding: 5px;
+        margin-top: 5px;
+        width: auto;
+        height: 308px;
+        overflow: scroll;
+    }
+
+    #btn-circle {
+        width: 30px;
+        height: 30px;
+        padding: 6px 0px;
+        border-radius: 15px;
+        text-align: center;
+        font-size: 12px;
+        line-height: 1.42857;
+    }
+</style>
+<div id="DinhDangCot" class="row" style="margin: 0;">
+    <div class="panel">
+        <div class="panel-body">
+            <div class="row">
+                <h3>@AppRes.ColumnFormat</h3>
+            </div>
+            <div class="row" style="border: 1px solid #D3D3D3;">
+                <div class="col-md-7" style="border-right: 1px solid #D3D3D3;">
+                    <div class="row" style="padding-top: 5px; padding-bottom: 5px;">
+                        <div class="col-md-6" style="padding-top: 5px; padding-bottom: 5px;">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="txtSearchColumn" name="txtSearchColumn" ng-model="txtSearchColumn" ng-change="findtextcolumn()">
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="padding-top: 12px; padding-bottom: 5px; padding-right: 30px; text-align: right">
+                            <a style="cursor: pointer" ng-click="deletefind()">Xóa tìm kiếm</a>
+                        </div>
+                    </div>
+                    <div class="row" style="background-color: #e6e6fa; height: 30px; padding-top: 5px;">
+                        <div class="col-md-8">
+                            <b>CỘT DỮ LIỆU</b>
+                        </div>
+                        <div class="col-md-4" style="text-align: right">
+                            <a ng-show="bochon" style="cursor: pointer" ng-click="SelectAllColumns()"><span id="spnSelectAll">Bỏ chọn toàn bộ</span></a>
+                            <a ng-hide="bochon" style="cursor: pointer" ng-click="SelectAllColumns()"><span id="spnSelectAll">Chọn toàn bộ</span></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <div ng-repeat="rolecolumn in netcolumns">
+                                <div class="checkbox" style="margin:15px">
+                                    <label>
+                                        <input name="chkGridCustomerSelect" id="{{rolecolumn.TableColumnId}}" ng-click="SelectColumnEx(rolecolumn)" type="checkbox" class="checkbox style-0" value="{{rolecolumn.TableColumnId}}">
+                                        <span class="font-xs" id="{{rolecolumn.TableColumnId}}">{{rolecolumn.DisplayName}}</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-5" style="background-color: #e6e6fa;">
+                    <div class="row">
+                        <div style="height: 32px; padding: 5px;">
+                            <b><span id="countSelected">{{Cot}}</span> CỘT ĐƯỢC LỰA CHỌN</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <ul class="sortable list" style="width:100%" id="olColumns">
+                                <li ng-repeat="employeedelete in neststart" id="nestable2-{{employeedelete.TableColumnId}}">
+                                    <span id="span" style="margin-left:15px;">{{employeedelete.DisplayName}} </span>
+                                    <button style="float:right;" type="button" id="btn-circle" class="btn btn-primary" ng-click="remove(employeedelete)"><i class="glyphicon glyphicon-remove"></i></button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="height:50px;"></div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top:30px;">
+                    <div class="col-md-9"></div>
+                    <div class="col-md-3">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-primary" ng-click="SaveCustomerColumns()">Cập nhật</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-default" ng-click="Close()">Bỏ qua</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

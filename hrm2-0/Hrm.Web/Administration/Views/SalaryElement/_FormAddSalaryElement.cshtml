@@ -1,0 +1,243 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Common
+@model Hrm.Admin.ViewModels.AddSalaryElementViewModel
+    <style>
+        #frm-add-salary-element .check-formula{            
+            text-align: center;
+            height: 100%;
+        }
+         #frm-add-salary-element .body-salary-element{            
+             
+              max-height:130px;
+              overflow:auto;
+        }     
+        #frm-add-salary-element .add-language{
+           margin-top:10px;
+        }
+         #frm-add-salary-element .add-language span{
+           cursor:pointer;
+           color:#037fff;
+        }
+        #frm-add-salary-element .header-language{
+           height:40px;
+        }
+        #frm-add-salary-element .check-formula span{
+           line-height:60px;
+           color:#2ca01c;
+           cursor:pointer;
+           font-size:18px;
+        }
+         #frm-add-salary-element .check-formula .disabled{
+          opacity:0.4;
+          pointer-events:none;
+          color:#ccc;
+        }
+         #frm-add-salary-element .list-language{
+           background-color: #f3f3f3;
+           margin-top:10px;
+           height:115px;
+
+        }
+         #frm-add-salary-element .header-language .header-language-title{
+           height:100%;
+        }
+         #frm-add-salary-element .header-language .header-language-title span{
+           line-height:40px;
+           margin-left:5px;
+        }
+        #frm-add-salary-element .header-language .header-language-select{
+           height:100%;
+        }
+        #frm-add-salary-element .header-language .header-language-select select{
+           width:100%;
+           margin-top:10px;
+           background-color: #f3f3f3;
+           border:none;
+           border-bottom:1px solid #ccc;
+
+        }
+         #frm-add-salary-element .header-language .header-language-select select:focus{
+           outline:none;
+
+        }
+        #frm-add-salary-element .header-language .header-language-icon-times{
+           height:100%;
+        }
+        #frm-add-salary-element .header-language .header-language-icon-times span{
+           color:red;
+           line-height:40px;
+           cursor:pointer;
+        }
+    </style>
+<div class="add-working-supplement-container display-inline-block">
+    <form id="frm-add-salary-element">
+        @if (Model.SalaryElement.Id == 0)
+        {
+            <div class="hrm-v2-modal-header">@T("SalaryElement.AddSalaryElement")</div>
+        }
+        else
+        {
+            <div class="hrm-v2-modal-header">@T("SalaryElement.EditSalaryElement")</div>
+        }
+        <input type="text" value="@Model.SalaryElement.Id" name="model.Id" hidden/>
+        <div class="hrm-v2-modal-body" style="margin-top:0px;">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">                   
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.Name", IsRequired = true, LabelName = T("SalaryElement.Name").ToString(), IsAnimationLabel = true, Value = Model.SalaryElement.Name })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.Code", IsRequired = true, LabelName = T("SalaryElement.Code").ToString(), IsAnimationLabel = true, Value = Model.SalaryElement.Code })
+                </div>
+            </div>     
+            
+            <div class="col-md-12 pd-0 display-inline-block"  style="margin-top:15px;">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("SalaryElement.Group").ToString(),IsRequired=true, IsAnimationLabel = true, Data = Model.Types, ValueField = "Id", Name = "model.TypeId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.SalaryElement.TypeId.ToString() })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("SalaryElement.InputType").ToString(), IsAnimationLabel = true, Data = Model.DataTypes, ValueField = "Id", Name = "model.DataTypeId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.SalaryElement.DataTypeId.ToString() })
+                </div>
+            </div> 
+            <div class="col-md-12 pd-0 display-inline-block" style="margin-top:15px;">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("SalaryElement.Description").ToString(), IsAnimationLabel = true, Name = "model.Description", Value=Model.SalaryElement.Description })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form" style="height:auto">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.Value", LabelName = T("SalaryElement.ValueTemplate").ToString(), IsAnimationLabel = true, Value = Model.SalaryElement.Value.ToString(), Type = "Number", })
+                </div>
+            </div> 
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-11 pd-0 display-inline-block hrm-v2-floating-form" style="height:auto">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("SalaryElement.Formula").ToString(), IsAnimationLabel = true, Name = "model.Formula", Value=Model.SalaryElement.Formula })
+                </div>
+               <div class="col-md-1 pd-l-0 hrm-v2-floating-form">
+                   <div class="check-formula">
+                       <span class="fas fa-check-circle" onclick="checkFormula(this)"></span>
+                   </div>
+               </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block check-formula-input" id="check-formula">
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block "  style="margin-top:10px;">
+                <div class="title-name-displayed-on-pay-slip">
+                   <span>@T("SalaryElement.NameDisplayedOnPayslip").ToString().ToUpper()</span>
+                </div>          
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+               <div id="body-salary-element" class="body-salary-element hrm-v2-scroll">
+                   @Html.Partial(UrlHelpers.TemplateAdmin("SalaryElement", "_BodyFromAddSalaryElement.cshtml"), Model)                                
+               </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+               <div class="add-language" >
+                   <span onclick="addDataLanguage()"><i class="fas fa-plus"></i> @T("SalaryElement.LanguageAdd")</span>
+               </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-login">
+                <div class="pull-right">                 
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Workingday.Close", ClassName = "hrm-v2-btn-close", Style = "float:left;margin-right:10px;",Type="button" })
+                    @if (Model.SalaryElement.IsEdit==true || Model.SalaryElement.Id==0)
+                    {
+                        @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", OnClick = "saveSalaryElement()", Value = "Workingday.Save", Type = "button", ClassName = "hrm-v2-btn-save", Style = "float:left" })
+                    }                 
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function removeLanguage(index) {
+        var data = $('#frm-add-salary-element').serializeArray();
+        data.push({ name: "index", value: index });
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/SalaryElement/RemoveDataLanguage",
+            data: data,
+            success: function (response) {
+                $('#body-salary-element').html(response);
+
+            }
+        });
+    }
+    function addDataLanguage() {
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/SalaryElement/AddDataLanguage",
+            data: $('#frm-add-salary-element').serializeArray(),
+            success: function (response) {
+                $('#body-salary-element').html(response);
+
+            }
+        });
+    }
+    function saveSalaryElement() {
+        $("#frm-add-salary-element span[name*='-error']").text("");
+        $('#cover-spin').show();
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/SalaryElement/SaveSalaryElement",
+            data: $('#frm-add-salary-element').serializeArray(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-add-salary-element");
+                    $('#cover-spin').hide();
+                }
+                if (response.result.Success) {
+                    $("#myModal").modal("hide");
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    changeItemsPerpage('@TableName.TableSalaryElement');
+                    $('#cover-spin').hide();
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    $('#cover-spin').hide();
+
+                }
+            }
+        });
+    }
+    function checkFormula(e) {
+        $(e).addClass('disabled');
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/SalaryElement/checkFormula",
+            data: $('#frm-add-salary-element').serializeArray(),
+            success: function (response) {
+                $('#check-formula').html(response);
+
+            }
+        });
+    }
+    function closeCheckFormula() {
+        $(".check-formula-input").empty();
+        $("#frm-add-salary-element .check-formula .disabled").removeClass("disabled");
+
+    }
+    function checkFormulaOutResult() {
+        $.ajax(
+       {
+           type: "POST",
+           url: "/Admin/SalaryElement/checkFormula",
+           data: $('#frm-add-salary-element').serializeArray(),
+           success: function (response) {
+               if (response.InvalidCheck) {
+                   $("#model-formula-error").text(response.Result)
+               }
+               else {
+                   $('#check-formula').html(response);
+               }
+              
+           }
+       });
+    }
+</script> 

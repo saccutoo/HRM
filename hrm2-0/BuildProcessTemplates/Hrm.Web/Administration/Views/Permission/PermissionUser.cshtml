@@ -1,0 +1,121 @@
+﻿@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using System.Linq
+@using Hrm.Common
+@model Hrm.Admin.ViewModels.MenuPermissionViewModel
+@{
+    ViewBag.Title = "Permission";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+<style>  
+     .gereral-left{
+         text-align: left;
+     }
+     .gereral-right .permission-role-content{
+         text-align: left;
+     }
+     .checkbox-tree{
+        max-height: 730px;
+        overflow: auto;
+     }
+      .gereral-right {
+       background-color: whitesmoke;
+    }
+     .gereral-right .permission-role-right-body{
+       background-color: whitesmoke;
+       border: none;
+       background: white;
+    }
+    </style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a>
+    <a href="/admin" class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Setting.Permisson")</a>
+    <span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Setting.User")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left",OnClick = "ShowFormAddPermissionUser()" })
+    </div>
+</div>
+<div class="gereral">
+    <div class="gereral-left">
+        <div class="category-body-ul hrm-v2-scroll">
+            <div class="permission-role-header">
+                <span>@T("Permission.ListUser")</span>
+            </div>
+            <div class="permission-role-filter">
+                <input type="text" placeholder="@T("Permission.SearchUser")" onkeypress="SearchStaff($(this).val())" />
+            </div>
+            <div class="permission-role-content" id="permission-role-content">
+                @Html.Partial("~/Administration/Views/Permission/_ListUser.cshtml")
+            </div>
+        </div>
+        </div>
+    <div class="gereral-right">        
+        @Html.Partial(UrlHelpers.TemplateAdmin("Permission", "_ListPermission.cshtml"), Model)
+    </div>
+</div>
+<script>
+    function ShowFormAddPermissionUser() {
+        window.location.href = "/Admin/Permission/AddPermissionUser?Id=" + 0;
+    }
+    $('.permission-role-list-content:first').addClass('active');
+    $(document).on('click', '.permission-role-list-content', function () {
+        $('.permission-role-list-content').removeClass('active');
+        $(this).addClass('active');
+    });
+    function ClickUser(Id) {
+        $.ajax(
+       {
+           type: "POST",
+           url: "/Admin/Permission/GetPermissionByStaffId",
+           data: { id: Id, isView: true },
+           success: function (response) {
+               $(".gereral-right").html(response);
+           }
+       });
+    }
+    function EditPermissionUser(Id) {
+        window.location.href = "/Admin/Permission/AddPermissionUser?Id=" + Id;
+    }
+    function DeletePermissionUser(Id) {
+        bootbox.confirm({
+            message: '@T("Message.Delete.QuestionDelete")',
+            buttons: {
+                confirm: {
+                    label: '@T("Message.Delete.Yes")',
+                    className: 'hrm-v2-btn-save'
+                },
+                cancel: {
+                    label: '@T("Message.Delete.No")',
+                    className: 'hrm-v2-btn-close'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax(
+                   {
+                       type: "POST",
+                       url: "/Admin/Permission/DeletePermissionByDataId",
+                       data: { dataId: Id, dataTypeName: '@Html.Encode(DataType.Personal)' },
+                       success: function (response) {
+                           if (response.result.Success == true) {
+                               ClickUser(Id);
+                           }
+                           alert(response.responeseResources);
+                       }
+                   });
+                }
+            }
+        });
+
+    }
+
+    function SearchStaff(searchKey) {
+        if (event.which == 13) {
+            Search("/Admin/Permission/SearchPermissionStaff", searchKey, "permission-role-content");
+        }
+    }
+</script>
+
+
+

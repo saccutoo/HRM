@@ -1,0 +1,70 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.PolicyDetail;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .icon-check-formular {
+        color: #2a80b2;
+        font-size: 13px;
+        float: left;
+        padding-top: 8px;
+        width: 32px;
+        height: 32px;
+        text-align: right;
+        cursor: pointer;
+    }
+    .label-form-save-policydetail{
+        width:200px;
+        float:left;
+    }
+    .input-form-save-policydetail {
+        width: calc(100% - 200px);
+        float: left;
+    }
+    input[name=chbox_policy]{
+        position:relative;
+        cursor:pointer;
+        top:2px;
+    }
+</style>
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row">
+        <div ng-controller="mytable" ng-init="init()">
+            <div style="display: none;">
+                @Html.Action("SavePolicyDetail", "PolicyDetail")
+            </div>
+            <div style="display: none;">
+                @Html.Action("CheckSFormular", "PolicyDetail")
+            </div>
+            <div style="display: none;">
+                @Html.Action("CopyPolicyDetail", "PolicyDetail")
+            </div>
+            <build-fixed-table table-url="'@(ViewBag.url)'"
+                               table-edit="editClick"
+                               table-copy ="copyClick"
+                               table-delete="deleteClick"
+                               table-excel-click="ExcelClick"
+                               table-add="addClick"
+                               table-param-filter="employeeFilter"
+                               table-model="PolicyDetailData">
+            </build-fixed-table>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/PolicyDetail/PolicyDetailService.js"></script>
+<script src="~/Scripts/mycustom/PolicyDetail/PolicyDetailUntil.js"></script>
+<script src="~/Scripts/mycustom/format-as-currency.js"></script>
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+</script>
+<script>
+    $(".datePicker123").datepicker({
+        autoclose: true,
+        format: "dd/mm/yyyy"
+    }).datepicker("setDate", new Date());
+    var alertfomularNotEsist = '@Html.Raw(AppRes.FormulaNotAccurate)';
+    var alertSelectPolicy = '@Html.Raw(AppRes.SelectPolicy)';
+</script>

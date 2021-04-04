@@ -1,0 +1,73 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using System.Collections.Generic
+@using System.Globalization
+@using Hrm.Common
+@model Hrm.Framework.Models.StaffModel
+@{
+    Layout = null;
+}
+<div class="add-discipline-container display-inline-block">
+    <form name="addStaffform" id="addStaffform">
+        <input type="checkbox" hidden name="IsOnboarding" id="IsOnboarding" value="@Model.IsOnboarding.ToString().ToLower()" />
+        <div class="hrm-v2-modal-header">Thêm mới nhân sự</div>
+        <div class="hrm-v2-modal-body">
+            <section class="hrmv2-section">
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.StaffCode").ToString(), IsRequired = true, Name = "StaffCode", IsAnimationLabel = true })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Name").ToString(), IsRequired = true, Name = "Name", IsAnimationLabel = true })
+
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.PhoneCompany").ToString(), Name = "PhoneCompany", IsAnimationLabel = true })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.EmailCompany").ToString(), Name = "EmailCompany", IsAnimationLabel = true })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @if (Model.IsOnboarding)
+                    {
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "OnboardingDate", Value = Model.OnboardingDate, LabelName = T("Staff.OnboardingDate").ToString() })
+                    }
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.WorkingClassification").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownClassification, ValueField = "Id", DisplayField = "Name", Name = "ClassificationId", IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.OrganizationId").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.Organizations, ValueField = "Id", DisplayField = "OrganizationName", Name = "OrganizationId", IsMultipleLanguage = true, DataType = DataType.Organization, PropertyName = "OrganizationName" })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Note").ToString(), Name = "Note", IsAnimationLabel = true })
+                </div>
+                <div class="col-md-12 pd-0">
+                    <section class="hrmv2-section">
+                        <a class="add-staff-redirect hand-point-right hrm-v2-font-13" onclick="goToAddForm()"><i class="far fa-hand-point-right"></i>@T("Staff.Detail.GoDetail")</a>
+                    </section>
+                </div>
+            </section>
+
+        </div>
+        <div class="footer">
+            <div class="footer-login">
+                <div class="pull-right">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", ClassName = "hrm-v2-btn-close", Value = "MasterData.Close", Style = "width:100px;height:38px;" })
+
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-master-data-continue",ClassName = "hrm-v2-btn-save", OnClick = "SaveStaff()", Value = "Staff.SaveStaff", Style = "width:100px;height:38px;", Type = "button" })
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        if(@Html.Raw(Json.Encode(Model.IsOnboarding)) == true)
+        {
+            $('#IsOnboarding').prop('checked', true);
+        }
+    });
+</script>

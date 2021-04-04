@@ -1,0 +1,135 @@
+﻿@model Hrm.Web.ViewModels.OrgChartViewModel
+@using Hrm.Framework.Models
+@using Hrm.Web.ViewModels
+@using Hrm.Framework.Helper
+@{
+    ViewBag.Title = T("OrgChart.Title");
+    Layout = UrlHelpers.View("~/Views/Shared/_MenuSidebarTop.cshtml");
+}
+<style>
+    .org-chart {
+        background-color: #eef1f6;
+        height: 100%;
+        padding-top: 30px;
+    }
+
+    .grand-father {
+        opacity: .5;
+    }
+
+    .emp-card {
+        transition: all .2s ease;
+        cursor: pointer;
+        position: relative;
+        background-color: #f8f9fa;
+        padding: 10px 15px;
+        margin: 0 auto 30px;
+        width: 225px;
+        border-radius: 5px;
+        text-align: initial;
+    }
+
+        .emp-card .middle-bound {
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+            .emp-card .middle-bound .avatar-circle {
+                height: 42px;
+                width: 42px;
+                display: inline-block;
+                border-radius: 50%;
+                text-align: center;
+            }
+
+                .emp-card .middle-bound .avatar-circle .avatar-inside {
+                    color: #fff;
+                    font-size: 18px;
+                    font-weight: 600;
+                    line-height: 42px;
+                    text-align: center;
+                    background-color: #95D1F3;
+                    opacity: .9;
+                    height: 100%;
+                    border-radius: 50%;
+                }
+
+        .emp-card .profile-details {
+            margin-left: 10px;
+            width: calc(100% - 60px);
+        }
+
+            .emp-card .profile-details .name {
+                font-family: "Roboto-Bold";
+                color: #0070d0;
+                font-size: 13px;
+            }
+
+        .emp-card .name {
+            font-size: 13px;
+        }
+
+        .emp-card .rep-count {
+            position: absolute;
+            left: calc(50% - 12px);
+            bottom: -12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            line-height: 24px;
+            text-align: center;
+            background-color: #3ec5d1;
+            color: #fff;
+            font-size: 10px;
+        }
+
+        .emp-card:hover {
+            -webkit-box-shadow: 0 4px 4px 0 rgba(0,0,0,.11);
+            box-shadow: 0 4px 4px 0 rgba(0,0,0,.11);
+        }
+
+    .org-chart .emp-card .gray-bg {
+        background-color: #f8f9fa;
+        margin: 10px -5px 0;
+        padding: 15px 20px;
+        border-radius: 5px;
+    }
+
+
+    .sec-text-color {
+        color: #607787;
+    }
+
+    .icon-with-text {
+        padding-bottom: 5px;
+    }
+
+    .childs .emp-card {
+        float: left;
+        margin-left: 30px;
+    }
+
+    .child-panel .childs {
+        width: 1000px;
+        height: 100%;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .child-panel {
+        width: 100%;
+        height: 100%;
+    }
+
+    .center-group {
+        display: inline-block;
+        max-width: 990px;
+    }
+
+        .center-group .emp-card:nth-child(4n + 1) {
+            margin-left: 0 !important;
+        }
+</style>
+<div id="org-chart-panel">
+    @Html.Partial(UrlHelpers.View("~/Views/Staff/_OrgChartView.cshtml"), Model)
+</div>

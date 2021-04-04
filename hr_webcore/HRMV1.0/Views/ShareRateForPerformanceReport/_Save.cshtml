@@ -1,0 +1,136 @@
+﻿
+@using HRM.App_LocalResources;
+<div class="container-fluid">
+    <div class="row" id="PaymentProduct" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-heading"><b>@ViewBag.Title</b></div>
+                <hr />
+                <div class="panel-body">
+                    <form role="form" name="SaveForm" ng-submit="SaveAction(tableInfo.AddUrl,SaveForm)" novalidate>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                @*---------------------------------------------------------------Đầu tiên-------------------------------------------------------------------------------------------------------*@
+                                <input type="text" ng-model="editData.Id" name="Id" hidden/>
+                                <div class="row" >
+                                    <div class="col-md-2"ng-if="IsStaff">
+                                        <label>@AppRes.Staff</label>
+                                    </div>
+                                    <div class="col-md-4" ng-if="IsStaff">
+                                        <div style="position: relative; display: inline-block; border: 0px solid blue; width: 100%">
+                           
+                                            <select class="form-control" ng-required="true" name="StaffId" ng-disabled="disabled" chosen options="ListEmployeeWhereOrganizationUnit" on-no-result="doStuff" ng-cloak ng-model="editData.StaffId" ng-options="list.StaffID as list.NamePB for list in ListEmployeeWhereOrganizationUnit" convert-dropdown>
+                                                <option value="" selected>-- SELECT --</option>
+                                            </select>
+                                            <span ng-show="SaveForm.$submitted && SaveForm.StaffId.$error.required" style="color: red">@AppRes.ValidationStaff</span>
+
+                                        </div>
+
+                                        
+
+                                    </div>
+                                    <div class="col-md-2"ng-if="!IsStaff">
+                                        <label>@AppRes.OrganizationUnit</label>
+                                    </div>
+                                    <div class="col-md-4"ng-if="!IsStaff">
+                                        <div style="position: relative; display:inline-block; border:0px solid blue; width:100%">
+                                            <select class="form-control" ng-required="true" name="OrganizationUnitID" ng-disabled="disabled" chosen options="getListOrganizationUnit" on-no-result="doStuff" ng-cloak ng-model="editData.OrganizationUnitId" ng-options="list.OrganizationUnitID as list.Name for list in getListOrganizationUnit" convert-dropdown>
+                                                <option value="" selected>-- SELECT --</option>
+                                            </select>
+                                            <span ng-show="SaveForm.$submitted && SaveForm.OrganizationUnitID.$error.required" style="color: red">@AppRes.ValidationOrganizationUnit</span>
+                                        </div>
+
+                                    </div>
+                                    
+
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.SharingRate</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" ng-model="editData.ShareRate"  ng-required="true" name="ShareRate" class="form-control">
+                                        <span ng-show="SaveForm.$submitted && SaveForm.ShareRate.$error.required" style="color: red">@AppRes.ValidationShareRate</span>
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.report</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" ng-required="true" name="PerformanceReportId" ng-disabled="disabled" chosen options="ListPerformanceReport" on-no-result="doStuff" ng-cloak ng-model="editData.PerformanceReportId" ng-options="list.Id as list.Name for list in ListPerformanceReport" convert-dropdown>
+                                            <option value="" selected>-- SELECT --</option>
+                                        </select>
+                                        <span ng-show="SaveForm.$submitted && SaveForm.PerformanceReportId.$error.required" style="color: red">@AppRes.ValidationReportType</span>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.StartDate</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @*<input type="text" ng-required="true"  class="form-control" ng-model="editData.StartDate" name="StartDate" my-date-picker/>*@
+                                        <input type="date" ng-required="true" class="form-control" ng-model="editData.StartDate" name="StartDate" format-date />
+
+                                        <span ng-show="SaveForm.$submitted && SaveForm.StartDate.$error.required" style="color: red">@AppRes.ValidationStartDate</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.EndDate</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @*<input type="text" class="form-control" ng-model="editData.EndDate" name="EndDate" novalidate my-date-picker/>*@
+
+                                        <input type="date" class="form-control" ng-model="editData.EndDate" name="EndDate" format-date />
+
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Status </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" ng-required="true"  data-modal="modal" ng-model="editData.Status" name="Status" convert-dropdown>
+                                            <option value="" selected>-- SELECT --</option>
+                                            <option value="1" selected="selected">@AppRes.Active</option>
+                                            <option value="0">@AppRes.NotActive</option>
+                                        </select>
+                                        <span ng-show="SaveForm.$submitted && SaveForm.Status.$error.required" style="color: red">@AppRes.ValidationStatus</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Note</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <textarea class="form-control"  ng-model="editData.Note" name="Note"></textarea>
+                                    </div>
+                                </div>
+                                <br />
+                                
+                            </div>
+                        </div>
+                        <br />
+                        @*---------------------------------------------------------------Thêm mới và bỏ qua-------------------------------------------------------------------------------------------------------*@
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-4 col-md-push-5">
+                                <button type="submit" class="btn btn-labeled btn-success">
+                                    <span class="btn-label">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </span>@AppRes.SaveData
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>

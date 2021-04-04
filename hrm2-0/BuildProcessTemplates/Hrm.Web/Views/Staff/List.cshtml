@@ -1,0 +1,34 @@
+﻿@model Hrm.Web.ViewModels.StaffViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Context
+@using Hrm.Common
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@{
+    ViewBag.Title = T("Staff.BreadCrumb.List");
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+    TableViewModel tableViewModel = JsonConvert.DeserializeObject<TableViewModel>(JsonConvert.SerializeObject(Model.Table.Clone()));
+    tableViewModel.TableData = new List<dynamic>();
+    tableViewModel.lstItemsPerPage = new List<dynamic>();
+
+}
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="bread-crumb-item"> @T("Staff.BreadCrumb.List")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span>
+    <div class="pull-right">
+        @if (FunctionHelpers.ControlPermission(ActionName.Update, TableConfig.Staff))
+        {
+            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "openPopupAddStaff(false)" })
+        }
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter('Staff', " + Html.Raw(Json.Encode(Model.Table.TableName)) + ", 0, 0)" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-upload", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "exportData('" + Model.Table.TableName + "', '/Staff/ExportStaff')" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-download", BtnClass = "filter btn-bread-crumb pull-left" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter('Staff',  " + Html.Raw(Json.Encode(Model.Table.TableName)) + ",  1, 0)" })
+    </div>
+</div>
+<div class="staff-table">
+    <div id="table-staff-contaner">
+        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/hrm-v2/Staff/_list.js?v=" + timeVersion)"></script>

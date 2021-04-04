@@ -1,0 +1,76 @@
+﻿@model Hrm.Admin.ViewModels.OrganizationChartViewModel
+@using Hrm.Framework.Models
+@using Hrm.Admin.ViewModels
+@using Hrm.Framework.Helper
+@{
+    Layout = null;
+    var listOrganization = new List<OrganizationByLevel>();
+    var grandFather = new OrganizationModel();
+    var father = new OrganizationModel();
+    var selectedOrganization = new OrganizationModel();
+    var childs = new List<OrganizationModel>();
+    if (Model.OrganizationsByLevel != null)
+    {
+        listOrganization = Model.OrganizationsByLevel;
+        var grandFatherType = listOrganization.FirstOrDefault(x => x.Level == -2);
+        if (grandFatherType != null)
+        {
+            grandFather = grandFatherType.Organization;
+        }
+        var fatherType = listOrganization.FirstOrDefault(x => x.Level == -1);
+        if (fatherType != null)
+        {
+            father = fatherType.Organization;
+        }
+        var selectedOrganizationType = listOrganization.FirstOrDefault(x => x.Level == 0);
+        if (selectedOrganizationType != null)
+        {
+            selectedOrganization = selectedOrganizationType.Organization;
+        }
+        var childType = listOrganization.Where(x => x.Level == 1).Select(y => y.Organization);
+        if (childType != null)
+        {
+            childs = childType.ToList();
+        }
+    }
+}
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item prev-bread-crumb"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Setting.OrganizationalStructure")</span>
+    <div class="pull-right" style="padding:23px 0px;">
+        <a type="button" class="" href="/Admin/Organization/List" style="display:block;text-align:center; color: #2ca01c;"><i class="fas fa-columns" aria-hidden="true"></i></a>
+    </div>
+</div>
+<div class="org-chart">
+    @if (selectedOrganization != null && selectedOrganization.Id != 0)
+    {
+        if (grandFather != null && grandFather.Id != 0)
+        {
+            <div class="grand-father">
+                @Html.Partial(UrlHelpers.View("~/Administration/Views/Organization/_OrganizationCard.cshtml"), grandFather)
+            </div>
+        }
+        if (father != null && father.Id != 0)
+        {
+            <div class="father">
+                @Html.Partial(UrlHelpers.View("~/Administration/Views/Organization/_OrganizationCard.cshtml"), father)
+            </div>
+        }
+
+        <div class="main-card">
+            @Html.Partial(UrlHelpers.View("~/Administration/Views/Organization/_OrganizationMainCard.cshtml"), selectedOrganization)
+        </div>
+        if (childs != null && childs.Count > 0)
+        {
+            <div class="child-panel">
+                <div class="childs">
+                    <div class="center-group">
+                        @foreach (var child in childs)
+                        {
+                            @Html.Partial(UrlHelpers.View("~/Administration/Views/Organization/_OrganizationCard.cshtml"), child)
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

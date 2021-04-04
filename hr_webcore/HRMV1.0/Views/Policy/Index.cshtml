@@ -1,0 +1,97 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title =AppRes.Policy;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        overflow-x: hidden;
+    }
+
+    .menu-department {
+        height: 95vh;
+        border-right: 1px solid #f3f3f3;
+    }
+
+    .demo-section1 {
+        display: block;
+        margin-top: 32px;
+        height: 500px;
+        margin-right: -50px;
+        overflow: scroll;
+        margin-left: -28px;
+    }
+
+        .demo-section1 li {
+            display: inline-block;
+            width: 100%;
+        }
+</style>
+<script>
+    var errorNamePolicy= @Html.Raw(Json.Encode(AppRes.ErrorNamePolicy));
+    var errorStatus= @Html.Raw(Json.Encode(AppRes.ErrorStatus));
+    var errorSelectDateStart= @Html.Raw(Json.Encode(AppRes.ErrorSelectDateStart));
+    var errorDate= @Html.Raw(Json.Encode(AppRes.ErrorDate));
+    var errorCreateDate= @Html.Raw(Json.Encode(AppRes.ErrorCreateDate));
+    var errorPolicyDupicate= @Html.Raw(Json.Encode(AppRes.ErrorPolicyDupicate));
+    var errorSelectPolicyAllowance= @Html.Raw(Json.Encode(AppRes.ErrorSelectPolicyAllowance));
+    var MessengerCheck= @Html.Raw(Json.Encode(AppRes.Policy_MessengerCheck));
+    var errorRewards= @Html.Raw(Json.Encode(AppRes.ErrorRewards));
+
+</script>
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row">
+        <div ng-controller="mytable" ng-init="init()">
+            <div style="display: none;">
+                @Html.Action("SavePolicy", "Policy")
+            </div>
+            <build-fixed-table table-url="'@(ViewBag.url)'"
+                               table-edit="editClick"
+                               table-delete="deleteClick"
+                               table-excel-click="ExcelClick"
+                               table-add="addClick"
+                               table-param-filter="employeeFilter"
+                               table-model="PolicyData">
+            </build-fixed-table>
+            <div class="modal fade" id="check"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <b>@AppRes.MS_Title</b>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="div">
+                                <span style="color:red">{{Messenger}}</span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button ng-click="continue()" class="btn btn-primary" >@AppRes.Policy_Continue</button>
+                            <button class="btn btn-default" data-dismiss="modal" aria-label="Close">@AppRes.Policy_ComeBack</button>
+                        </div>                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/Policy/PolicyUntil.js"></script>
+
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)', '@(ViewBag.url1)','@(ViewBag.url2)');
+</script>
+<script>
+    var endYear = new Date(new Date().getFullYear(), 11, 31);
+    //$(".datePicker123").datepicker({
+    //    autoclose: true,
+    //    format: "dd/mm/yyyy"
+    //}).datepicker("setDate", new Date());
+</script>
+

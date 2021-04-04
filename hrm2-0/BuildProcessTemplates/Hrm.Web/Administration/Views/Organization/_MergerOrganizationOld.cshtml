@@ -1,0 +1,71 @@
+﻿@model Hrm.Admin.ViewModels.OrganizationViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using System.Linq
+@using Newtonsoft.Json;
+@{
+    ViewBag.Title = "MergerOrganization";
+   
+}
+<div class="col-md-12 padding " id="merger-organization-old">
+    @Html.Partial(UrlHelpers.TemplateAdmin("Organization", "_MergerOrganizationOldBody.cshtml"),Model)
+</div>
+
+<div class="form-group" style="clear:both;">
+    <div class="header" style="height:15px;">
+        <div class="col-md-6 header-left">
+            @T("Organization.MergerDecision").ToString().ToUpper()
+        </div>
+    </div>
+</div>
+<div class="col-md-12 padding" style="clear:both">
+    <div class="form-group col-md-6">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.DecisionNo", LabelName = T("Staff.Detail.DecisionNo").ToString(), Style = "width:100%;", IsAnimationLabel = true })
+    </div>
+    <div class="form-group col-md-6">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel()
+  {
+      Name = "data.DecisionDate",
+      Vertical = "top",
+      DateFormat = "dd/MM/yyyy",
+      IsAnimationLabel = true,
+      LabelName = T("Table.Title.DecisionDate").ToString(),
+  })
+    </div>
+</div>
+<div class="col-md-12 padding" style="clear:both">
+
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel()
+       {
+           Name = "data.StartDate",
+           Value = DateTime.Now,
+           Vertical = "top",
+           DateFormat = "dd/MM/yyyy",
+           IsAnimationLabel = true,
+           LabelName = T("Table.Title.ApplyDate").ToString(),
+           IsRequired = true
+       })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel()
+       {
+           Name = "data.EndDate",
+           Vertical = "top",
+           DateFormat = "dd/MM/yyyy",
+           IsAnimationLabel = true,
+           LabelName = T("Staff.Detail.EndDateApply").ToString()
+       })
+        </div>
+
+    </div>
+
+</div>
+<div class="col-md-12 padding" style="clear:both">
+    <div class="form-group col-md-12">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.Note", LabelName = T("Organization.Note").ToString(), Style = "width:100%;", IsAnimationLabel = true })
+    </div>
+</div>

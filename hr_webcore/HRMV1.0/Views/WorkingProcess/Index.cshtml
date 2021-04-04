@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container-fluid" ng-controller="WorkingProcess" ng-init="initWP()">
+    <div class="row">
+
+        <build-table table-url="urlWorkingProcess"
+                     table-edit="editWPClick"
+                     table-copy="IsCopyClick"
+                     table-delete="deleteWPClick"
+                     table-excel-click="ExcelWPClick"
+                     table-add="addWPClick"
+                     table-param-filter="wpFilter"
+                     table-model="wpTableData"></build-table>
+
+        <div style="display: none;">
+            @Html.Action("Save_WorkingProcess", "WorkingProcess")
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+﻿@model Hrm.Framework.Models.DropdownListModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@{
+    Layout = null;
+    var cssName = Model.Name.Replace(".", "-").Replace("[", "").Replace("]", "-");
+}
+<div class="hrm-v2-floating-form">
+    <div class="floating-label">
+        <select class="floating-select js-example-basic-multiple" id="@cssName" name="@Model.Name" multiple="multiple">
+            @foreach (var item in Model.Data)
+            {
+                {
+                    <option value="@item[Model.ValueField]"> @item[Model.DisplayField] </option>
+                }
+            }
+        </select>
+        @if (Model.IsAnimationLabel)
+        {
+            <label>
+                @Model.LabelName@if (Model.IsRequired)
+                {<span class="star"> *</span> }
+            </label>
+        }
+        <span name="@Model.Name-error" class="hrm-v2-error" label-name="@Model.LabelName"></span>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#@cssName').select2({
+            tags: true,
+            tokenSeparators: [',', ' '],
+        });
+        $('#@cssName').val(@Html.Raw(Json.Encode(Model.ValueMultiSelect))).change();
+        @*$('#@cssName').val([@Model.Value]).change();*@
+    });
+</script>

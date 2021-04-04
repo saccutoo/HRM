@@ -1,0 +1,47 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.DetailAccountReport;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div id="AttendanceManagement" class="container-fluid" ng-app="tableApp">
+    <div class="row" id="PerformanceReport">
+        <div class="col-md-12" id="PerformanceReport" ng-controller="DetailAccountReport" ng-init="init()">
+            <br />
+            <div class="col-md-6" style="margin-left:12px;">
+                <input type="radio" ng-model="type" ng-checked="true" value="1"> @AppRes.TitleAccount
+                <input type="radio" ng-model="type"  value="2"> @AppRes.CollectionFee
+                <input type="radio" ng-model="type"  value="3"> @AppRes.RentAnAccountAndRefer
+            </div>
+            <div>
+            <div ng-if="type==1?true:false" >
+                <build-fixed-table table-url="'@(ViewBag.url)'"          
+                                   table-param-filter="employeeFilter"
+                                   table-model="DetailAccountReportData" notification="'@(AppRes.Notification)'" validate-datetime="'@(AppRes.ValidateFromDateToDate)'">
+                </build-fixed-table>
+            </div>
+            <div ng-if="type==2?true:false">
+                <build-fixed-table table-url="'@(ViewBag.url1)'"                 
+                                   table-param-filter="employeeFilter"
+                                   table-model="DetailAccountReportData" notification="'@(AppRes.Notification)'"  validate-datetime="'@(AppRes.ValidateFromDateToDate)'">
+                </build-fixed-table>
+            </div>
+                <div ng-if="type==3?true:false" >
+                    <build-fixed-table table-url="'@(ViewBag.url2)'"
+                                       table-param-filter="employeeFilter"
+                                       table-model="DetailAccountReportData" notification="'@(AppRes.Notification)'"  validate-datetime="'@(AppRes.ValidateFromDateToDate)'">
+                    </build-fixed-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/DetailAccountReport/DetailAccountReport.js"></script>
+<script>
+    BuildTable('tableApp', 'DetailAccountReport', '@(ViewBag.url)', '@(ViewBag.url1)', '@(ViewBag.url2)');
+</script>
+<script src="~/Scripts/directive/datePicker(NewDate)/datePicker.js"></script>

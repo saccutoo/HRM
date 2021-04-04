@@ -1,0 +1,48 @@
+﻿@model Hrm.Admin.ViewModels.MenuPermissionViewModel
+@using System.Linq
+@using Hrm.Common
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+
+@{
+    Layout = null;
+}
+
+@{
+    var data = Model.Roles;
+    if (data != null && data.Count > 0)
+    {
+        foreach (var item in data)
+        {
+            <div class="permission-role-list-content" onclick="ClickRole(@item.Id)">
+                <div class="permission-role-list-content-name">
+                    <span>@M(item.Id.ToString()+";Role;Name")</span>
+                </div>
+                <div class="permission-role-list-content-description">
+
+                   
+                    @{
+                        var Description = item.Description.Value;
+                        int length = 0;
+                        if (Description!=null)
+                        {
+                            length = Description.Length;
+                        }
+                        var style = "display:none";
+                        if (Convert.ToInt32(length) > 20)
+                        {
+                            style = "display:block";
+                            <span class="description">@item.Description.Value.Substring(0,20)... </span>
+                        }
+                        else
+                        {
+                            <span class="description">@item.Description </span>
+                        }
+                    }
+                    @*<span class="show-more" style="@style"> <a>@T("Permission.ViewMore")</a></span>*@
+                </div>
+            </div>
+        }
+    }
+}

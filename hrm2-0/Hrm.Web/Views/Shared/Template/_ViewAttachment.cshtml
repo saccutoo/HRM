@@ -1,0 +1,13 @@
+﻿@model Hrm.Framework.Models.AttachmentModel
+@using Hrm.Common
+@{
+    Layout = null;
+}
+
+<div class="hrmv2-property-field width-100-percent">
+    @if (Model != null)
+    {
+        <div class="width-100-percent property-label">@Model.Label</div>
+        <a class="hrm-v2-font-13" href="/Attachment/DownloadFileById?id=@Model.Id"><i class="fas fa-file-contract" style="color:#2CA01C; width:16px;font-size:13px"></i>@Model.DisplayFileName</a>
+    }
+</div>

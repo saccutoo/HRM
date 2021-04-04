@@ -1,0 +1,88 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = @AppRes.Timekeeping_Manager;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var timeVersion = "20190926";
+}
+<link href="~/Scripts/directive/angular-treeview/treeview.css" rel="stylesheet" />
+<style>
+    #model {
+        pointer-events: none;
+    }
+</style>
+<script>
+    var errorWorkAlreadyExists= @Html.Raw(Json.Encode(AppRes.ErrorWorkAlreadyExists));
+    var errorReasonToForgetToTimekeeping= @Html.Raw(Json.Encode(AppRes.ErrorReasonToForgetToTimekeeping));
+    var errorAdditionalPermissionsExceeded= @Html.Raw(Json.Encode(AppRes.ErrorAdditionalPermissionsExceeded));
+    var errorPastThirtyMinutes= @Html.Raw(Json.Encode(AppRes.ErrorPastThirtyMinutes));
+    var errorTimeIsZero= @Html.Raw(Json.Encode(AppRes.ErrorTimeIsZero));
+    var errorWork= @Html.Raw(Json.Encode(AppRes.ErrorWork));
+    var errorCreatingMerit= @Html.Raw(Json.Encode(AppRes.ErrorCreatingMerit));
+    var errorTardinessLeaveEarly= @Html.Raw(Json.Encode(AppRes.ErrorTardinessLeaveEarly));
+
+</script>
+<div class="container-fluid" ng-app="tableApp" ng-cloak>
+    <div id="TimeSSN" class="row" style="margin: 0;" ng-controller="TimeSSN" ng-init="init()">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <div id="tabs">
+                        <ul>
+                            <li><a href="#tabs1" ng-click="LoadTab('tabs1')">@AppRes.Timekeeping_TimeSSN</a></li>
+                            <li><a href="#tabs3" ng-click="LoadTab('tabs3')">@AppRes.RecommendedList</a></li>
+                            <li><a ng-show="isQL" href="#tabs2" ng-click="LoadTab('tabs2')">@AppRes.WorkingDaySupplement</a></li>
+                            <li><a href="#tabs4" ng-click="LoadTab('tabs4')">@AppRes.WorkingDaySummary</a></li>
+                            <li><a href="#tabs5" ng-click="LoadTab('tabs5')">@AppRes.Timekeeping_Manager</a></li>
+                            <li><a href="#tabs6" ng-click="LoadTab('tabs6')">@AppRes.Timekeeping_ManagerVacation</a></li>
+                        </ul>
+                        <div id="tabs1">
+                            @Html.Action("TimeKeepingServerSide", "Common")
+                            <div style="display: none;">
+                                @Html.Action("BoSungCong", "TimeKeeping_TimeSSN")
+                            </div>
+                        </div>
+                        <div id="tabs2">
+                            <div ng-if="flagShow == 'tabs2'" compile="tab2Data"></div>
+                        </div>
+                        <div id="tabs3">
+                            <div ng-if="flagShow == 'tabs3'" compile="tab3Data"></div>
+                        </div>
+                        <div id="tabs5">
+                            <div ng-if="flagShow == 'tabs5'" compile="tab5Data"></div>
+                        </div>
+                        <div id="tabs4">
+                            <div ng-if="flagShow == 'tabs4'" compile="tab4Data"></div>
+                        </div>
+                        <div id="tabs6">
+                            <div ng-if="flagShow == 'tabs6'" compile="tab6Data"></div>
+                        </div>
+                        <!-- END panel-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="@Url.Content("~/Scripts/mycustom/TableService.js?v=" + timeVersion)"></script>
+<script src="@Url.Content("~/Scripts/mycustom/TimeKeeping_TimeSSN/TimeKeeping_TimeSSNUntil.js?v=" + timeVersion)"></script>
+<script src="@Url.Content("~/Scripts/mycustom/HR_WorkingDaySupplement/HR_WorkingSupplementUntil.js?v=" + timeVersion)"></script>
+<script src="@Url.Content("~/Scripts/mycustom/RecommendedList/RecommendedListUntil.js?v=" + timeVersion)"></script>
+<script src="@Url.Content("~/Scripts/mycustom/HR_WorkingDaySummary/HR_WorkingDaySummaryUntil.js?v=" + timeVersion)"></script>
+<script src="@Url.Content("~/Scripts/mycustom/TimeKeeping/TimeKeepingUntil.js?v=" + timeVersion)"></script>
+<script src="@Url.Content("~/Scripts/mycustom/Timekeeping_ManagerVacation/Timekeeping_ManagerVacationUntil.js?v=" + timeVersion)"></script>
+<script>
+    BuildTable1('tableApp', 'TimeSSN', '@(ViewBag.url1)');
+    BuildTable2('tableApp', 'WorkingDaySupplement', '@(ViewBag.url2)');
+    BuildTable3('tableApp', 'RecommendedList', '@(ViewBag.url3)');
+    BuildTable4('tableApp', 'WorkingDaySummary', '@(ViewBag.url4)');
+    BuildTable5('tableApp', 'TimeKeeping','@(ViewBag.url5)','@AppRes.ValidateCheckBox','@AppRes.Notification');
+    BuildTable6('tableApp', 'Timekeeping_ManagerVacation', '@(ViewBag.url6)');
+    $(function () { $('.timeselect').inputmask({ mask: "99:99" }); });
+</script>

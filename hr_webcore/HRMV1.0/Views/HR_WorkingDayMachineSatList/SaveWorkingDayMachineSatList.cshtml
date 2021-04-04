@@ -1,0 +1,99 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<div class="container-fluid">
+    <div class="row" id="SaveWorkingDayMachineSatList" style="margin: 0;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;">@AppRes.Work7th</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.WorkingDayMachine <span style="color:red">(*)</span></label>
+                                    </div>
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <div class="col-md-9" ng-show="WorkingDayMachineEdit">
+                                            <select class="form-control" chosen options="WorkingDayMachineList" on-no-result="doStuff" required data-modal="modal" ng-model="Data.WorkingDayMachineIDEdit" ng-options="list.WorkingDayMachineID as list.Name for list in WorkingDayMachineList" ng-change="ChangeWorkingDayMachineEdit()">
+                                                <option value="" selected>--@AppRes.Select--</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-9" ng-show="WorkingDayMachineADD">
+                                            <select class="form-control" chosen multiple options="WorkingDayMachineList" on-no-result="doStuff" required data-modal="modal" ng-model="Data.ListWorkingDayMachineID" ng-options="list.WorkingDayMachineID as list.Name for list in WorkingDayMachineList" ng-change="ChangeWorkingDayMachineADD()"></select>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-md-9" ng-show="WorkingDayMachineEdit">
+                                            <select class="form-control" chosen options="WorkingDayMachineList" on-no-result="doStuff" required data-modal="modal" ng-model="Data.WorkingDayMachineIDEdit" ng-options="list.WorkingDayMachineID as list.NameEN for list in WorkingDayMachineList" ng-change="ChangeWorkingDayMachineEdit()">
+                                                <option value="" selected>--@AppRes.Select--</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-9" ng-show="WorkingDayMachineADD">
+                                            <select class="form-control" chosen multiple options="WorkingDayMachineList" on-no-result="doStuff" required data-modal="modal" ng-model="Data.ListWorkingDayMachineID" ng-options="list.WorkingDayMachineID as list.NameEN for list in WorkingDayMachineList" ng-change="ChangeWorkingDayMachineADD()"></select>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label style="line-height:30px;">@AppRes.DateofAttendance <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" id="datePicker123" class="form-control datePicker123" ng-model="Data.Date" ng-change="ChangeDate()" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:35px;">@AppRes.AllDay</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" class="form-control" id="Check" ng-model="Data.Check" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;">@AppRes.CustNote </label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control" ng-model="Data.Note" ng-change="ChangeNote()"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-sm-12">
+                            <span style="color:red" ng-bind="Mesenger"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+                <center>
+                    <button type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>@AppRes.btnUpdate
+                    </button>
+                    <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                        <span class="btn-label">
+                            <i class="fa fa-close"></i>
+                        </span>@AppRes.btnCancel
+                    </button>
+                </center>
+            </div>
+        </form>
+    </div>
+</div>

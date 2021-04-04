@@ -1,0 +1,44 @@
+﻿@model Hrm.Admin.ViewModels.WelcomeKitViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@using Hrm.Framework.Context
+@{
+    ViewBag.Title = "WelcomeKit";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+} 
+<!--Add Css View-->
+<link href="@Url.Content("~/Content/hrm-v2/_staffdetails.css?v=" + timeVersion)" rel="stylesheet" type="text/css" />
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><a href="#" class="bread-crumb-item">@T("Checklist.ProbationaryReception")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><a href="#" class="bread-crumb-item">@T("Checklist.WelcomKit")</a>
+    <div class="pull-right" style="padding:15px 0px;">
+        <a type="button" class="hrm-v2-btn-save" href="/staff-onboarding?viewtype=list" style="display:block;text-align:center">@T("WelcomeKit.Button.ComeBack")</a>
+    </div>
+</div>
+<div class="col-md-12 hrm-v2-inline-block pd-l-0">
+    <div id="welcom-kit-view">
+        <div class="hrmv2-tab">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item active in" index="0">
+                    <a class="nav-link" id="send-wellcome-kit-tab" data-toggle="tab" data-target="#send-wellcome-kit" role="tab" aria-controls="send-wellcome-kit" aria-selected="true">Email chào mừng</a>
+                </li>
+                <li class="nav-item " index="1">
+                    <a class="nav-link" id="document-tab" data-toggle="tab" data-target="#document" role="tab" aria-controls="document" aria-selected="false">Tài liệu</a>
+                </li>
+            </ul>
+            <div class="tab-content pd-0" id="myTabContent-add">
+                    <div class="tab-pane fade active in" id="send-wellcome-kit" role="tabpanel" aria-labelledby="send-wellcome-kit-tab">
+                        <div style="width:80%;padding:30px;padding-top:15px">
+                            @Html.Partial(UrlHelpers.Template("_SendMail.cshtml"))
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="document" role="tabpanel" aria-labelledby="document-tab">
+                        yzxsad
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

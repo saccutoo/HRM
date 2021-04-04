@@ -1,0 +1,33 @@
+﻿@using HRM.App_LocalResources
+@{
+    ViewBag.Title = AppRes.PermissionColumnTable;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    var errorTableColumn=@Html.Raw(Json.Encode(AppRes.ErrorTableColumn));
+    var errorSecRole=@Html.Raw(Json.Encode(AppRes.ErrorSecRole));
+</script>
+<div class="container-fluid" ng-app="tableApp">
+
+    <div class="row">
+        <div class="col-sm-6" ng-controller="mytable">
+            @Html.Action("SecRoleServerSide", "Common")
+        </div>
+        <div class="col-sm-6" ng-controller="mytable1">
+            @Html.Action("SecRoleServerSide1", "Common")
+        </div>
+    </div>
+
+</div>
+<script src="~/Scripts/mycustom/Sys_table_column_Role/Sys_table_Column_service.js"></script>
+<script src="~/Scripts/mycustom/Sys_table_column_Role/Sys_table_Column_Until.js"></script>
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+    BuildTable('tableApp', 'mytable1', '@(ViewBag.url1)');
+</script>
+
+
+
+
+

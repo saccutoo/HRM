@@ -1,0 +1,74 @@
+﻿@model Hrm.Admin.ViewModels.AddSalaryTypeTableSalaryElementViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Common
+
+
+
+<td style="text-align:center;line-height:50px;">
+    @Model.SalaryElement.Index
+    <input type="text" value="@Model.SalaryElement.OrderNo" name="listModel[@Model.SalaryElement.Index].OrderNo" hidden />
+    <input type="text" value="@Model.SalaryElement.MergeCells" name="listModel[@Model.SalaryElement.Index].MergeCells" hidden />
+    <input type="text" value="@Model.SalaryElement.Css" name="listModel[@Model.SalaryElement.Index].Css" hidden />
+</td>
+<td >
+    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Trường thông tin").ToString(),  IsAnimationLabel = false, Data = Model.DynamicSalaryElements, ValueField = "Id", Name = "listModel[" + Model.SalaryElement.Index + "].Id", IsMultipleLanguage = true, DataType = DataType.SalaryElement, PropertyName = "Name",Value=Model.SalaryElement.Id.ToString(),Attribute="model-index="+Model.SalaryElement.Index })
+</td>
+
+<td style="opacity:0.5">
+    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "listModel[" + Model.SalaryElement.Index + "].Code", LabelName = T("SalaryElement.Code").ToString(), IsAnimationLabel = false,PlaceHolder= T("SalaryElement.Code").ToString(), Value = Model.SalaryElement.Code, Attribute = "readonly" })
+</td>
+<td style="opacity:0.5">
+    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() {Name= "listModel-TypeId",  LabelName = T("SalaryElement.Group").ToString(),PlaceHolder=T("SalaryElement.Group").ToString(), IsAnimationLabel = false, Value = M(Model.SalaryElement.TypeId.ToString() + ";" + DataType.MasterData + ";Name").ToString(), Attribute = "readonly" })
+
+    <input type="text" value="@Model.SalaryElement.TypeId" name="listModel[@Model.SalaryElement.Index].TypeId" hidden />
+</td>
+<td style="opacity:0.5">
+    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("SalaryElement.Formula").ToString(), IsAnimationLabel = false, Name = "listModel[" + Model.SalaryElement.Index + "].Formula", Value = Model.SalaryElement.Formula, Attribute = "readonly" })
+</td>
+<td class="td-permission-isedit">
+    @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel()
+{
+    Name = "ck-checked-permission-isedit-" +
+                                     Model.SalaryElement.Index,
+    Attribute = Model.SalaryElement.IsEdit == true ? "Checked" : "",
+    Id = "listModel[" + Model.SalaryElement.Index + "].IsEdit",
+    Value="true"
+})
+</td>
+
+<td class="td-permission-show-table-paycheck">
+    @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "ck-checked-permission-show-table-paycheck-" + Model.SalaryElement.Index, Attribute = Model.SalaryElement.IsShowSalary == true ? "Checked" : "", Id = "listModel[" + Model.SalaryElement.Index + "].IsShowSalary", Value = "true" })
+</td>
+<td class="td-permission-show-table-paycheck td-delete">
+    @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "ck-checked-permission-show-table-paycheck-td-delete" + Model.SalaryElement.Index, Attribute = Model.SalaryElement.IsShowPayslip == true ? "Checked" : "", Id = "listModel[" + Model.SalaryElement.Index + "].IsShowPayslip" ,Value="true"})
+
+    <input type="text" name="listModel[@Model.SalaryElement.Index].Index" value="@Model.SalaryElement.Index" hidden />    
+    <a class="fas fa-trash-alt" onclick="deleteRow(@Model.SalaryElement.Index)" title=@T("table.button.delete")></a>
+    @*@if (Model.SalaryElement.IsEdit)
+    {
+        <a class="fas fa-check" style="color:#2CA01C;float:right;margin-right:5px;margin-top:15px;" onclick="saveRow(@Model.SalaryElement.Index)")></a>
+    }*@  
+</td>
+
+
+<script>
+    $(document).on('select2:selecting', '#listModel-'+'@Model.SalaryElement.Index'+'-Id', function (e) {
+        var id = e.params.args.data.id;
+        var data = $('#form-add-salary-type').serializeArray();
+        data.push({ name: "salaryElementId", value: id })
+        data.push({ name: "index", value: $(e)[0].currentTarget.getAttribute("model-index")})
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/SalaryType/ReloadRowTable",
+            data: data,
+            success: function (response) {
+                $('#checkbox-add-salary-element-type-'+@Model.SalaryElement.Index).html(response);
+
+            }
+        });
+    });
+</script>
+

@@ -1,0 +1,456 @@
+﻿@model Hrm.Web.ViewModels.OnboardingViewModel
+@using Hrm.Framework.Models
+@using Hrm.Web.ViewModels
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Context
+@{
+    ViewBag.Title = T("Onboarding.Title");
+    Layout = UrlHelpers.View("~/Views/Shared/_MenuSidebarTop.cshtml");
+    var total = 0;
+    var onboarding = Model.Onboardings;
+    if (onboarding != null && onboarding.Count > 0)
+    {
+        total = onboarding.Count;
+    }
+    var timeVersion = "140320181446";
+}
+<style>
+    .onboarding-pipeline {
+        height: 50px;
+        width: 100%;
+        position: relative;
+        /*background: #2CA01C;*/
+        float: left;
+        display: flex;
+        align-items: center;
+        margin-bottom: 2px;
+    }
+
+        .onboarding-pipeline .pipeline-name {
+            margin-left: 40px;
+            color: #FFFFFF;
+            font-size: 13px;
+        }
+
+        .onboarding-pipeline .total-staff {
+            position: absolute;
+            bottom: 15px;
+            right: 25px;
+            font-size: 13px;
+            color: #FFFFFF;
+        }
+
+            .onboarding-pipeline .total-staff i {
+                width: 15px;
+                text-align: center;
+            }
+
+            .onboarding-pipeline .total-staff .fas.fa-circle {
+                font-size: 5px;
+                color: #FFFFFF;
+                position: relative;
+                top: -2px;
+            }
+
+            .onboarding-pipeline .total-staff .fas.fa-user {
+                font-size: 11px;
+            }
+
+    .onboarding-pipeline-column {
+        position: relative;
+        float: left;
+    }
+
+    .onboarding-staff-panel, .onboarding-staff-panel-full {
+        background-color: #e8e8e8;
+        height: calc(100% - 40px);
+        float: left;
+    }
+
+    .onboarding-staff-panel {
+        width: calc(100% - 20px);
+    }
+
+    .onboarding-staff-panel-full {
+        width: 100%;
+    }
+
+    .first-onboarding-column .onboarding-pipeline {
+        clip-path: polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%);
+    }
+
+    .onboarding-pipeline {
+        clip-path: polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%, calc(0% + 20px) 50%);
+    }
+
+    .last-onboarding-column .onboarding-pipeline {
+        clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 100% 100%, 0% 100%, calc(0% + 20px) 50%);
+    }
+
+    .normal-onboarding-column, .last-onboarding-column {
+        position: relative;
+    }
+
+    .onboarding-card {
+        height: 90px;
+        width: 100%;
+        background-color: white;
+        border: none;
+        z-index: 9;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        position: relative;
+    }
+
+        .onboarding-card:hover {
+            cursor: pointer;
+        }
+
+    .ghost {
+        opacity: 0.5;
+        z-index: 10;
+        border: 1px dashed black;
+    }
+
+    .drag-container {
+        overflow-x: auto;
+        padding: 10px 5px 10px 5px;
+        height: 100%;
+    }
+
+    .onboarding-card .sort-icon {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        width: 8px;
+        float: left;
+        margin-right: 14px;
+        margin-left: 14px;
+        color: #F86367;
+        font-size: 13px;
+    }
+
+    .onboarding-card .staff-name {
+        color: #3797D4;
+        font-family: "Roboto-Bold";
+        font-size: 13px;
+        line-height: 26px;
+    }
+
+    .onboarding-card .staff-classification {
+        font-size: 13px;
+        line-height: 26px;
+        color: #223133;
+        font-family: Roboto-Regular;
+    }
+
+    .onboarding-card .staff-date {
+        font-size: 13px;
+        color: #223133;
+        font-family: Roboto-Regular;
+    }
+
+        .onboarding-card .staff-date .fas {
+            margin-right: 10px;
+        }
+
+    .onboarding-card .staff-information {
+        padding-top: 5px;
+    }
+
+    .staff-action .fas {
+        float: right;
+        margin-right: 10px;
+        font-size: 13px;
+    }
+
+    .staff-name .fas.fa-birthday-cake {
+        color: #F86367;
+        width: 20px;
+        text-align: center;
+    }
+
+    .staff-action .fas.fa-share {
+        color: #2CA01C;
+    }
+
+    .staff-action .fas.fa-ellipsis-v {
+        color: #F86367;
+    }
+
+    .staff-date .fas {
+        color: #3797D4;
+    }
+
+    #table-onboarding-container .table-content {
+        height: 95%;
+    }
+
+    #table-onboarding-container .circle-pipeline-step {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        float: left;
+        color: white;
+        display: flex;
+        align-items: center;
+    }
+
+        #table-onboarding-container .circle-pipeline-step .pipeline-name {
+            text-align: center;
+            width: 100%;
+        }
+
+    #table-onboarding-container .pipeline-line-break {
+        width: 10px;
+        float: left;
+        height: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    #table-onboarding-container .circle-pipeline-step.element-disabled {
+        color: white;
+        opacity: 0.2;
+        background-color: #666666 !important;
+    }
+
+    #table-onboarding-container .pipeline-line-break.element-disabled {
+        color: #666666;
+        opacity: 0.2;
+    }
+
+    .onboarding-welcome-kit i {
+        margin-right: 10px;
+        color: green;
+    }
+
+    .onboarding-checklist {
+        margin: 0 auto;
+    }
+
+        .onboarding-checklist .send-checklist {
+            border: 1px solid #2CA01C;
+            height: 40px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+        }
+
+            .onboarding-checklist .send-checklist span {
+                color: #2CA01C;
+                font-family: Roboto-bold;
+                font-size: 12px;
+            }
+
+        .onboarding-checklist .list-check {
+            height: 30px;
+            border-radius: 5px;
+            display: flex;
+            font-size: 14px;
+            align-items: center;
+            background-color: transparent !important;
+        }
+
+    .staff-mail.check-list-completed {
+        position: absolute;
+        bottom: 5px;
+        right: 8px;
+        color: #2CA01C;
+        font-size: 13px;
+        font-family: Roboto-Regular;
+        opacity: 0.5;
+    }
+
+        .staff-mail.check-list-completed .check {
+            background: #2CA01C;
+            color: #fff;
+            font-size: 8px;
+            padding: 1px 2px;
+            margin: 0px 2px;
+            margin-left: 4px;
+            position: relative;
+            top: -1px;
+        }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="hrm-v2-font-13 hrm-v2-bold" style="color:#7C7C7C">@T("Menu.Staff")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><a href="#" class="bread-crumb-item">@T("Checklist.ProbationaryReception")</a>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick= "openPopupAddStaff(true)" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "changeView()" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left" })
+    </div>
+</div>
+
+<div id="onboarding-panel" style="width: calc(100% + (@total - 1) * 17px);padding:0px 0px 0px 0px!important;display:inline-block">
+    @if (total > 0)
+    {
+        <div class="first-onboarding-column">
+            @Html.Partial(UrlHelpers.View("~/Views/Staff/_OnboardingPipeline.cshtml"), new OnboardingColumnViewModel() { Onboarding = Model.Onboardings[0], Index = 0, Total = total, ViewType = Model.ViewType })
+        </div>
+    }
+    @if (total > 2)
+    {
+        <div class="normal-onboarding-column">
+            @for (var i = 1; i <= total - 2; i++)
+            {
+                @Html.Partial(UrlHelpers.View("~/Views/Staff/_OnboardingPipeline.cshtml"), new OnboardingColumnViewModel() { Onboarding = Model.Onboardings[i], Index = i, Total = total, ViewType = Model.ViewType })
+            }
+        </div>
+    }
+    @if (total > 1)
+    {
+        <div class="last-onboarding-column">
+            @Html.Partial(UrlHelpers.View("~/Views/Staff/_OnboardingPipeline.cshtml"), new OnboardingColumnViewModel() { Onboarding = Model.Onboardings[total - 1], Index = total - 1, Total = total, ViewType = Model.ViewType })
+        </div>
+    }
+</div>
+@if (Model.ViewType == Hrm.Common.ViewType.List)
+{
+    var lstOnboarding = Model.Onboardings;
+    var pipelineSteps = new List<PipelineStepModel>();
+    if (lstOnboarding != null && lstOnboarding.Count > 0)
+    {
+        foreach (var onboardingStep in lstOnboarding)
+        {
+            var pipelineStep = onboardingStep.Pipeline;
+            if (pipelineStep != null)
+            {
+                pipelineSteps.Add(pipelineStep);
+            }
+        }
+    }
+
+    <div id="table-onboarding-container">
+        @{
+            var table = Model.Table;
+            table.CurrentPage = 1;
+            table.PipelineData = pipelineSteps;
+            table.TableDataUrl = "Staff/GetDataOnboarding";
+            table.TableName = "table-staff-onboarding";
+        }
+        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), table)
+    </div>
+            }
+<script src="@Url.Content("~/Scripts/hrm-v2/Staff/_list.js?v=" + timeVersion)"></script>
+<script type="text/javascript">
+    $(function () {
+        var element;
+        var container;
+        $(".drag-content").draggable({
+            helper: function (event) {
+                var ret = $(this).clone();
+                $(this).toggleClass("ghost");
+                return ret;
+            },
+            revert: function (is_valid_drop) {         
+                if ($(this).closest(".drag-container")[0] == container[0]) {
+                    return 'invalid';
+                }
+                if (!is_valid_drop) {
+                    $(".drag-container").css("border", "none").css("background-color", "#e8e8e8");
+                    return 'invalid';
+                }
+            },
+            stop: function (event, ui) {
+                $(this).toggleClass("ghost");
+            },
+            drag: function () {
+                element = this;
+                container = $(this).closest(".drag-container");
+                $(".drag-container").css("border", "1px dashed red").css("background-color", "#d6d6d6");
+                container.css("border", "none").css("background-color", "#e8e8e8");
+            },
+        });
+
+        $(".drag-container").droppable({
+            drop: function () {
+                if ($(this)[0] != container[0]) {
+
+                    var thisIndex= $(this)[0].getAttribute('index-rule');
+                    var elementRule= $(element)[0].getAttribute('pipeline-rule');
+                    var stepIdDrag =  $(this)[0].getAttribute('pipeline-step-id');
+                    var stepIdDrop =  $(element)[0].getAttribute('pipeline-step-id');
+                    var totalDrag = $(".onboarding-pipeline-column-"+ stepIdDrag +" .onboarding-pipeline .total-staff .count").text();
+                    var totalDrop = $(".onboarding-pipeline-column-"+ stepIdDrop +" .onboarding-pipeline .total-staff .count").text();
+                    if (elementRule!=null) {
+                        if (elementRule.indexOf(thisIndex)>-1) {
+                            $(this).attr("pipeline-step-id",stepIdDrag);
+                            $(element).attr("pipeline-step-id",stepIdDrag);
+                            $(element).attr("pipeline-rule",$(this)[0].getAttribute('pipeline-rule'));
+                            $(this).append(element);
+                            var pipelineStep={
+                                Id:$(this)[0].getAttribute('pipeline-step-id'),
+                                PipelineId:$(this)[0].getAttribute('pipeline-id'),
+                                PipelineStaffStatusId:$(this)[0].getAttribute('pipeline-staff-status-id')
+                            }
+                            $.ajax(
+                            {
+                                type: "POST",
+                                url: "/Staff/SaveStatusPipeline",
+                                data: {
+                                    pipelineStep: pipelineStep,
+                                    staffId:$(element)[0].getAttribute('staff-id'),
+                                },
+                                success: function (response) {
+                                    totalDrag = parseInt(totalDrag) + 1;
+                                    totalDrop =  parseInt(totalDrop) - 1;
+                                    $(".onboarding-pipeline-column-"+ stepIdDrag +" .onboarding-pipeline .total-staff .count").text(totalDrag.toString());
+                                    $(".onboarding-pipeline-column-"+ stepIdDrop +" .onboarding-pipeline .total-staff .count").text(totalDrop.toString());
+                                    ShowMessage(response.result.Success, response.responeseResources, 0, 500,  3000);
+                                }
+                            });
+                        }
+                        else{
+                            ShowMessage(false, '@T("Message.False")', '@T("Onbroading.ErrorMessageConvertStatus")', 500,  3000);
+                        }
+
+                    }
+                    else {                      
+                        ShowMessage(false, '@T("Message.False")', '@T("Onbroading.ErrorMessageConvertStatus")', 500,  3000);
+                    }
+                }
+                $(".drag-container").css("border", "none").css("background-color", "#e8e8e8");
+            }
+        });
+    })
+    function changeView()
+    {
+        if (@Html.Raw(Json.Encode(Model.ViewType)) == "Card")
+            window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "staff-onboarding?viewtype=list";
+        else
+            window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "staff-onboarding?viewtype=card";
+    }
+    function openPopupCheckList(id,name,officePositionId){
+        var options = {
+            id: 'frmCheckList',
+            isNotificationPoup: false,
+            align: "center",
+            url: '/Staff/CheckListModal',
+            width: 600,
+            data:{
+                id : id,
+                staffName : name,
+                officePositionId : officePositionId
+            },
+            isDataTypeJson: true,
+            idform: 'frm-check-list'
+        };
+        CreatePopup(options);
+    }
+    function ChecklistSummary(id){
+        $.ajax(
+             {
+                 type: "POST",
+                 url: "/Staff/SendStaffCheckList",
+                 data: {
+                   staffId: id,
+                   checklistId: $('#send-checklistId').val()
+                 },
+                 success: function (response) {
+                     window.location.reload();
+                 }
+             });
+    }
+</script>

@@ -1,0 +1,31 @@
+﻿@model Hrm.Web.ViewModels.DashboardPersonalViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+<div class="col-md-12 pd-0">
+    <div class="item col-md-3 pull-left">
+        <label class="time-lbl">@T("Workingday.Title.TotalWorkingday")</label>
+        <label class="txt-time hrm-v2-color-green">@Model.Workingdays.Sum(x => x.TotalWorkingday)</label>
+    </div>
+    <div class="item col-md-3 pull-left">
+        <label class="time-lbl">@T("Workingday.Title.Overtime")</label>
+        <label class="txt-time hrm-v2-color-green">@Model.Workingdays.Sum(x => x.WorkingdayOvertime)</label>
+    </div>
+    <div class="item col-md-3 pull-left">
+        @{
+            double totalLateEarly = 0;
+            foreach (var wd in Model.Workingdays)
+            {
+                TimeSpan late = TimeSpan.Parse(wd.LateDuration.ToString("HH:mm", CultureInfo.InvariantCulture));
+                TimeSpan early = TimeSpan.Parse(wd.EarlyDuration.ToString("HH:mm", CultureInfo.InvariantCulture));
+                totalLateEarly += (late + early).TotalMinutes;
+            }
+        }
+        <label class="time-lbl">@T("Dashboard.Label.MinutePunish")</label>
+        <label class="txt-time" style="margin-right:10px;color:#F86367;">@totalLateEarly</label><div class="db-minute">@T("Workingday.Unit.Minute")</div>
+    </div>
+    <div class="item col-md-3 pull-left">
+        <label class="time-lbl">@T("Workingday.Title.ApprovedRequest")</label>
+        <label class="txt-time hrm-v2-color-orange">@Model.WorkingdaySupplements.Where(x => x.IsCompleted).Count()/@Model.WorkingdaySupplements.Count()</label>
+    </div>
+</div>

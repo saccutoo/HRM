@@ -1,0 +1,138 @@
+﻿@model Hrm.Admin.ViewModels.OrganizationViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@{
+    ViewBag.Title = T("Setting.OrganizationalStructure");
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+}
+<style>
+    .organization-left-button-add {
+        background-color: #2CA01C;
+        color: white;
+        font-family: Roboto-Bold;
+        width: 60px;
+        border-radius: 3px;
+        height: 30px;
+        border: none;
+        float: left;
+        font-weight: normal;
+        font-size: 13px;
+        margin-right: 10px;
+    }
+
+    .gereral-left {
+        text-align: left;
+    }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Setting.OrganizationalStructure")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left" })
+    </div>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-project-diagram", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "redirectOrganization()", Title = "Sơ đồ tổ chức" })
+    </div>
+</div>
+<div class="gereral">
+    <div class="gereral-left">
+
+        <div class="organization-left-header">
+            <div class="title-left">
+                @T("Organization.OrganizationTree")
+            </div>
+            <div class="button-right">
+                <button class="organization-left-button-add" onclick="ShowModalAddOrganization()">@T("Organization.Add")</button>
+                <a href="/Admin/Organization/ListOrganization"><button class="fa fa-align-justify button-icon"></button></a>
+            </div>
+        </div>
+
+        <div style="border:1px solid #2CA01C;clear:both;">
+
+        </div>
+        <div class="organization-body-search">
+            <div class="organization-body-icon-search">
+                <i class="fa fa-search"></i>
+            </div>
+            <div class="organization-body-input-search">
+                <input placeholder="@T("Organization.SearchUnit")" type="text" onkeypress="searchOrganization($(this).val())" />
+            </div>
+        </div>
+        <div >
+            <div class="organization-tree hrm-v2-scroll" id="organization-tree" >
+                @{
+                    var treeData = Model.OrganizationsTree.ToList();
+                    if (treeData != null && treeData.Count > 0)
+                    {
+                        @Html.Partial(UrlHelpers.Template("_TreeView.cshtml"), new TreeViewModel() { Name = "tree-organization", ValueField = "OrganizationCode", DisplayField = "OrganizationName", TreeData = treeData })
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="gereral-right">
+        @{
+            var table = Model.Table;
+        }
+        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), table)
+    </div>
+</div>
+<script>
+    var tableName=@Html.Raw(Json.Encode(Model.Table.TableName));
+    filterStr=0;
+    var parentId=0;
+</script>
+<script>
+    function ShowModalAddOrganization(){
+        var options = {
+            id: 'add-organization',
+            url: '/Admin/Organization/ShowFormAddOrganization',
+            isNotificationPoup: true,
+            align: "center",
+            //data: '{GroupId: ' + coaTypeId + '}',
+            idform: 'frm-add-Organization',
+            //urlback: '/Contract/GetContractCoaInfoList',
+            //databack: '{contractId:' + contractId + '}',
+            //divload: 'GridContractCoaInfo',
+            //fnNameReload: 'ResetSelectCoaInfo'
+        };
+     
+
+        //var options = {
+        //    id: 'merger-0rganization',
+        //    url: '/Admin/Organization/ShowFormPersonnelTransfer',
+        //    isNotificationPoup: true,
+        //    align: "center",
+        //    //width:1000,
+        //    //data: '{GroupId: ' + coaTypeId + '}',
+        //    idform: 'frm-merger-organization',
+        //    //urlback: '/Contract/GetContractCoaInfoList',
+        //    //databack: '{contractId:' + contractId + '}',
+        //    //divload: 'GridContractCoaInfo',
+        //    //fnNameReload: 'ResetSelectCoaInfo'
+        //};
+        CreatePopup(options);
+
+    }
+    function ClickTree(id){       
+        parentId = id;
+        var par={};
+        par.FilterField = id;
+        par.RoleId=id;
+        par.PageNumber=$("#" + tableName + "-paging-current-page").val();
+        par.PageSize=$("#" + tableName + "-paging-items-per-page").val();
+        $('.gereral-right').load('/Admin/Organization/GetStaffById', { param: par })
+    }
+
+    function searchOrganization(searchKey)
+    {
+        if (event.which == 13)
+        {
+            Search("/Search/SearchOrganization", searchKey, "organization-tree");
+        }
+
+    }
+    function redirectOrganization(){
+        window.location = "/Admin/Organization/OrganizationChart";
+    }
+</script>

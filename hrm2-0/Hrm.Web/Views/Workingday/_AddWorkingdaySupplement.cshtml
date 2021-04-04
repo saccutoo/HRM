@@ -1,0 +1,99 @@
+﻿@model Hrm.Web.ViewModels.AddWorkingdaySupplementViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@{
+    Layout = null;
+    var date = string.Empty;
+    if (Model.Date != null)
+    {
+        date = Model.Date.Value.ToString("dd/MM/yyyy");
+    }
+}
+<div class="add-working-supplement-container display-inline-block">
+    <form id="frm-add-working-supplement">
+        <div class="hrm-v2-modal-header">@T("Workingday.Title.CreateRequest").ToString()</div>
+        <div class="hrm-v2-modal-body">
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.Label.RequestType").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownSupplementType, ValueField = "Id", Name = "model.SupplementTypeId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.SupplementTypeIdSelected.ToString() })
+
+                <input type="text" name="model.StaffId" value="@Model.StaffId" hidden />
+                <input type="text" name="model.Id" value="@Model.WorkingdaySupplement.Id" hidden />
+                <input type="text" name="model.RequestStatusId" value="@Model.WorkingdaySupplement.RequestStatusId" hidden />
+
+            </div>
+            <section class="hrmv2-section" id="add-working-supplement-section">
+                @Html.Partial(UrlHelpers.View("~/Views/Workingday/_AddWorkingdaySupplementBodyModal.cshtml"), Model)
+            </section>
+        </div>
+        <div class="footer">
+            <div class="footer-login">
+                <div class="pull-right">                  
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Workingday.Close", ClassName = "hrm-v2-btn-close", Style = "float:left;margin-right:10px",OnClick="removeModel()" })
+                    @if (Model.IsView != false)
+                    {
+                        @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", OnClick = "SaveWorkingdaySupplement(false)", Value = "Workingday.Save", Type = "button", ClassName = "hrm-v2-btn-save", Style = "float:left;margin-right:10px" })                       
+                    }
+                    @if (Model.isSendApproval==true && Model.IsView != false)
+                    {
+                        @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "save-submit-approval", Value = "table.button.approved", ClassName = "hrm-v2-btn-save", Style = "float:left", OnClick = "SaveWorkingdaySupplement(true)" })
+                    }
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    var supplementTypeId=@Model.SupplementTypeIdSelected;
+    $(document).ready(function () {
+        $('#model-SupplementTypeId').on('select2:selecting', function (e) {
+            var date=null;
+            var isClickByDate=@Model.isClickByDate.ToString().ToLower();
+            supplementTypeId=e.params.args.data.id;
+
+            if (isClickByDate==true) {
+                date='@date';
+            }
+            $('#add-working-supplement-section').load('/Workingday/WorkingdaySupplementBodyModal', { supplementTypeId: e.params.args.data.id,workingdays:@Html.Raw(JsonConvert.SerializeObject(Model.Workingdays)),isClickByDate:isClickByDate,date:date })
+        })
+    });
+
+    function SaveWorkingdaySupplement(isApproval) {
+        $("#frm-add-working-supplement span[name*='-error']").text("");
+        var listData= $('#frm-add-working-supplement').serializeArray();
+        listData.push({name:"isApproval",value:isApproval});
+        $.ajax(
+         {
+             type: "POST",
+             url: "/Workingday/SaveWorkingdaySupplement",
+             data: listData,
+             success: function (response) {
+                 if (response.Invalid) {
+                     var validations = response.Result;
+                     RenderError(validations, "frm-add-working-supplement");
+                 }               
+                 else if(response.InvalidTwoDate){
+                     ShowMessage(false, msgFalse, response.Result, 500, 3000);
+                 }
+                 else if(response.Resources==true){
+                     ShowMessage(false, msgFalse, response.Result, 500, 3000);
+                 }
+                 else{
+                     if (response.result.Success==true) {
+                         ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                         $("#myModal").modal("hide");
+                         window.location.reload();
+                     }
+                     else {
+                         ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                     }
+                 }
+
+             }
+         });
+    }
+    function removeModel(){
+        $(".modal-backdrop").remove();
+    }
+</script>

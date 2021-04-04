@@ -1,0 +1,41 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.StaffPlanRenewalRateTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .divTableData {
+        min-width: 1860px !important;
+    }
+</style>
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row">
+        <div ng-controller="mytable" ng-init="init()">
+            <div style="display: none;">
+                @Html.Action("SaveStaffPlanRenewalRate", "StaffPlanRenewalRate")
+            </div>
+            <build-table1 table-url="'@(ViewBag.url)'"
+                          table-edit="EditClick"
+                          table-delete="deleteClick"
+                          table-add="addClick"
+                          table-hide="HideClick"
+                          change-edit-table-column ="changeEditTableColumn"
+                          save-edit-click="SaveEditClick"
+                          table-param-filter="employeeFilter"
+                          table-model="StaffPlanRenewalRateData">
+            </build-table1>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/StaffPlanRenewalRate/StaffPlanRenewalRateService.js"></script>
+<script src="~/Scripts/mycustom/StaffPlanRenewalRate/StaffPlanRenewalRateUntil.js"></script>
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+    var errorStaff = '@Html.Raw(AppRes.ErrorStaff)';
+    var errorOrganizationUnit = '@Html.Raw(AppRes.ErrorDepartment)';
+    var errorStatus = '@Html.Raw(AppRes.ErrorStatus1)';
+    var errorYear = '@Html.Raw(AppRes.ErrorYear)';
+</script>
+

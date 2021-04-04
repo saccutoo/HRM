@@ -1,0 +1,109 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common;
+<div class="container-fluid">
+    <div class="row" id="SaveProvince" style="margin: 0;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;">@AppRes.Province</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.City <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.Name" class="form-control" ng-change="ChangeName()" />
+                                        <span style="color:red;line-height:30px;">{{ErrorName}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.CityEN <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.NameEN" class="form-control" ng-change="ChangeNameEN()" />
+                                        <span style="color:red;line-height:30px;" >{{ErrorNameEN}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.TitleCountry <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage==5)
+                                        {
+                                            <select ng-model="Data.CountryID" chosen options="ListCountry" on-no-result="doStuff" required data-modal="modal" ng-options="list.GlobalListID as list.Name for list in ListCountry" ng-change="ChangeCountry()">
+                                                <option value="" selected>@AppRes.Select</option>
+                                            </select>
+                                        }
+                                        else
+                                        { 
+                                            <select ng-model="Data.CountryID" chosen options="ListCountry" on-no-result="doStuff" required data-modal="modal" ng-options="list.GlobalListID as list.NameEN for list in ListCountry" ng-change="ChangeCountry()">
+                                            <option value="" selected>@AppRes.Select</option>
+                                        </select>
+
+                                        }
+                                        <span style="color:red;line-height:30px;">{{ErrorCountryID}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Promotion_Status <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select ng-model="Data.Status" chosen options="getListStatus" on-no-result="doStuff" required data-modal="modal" ng-options="list.Value as list.Name for list in getListStatus" ng-change="ChangeStatus()">
+                                                <option value="" selected>@AppRes.Select</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select ng-model="Data.Status" chosen options="getListStatus" on-no-result="doStuff" required data-modal="modal" ng-options="list.Value as list.NameEN for list in getListStatus" ng-change="ChangeStatus()">
+                                                <option value="" selected>@AppRes.Select</option>
+                                            </select>
+                                        }
+                                        <span style="color:red;line-height:30px;">{{ErrorStatus}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+            </div>
+            <br />
+            <center>
+                <button type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                    <span class="btn-label">
+                        <i class="fa fa-save"></i>
+                    </span>@AppRes.btnUpdate
+                </button>
+                <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                    <span class="btn-label">
+                        <i class="fa fa-close"></i>
+                    </span>@AppRes.btnCancel
+                </button>
+            </center>
+        </form>
+    </div>
+</div>
+

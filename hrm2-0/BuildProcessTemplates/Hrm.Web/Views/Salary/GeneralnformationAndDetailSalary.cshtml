@@ -1,0 +1,61 @@
+﻿
+@model Hrm.Web.ViewModels.GeneralnformationAndSalaryViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@using Hrm.Framework.Context
+@using Hrm.Common
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Salary";
+    var timeVersion = "140320181446";
+    Layout = UrlHelpers.View("~/Views/Shared/_MenuSidebarTop.cshtml");
+}
+
+<link href="@Url.Content("~/Content/hrm-v2/_staffdetails.css?v=" + timeVersion)" rel="stylesheet" type="text/css" />
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="hrm-v2-font-13 hrm-v2-bold" style="color:#7C7C7C">@T("Quản trị lương")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><a href="#" class="bread-crumb-item">@T("Bảng lương tháng 12/2019")</a>
+    <div class="pull-right">
+       
+
+    </div>
+</div>
+<div class="col-md-12 hrm-v2-inline-block pd-0">
+    <div id="working-day-view">
+        <div class="hrmv2-tab">
+            @{
+                var active = new Dictionary<int, string>();
+                for (var i = 0; i < 2; i++)
+                {
+                    if (i == Model.ActiveTab)
+                    {
+                        active.Add(i, "active in");
+                    }
+                    else
+                    {
+                        active.Add(i, string.Empty);
+                    }
+                }
+            }
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item @active[0]" index="0">
+                    <a class="nav-link" id="generaln-formation" data-toggle="tab" data-target="#generaln-formation" role="tab" aria-controls="generaln-formation" aria-selected="true">Thông tin chung</a>
+                </li>
+                <li class="nav-item  @active[1]" index="1">
+                    <a class="nav-link" id="salary" data-toggle="tab" data-target="#salary" role="tab" aria-controls="salary" aria-selected="false">Chi tiết</a>
+                </li>
+            </ul>
+            <div class="tab-content pd-0" id="myTabContent-add">
+                @if (Model.ActiveTab == 0)
+                {
+                    <span>0</span>
+                }
+                @if (Model.ActiveTab == 1)
+                {
+                    @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Salary.Table)
+
+                }          
+            </div>
+        </div>
+    </div>
+</div>

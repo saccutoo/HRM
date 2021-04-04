@@ -1,0 +1,377 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+
+<div class="container-fluid">
+    <div class="row" id="SavePolicyDetail" style="margin: 0;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading" style="line-height: 40px;"><div style="text-transform: none;font-size:20px;height:25px">@AppRes.PolicyDetail</div></div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.Policy <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <select class="form-control" chosen options="ListPolicy" on-no-result="doStuff" name="PolicyID" data-modal="modal" ng-model="PolicyDetailModel.PolicyID" ng-options="list.PolicyID as list.Name for list in ListPolicy">
+                                            <option value="" selected>--@AppRes.Select--</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;" ng-show="PolicyIdError && IsClickBtnSave">@AppRes.ErrorSelectPolicy.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.Promotion_Status <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select class="form-control" chosen options="getListStatus" data-modal="modal" name="Status" ng-model="PolicyDetailModel.Status" ng-options="list.Value as list.Name for list in getListStatus">
+                                                <option value="" selected>--@AppRes.Select--</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select class="form-control" chosen options="getListStatus" data-modal="modal" name="Status" ng-model="PolicyDetailModel.Status" ng-options="list.Value as list.NameEN for list in getListStatus">
+                                                <option value="" selected>--@AppRes.Select--</option>
+                                            </select>
+                                        }
+                                        <span style="color:red;line-height:30px;" ng-show="StatusError && IsClickBtnSave">@AppRes.ErrorStatus.</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.StaffLevel<span style="color:red"> (*)</span></label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <select class="form-control" chosen options="ListStaffLevel" on-no-result="doStuff" data-modal="modal" name="staffLevelId" ng-model="PolicyDetailModel.StaffLevelId" ng-options="list.GlobalListID as list.Name for list in ListStaffLevel">
+                                            <option value="" selected>--@AppRes.Select--</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;" ng-show="StaffLevelIdError && IsClickBtnSave">@AppRes.ErrorEmployeeLevel</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.StandardSpendingAmount </label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" data-ng-model="PolicyDetailModel.StandardSpendingAmount" class="form-control text-right" only-numbers format-as-currency />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.BasicSalarFrom<span style="color:red"> (*)</span></label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.BasicSalaryFrom" class="form-control text-right" name="BasicSalaryFrom" required only-numbers format-as-currency />
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave && BasicSalaryFromError">@AppRes.ErrorBasicSalarFrom.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.BasicSalaryComes<span style="color:red"> (*)</span></label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.BasicSalaryTo" name="BasicSalaryTo" class="form-control text-right" only-numbers format-as-currency />
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave && BasicSalaryToError">@AppRes.ErrorBasicSalaryComes.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.EffectiveReward</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.Commission" class="form-control text-right" only-numbers format-as-currency />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.MinSpending</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.MinSpending" class="form-control text-right" only-numbers format-as-currency />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.EnjoyEfficiency</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.EfficiencyBonus" class="form-control text-right" only-numbers format-as-currency />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.Margincompensation</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.Margincompensation" class="form-control text-right" only-numbers format-as-currency />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.TotalIncome</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.TotalIncome" class="form-control text-right" only-numbers format-as-currency />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.HR_FromDate</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.StartDate" name="StartDate" placeholder="dd/mm/yyyy" class="datePicker123 form-control" my-date-picker />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.MinimalManagement</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.MinPerson" class="form-control text-right" only-numbers format-as-currency />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.HR_ToDate</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.EndDate" placeholder="dd/mm/yyyy" name="EndDate" class="datePicker123 form-control" my-date-picker />
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave && CompareDateError">@AppRes.ErrorDate.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.RecipeBonus</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <textarea class="form-control" ng-model="PolicyDetailModel.SFormular" style="height:32px;width: calc(100% - 32px);float: left;"></textarea>
+                                        <span class="glyphicon glyphicon-ok icon-check-formular" aria-hidden="true" ng-click="OpenDailogCheckFormular(PolicyDetailModel.SFormular)"></span>
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave  && SFormularError">@AppRes.FormulaNotAccurate</span>
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave  && SFormularValid">@AppRes.FormulaValid</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.CreatedBy</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.UserCreatedName" ng-disabled="true" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.FormularProbation</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <textarea class="form-control" ng-model="PolicyDetailModel.SFormularProbation" style="height:32px;width: calc(100% - 32px);float: left;"></textarea>
+                                        <span class="glyphicon glyphicon-ok icon-check-formular" aria-hidden="true" ng-click="OpenDailogCheckFormular(PolicyDetailModel.SFormularProbation)"></span>
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave && SFormularProbationError">@AppRes.FormulaNotAccurate</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.Promotion_CreatedOn</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.CreatedDate" ng-disabled="true" class="datePicker123 form-control" my-date-picker />
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.FormularCompensation</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <textarea class="form-control" ng-model="PolicyDetailModel.SFormularCompensation" style="height:32px;width: calc(100% - 32px);float: left"></textarea>
+                                        <span class="glyphicon glyphicon-ok icon-check-formular" aria-hidden="true" ng-click="OpenDailogCheckFormular(PolicyDetailModel.SFormularCompensation)"></span>
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave && SFormularCompensationError">@AppRes.FormulaNotAccurate</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.ModifiedBy</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.UserModifiedName" class="form-control" ng-disabled="true" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.FormularAllowances</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <textarea class="form-control" ng-model="PolicyDetailModel.SFormularAllowances" style="height:32px;width: calc(100% - 32px);float: left;"></textarea>
+                                        <span class="glyphicon glyphicon-ok icon-check-formular" ng-click="OpenDailogCheckFormular(PolicyDetailModel.SFormularAllowances)" aria-hidden="true"></span>
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave && SFormularAllowancesError"> @AppRes.FormulaNotAccurate</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                      
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.ModifiedDate</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <input type="text" ng-model="PolicyDetailModel.ModifiedDate" ng-disabled="true" class="datePicker123 form-control" my-date-picker />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.FormularBonus</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <textarea class="form-control" ng-model="PolicyDetailModel.SFormularBonus" style="height:32px;width: calc(100% - 32px);float: left;"></textarea>
+                                        <span class="glyphicon glyphicon-ok icon-check-formular" ng-click="OpenDailogCheckFormular(PolicyDetailModel.SFormularBonus)" aria-hidden="true"></span>
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave && SFormularBonusError"> @AppRes.FormulaNotAccurate</span>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.FormularDecemberbonus</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <textarea class="form-control" ng-model="PolicyDetailModel.SFormularDecemberbonus" style="height:32px;width: calc(100% - 32px);float: left;"></textarea>
+                                        <span class="glyphicon glyphicon-ok icon-check-formular" ng-click="OpenDailogCheckFormular(PolicyDetailModel.SFormularDecemberbonus)" aria-hidden="true"></span>
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave && SFormularDecemberbonusError"> @AppRes.FormulaNotAccurate</span>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.SFormularKPIQuotarate  </label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <textarea class="form-control" ng-model="PolicyDetailModel.StandardProbation" style="height:32px;width: calc(100% - 32px);float: left;"></textarea>
+                                        <span class="glyphicon glyphicon-ok icon-check-formular" ng-click="OpenDailogCheckFormular(PolicyDetailModel.StandardProbation)" aria-hidden="true"></span>
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave && StandardProbationError"> @AppRes.FormulaNotAccurate</span>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.SFormularKPIYear </label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <textarea class="form-control" ng-model="PolicyDetailModel.SFormularKPIYear" style="height:32px;width: calc(100% - 32px);float: left;"></textarea>
+                                        <span class="glyphicon glyphicon-ok icon-check-formular" ng-click="OpenDailogCheckFormular(PolicyDetailModel.SFormularKPIYear)" aria-hidden="true"></span>
+                                        <span style="color:red;line-height:30px;" ng-show="IsClickBtnSave && SFormularKPIYearError"> @AppRes.FormulaNotAccurate</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.Note</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <textarea class="form-control" ng-model="PolicyDetailModel.Description" style="height:189px"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+            </div>
+            <br />
+            <center>
+                <button type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                    <span class="btn-label">
+                        <i class="fa fa-save"></i>
+                    </span>@AppRes.btnUpdate
+                </button>
+                <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                    <span class="btn-label">
+                        <i class="fa fa-close"></i>
+                    </span>@AppRes.btnCancel
+                </button>
+            </center>
+        </form>
+    </div>
+</div>

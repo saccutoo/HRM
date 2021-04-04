@@ -1,0 +1,237 @@
+﻿@model Hrm.Web.ViewModels.StaffDetailsViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common;
+
+<form id="staff-info-form">
+    <input type="hidden" value="@Model.Staff.Id" name="Staff.Id" />
+    <section class="hrmv2-section">
+        @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "icon-append fa fa-user", SectionName = T("Staff.Detail.GeneralInformation").ToString(), Style = "width:160px;", Width = "160px" })
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0 display-inline-block">
+                <div class="add-staff-profile avata-default pull-left">
+                    @if (Model.Staff.ImageAvataSrc != null && Model.Staff.ImageAvataSrc != string.Empty)
+                    {
+                        <img src="@Model.Staff.ImageAvataSrc" id="avater-img" onclick="choseAvatar()" style="cursor: pointer; border:1px solid #f7f7f7;" />
+                    }
+                    else
+                    {
+                        <img src="~/Content/Images/avatar-default.png" id="avater-img" onclick="choseAvatar()" style="cursor: pointer; border:1px solid #f7f7f7;" />
+                    }
+                    <input id="file-upload" type="file" style="display:none" onchange="changeInputFile()" accept="image/*" multiple />
+                    <input id="staff-avata" name="Staff.ImageLink" value="@Model.Staff.ImageLink" style="display:none" />
+                    <a onclick="choseAvatar()">@T("Staff.Label.ChoseAvata")</a>
+                </div>
+                <div class="pull-left" style="width:calc(100% - 120px)">
+                    <div class="col-md-12">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "Staff.StaffCode", Value = Model.Staff.StaffCode, LabelName = T("Staff.Detail.StaffCode").ToString(), IsAnimationLabel = true, IsRequired = true })
+                    </div>
+                    <div class="col-md-12">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "Staff.Name", Value = Model.Staff.Name, IsRequired = true, LabelName = T("Staff.Detail.Name").ToString(), IsAnimationLabel = true })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pd-r-0">
+                <span class="gender-label">Giới tính</span>
+                <div class="col-md-2 pd-l-0">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Radio.cshtml"), new TextEditorModel() { Name = "Staff.GenderId", NameId = "male", Value = MasterDataId.Male.ToString(), LabelName = T("Staff.Male").ToString() })
+                </div>
+                <div class="col-md-2 pd-l-0">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Radio.cshtml"), new TextEditorModel() { Name = "Staff.GenderId", NameId = "female", Value = MasterDataId.Female.ToString(), LabelName = T("Staff.Female").ToString() })
+                </div>
+                <span class="hrm-v2-floating-form">@Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "Staff.Birthday", Value = Model.Staff.Birthday, LabelName = T("Staff.Detail.DateOfBirth").ToString(), DateFormat = "dd/MM/yyyy", PlaceHolder = " " })</span>
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Nation").ToString(), SearchField = true, IsAnimationLabel = true, Data = Model.DataDropdownEthnicity, ValueField = "Id", DisplayField = "Name", Name = "Staff.EthnicityId", IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                @*@Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.MaritalStatus").ToString(), SearchField = true, IsAnimationLabel = true, Data = Model.DataDropdownMaritalStatus, ValueField = "Id", DisplayField = "Name", Name = "Staff.MaritalStatus" })*@
+            </div>
+            <div class="col-md-6 pd-r-0">
+                <div class="col-md-6 pd-l-0">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.IdentityNumber").ToString(), Name = "Staff.IdentityNumber", Value = Model.Staff.IdentityNumber, IsAnimationLabel = true })
+                </div>
+                <div class="col-md-6 pd-r-0">
+                    <span class="hrm-v2-floating-form">@Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "Staff.IdIssuedDate", Value = Model.Staff.IdIssuedDate, LabelName = T("Staff.Detail.IdIssuedDate").ToString(), DateFormat = "dd/MM/yyyy", PlaceHolder = " " })</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Address").ToString(), Name = "Staff.Address", Value = Model.Staff.Address, IsAnimationLabel = true })
+            </div>
+            <div class="col-md-6 pd-r-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Domicile").ToString(), Name = "Staff.Domicile", Value = Model.Staff.Domicile, IsAnimationLabel = true })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.MaritalStatus").ToString(), SearchField = true, IsAnimationLabel = true, Data = Model.DataDropdownMaritalStatus, ValueField = "Id", DisplayField = "Name", Name = "Staff.MaritalStatus", IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+            </div>
+            <div class="col-md-6 pd-r-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.TaxCode").ToString(), Name = "Staff.TaxId", Value = Model.Staff.TaxId, IsAnimationLabel = true })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                <span class="hrm-v2-floating-form">@Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "Staff.TaxDate", Value = Model.Staff.TaxDate, LabelName = T("Staff.TaxDate").ToString(), DateFormat = "dd/MM/yyyy", PlaceHolder = " " })</span>
+            </div>
+            <div class="col-md-6 pd-r-0">
+                <span class="hrm-v2-floating-form">@Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Note").ToString(), Name = "Staff.Note", Value = Model.Staff.Note, IsAnimationLabel = true })</span>
+            </div>
+        </div>
+    </section>
+    <section class="hrmv2-section">
+        @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-portrait", SectionName = T("Staff.Detail.ContactInformation").ToString(), Style = "width:160px;", Width = "160px" })
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.OfficeEmail").ToString(), Name = "Staff.EmailCompany", Value = Model.Staff.EmailCompany, IsAnimationLabel = true })
+            </div>
+            <div class="col-md-6 pd-r-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.PersonalEmail").ToString(), Name = "Staff.Email", Value = Model.Staff.Email, IsAnimationLabel = true })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.PhoneWorking").ToString(), Name = "Staff.PhoneCompany", Value = Model.Staff.PhoneCompany, IsAnimationLabel = true })
+            </div>
+            <div class="col-md-6 pd-r-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.PhonePersonal").ToString(), Name = "Staff.Phone", Value = Model.Staff.Phone, IsAnimationLabel = true })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.PersonalFacebook").ToString(), Name = "Staff.LinkFacebook", Value = Model.Staff.LinkFacebook, IsAnimationLabel = true })
+            </div>
+            <div class="col-md-6 pd-r-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Skype").ToString(), Name = "Staff.Skype", Value = Model.Staff.Skype, IsAnimationLabel = true })
+            </div>
+        </div>
+    </section>
+    <section class="hrmv2-section">
+        @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-portrait", SectionName = T("Staff.WorkingDayInfomation").ToString(), Style = "width:160px;", Width = "160px" })
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.TimekeepingForm").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownTimekeepingForm, ValueField = "Id", DisplayField = "Name", Name = "Staff.TimekeepingForm", Value = Model.Staff.TimekeepingForm.ToString(), SearchField = true, IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+            </div>
+            <div class="col-md-6 pd-r-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.AllowToBeLateM").ToString(), Name = "Staff.TimeLateLimit", Value = Model.Staff.TimeLateLimit.ToString(), PlaceHolder = T("Staff.Minute").ToString(), IsAnimationLabel = true })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.AllowedToLeaveEarlyM").ToString(), PlaceHolder = T("Staff.TimeLeaveEarlyLimitM").ToString(), Name = "Staff.TimeLeaveEarlyLimit", Value = Model.Staff.TimeLeaveEarlyLimit.ToString(), IsAnimationLabel = true })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            @{
+                Model.ListStaffWorkingDayMachines.ViewType = 1;
+            }
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListStaffWorkingDayMachines)
+        </div>
+
+    </section>
+    <section class="hrmv2-section">
+        @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-credit-card ", SectionName = T("Staff.Detail.PaymentInformation").ToString(), Style = "width:200px;", Width = "200px" })
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.BankNumber").ToString(), Name = "Staff.BankNumber", Value = Model.Staff.BankNumber, IsAnimationLabel = true })
+            </div>
+            <div class="col-md-6 pd-r-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.BankAccount").ToString(), Name = "Staff.BankAccount", Value = Model.Staff.BankAccount, IsAnimationLabel = true })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.BankName").ToString(), Name = "Staff.BankName", Value = Model.Staff.BankName, IsAnimationLabel = true })
+            </div>
+            <div class="col-md-6 pd-r-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.BankBranch").ToString(), Name = "Staff.BankBranch", Value = Model.Staff.BankBranch, IsAnimationLabel = true })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Currency").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownCurrency, ValueField = "Id", DisplayField = "Name", Name = "Staff.CurrencyId", Value = Model.Staff.CurrencyId.ToString(), SearchField = true })
+            </div>
+
+        </div>
+    </section>
+    <section class="hrmv2-section">
+        @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-user-circle", SectionName = T("Staff.Detail.AccountInformation").ToString(), Style = "width:180px;", Width = "180px" })
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.UserName").ToString(), Name = "Staff.UserName", Value = Model.Staff.UserName, IsAnimationLabel = true, IsRequired = true })
+                </div>
+                <div class="col-md-6 pd-r-0">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Password").ToString(), Name = "Staff.Password", Value = Model.Staff.Password, IsAnimationLabel = true })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-l-0" style="padding-right:30px">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.RoleGroup").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownRole, ValueField = "Id", DisplayField = "Name", SearchField = true, Name = "ListRole[0].RoleId", Value = Model.ListRole.Count>0 ? Model.ListRole[0].RoleId.ToString() : null, IsMultipleLanguage = true, DataType = DataType.Role, PropertyName = "Name" })
+                </div>
+                <div class="col-md-6 pd-r-0">
+                    <div class="section-title pull-left" style="margin-top:10px">
+                        <div class="cb-control hrm-v2-inline-block pull-left">
+                            <label for="dramatic-use" class="label-cbx">
+                                <input id="dramatic-use" name="Staff.IsActivated" type="checkbox" value="true" class="invisible chk_column">
+                                <div class="checkbox" style="margin-top:0px">
+                                    <svg width="20px" height="20px" viewBox="0 0 20 20">
+                                        <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                                        <polyline points="4 11 8 15 16 6"></polyline>
+                                    </svg>
+                                </div>
+                            </label>
+                        </div>
+                        <span class="pull-left hrm-v2-font-13" style="margin-top:5px"> @T("Staff.Activated").ToString()</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="hrmv2-section">
+        @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-users", SectionName = T("Staff.Detail.RelativesInformation").ToString(), Style = "width:250px", Width = "250px" })
+        <div class="col-md-12 pd-0 display-inline-block">
+            @{
+                Model.ListStaffRelationShips.ViewType = 1;
+            }
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListStaffRelationShips)
+        </div>
+    </section>
+    <section class="hrmv2-section" style="height:60px">
+    </section>
+    <section class="hrmv2-section">
+        <div class="footer-add-staff">
+            <div class="footer-login">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                        @T("Staff.Detail.Cancel")
+                    </button>
+                    <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="saveStaffInfomation()">
+                        @T("Staff.Detail.Save")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        if(@Html.Raw(Json.Encode(Model.Staff.IsActivated)) == true)
+        {
+            $('#dramatic-use').prop('checked', true);
+        }
+        if(@Html.Raw(Json.Encode(Model.Staff.GenderId)) == @Html.Raw(Json.Encode(MasterDataId.Male)))
+        {
+            $('#male').prop('checked', true);
+    }
+    else if(@Html.Raw(Json.Encode(Model.Staff.GenderId)) == @Html.Raw(Json.Encode(MasterDataId.Female)))
+    {
+            $('#female').prop('checked', true);
+    }
+
+    });
+</script>

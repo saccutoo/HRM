@@ -1,0 +1,83 @@
+﻿@model List<Hrm.Framework.Models.MasterDataModel>
+
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common;
+@{
+    ViewBag.Title = "_Category";
+    Layout = null;
+}
+<style>
+    #category-body-ul .category-body-li-name{        
+        height: 40px;
+        width: 100%;
+        
+    }
+     #category-body-ul .category-body-li-name span{
+        height: 40px;
+        max-width: 200px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        float: left;
+        overflow:hidden;
+     }
+     #category-body-ul .category-body-li-icon{
+        width: 20%;
+        height: 100%;
+        float: left;
+        display:none;
+     }
+     #category-body-ul .category-body-li-icon .category-body-icon{
+        float: left;
+        width: 50%;
+        text-align: center;
+        height:100%;        
+     }
+     #category-body-ul .category-body-li-icon .category-body-icon i{
+          line-height:40px;
+     }
+     #category-body-ul .category-item:hover .category-body-li-icon{
+         display:block;
+         position:absolute;
+         right: 0px;
+         z-index: 999;
+         top:0px;
+     }
+</style>
+<ul id="category-body-ul">
+@{
+    if (Model != null && Model.Count > 0)
+    {
+        foreach (var data in Model)
+        {
+            <li  id="masterDataSelect-@data.Id" onclick="ClickCategory(@data.Id)" class="category-item" >
+                <div class="category-body-li-name">
+                    <span>@M(data.Id.ToString() + ";" + DataType.MasterData + ";Name")</span>
+                </div>                
+                <div class="category-body-li-icon" >                 
+                    @if (FunctionHelpers.ControlPermission(ActionName.Update, TableConfig.MasterData))
+                    {
+                        <div class="category-body-icon" onclick="ShowEditFormEditMasterData(@data.Id)">
+                            <i class="fas fa-pencil-alt" style="color:blue"></i>
+                        </div>
+                    }
+                    @if (FunctionHelpers.ControlPermission(ActionName.Delete, TableConfig.MasterData))
+                    {
+                        <div class="category-body-icon" onclick="DeleteMasterData(@data.Id)">
+                            <i class="fas fa-trash-alt" style="color:red"></i>
+                        </div>
+                    }
+                </div>                             
+            </li>
+        }
+    }
+}
+
+</ul>
+<script>
+    $(document).on('click', '.category-item', function () {
+        $('.category-item').removeClass('active');
+        $(this).addClass('active');
+    });
+
+</script>

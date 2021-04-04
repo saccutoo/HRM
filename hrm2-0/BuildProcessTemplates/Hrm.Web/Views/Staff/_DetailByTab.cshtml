@@ -1,0 +1,277 @@
+﻿@model Hrm.Web.ViewModels.StaffDetailsViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.ViewModels
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@using Newtonsoft.Json;
+
+@{
+    Layout = null;
+}
+
+@if (Model.ViewType != 1)
+{
+    <div class="hrm-v2-inline-block staff-detail-box-left pull-left" style="width:285px">
+        <div class="text-center">
+            <div class="upload-avata hrm-v2-inline-block">
+                @if (Model.Staff.ImageAvataSrc != null && Model.Staff.ImageAvataSrc != string.Empty)
+                {
+                    <img src="@Model.Staff.ImageAvataSrc" />
+                }
+                else
+                {
+                    <img src="~/Content/Images/Clip.png" />
+                }
+                <span class="staff-status hrm-v2-bold">@M(Model.Staff.WorkingStatus.ToString() + ";" + DataType.MasterData + ";Name")</span>
+            </div>
+        </div>
+        <div class="staff-info first">
+            <span class="staff-name">@Model.Staff.Name</span>
+            @*@if (Model.ListRole != null && Model.ListRole.Count > 0)
+            {
+                foreach (var item in Model.ListRole)
+                {
+                    <span class="staff-officeposition">@Html.Partial(UrlHelpers.Template("_IconProperty.cshtml"), new IconPropertyModel() { Icon = "fas fa-briefcase", Text = M(item.RoleId.ToString() + ";" + DataType.Role + ";Name").ToString() })</span>
+                }
+            }*@
+            <span class="staff-organization">
+                <span class="staff-officeposition">@Html.Partial(UrlHelpers.Template("_IconProperty.cshtml"), new IconPropertyModel() { Icon = "fas fa-briefcase", Text = M(Model.Staff.ClassificationId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })</span>
+            </span>
+            <span class="staff-organization">
+                @Html.Partial(UrlHelpers.Template("_IconProperty.cshtml"), new IconPropertyModel() { Icon = "fas fa-building", Text = M(Model.Staff.OrganizationId.ToString() + ";" + DataType.Organization + ";OrganizationName").ToString() })
+            </span>
+            <span class="staff-organization">
+                @Html.Partial(UrlHelpers.Template("_IconProperty.cshtml"), new IconPropertyModel() { Icon = "fas fa-file-signature", Text = M(Model.Staff.OfficePositionId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+            </span>
+        </div>
+        <div class="staff-info">
+            <span class="staff-contract">@T("Staff.Detail.Contact").ToString()</span>
+            <span class="staff-organization">@Html.Partial(UrlHelpers.Template("_IconProperty.cshtml"), new IconPropertyModel() { Icon = "fas fa-envelope", Text = Model.Staff.EmailCompany })</span>
+            <span class="staff-organization">
+                @Html.Partial(UrlHelpers.Template("_IconProperty.cshtml"), new IconPropertyModel() { Icon = "fas fa-phone-alt", Text = Model.Staff.PhoneCompany })
+            </span>
+            <span class="staff-organization">
+                @Html.Partial(UrlHelpers.Template("_IconProperty.cshtml"), new IconPropertyModel() { Icon = "fas fa-mobile-alt", Text = Model.Staff.Phone })
+            </span>
+        </div>
+        <div class="staff-info box-manager-info">
+            <span class="position-mangaer staff-contract">@T("Staff.Detail.Manager").ToString()</span>
+            <span class="manger-info">
+                <i class="fas fa-user"></i>
+                <span class="manager-info-text">
+                    <span class="manager-name">@Model.Staff.ManagerName</span>
+                    <span class="manager-depart">
+                        @Html.Partial(UrlHelpers.Template("_IconProperty.cshtml"), new IconPropertyModel() { Text = M(Model.Staff.ManagerOrganizationId.ToString() + ";" + DataType.Organization + ";OrganizationName").ToString() + " - " + M(Model.Staff.ManagerOfficePositionId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                    </span>
+                </span>
+            </span>
+        </div>
+        <div class="approval-request">
+            <span class="request approval">@T("Staff.Detail.Request")<span class="hrm-v2-pink">6</span></span> <span class="view"> @T("Staff.Detail.View")</span>
+        </div>
+    </div>
+}
+<div class="hrm-v2-inline-block pull-left" id="tab-content" style="width: calc(100% - 285px)">
+    <div class="hrmv2-tab">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            @{
+                var active = new Dictionary<int, string>();
+                for (var i = 0; i < 7; i++)
+                {
+                    if (i == Model.ActiveTab)
+                    {
+                        active.Add(i, "active in");
+                    }
+                    else
+                    {
+                        active.Add(i, string.Empty);
+                    }
+                }
+
+                var action = new Dictionary<int, string>();
+                for (var i = 0; i < 2; i++)
+                {
+                    if (i == Model.ActionTab)
+                    {
+                        action.Add(i, "active in");
+                    }
+                    else
+                    {
+                        action.Add(i, string.Empty);
+                    }
+                }
+                var view = new Dictionary<int, string>();
+                for (var i = 0; i < 2; i++)
+                {
+                    if (i == Model.ViewType)
+                    {
+                        view.Add(i, "active in");
+                    }
+                    else
+                    {
+                        view.Add(i, string.Empty);
+                    }
+                }
+            }
+            <li class="nav-item  @active[0]" index="0">
+                <a class="nav-link" id="checklist-tab" data-toggle="tab" data-target="#certification" role="tab" aria-controls="certification" aria-selected="false">@T("Staff.Detail.Checklist")</a>
+            </li>
+            <li class="nav-item @active[1]" index="1">
+                <a class="nav-link" id="staff-profile-tab" data-toggle="tab" data-target="#staff-profile" role="tab" aria-controls="staff-profile" aria-selected="true">@T("Staff.Detail.PersonalInformation")</a>
+            </li>
+            <li class="nav-item  @active[2]" index="2">
+                <a class="nav-link" id="working-process-tab" data-toggle="tab" data-target="#working-process" role="tab" aria-controls="working-process" aria-selected="false">@T("Staff.Detail.WorkingProcess")</a>
+            </li>
+            @if (Model.ViewType != 1)
+            {
+                <li class="nav-item  @active[3]" index="3">
+                    <a class="nav-link" id="benefits-tab" data-toggle="tab" data-target="#benefits" role="tab" aria-controls="benefits" aria-selected="false">@T("Staff.Detail.SalaryWelfare")</a>
+                </li>
+            }
+            <li class="nav-item  @active[4]" index="4">
+                <a class="nav-link" id="bonus-discipline-tab" data-toggle="tab" data-target="#bonus-discipline" role="tab" aria-controls="bonus-discipline" aria-selected="false">@T("Staff.Detail.RewardDiscipline")</a>
+            </li>
+            <li class="nav-item  @active[5]" index="5">
+                <a class="nav-link" id="insurrance-tab" data-toggle="tab" data-target="#insurrance" role="tab" aria-controls="insurrance" aria-selected="false">@T("Staff.Detail.Insurrance")</a>
+            </li>
+            <li class="nav-item  @active[6]" index="6">
+                <a class="nav-link" id="certification-tab" data-toggle="tab" data-target="#certification" role="tab" aria-controls="certification" aria-selected="false">@T("Staff.Detail.ExperienceCertification")</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div id="loading-tab"></div>
+            @if (active[0] != string.Empty) // tab thủ tục tiếp nhận
+            {
+                <div class="tab-pane fade @active[0]" id="checklist" role="tabpanel" aria-labelledby="checklist-tab" style="padding-top:0px;">
+                    <section class="hrmv2-section">
+                        <div id="setting-checklist" class="setting-checklist">
+                            <form id="frm-staff-checklist">
+                                @{
+                                    ChecklistViewModel checklist_vm = Model.Checklist;
+                                    checklist_vm.StaffId = Model.Staff.Id;
+                                }
+                                @Html.Partial(UrlHelpers.View("~/Views/Shared/Checklist/_ChecklistSummary.cshtml"), checklist_vm)
+                            </form>
+                        </div>
+
+                    </section>
+                </div>
+                                    }
+            @if (active[1] != string.Empty) //tab thông tin cá nhân
+            {
+
+                <div class="tab-pane fade @active[1]" id="staff-profile" role="tabpanel" aria-labelledby="staff-profile-tab">
+                <div class="pull-right" id="pull-right-personal-info">
+                    @if (Model.ViewType == 1)
+                    {
+                        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-eye", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "openEditForm()" })
+                    }
+                    else
+                    {
+                        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-pencil-alt", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "openEditForm()" })
+                    }
+                </div>
+                    @if (view[1] != string.Empty)
+                    {
+
+                        @Html.Partial(UrlHelpers.View("~/Views/Staff/_SavePersonalInformation.cshtml"), Model)
+                    }
+                    else
+                    {
+                        @Html.Partial(UrlHelpers.View("~/Views/Staff/_TabPersonalInformation.cshtml"), Model)
+                    }
+                </div>
+            }
+            @if (active[2] != string.Empty) //tab quá trình công tác
+            {
+                if (action[0] != string.Empty)
+                {
+                    <div class="tab-pane fade @active[2]" id="working-process" role="tabpanel" aria-labelledby="working-process-tab">
+                        @Html.Partial(UrlHelpers.View("~/Views/Staff/_TabWorkingProcessCard.cshtml"), Model)
+                    </div>
+                }
+                else
+                {
+                    <div class="tab-pane fade @active[2]" id="working-process" role="tabpanel" aria-labelledby="working-process-tab">
+                        <div class="col-md-12 working-process-content-left">
+                            <div class="col-md-12 pd-l-0 display-inline-block staff-detail-actionbar">
+                                @{
+                                    var actionModel = new IconButtonModel()
+                                    {
+                                        ViewType = Model.ViewType
+                                    };
+                                }
+                                <div class="hrm-v2-action-bar">
+                                    <span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-download", OnClick = "test()" })</span>
+                                    <span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", OnClick = "test()" })</span>
+                                    <span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", OnClick = "changeView()" })</span>
+                                    <span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fa fa-plus", OnClick = "addWorkingProcess()" })</span>
+
+                                </div>
+                            </div>
+                            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListWorkingProcessTable)
+                        </div>
+                    </div>
+                                        }
+                                    }
+            @if (active[3] != string.Empty && Model.ViewType != 1) // tab lương - phúc lợi
+            {
+                <div class="tab-pane fade @active[3]" id="staff-salary" role="tabpanel" aria-labelledby="benefits-tab">
+                    <section class="hrmv2-section">
+
+                        @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.BasicPay").ToString(), WidthSecitonName = "150px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() { new IconRight { Icon = "fas fa-history", Action = "onhistory()" }, new IconRight { Icon = "fas fa-pencil-alt", Action = "openEditSalary("+Html.Raw(Json.Encode(Model.Staff.CurrentWorkingProcessId))+")" } } })
+                        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListSalary)
+                        <section class="hrmv2-section">
+                            @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.Allowance").ToString(), WidthSecitonName = "100px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() { new IconRight { Icon = "fas fa-history", Action = "historyAllowance()" }, new IconRight { Icon = "fas fa-pencil-alt", Action = "openEditAllowance(" + Html.Raw(Json.Encode(Model.Staff.CurrentWorkingProcessId)) + ")" } } })
+                            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListAllowance)
+                        </section>
+                    </section>
+                    <section class="hrmv2-section">
+                        @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.Benefit").ToString(), WidthSecitonName = "100px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() { new IconRight { Icon = "fas fa-history", Action = "historyBenefit()" }, new IconRight { Icon = "fas fa-pencil-alt", Action = "openEditBenefit(" + Html.Raw(Json.Encode(Model.Staff.CurrentWorkingProcessId)) + ")" } } })
+                        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListBenefit)
+                    </section>
+                </div>
+            }
+            @if (active[4] != string.Empty) // tab khen thưởng - kỷ luật
+            {
+                <div class="tab-pane fade @active[4]" id="bonus-discipline" role="tabpanel" aria-labelledby="bonus-discipline-tab">
+                    <section class="hrmv2-section">
+                        @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.Reward").ToString(), WidthSecitonName = "150px ", WidthSectionIconRight = "120px", ListIcon = new List<IconRight>() { new IconRight { Icon = "fas fa-download", Action = "onhistory()" }, new IconRight { Icon = "fas fa-filter", Action = "" }, new IconRight { Icon = "fas fa-list-ul", Action = "changeViewReward()" }, new IconRight { Icon = "fa fa-plus", Action = "addReward()" } } })
+                        <input id="reward-actionTab" hidden value="1" />
+                        <div class="col-md-12 pd-0" id="staff-reward">
+                            @if (Model.ListReward != null && Model.ListReward.TableData != null && Model.ListReward.TableData.Count > 0)
+                            {
+                                var tmp = JsonConvert.SerializeObject(Model.ListReward.TableData);
+                                var data = JsonConvert.DeserializeObject<List<StaffBonusDisciplineModel>>(tmp.ToString());
+                                @Html.Partial(UrlHelpers.Template("_SectionReward_Discipline.cshtml"), new Hrm.Web.ViewModels.StaffBonusDisciplineViewModel() { ListStaffBonusDiscipline = data, ViewType = Model.ViewType })
+                            }
+                        </div>
+                        @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.Discipline").ToString(), WidthSecitonName = "150px ", WidthSectionIconRight = "120px", ListIcon = new List<IconRight>() { new IconRight { Icon = "fas fa-download", Action = "onhistory()" }, new IconRight { Icon = "fas fa-filter", Action = "addDiscipline()" }, new IconRight { Icon = "fas fa-list-ul", Action = "changeViewDiscipline()" }, new IconRight { Icon = "fa fa-plus", Action = "addDiscipline()" } } })
+                        <input id="discipline-actionTab" hidden value="1" />
+                        <div class="col-md-12 pd-0" id="staff-discipline">
+                            @if (Model.ListDiscipline != null && Model.ListDiscipline.TableData != null && Model.ListDiscipline.TableData.Count > 0)
+                            {
+                                var tmp = JsonConvert.SerializeObject(Model.ListDiscipline.TableData);
+                                var data = JsonConvert.DeserializeObject<List<StaffBonusDisciplineModel>>(tmp.ToString());
+                                @Html.Partial(UrlHelpers.Template("_SectionReward_Discipline.cshtml"), new Hrm.Web.ViewModels.StaffBonusDisciplineViewModel() { ListStaffBonusDiscipline = data, ViewType = Model.ViewType })
+                            }
+                        </div>
+                    </section>
+                </div>
+            }
+            @if (active[5] != string.Empty) // tab bảo hiểm
+            {
+                <div class="tab-pane fade @active[5]" id="insurrance" role="tabpanel" aria-labelledby="insurrance-tab">
+                    @Html.Partial(UrlHelpers.View("~/Views/Staff/_TabInsurrance.cshtml"), Model)
+                </div>
+            }
+            @if (active[6] != string.Empty) // tab kinh nghiệm - chứng nhận
+            {
+                <div class="tab-pane fade @active[6]" id="certification" role="tabpanel" aria-labelledby="certification-tab">
+                    @Html.Partial(UrlHelpers.View("~/Views/Staff/_TabCertification.cshtml"), Model)
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

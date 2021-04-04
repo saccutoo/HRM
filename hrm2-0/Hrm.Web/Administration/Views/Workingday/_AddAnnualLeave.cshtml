@@ -1,0 +1,239 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Common
+@model Hrm.Admin.ViewModels.AddWorkingdayAnnualLeaveViewModel
+
+<style>
+    #frm-add-workingday-annual-leave #list-staff {
+        border: 1px solid #ccc;
+    }
+
+        #frm-add-workingday-annual-leave #list-staff .list-staff-header {
+            height: 40px;
+        }
+
+        #frm-add-workingday-annual-leave #list-staff .header-left {
+            float: left;
+            height: 100%;
+            width: 40%;
+            line-height: 50px;
+        }
+
+            #frm-add-workingday-annual-leave #list-staff .header-left a {
+                margin-left: 10px;
+            }
+
+        #frm-add-workingday-annual-leave #list-staff .header-right {
+            float: left;
+            height: 100%;
+            width: 60%;
+        }
+
+            #frm-add-workingday-annual-leave #list-staff .header-right .icon-filter {
+                float: left;
+                height: 100%;
+                width: 40px;
+                text-align: center;
+                border-bottom: 1px solid #ccc;
+            }
+
+                #frm-add-workingday-annual-leave #list-staff .header-right .icon-filter i {
+                    line-height: 50px;
+                }
+
+            #frm-add-workingday-annual-leave #list-staff .header-right .input-filter {
+                float: left;
+                height: 100%;
+                width: 340px;
+                border-bottom: 1px solid #ccc;
+            }
+
+                #frm-add-workingday-annual-leave #list-staff .header-right .input-filter input {
+                    border: none;
+                    margin-top: 15px;
+                    width: 100%;
+                }
+
+                    #frm-add-workingday-annual-leave #list-staff .header-right .input-filter input:focus {
+                        outline: none;
+                    }
+
+        #frm-add-workingday-annual-leave #list-staff .list-staff-body .staff-body {
+            height: 40px;
+        }
+
+        #frm-add-workingday-annual-leave #list-staff .list-staff-body {
+            max-height: 180px;
+            overflow: auto;
+        }
+
+            #frm-add-workingday-annual-leave #list-staff .list-staff-body .staff-body .body-checked {
+                float: left;
+                height: 100%;
+                margin-left: 10px;
+            }
+
+            #frm-add-workingday-annual-leave #list-staff .list-staff-body .staff-body .body-name {
+                float: left;
+                height: 100%;
+                width: 35%;
+                line-height: 45px;
+            }
+
+            #frm-add-workingday-annual-leave #list-staff .list-staff-body .staff-body .body-organization {
+                float: left;
+                height: 100%;
+                line-height: 45px;
+            }
+</style>
+<div class="add-working-supplement-container display-inline-block">
+    <form id="frm-add-workingday-annual-leave">
+
+        <div class="hrm-v2-modal-body">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    <input type="text" name="model.Id" value="@Model.WorkingdayAnnualLeave.Id" hidden />
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.Name", IsRequired = true, LabelName = T("Workingday.AnnualLeave.Name").ToString(), IsAnimationLabel = true, Value = Model.WorkingdayAnnualLeave.Name })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.AnnualLeave.Status").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.Status, ValueField = "Id", Name = "model.Status", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.WorkingdayAnnualLeave.Status.ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block" style="margin-top:20px">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    <div class="col-md-8 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.AnnualLeave.PeriodApply").ToString(), IsRequired = true, IsAnimationLabel = true, Data =Model.PeriodApplys, ValueField = "Id", Name = "model.PeriodApplyId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.WorkingdayAnnualLeave.PeriodApplyId.ToString() })
+                    </div>
+                    <div class="col-md-4 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.AnnualLeave", IsRequired = true, LabelName = T("Workingday.AnnualLeave.Amount").ToString(), IsAnimationLabel = true, Value = Model.WorkingdayAnnualLeave.AnnualLeave.ToString(),Type="Number" })
+                    </div>
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.AnnualLeave.RegimeSalary").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.Regimes, ValueField = "Id", Name = "model.RegimeId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.WorkingdayAnnualLeave.RegimeId.ToString() })
+                </div>
+            </div>
+
+            <div class="col-md-12 pd-0 display-inline-block hrm-v2-floating-form">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("Workingday.AnnualLeave.Note").ToString(), IsAnimationLabel = true, Name = "model.Note",Value=Model.WorkingdayAnnualLeave.Note })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <span>@T("Workingday.AnnualLeave.ChooseToReceiveTheApplication") <i style="color:red">*</i></span>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block" id="list-staff">
+                <div class="list-staff-header">
+                    <div class="header-left">
+                        <a onclick="selectAll()">@T("Workingday.AnnualLeave.SelectAll")</a>
+                    </div>
+                    <div class="header-right">
+                        <div class="icon-filter">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="input-filter">
+                            <input type="text" placeholder="@T("GlobalSearch.PlaceHolder.Title")" onkeypress="SearchStaff($(this).val())" />
+                        </div>
+                    </div>
+                </div>
+                <div class="list-staff-body" id="list-staff-body">
+
+                    @if (Model.Staffs.Count() > 0)
+                    {
+                        @Html.Partial(UrlHelpers.TemplateAdmin("Workingday","_ListStaffSelectCheckbox.cshtml"), Model)
+                    }
+                </div>
+
+                <div class="list-staff-footer">
+                    <i style="font-family: Roboto-Bold;margin-left:10px" id="count-select"></i><i> @T("Workingday.AnnualLeave.SelectedPersonnel")</i>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-login">
+                <div class="pull-right">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Workingday.Close", ClassName = "hrm-v2-btn-close", Style = "float:left;margin-right:10px" })
+
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", OnClick = "saveWorkingdayAnnualLeave()", Value = "Workingday.Save", Type = "button", ClassName = "hrm-v2-btn-save", Style = "float:left" })
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    var workingdayAnnualLeaveStaffMapper = [];
+    if (@Model.ListCheckbox.Count()>0) {
+        workingdayAnnualLeaveStaffMapper=@Html.Raw(JsonConvert.SerializeObject(Model.ListCheckbox));
+    }
+    var countSelect = workingdayAnnualLeaveStaffMapper.length;
+    $('#count-select').text(countSelect);
+
+    function clickChecked(id) {
+        if ($('#cb-checklist-'+id).is(":checked")) {
+            workingdayAnnualLeaveStaffMapper.push(id);
+            $('#count-select').text(workingdayAnnualLeaveStaffMapper.length);
+        }
+        else {
+            workingdayAnnualLeaveStaffMapper = workingdayAnnualLeaveStaffMapper.filter(function (obj) {
+                return obj != id;
+            });
+            $('#count-select').text(workingdayAnnualLeaveStaffMapper.length);
+        }
+    }
+
+    function saveWorkingdayAnnualLeave() {
+        $("#frm-add-workingday-annual-leave span[name*='-error']").text("");
+        var listData = $('#frm-add-workingday-annual-leave').serializeArray();
+        if (workingdayAnnualLeaveStaffMapper.length>0) {
+            for (var i = 0; i < workingdayAnnualLeaveStaffMapper.length;i++){
+                var obj = {
+                    name: "list[" + i + "].StaffId",
+                    value: workingdayAnnualLeaveStaffMapper[i]
+                }
+                listData.push(obj);
+            }
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Workingday/SaveWorkingdayAnnualLeave",
+            data: listData,
+            success: function (response) {
+                if (response.Invalid)
+                {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-add-workingday-annual-leave");
+                }
+                else
+                {
+                    if (response.result.Success == true) {
+                        $('#myModal').modal('hide');
+                        ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                        changeItemsPerpage('@TableName.TableWorkingdayAnnualLeave');
+                    }
+                    else {
+                        ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    }
+                }
+            }
+        });
+    }
+    function SearchStaff(searchKey) {
+        if (event.which == 13) {
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Workingday/SearchStaff",
+                data: {
+                    searchKey:searchKey,
+                    listStaffId:workingdayAnnualLeaveStaffMapper
+                },
+                success: function (response) {
+                    $('#list-staff-body').html(response);
+                }
+            });
+        }
+    }
+    function selectAll(){
+
+    }
+</script>
+
+
+

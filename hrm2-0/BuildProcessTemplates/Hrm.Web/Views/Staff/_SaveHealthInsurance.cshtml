@@ -1,0 +1,70 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Web.ViewModels.HealthInsuranceViewModel
+@{
+    Layout = null;
+}
+<form id="save-health-insurance-form">
+    <div class="detail-allowance-container display-inline-block">
+        <div class="hrm-v2-modal-header">@T("Staff.Detail.CreateHealthInsurance")</div>
+        <input type="hidden" name="StaffId" id="hi-staffId" value="@Model.HealthInsurance.StaffId" />
+        <div class="hrm-v2-modal-body" style="margin-top:0px">
+            <section class="hrmv2-section">
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Form").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownType, ValueField = "Id", DisplayField = "Name", Name = "TypeId", Value = MasterDataId.InsuranceTypeIncrease.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.HealthInsuranceCode").ToString(), Name = "InsuranceCode", IsRequired = true, IsAnimationLabel = true, Value = Model.HealthInsurance.InsuranceCode })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "IssuedDate", LabelName = T("Staff.Detail.IssueDate").ToString(), Value = Model.HealthInsurance.IssuedDate, PlaceHolder = " " })
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.PlaceHealthCare").ToString(), Name = "PlaceHealthCare", IsAnimationLabel = true, Value = Model.HealthInsurance.PlaceHealthCare })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "StartDate", LabelName = T("Staff.Detail.StarDateApply").ToString(), Value = Model.HealthInsurance.StartDate, PlaceHolder = " " })
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "EndDate", LabelName = T("Staff.Detail.EndDateApply").ToString(), Value = Model.HealthInsurance.EndDate, PlaceHolder = " " })
+                    </div>
+                </div>
+                <div class="col-md-12 display-inline-block" style="padding-top:10px;">
+                    <textarea placeholder="@T("Staff.Detail.Note")" style="width:100%" Name="Note">@Model.HealthInsurance.Note</textarea>
+                </div>
+            </section>
+            <div class="footer">
+                <div class="footer-login">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                            @T("Staff.Detail.Cancel")
+                        </button>
+                        <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="saveHealthInsurance()">
+                            @T("Staff.Detail.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    var insuranceCode = "@Model.HealthInsurance.InsuranceCode"
+    if ($("#TypeId").val() == "@MasterDataId.InsuranceTypeIncrease") {
+        $('#InsuranceCode').prop('disabled', true);
+    }
+    $("#TypeId").change(function () {
+        if ($("#TypeId").val() == "@MasterDataId.InsuranceTypeIncrease" && insuranceCode != "") {
+            $('#InsuranceCode').prop('disabled', true);
+            $('#InsuranceCode').val(insuranceCode);
+        } else {
+            $('#InsuranceCode').prop('disabled', false);
+        }
+    })
+</script>

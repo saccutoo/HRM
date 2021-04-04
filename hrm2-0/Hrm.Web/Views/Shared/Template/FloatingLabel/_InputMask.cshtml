@@ -1,0 +1,35 @@
+﻿@model Hrm.Framework.Models.TextEditorModel
+@{
+    Layout = null;
+    var type = "hh:mm";
+    if (Model.isTimeFormat==false)
+    {
+        type = "99:99";
+    }
+}
+<div class="hrm-v2-floating-form">
+    <div class="floating-label">
+        
+        @if(Model.IsAnimationLabel)
+        {          
+            <input class="floating-input input-mask-@Model.NameId"  id="@Model.Name" value="@Model.Value" style="@Model.Style" name="@Model.Name" type="@Model.Type" placeholder="@string.Format("{0}", " ")" >
+           <label for="@Model.Name">@Model.LabelName @if (Model.IsRequired) {<span class="star"> *</span> } </label> 
+        }
+        else
+        {
+            <input class="floating-input input-mask-@Model.NameId"  id="@Model.Name" name="@Model.Name" value="@Model.Value" style="@Model.Style" type="@Model.Type" placeholder="@Model.PlaceHolder">
+        }
+        <span name="@Model.Name-error" class="hrm-v2-error" label-name="@Model.LabelName"></span>
+    </div>
+</div>
+<script>
+    $(function () {
+        var nameInputMarks='.input-mask-' + '@Model.NameId';
+        $(nameInputMarks).inputmask("@type", {
+            placeholder: "__:__",
+            insertMode: false,
+            showMaskOnHover: false,
+            hourFormat:12
+        });
+    })
+</script>

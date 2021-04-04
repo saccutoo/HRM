@@ -1,0 +1,349 @@
+﻿@model Hrm.Admin.ViewModels.WorkingdayAnnualLeaveViewModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@{
+    ViewBag.Title = "AnnualLeave";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+<style>
+    .organization-table .Action.ellipsis {
+        top: 4px;
+    }
+
+    #working-day-annual-leave .title-name {
+        margin-left: 10px;
+    }
+
+        #working-day-annual-leave .title-name i {
+            color: #ccc;
+        }
+
+    #working-day-annual-leave table tr td {
+        border: none;
+    }
+
+    #working-day-annual-leave table tr .icon-action .category-body-icon {
+        display: none;
+    }
+
+    #working-day-annual-leave table tr:hover .icon-action .category-body-icon {
+        display: block;
+    }
+
+    #button-edit-annual-leave .floating-label {
+        border: none;
+        margin: 0px;
+    }
+
+    #button-edit-annual-leave {
+        height: 30px;
+    }
+
+        #button-edit-annual-leave .floating-label input {
+            border: none;
+            border-bottom: 1px solid #ccc;
+        }
+
+    .table-request-other {
+        margin-left: 30px;
+        width: 50%;
+        margin-top: 15px;
+        margin-bottom: 0px;
+        font-family: Roboto-Regular;
+        font-size: 13px;
+    }
+
+    .use-annual-leave button {
+        float:left !important;
+        margin:0px !important;
+        margin-left:30px !important;
+        width:20px !important;
+        height:20px !important;
+    }
+     .use-annual-leave button i{
+       font-size: 7px !important;
+    }
+     .use-annual-leave table tr:hover{
+       background-color:white;
+    }
+</style>
+
+
+<link href="@Url.Content("~/Content/hrm-v2/_staffdetails.css")" rel="stylesheet" type="text/css" />
+
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Table.Title.WorkingdayAnnualLeave")</span>
+    @if (Model.ActiveTab == 1)
+    {
+        <div class="pull-right">
+            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-pencil-alt", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormEditUserWorkingdayAnnualLeave()" })
+        </div>
+    }
+
+</div>
+
+<div class="col-md-12 hrm-v2-inline-block pd-l-0">
+    <div id="working-day-annual-leave">
+        <div class="hrmv2-tab">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                @{
+                    var active = new Dictionary<int, string>();
+                    for (var i = 0; i < 2; i++)
+                    {
+                        if (i == Model.ActiveTab)
+                        {
+                            active.Add(i, "active in");
+                        }
+                        else
+                        {
+                            active.Add(i, string.Empty);
+                        }
+                    }
+                }
+                <li class="nav-item @active[0]" index="0" onclick="changeView(0)">
+                    <a class="nav-link" id="workingday-annual-leave-funds-license" data-toggle="tab" data-target="#workingday-annual-leave-funds-license" role="tab" aria-controls="workingday-annual-leave-funds-license" aria-selected="true">@T("Workingday.AnnualLeave.FundsLicense")</a>
+                </li>
+                @*<li class="nav-item @active[1]" index="1" onclick="changeView(1)">
+                        <a class="nav-link" id="use-workingday-annual-leave" data-toggle="tab" data-target="#use-workingday-annual-leave" role="tab" aria-controls="use-workingday-annual-leave" aria-selected="false" >@T("Workingday.AnnualLeave.UseAnnualLeave")</a>
+                    </li>*@
+            </ul>
+            <div class="tab-content pd-0" id="myTabContent-add" style="margin-top:10px">
+                @if (Model.ActiveTab == 0)
+                {
+                    <div class="title-name">
+                        <span>@T("Workingday.AnnualLeave.GeneralLicenseFund").ToString().ToUpper() <i class="fas fa-exclamation-circle" title="@T("Workingday.AnnualLeave.ApplyTheOfficialContract")"></i></span>
+                        <table class="table table-request-other">
+                            <tbody>
+                                <tr>
+                                    <td style="width:50%">@T("Workingday.AnnualLeave.GeneralSummation")</td>
+                                    <td>
+                                        <form id="frm-annual-leave">
+                                            <input value="@Model.AnnualLeave.Id" name="model.Id" hidden />
+                                            <input value="@Model.AnnualLeave.AnnualLeaveSeniority" name="model.AnnualLeaveSeniority" hidden />
+                                            <div id="total-annual-leave">@Model.AnnualLeave.AnnualLeave</div>
+                                            <div id="button-edit-annual-leave" style="display:none">
+                                                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.AnnualLeave", Value = Model.AnnualLeave.AnnualLeave.ToString(), Type = "Number", OnBlur = "onBlur()" })
+                                            </div>
+                                        </form>
+                                    </td>
+                                    <td>@T("Workingday.AnnualLeave.AnnualLeave/Year")</td>
+                                    <td class="icon-action">
+                                        <div class="category-body-icon" onclick="ShowButtonEditAnnualLeave()">
+                                            <i class="fas fa-pencil-alt" style="color:#2CA01C"></i>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>@T("Workingday.AnnulLeave.NumberOfSeniorityMagicCalculationAllowed")</td>
+                                    <td>@Model.AnnualLeave.AnnualLeaveSeniority</td>
+                                    <td>@T("Workingday.AnnualLeave.Year/AnnualLeave")</td>
+                                    <td class="icon-action" style="width:5%">
+                                        <div class="category-body-icon">
+                                            @*<i class="fas fa-pencil-alt" style="color:#2CA01C"></i>*@
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="title-name use-annual-leave" style="margin-top:10px;">
+                        <span style="float:left">@T("Workingday.AnnualLeave.UseAnnualLeave").ToString().ToUpper()  </span>
+                       @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-pencil-alt", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormEditAnnualLeave()" })                 
+                        <table class="table table-request-other" style="clear:both;">
+                            <tbody>
+                                <tr>                                    
+                                    <td style="width:50%">@T("Workingday.AnnualLeave.MaximumNumberOfpells")  <i class="fas fa-exclamation-circle" title="@T("Workingday.AnnualLeave.MessageTitle")" style="color:#ccc"></i></td>                           
+                                    <td>
+                                        <span>@Model.AnnualLeave.NumberOfLeaveGranted <span style="color:#ccc">&nbsp;&nbsp; @T("Workingday.AnnualLeave.AnnualLeave")</span></span>
+                                    </td>                          
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @T("Workingday.AnnualLeave.HandlingAnnualLeave")
+                                    </td>
+                                    <td>@M(Model.AnnualLeave.HandlingAnnualLeaveBacklog.ToString() + ";" + DataType.MasterData+";Name")</td>
+                                   
+                                </tr>                             
+                                <tr>
+                                    <td>@T("Workingday.AnnualLeave.DateSurplusAnnualLeave")</td>  
+                                    <td>
+                                         @{ 
+                                             string date = string.Empty;
+                                             if (Model.AnnualLeave.DateRemoveSurplusAnnualLeave!=null)
+                                             {
+                                                 date = Model.AnnualLeave.DateRemoveSurplusAnnualLeave.Value.ToString("dd/MM");
+                                             }
+                                         }
+                                        @date
+                                    </td>  
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-md-12 bread-crumb" style="padding:0 10px 0 10px">
+                        <span style="color:black;font-size:14px;">@T("Workingday.AnnualLeave.OtherLicenseFunds").ToString().ToUpper() <i class="fas fa-exclamation-circle" title="@T("Workingday.AnnualLeave.ApplySomeSpecificObjects")" style="color:#ccc"></i></span>
+                        <div class="pull-right">
+                            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormAddWorkingdayAnnualLeave()" })
+
+                            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.WorkingdayAnnualLeave + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 0, 0)" })
+
+                            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.WorkingdayAnnualLeave + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 1, 0)" })
+                        </div>
+                    </div>
+
+                        <div id="workingday-annual-leave-funds-license" role="tabpanel" aria-labelledby="workingday-annual-leave-funds-license">
+                            <div>
+                                <div class="annual-leave-table">
+                                    <div id="table-workingday-annual-leave">
+                                        @if (Model.Table != null)
+                                        {
+                                            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                }
+                @*else if (Model.ActiveTab == 1)
+                    {
+                        <div class="user-annual-leave">
+                            <div class="col-md-12 display-inline-block">
+                                <div class="col-md-3 pd-l-0 hrm-v2-floating-form">
+                                    Số phép được ứng tối đa trong kỳ tính công <i class="fas fa-exclamation-circle"></i>
+                                </div>
+                                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                                    0 <span>phép</span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 display-inline-block">
+                                <div class="col-md-3 pd-l-0 hrm-v2-floating-form">
+                                    Xử lý phép tồn hàng năm
+                                </div>
+                                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                                    Cộng dồn sang kì tiếp theo
+                                </div>
+                            </div>
+                            <div class="col-md-12 display-inline-block">
+                                <div class="col-md-3 pd-l-0 hrm-v2-floating-form">
+                                    Ngày xóa số dư
+                                </div>
+                                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                                    01/01
+                                </div>
+                            </div>
+                        </div>
+
+                    }*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var tableName = '@Model.Table.TableName';
+
+    function ShowButtonEditAnnualLeave() {
+        $("#button-edit-annual-leave").css("display", "block");
+        $("#total-annual-leave").css("display", "none");
+    }
+
+    function onBlur() {
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Workingday/SaveAnnualLeave",
+            data: $('#frm-annual-leave').serializeArray(),
+            success: function (response) {
+                if (response.result.Success == true) {
+                    $("#button-edit-annual-leave").css("display", "none");
+                    $("#total-annual-leave").css("display", "block");
+                    $("#total-annual-leave").text($("#model-annualleave").val());
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    $("#button-edit-annual-leave").css("display", "none");
+                    $("#total-annual-leave").css("display", "block");
+                    $("#total-annual-leave").text('@Model.AnnualLeave.AnnualLeave');
+                }
+            }
+        });
+    }
+
+    function ShowFormAddWorkingdayAnnualLeave() {
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/Workingday/ShowFormAddWorkingdayAnnualLeave',
+            width: 800,
+            isNotificationPoup: true,
+            align: "center",
+            idform: 'frmAddOrEditContract',
+        };
+        CreatePopup(options);
+    }
+
+    function ShowFormEditWorkingdayAnnulLeave(Id) {
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/Workingday/ShowFormAddWorkingdayAnnualLeave',
+            width: 800,
+            isNotificationPoup: true,
+            align: "center",
+            data: '{id: ' + Id + '}',
+            idform: 'frmAddOrEditContract',
+        };
+        CreatePopup(options);
+    }
+
+    function deleteWorkingdayAnnulLeave(id) {
+        bootbox.confirm({
+            message: '@T("Message.Delete.QuestionDelete")',
+             buttons: {
+                confirm: {
+                    label: '@T("Message.Delete.Yes")',
+                    className: 'hrm-v2-btn-save'
+                },
+                cancel: {
+                    label: '@T("Message.Delete.No")',
+                    className: 'hrm-v2-btn-close'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Admin/Workingday/DeleteWorkingdayAnnualLeave",
+                        data: {
+                            id: id,
+                        },
+                        success: function (response) {
+                            if (response.result.Success == true) {
+                                ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                                changeItemsPerpage('@TableName.TableWorkingdayAnnualLeave');
+                            }
+                            else {
+                                ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+    function changeView(activeTab) {
+        window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "Admin/WorkingDay/AnnualLeave?activeTab=" + activeTab;
+    }
+    function ShowFormEditAnnualLeave() {
+        var options = {
+            url: '/Admin/Workingday/ShowFormEditAnnualLeave',
+            isNotificationPoup: true,
+            align: "center",
+        };
+        CreatePopup(options);
+    }
+</script>

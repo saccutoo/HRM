@@ -1,0 +1,12 @@
+﻿@model Hrm.Framework.Models.ButtonModel
+@{
+    Layout = null;
+}
+<style>
+    .square-button{
+        border-radius:2px;
+        width:30px;
+        height:30px;
+    }
+</style>
+    <input id="@Model.Name" class="square-button " type="button" value="@T(Model.Value)" onclick="@Model.OnClick"/>

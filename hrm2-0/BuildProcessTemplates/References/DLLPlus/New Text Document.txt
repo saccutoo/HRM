@@ -1,0 +1,184 @@
+USE [Hrm2.0]
+GO
+/****** Object:  StoredProcedure [dbo].[WorkingdaySupplementConfiguration_Update_SaveSupplementConfigurationException]    Script Date: 2/3/2020 6:00:15 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[WorkingdaySupplementConfiguration_Update_SaveSupplementConfigurationException]
+    @Id BIGINT ,
+    @ListStaffId NVARCHAR(500) ,
+    @OrganizationId BIGINT ,
+    @PreApprovalStatus BIGINT ,
+    @ApprovedBy NVARCHAR(500) ,
+    @Note NVARCHAR(500) ,
+    @DbName NVARCHAR(500)
+AS
+    BEGIN
+        DECLARE @ExeQuery NVARCHAR(MAX) ,
+            @params NVARCHAR(MAX)	   				
+															 
+        SET @ExeQuery = N'USE [Hrm_' + @DbName + ']'
+            + N'
+		IF ( @Id = 0 )
+			BEGIN
+				INSERT INTO dbo.Data_Workingday_Supplement_Configuration_Exception
+				( StaffId ,
+				  OrganizationId ,
+				  PreApprovalStatus ,
+				  ApprovedBy ,
+				  Note ,
+				  CreatedDate ,
+				  CreatedBy ,
+				  IsDeleted
+				)
+				SELECT Name AS StaffId,1,@PreApprovalStatus,@ApprovedBy,@Note,GETDATE(),1,0 FROM dbo.splitstring(@ListStaffId, '','')
+			END												
+					'
+        SET @params = ' @Id BIGINT ,
+						@ListStaffId NVARCHAR(500) ,
+						@OrganizationId BIGINT ,
+						@PreApprovalStatus BIGINT ,
+						@ApprovedBy NVARCHAR(500) ,
+						@Note NVARCHAR(500) ,
+						@DbName NVARCHAR(500)
+						'
+        EXEC sp_executesql @ExeQuery, @params, @Id,@ListStaffId ,
+            @OrganizationId, @PreApprovalStatus, @ApprovedBy,
+            @Note,@DbName
+	
+    END
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	USE [Hrm2.0]
+GO
+/****** Object:  StoredProcedure [dbo].[WorkingdaySupplementConfiguration_Get_GetSupplementConfigurationException]    Script Date: 2/3/2020 5:58:56 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ 
+
+/*
+***************************************************************************
+	-- Author:			nhungpt
+	-- Description:		Update User
+	-- Date				21/11/2019					Update record
+***************************************************************************
+*/
+
+ALTER PROCEDURE [dbo].[WorkingdaySupplementConfiguration_Get_GetSupplementConfigurationException]
+    @BaseParam BaseParamType READONLY ,
+    @TotalRecord INT = 0 OUTPUT
+AS --begin try
+    DECLARE @FilterField NVARCHAR(MAX) = '' ,
+        @OrderBy VARCHAR(100) = '' ,
+        @PageNumber INT = 1 ,
+        @PageSize INT = 9000000 ,
+        @UserId INT = 1 ,
+        @RoleId INT = 1 ,
+        @DBName NVARCHAR(50) = 'Hrm_System' ,
+        @LanguageId INT = 1
+    IF EXISTS ( SELECT TOP 1
+                        *
+                FROM    @BaseParam )
+        BEGIN
+            SELECT TOP 1
+                    @FilterField = FilterField ,
+                    @OrderBy = OrderBy ,
+                    @PageNumber = PageNumber ,
+                    @PageSize = PageSize ,
+                    @UserId = UserId ,
+                    @RoleId = RoleId ,
+                    @DBName = DbName ,
+                    @LanguageId = LanguageId
+            FROM    @BaseParam
+        END
+    DECLARE @WhereSQL NVARCHAR(MAX) ,
+        @Delim NVARCHAR(100) ,
+        @StartIndex BIGINT ,
+        @EndIndex BIGINT ,
+        @SQL NVARCHAR(MAX) ,
+        @SQLCount NVARCHAR(MAX) ,
+        @SQLFrom NVARCHAR(MAX) ,
+		@SQLJoin NVARCHAR(MAX) ,
+        @SQLSelect NVARCHAR(MAX) ,
+        @dynamicsql NVARCHAR(MAX) ,
+        @dynamicparamdec NVARCHAR(MAX) ,
+        @SearchResult BIGINT ,
+        @OrderBySQL VARCHAR(MAX) ,
+        @WhereSQLRight NVARCHAR(MAX)
+
+    SET @OrderBy = ISNULL(@OrderBy, ' DSCE.Id desc')
+    SET @FilterField = ISNULL(@FilterField, '')
+    SET @WhereSQL = ' ' 
+    SET @WhereSQLRight = ''
+    SET @PageNumber = CASE WHEN ISNULL(@PageNumber, 0) = 0 THEN 1
+                           ELSE CONVERT(INT, @PageNumber)
+                      END
+    SET @PageSize = CASE WHEN ISNULL(@PageSize, 0) = 0 THEN 50
+                         ELSE CONVERT(INT, @PageSize)
+                    END
+
+		--1. Calculate to paging
+    SET @StartIndex = @PageSize * @PageNumber
+    SET @EndIndex = @StartIndex + @PageSize
+
+    SET @StartIndex = ( ( @PageNumber - 1 ) * @PageSize ) + 1
+    SET @EndIndex = @PageNumber * @PageSize
+
+    IF @FilterField <> ''
+        BEGIN
+            SET @Delim = ' '
+            SET @WhereSQL = @WhereSQL + @Delim + @FilterField
+        END
+		--2. get right for role or user
+
+		-- set @WhereSQLRight by role or user
+
+    IF @WhereSQLRight <> ''
+        BEGIN
+            SET @Delim = ' '
+            SET @WhereSQL = @WhereSQL + @Delim + @WhereSQLRight
+        END
+
+		--3. Build select query
+
+    SET @SQLSelect = N'USE [Hrm_' + @DBName + ']' + N'
+					 SELECT DSI.Name AS StaffName, DWSCE.StaffId,DWSCE.OrganizationId, DWSCE.PreApprovalStatus, DWSCE.Note, Temp.ApproveByName AS ApprovedByName
+			'				
+    SET @SQLFrom = '    FROM dbo.Data_Workingday_Supplement_Configuration_Exception DWSCE'
+						
+	SET @SQLJoin = ' JOIN dbo.Data_Staff_Information DSI ON DSI.Id = DWSCE.StaffId
+						OUTER APPLY (
+						SELECT ApproveByName =STUFF ((SELECT '','' + IA.Name   
+						FROM Data_Staff_Information IA 
+						WHERE IA.Id IN (
+						SELECT Name FROM dbo.splitstring(DWSCE.ApprovedBy,'','')
+						) FOR XML PATH ('''')
+						),1,1,'''')
+						) Temp'
+    SET @SQL = @SQLSelect + @SQLFrom + @SQLJoin
+        + ' WHERE DWSCE.IsDeleted = 0'
+        + @WhereSQL + ' ORDER BY DWSCE.StaffId DESC
+		  OFFSET  ' + CONVERT(VARCHAR, ( @PageNumber - 1 ) * @PageSize)
+        + ' ROWS  FETCH NEXT ' + CONVERT(VARCHAR, @PageSize) + ' ROWS ONLY '
+		  
+    EXEC(@SQL )
+    PRINT @SQL
+		--4. Count
+    SET @SQLCount = N'USE [Hrm_' + @DBName + ']'
+        + ' SELECT @TotalRecord = COUNT(DWSCE.Id) '
+    SET @dynamicsql = @SQLCount + @SQLFrom + '  WHERE DWSCE.IsDeleted = 0'
+        + @WhereSQL
+    PRINT @dynamicsql
+    SET @dynamicparamdec = '@TotalRecord INT OUTPUT'
+    EXECUTE sp_executesql @dynamicsql, @dynamicparamdec, @TotalRecord OUTPUT

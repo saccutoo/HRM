@@ -1,0 +1,145 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<style>
+    .titleTotal {
+        color: blue;
+    }
+
+    .dataFomat {
+        text-align: right;
+    }
+
+    .smart-style-3 .dropdown-menu > .latches > a:hover {
+        background-color: #EC9519;
+    }
+
+    .smart-style-3 .dropdown-menu > .removeLatches > a:hover {
+        background-color: #3276b1;
+    }
+
+    .smart-style-3 .dropdown-menu > .sendmail > a:hover {
+        background-color: #a90329;
+    }
+</style>
+<div>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Button trigger modal -->
+            <button title="" type="button" ng-show="tablePermission.isEdit" ng-click="CreatePayslip()" class="btn btn-labeled btn-success">
+                <span class="btn-label">
+                    <i class="fa fa-plus"></i>
+                </span>@AppRes.CreatePayslip
+            </button>
+
+            <button ng-show="tablePermission.isExcel" ng-click="ExcelClick()" title="@AppRes.btnExcel" type="button" class="btn btn-labeled btn-primary">
+                <span class="btn-label">
+                    <i class="fa fa-download"></i>
+                </span>@AppRes.btnExcel
+            </button>
+
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+
+        <div class="col-md-1">
+            <input type="text" ng-model="FromMonth" class="form-control" id="datePicker4" autocomplete="off">
+        </div>
+        <div class="col-md-1">
+            <input type="text" ng-model="ToMonth" class="form-control" id="datePicker5" autocomplete="off">
+        </div>
+        <div class="col-md-2">
+            <select chosen options="getListAllOrganizationUnit" on-no-result="doStuff" ng-model="OrganizationUnitID" ng-options="list.OrganizationUnitID as list.Name for list in getListAllOrganizationUnit" ng-change="onOrganizationUnitChange()" convert-dropdown>
+                <option value="" selected>-- @AppRes.Department --</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select chosen options="ListEmployeeWhereOrganizationUnit" on-no-result="doStuff" ng-model="StaffID" ng-options="list.StaffID as list.NamePB for list in ListEmployeeWhereOrganizationUnit" ng-change="onStaffChange()" convert-dropdown>
+                <option value="" selected>-- ALL --</option>
+            </select>
+        </div>
+        <div class="col-md-1">
+            <button ng-click="GetListData();" id="submit" title="@AppRes.FindFilter"
+                    type="button" class="btn btn-primary">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+        @*<div class="col-md-4" ng-show="tablePermission.isEdit">
+                <div class="center-on-page">
+                    <input type="checkbox" ng-model="AllStaff" name="cb" id="cb1" class="cb1" />
+                    <label for="cb1" id="cbAll">@AppRes.AllStaff</label>
+                </div>
+            </div>*@
+    </div>
+    <br />
+    <div class="row">
+        <div class="container-fluid">
+            <table class="table table-striped table-bordered table-hover tabel-condensed" id="PayBill">
+                <thead class="thead">
+                    <tr class="success">
+                        <th ng-show="SetHiddenActionColumn(tablePermission.isEdit,tablePermission.isDelete)" style="min-width:32px">
+                            <input type="checkbox" ng-model="checkboxAll" ng-click="toggleCheck()">
+                            {{Column.Css}}
+                        </th>
+                        <th ng-repeat="Column in Columns | orderBy:'OrderNo'" style="{{Column.Css}}">
+                            <span ng-bind='@Global.CurrentLanguage==5?Column.DisplayName:Column.DisplayNameEn' ng-click="sort(Column.ColumnName)" style="cursor: pointer;"></span><br />
+                        </th>
+                    </tr>
+                </thead>
+                <thead class="thead">
+                    <tr class="success">
+                        <th ng-show="SetHiddenActionColumn(tablePermission.isEdit,tablePermission.isDelete)" style="min-width:34px">
+
+                        </th>
+                        <th ng-repeat="Column in Columns | orderBy:'OrderNo'" class="titleTotal {{Column.DataFomat==2?'dataFomat':''}}" style="{{Column.Css}}">
+                            <span ng-bind="SetTotalByColumns(Column.ShowTotal,Column.DataFomat)"></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <tr ng-repeat="employee in employees | orderBy:'OrderNo'">
+
+                        <td ng-show="SetHiddenActionColumn(tablePermission.isEdit,tablePermission.isDelete)" style="min-width:34px">
+                            <input type="checkbox" checklist-model="list.employees" ng-model="justAnotherCheckedVar" checklist-value="employee">
+                        </td>
+                        <td ng-repeat="Column in Columns | orderBy:'OrderNo'" class="{{Column.DataFomat==2?'dataFomat':''}}" ng-if="Column.isVisible" style="{{Column.Css}}">
+                            <div ng-if="Column.CustomHTML != null"
+                                 compile="Column.CustomHTML" title="{{employee[Column.ColumnName]}}"></div>
+                            <span ng-if="Column.CustomHTML == null && Column.Type==3"
+                                  ng-bind="employee[Column.ColumnName]| date:'dd/MM/yyyy'" title="{{employee[Column.ColumnName]}}"></span>
+                            <span ng-if="Column.CustomHTML == null && Column.Type==2"
+                                  ng-bind='employee[Column.ColumnName]| number:Column.DataFomat' title="{{employee[Column.ColumnName]}}"></span>
+                            <span ng-if="Column.CustomHTML == null && Column.Type!=2&& Column.Type!=3"
+                                  ng-bind='employee[Column.ColumnName]' title="{{employee[Column.ColumnName]}}"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2 pull-right total">
+                    View 1 to {{pageSizeSelected}} of {{totalCount}} total records
+                </div>
+                <div class="col-md-1 pull-right">
+                    <select class="form-control control-color" style="margin-top: 17px;"
+                            ng-model="pageSizeSelected"
+                            ng-change="changePageSize()" convert-to-number>
+                        <option ng-repeat="pageSizeItem in lstPageSize " value="{{pageSizeItem}}">{{pageSizeItem}}</option>
+                    </select>
+                </div>
+                <div class="col-md-6 pull-right">
+                    <ul style="float:right" uib-pagination total-items="totalCount" ng-change="pageChanged()"
+                        items-per-page="pageSizeSelected" direction-links="true" ng-model="pageIndex"
+                        max-size="maxSize" class="pagination" boundary-links="true"
+                        rotate="false" num-pages="numPages"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

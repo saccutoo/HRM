@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "Sys_Table_Role_Action";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid" ng-app="tableApp">
+    <div ng-controller="roleaction">
+        <div class="row">
+            <div class="col-sm-8 col-sm-push-4">
+                @Html.Action("Sys_Table_Role_ActionServerSide", "Common")
+            </div>
+            <div class="col-sm-4 col-sm-pull-8" ng-controller="secrole">
+                @Html.Action("SecRoleMenuServerSide", "Common")
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/mycustom/Sys_Table_Role_Action/Sys_Table_Role_ActionService.js"></script>
+<script src="~/Scripts/mycustom/Sys_Table_Role_Action/Sys_Table_Role_ActionUntil.js"></script>
+
+<script>
+    BuildTable('tableApp', 'secrole', '@(ViewBag.url)');
+    BuildTable('tableApp', 'roleaction', '@(ViewBag.url1)');
+</script>

@@ -1,0 +1,69 @@
+﻿@model Hrm.Framework.Models.DropdownListModel
+@using Hrm.Framework.Context;
+@using Newtonsoft.Json;
+@using Hrm.Framework.Helper;
+@using Hrm.Common;
+@{
+    Layout = null;
+}
+<div id="@Model.Name">
+    <div class="hrmv2-dropdown-container" id="@Model.Name-hrmv2-dropdown" style="@Model.Style">
+        <a class="hrmv2-dropdown-choice">
+            @if (Model.Data.Count > 0)
+            {
+                <span class="dropdown-chosen" id="@Model.Name-selected-value">@T("Mail.SelectTheDisplayField") </span>
+                <span class="drodown-arrow">
+                    <i class="fa fa-angle-down"></i>
+                </span>
+            }
+        </a>
+
+        <div class="dropdown-drop">
+            <ul class="dropdown-results">
+                @foreach (var item in Model.Data)
+                {
+                    <li class="dropdown-result-selectable" onclick="selectDropdown('@item[Model.ValueField]', '@Model.Name');@Model.Event" >
+                        @if (Model.IsUseImage)
+                        {
+                            var imageUrl = CurrentContext.WebBaseUrl + item.ImageName;
+                            if (Model.IsMultipleLanguage)
+                            {
+                                <div class="dropdown-results-option"><img src="@imageUrl" style="margin-right:10px" />@M(item[Model.Value].Value.ToString() + ";" + DataType.TableName + ";ColumnName").ToString()</div>
+                            }
+                            else
+                            {
+
+                                <div class="dropdown-results-option"><img src="@imageUrl" style="margin-right:10px" />@item[Model.DisplayField]</div>
+                            }
+
+                        }
+                        else
+                        {
+                            if (Model.IsMultipleLanguage)
+                            {
+                                <div class="dropdown-results-option">@M(item[Model.Value].Value.ToString() + ";"+DataType.TableName+ ";ColumnName").ToString()</div>
+
+                            }
+                            else
+                            {
+                                <div class="dropdown-results-option">@item[Model.DisplayField]</div>
+
+                            }
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    ControlModel[@Html.Raw(Json.Encode(Model.Name))] = @Html.Raw(Json.Encode(Model));
+    ControlModel[@Html.Raw(Json.Encode(Model.Name))].Data = @Html.Raw(JsonConvert.SerializeObject(Model.Data));
+    var baseUrl =  @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl));
+    $(document).ready(function(){
+        $('#' + @Html.Raw(Json.Encode(Model.Name)) + '-value').trigger('change');
+    });  
+</script>
+

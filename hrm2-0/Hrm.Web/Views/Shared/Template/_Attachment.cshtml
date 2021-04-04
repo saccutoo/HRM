@@ -1,0 +1,128 @@
+﻿@model List<Hrm.Framework.Models.AttachmentModel>
+@using Hrm.Common
+@{
+    Layout = null;
+}
+
+<style>
+    .attachment-bottom-content {
+        width: auto;
+    }
+
+        .attachment-bottom-content .attachment-right-content {
+            width: 100%;
+            background-color: #F8F8F8;
+            height: 30px;
+            float: left;
+            margin-left: 10px;
+        }
+
+            .attachment-bottom-content .attachment-right-content .attachment-right-date {
+                padding-right: 10px;
+                float: left;
+                height: 100%;
+                line-height: 30px;
+                margin-left: 10px;
+            }
+
+            .attachment-bottom-content .attachment-right-content .attachment-right-name {
+                padding-right: 10px;
+                float: left;
+                height: 100%;
+                line-height: 30px;
+                display: block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                word-break: normal;
+            }
+
+        .attachment-bottom-content .attachment-right-kb {
+            float: left;
+            width: 30%;
+            height: 100%;
+            line-height: 30px;
+        }
+
+        .attachment-bottom-content .attachment-right-remove {
+            float: left;
+            width: 5%;
+            height: 100%;
+            line-height: 30px;
+            cursor: pointer;
+        }
+
+            .attachment-bottom-content .attachment-right-remove span {
+                line-height: 30px;
+            }
+</style>
+<div class="attachment-bottom-content">
+
+    @if (Model.Count() > 0)
+    {
+        <input Id="attachments-count" value="@Model.Count" hidden />
+        for (int i = 0; i < Model.Count; i++)
+        {
+            var item = Model[i];
+            <input name="FileName" value="@item.FileName" hidden />
+            <input name="FileId" value="@item.Id" hidden />
+            <input name="IsDeletedFile" value="False" hidden />
+            <div id="file-item">
+                <div class="attachment-right-content">
+                    <div class="attachment-right-name">
+                        <a id="file-name" href="/Attachment/DownloadFileById?id=@item.Id" title="@item.DisplayFileName" style="margin-left:10px">@item.DisplayFileName</a>
+                    </div>
+                    <div class="attachment-right-kb">
+                        <span id="file-size">@item.FileSize Byte</span>
+                    </div>
+                    <div class="attachment-right-remove">
+                        <span class="fas fa-times" id="remove-file-btn"></span>
+                    </div>
+                </div>
+
+            </div>
+        }
+    }
+    else
+    {
+        <input name="FileName" value="" hidden />
+        <input name="FileId" value="0" hidden />
+        <input name="IsDeletedFile" value="False" hidden />
+        <div id="file-item"></div>
+    }
+
+</div>
+<input id="file-upload" type="file" style="display:none" multiple />
+<span class="upload" onclick="choseFile()" style="width:30px;line-height:30px;"><i class="fas fa-upload" style="color:#2ca01c;width:20px"></i> @T("Staff.Detail.SelectAttachment").ToString()</span>
+<script>
+    function choseFile() {
+        $('#file-upload').click();
+    }
+    $('#file-upload').change(function (e) {
+        $("input[name = 'IsDeletedFile']").attr("value", "True");
+        if ($("#file-item")[0].innerHTML != undefined) {
+            $("#file-item")[0].innerHTML = "";
+        }
+        var fileName = e.target.files[0].name;
+        var fileSize = e.target.files[0].size;
+        $('#file-name').text(fileName);
+        $('#file-size').text(fileSize);
+
+        var htmlAppend = '<div class="attachment-right-content"> ';
+        htmlAppend += ' <div class="attachment-right-name"> ';
+        htmlAppend += ' <span id="file-name" style="margin-left:10px">' + fileName + '</span> ';
+        htmlAppend += ' </div> '
+        htmlAppend += ' <div class="attachment-right-kb"> ';
+        htmlAppend += ' <span id="file-size">' + fileSize + ' Byte</span> ';
+        htmlAppend += ' </div> ';
+        htmlAppend += ' <div class="attachment-right-remove"> ';
+        htmlAppend += ' <span class="fas fa-times" id="remove-file-btn"></span> ';
+        htmlAppend += ' </div> ';
+        htmlAppend += ' </div> ';
+        $("#file-item").append(htmlAppend);
+    });
+    $(document).on('click', '#remove-file-btn', function () {
+        document.getElementById('file-upload').value = "";
+        $("input[name = 'IsDeletedFile']").attr("value", "True");
+        $("#file-item")[0].innerHTML = "";
+    });
+</script>

@@ -1,0 +1,315 @@
+﻿@model Hrm.Framework.ViewModels.TableRowViewModel
+@using Hrm.Framework.Models
+@using Hrm.Web.ViewModels
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Context;
+@using Newtonsoft.Json;
+@using Hrm.Common;
+@using System.Globalization
+@{
+    Layout = null;
+    var data = Model.Data;
+    var rowId = Model.TableViewModel.TableName + "-row-" + data.Id;
+    var fields = Model.TableViewModel.Fields.OrderBy(x => x.Position);
+    var backgroundColor = string.Empty;
+}
+@foreach (var field in fields)
+{
+    var fieldWidth = string.Empty;
+    var eventClick = string.Empty;
+    if (!field.Width.ToLower().Contains("px")) { fieldWidth = field.Width + "px"; }
+    var fieldVisible = field.Visible ? "inline-block" : "none";
+
+    if (!String.IsNullOrEmpty(field.EventClick))
+    {
+        eventClick = field.EventClick + "(" + data["Id"].Value + ")";
+    }
+    if (!string.IsNullOrEmpty(Model.TableViewModel.BackgroundColor))
+    {
+        var colorId = data[Model.TableViewModel.BackgroundColor].Value;
+        backgroundColor = "background:" + C(colorId.ToString());
+    }
+    <td style="width:@fieldWidth;display:@fieldVisible;text-align:@field.Alignment!important;@backgroundColor" class="@field.FieldName.ToLower() ellipsis" data-format="@field.DataFormat" >
+        @if (!string.IsNullOrEmpty(field.Presentation))
+        {
+            var color = string.Empty;
+            if (field.PresentationData != null && field.PresentationData.Count() > 0)
+            {
+                var complexColumnModel = new List<string>();
+                var lstPresentationData = field.PresentationData;
+                if (lstPresentationData != null && lstPresentationData.Count > 0)
+                {
+                    foreach (var presentationData in lstPresentationData)
+                    {
+                        if (data[presentationData.ValueField] != null)
+                        {
+                            if (!presentationData.IsMultiLanguage)
+                            {
+                                complexColumnModel.Add(data[presentationData.ValueField].ToString());
+                            }
+                            else
+                            {
+                                var format = data[presentationData.ValueField].ToString() + ';' + presentationData.DataType + ';' + presentationData.DisplayField;
+                                if (format != null)
+                                {
+                                    complexColumnModel.Add(M(format).ToString());
+                                }
+                                else
+                                {
+                                    complexColumnModel.Add(string.Empty);
+                                }
+                                if (field.Presentation == "ColoredText")
+                                {
+                                    color = C(data[presentationData.ValueField].ToString()).ToString();
+                                }
+                            }
+                        }
+                    }
+                }
+                if (field.Presentation == "Checkbox")
+                {
+
+                    @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "chk_column" + complexColumnModel[0], Value = complexColumnModel[0], Id = "chk-column-row" })
+                }
+                else
+                                                        if (field.Presentation == "ComplexName")
+                {
+                    var externalLink = CurrentContext.WebBaseUrl + field.ExternalLink + data["Id"].Value;
+                    complexColumnModel.Add(externalLink);
+                    @Html.Partial(UrlHelpers.Template("_GridNameColumn.cshtml"), complexColumnModel)
+                }
+                else
+                                                                if (field.Presentation == "ComplexContact")
+                {
+                    <div class="hrm-v2-td-template">
+                        @Html.Partial(UrlHelpers.Template("_GridContactColumn.cshtml"), complexColumnModel)
+                    </div>
+                }
+                else
+                                                                if (field.Presentation == "ColoredText")
+                {
+                    var coloredModel = new ColoredTextModel
+                    {
+                        Rows = complexColumnModel,
+                        Color = color
+                    };
+                    @Html.Partial(UrlHelpers.Template("_GridStatusColumn.cshtml"), coloredModel)
+                }
+                else
+                                                                if (field.Presentation == "PipelineView")
+                {
+                    var pipeline_vm = new PipelineGridModel();
+                    pipeline_vm.PipelineSteps = Model.TableViewModel.PipelineData;
+                    pipeline_vm.CurrentStep = long.Parse(complexColumnModel[0]);
+                    <div class="hrm-v2-td-template">
+                        @Html.Partial(UrlHelpers.View("~/Views/Staff/_StaffStepInPipeline.cshtml"), pipeline_vm)
+                    </div>
+                }
+                else
+                                                                if (field.Presentation == "WelcomeKit")
+                {
+                    <div class="hrm-v2-td-template">
+                        @Html.Partial(UrlHelpers.Template("_WelcomeKit.cshtml"), new StaffModel { isSendWelcomkit = bool.Parse(complexColumnModel[0]), Id = long.Parse(complexColumnModel[1]) })
+                    </div>
+                }
+                else
+                                                                if (field.Presentation == "Checklist")
+                {
+                    var checklist_vm = new GridChecklistViewModel()
+                    {
+                        IsSendChecklist = bool.Parse(complexColumnModel[0]),
+                        TotalCurrentCheckListDetailCompleted = int.Parse(complexColumnModel[1]),
+                        TotalCurrentChecklistChild = int.Parse(complexColumnModel[2]),
+                        Id = int.Parse(complexColumnModel[3]),
+                        Name = complexColumnModel[4],
+                        OfficePositionId = complexColumnModel[5],
+                    };
+                    <div class="hrm-v2-td-template">
+                        @Html.Partial(UrlHelpers.Template("_Checklist.cshtml"), checklist_vm)
+                    </div>
+                }
+                else
+                                                                if (field.Presentation == "DateRange")
+                {
+                    var fromDate = DateTime.MinValue;
+                    var fromDateString = string.Empty;
+                    if (complexColumnModel.Count > 0)
+                    {
+                        fromDate = DateTime.Parse(complexColumnModel[0].ToString());
+                    }
+                    var minus = string.Empty;
+                    if (fromDate != DateTime.MinValue)
+                    {
+                        fromDateString = fromDate.ToShortDateString();
+                    }
+                    var toDate = DateTime.MinValue;
+                    if (complexColumnModel.Count > 1)
+                    {
+                        toDate = DateTime.Parse(complexColumnModel[1].ToString());
+                    }
+                    var toDateString = string.Empty;
+                    if (toDate != DateTime.MinValue)
+                    {
+                        toDateString = toDate.ToShortDateString();
+                    }
+                    if (fromDateString != string.Empty || toDateString != string.Empty)
+                    {
+                        minus = " - ";
+                    }
+                    <div class="hrm-v2-td-template">
+                        <span class="@field.Class">@fromDateString @minus @toDateString </span>
+                    </div>
+                }
+                else
+                                                                if (field.Presentation == "Currency")
+                {
+                    var amount = decimal.Parse(complexColumnModel[0].ToString());
+                    var amountString = string.Empty;
+                    amountString = String.Format("{0:#,##0.##}", amount);
+                    var currency = decimal.Parse(complexColumnModel[1].ToString());
+                    var currencyString = string.Empty;
+                    currencyString = M(currency.ToString() + ";" + DataType.MasterData + ";Name").ToString();
+                    <div class="hrm-v2-td-template">
+                        <span onclick="@eventClick" class="@field.Class"><span class="currency-amount">@amountString</span> <span class="currency-code">@currencyString</span>  </span>
+                    </div>
+                }
+                else if (field.Presentation == "Time")
+                {
+                    var date = Convert.ToDateTime(complexColumnModel[0]);
+                    <div class="hrm-v2-td-template">
+                        <span class="@field.Class">@date.ToString("HH:mm") </span>
+                    </div>
+                }
+                else if (field.Presentation == "Date")
+                {
+                    if (complexColumnModel.Count()>0)
+                    {
+                        var date = Convert.ToDateTime(complexColumnModel[0]);
+                        <div class="hrm-v2-td-template">
+                            <span class="@field.Class">@date.ToString("dd/MM/yyyy") </span>
+                        </div>
+                    }
+
+
+                }
+                else if (field.Presentation == "CountWorkingdaySupplement")
+                {
+                    if (Convert.ToInt32(complexColumnModel[0]) > 0)
+                    {
+                        <div class="hrm-v2-td-template">
+                            <div class="value-supplement">
+                                <span class="@field.Class"> @complexColumnModel[0]</span>
+                            </div>
+                            @Html.Partial(UrlHelpers.View("~/Views/Workingday/_TooltipListSupplement.cshtml"), new BaseModel
+                       {
+                           ValueCommon = complexColumnModel[1],
+                           Id = long.Parse(complexColumnModel[2])
+                       })
+                        </div>
+                    }
+                    
+
+                }
+                else if (field.Presentation == "DateSupplement")
+                {
+                    @Html.Partial(UrlHelpers.View("~/Views/Workingday/_TooltipHistory.cshtml"), new BaseModel
+               {
+                   ValueCommon = complexColumnModel[0],
+                   Id=long.Parse(complexColumnModel[1])
+               });
+                }
+                else if (field.Presentation == "ThAndDate")
+                {
+                    if (complexColumnModel[0]!=null)
+                    {
+                        DateTime date = Convert.ToDateTime(complexColumnModel[0]);
+                        <span style="line-height:50px">@T(date.ToString("dddd")) @date.ToString("dd/MM/yyyy")</span>
+                    }
+
+                }
+                else if (field.Presentation == "AdditionalTime")
+                {
+                    if (long.Parse(complexColumnModel[0]) == MasterDataId.EarlyDuration || long.Parse(complexColumnModel[0]) == MasterDataId.LateDuration)
+                    {
+                        var missingTimeDuration = string.Empty;
+                        if (complexColumnModel.Count() > 0)
+                        {
+                            DateTime date = Convert.ToDateTime(complexColumnModel[complexColumnModel.Count()-1]);
+                            missingTimeDuration = date.TimeOfDay.Minutes.ToString();
+                            <span style="color:red;line-height:50px;">- @missingTimeDuration  @T("Workingday.Unit.Minute")</span>
+                        }
+                    }
+                    else
+                    {
+                        if (complexColumnModel[1] != null && complexColumnModel[2] != null)
+                        {
+                            DateTime startTime = Convert.ToDateTime(complexColumnModel[1]);
+                            DateTime endTime = Convert.ToDateTime(complexColumnModel[2]);
+                            <span style="color:red;line-height:50px;">@startTime.ToString("HH:mm") - @endTime.ToString("HH:mm")</span>
+                        }
+                    }
+                }
+                else
+                {
+                    if (complexColumnModel.Count() > 0)
+                    {
+                        <div class="hrm-v2-td-template">
+                            <span onclick="@eventClick" class="@field.Class">@complexColumnModel[0]</span>
+                        </div>
+                    }
+        }
+            }
+        }
+        else
+        {
+            if (field.DataFormat == "Date" && data[field.FieldName] != DateTime.MinValue && data[field.FieldName] != null)
+            {
+                <div class="hrm-v2-td-template">
+                    <span class="@field.Class">
+                        @DateTime.Parse(data[field.FieldName].ToString()).ToShortDateString()
+                    </span>
+                </div>
+            }
+            else if (field.DataFormat == "Date" && data[field.FieldName] == DateTime.MinValue)
+            {
+
+            }
+            else if (field.FieldName == "Action")
+            {
+                <div class="action-table">
+                    @if (FunctionHelpers.ControlPermission(ActionName.Update, Model.TableViewModel.TableConfigName))
+                    {
+                        if (field.ActionSave != null && field.ActionSave != string.Empty)
+                        {
+                            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-pencil-alt", BtnClass = "action-grid pull-left", OnClick = field.ActionSave + "(" + data["Id"].Value + ")" })
+                        }
+                    }
+                    @if (FunctionHelpers.ControlPermission(ActionName.Delete, Model.TableViewModel.TableConfigName))
+                    {
+                        if (field.ActionDelete != null && field.ActionDelete != string.Empty)
+                        {
+                            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-trash-alt", BtnClass = "action-grid pull-left", OnClick = field.ActionDelete + "(" + data["Id"].Value + ")" })
+                        }
+                    }
+                    @if (field.ActionAproval != null && field.ActionAproval != string.Empty)
+                        {
+                        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-check-circle", BtnClass = "action-grid pull-left", OnClick = field.ActionAproval + "(" + data["Id"].Value + ")" })
+                    }
+                    @if (field.ActionNoAproval != null && field.ActionNoAproval != string.Empty)
+                        {
+                        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-times-circle", BtnClass = "action-grid pull-left", OnClick = field.ActionNoAproval + "(" + data["Id"].Value + ")" })
+                    }
+                </div>
+
+            }
+            else
+            {
+                <div class="hrm-v2-td-template">
+                    <span onclick="@eventClick" class="@field.Class">
+                        @data[field.FieldName]
+                    </span>
+                </div>
+            }
+        }
+    </td>
+}

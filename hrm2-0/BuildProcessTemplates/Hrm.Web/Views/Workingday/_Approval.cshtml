@@ -1,0 +1,191 @@
+﻿@model Hrm.Web.ViewModels.WorkingdaySupplementViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@using Hrm.Framework.Context
+@using Hrm.Common
+
+<style>
+    .hrmv2-section .my-request-header .my-request-header-filter {
+        width: 20%;
+        height: 37px;
+        float: left;
+    }
+
+        .hrmv2-section .my-request-header .my-request-header-filter .icon-left {
+            height: 100%;
+            width: 30px;
+            float: left;
+            text-align: center;
+            margin-left: 10px;
+        }
+
+            .hrmv2-section .my-request-header .my-request-header-filter .icon-left span {
+                float: left;
+                line-height: 50px;
+            }
+
+        .hrmv2-section .my-request-header .my-request-header-filter .filter-right {
+            height: 100%;
+            border-bottom: 1px solid #ccc;
+        }
+
+            .hrmv2-section .my-request-header .my-request-header-filter .filter-right input {
+                width: 89%;
+                margin-top: 14px;
+                border: none;
+            }
+
+                .hrmv2-section .my-request-header .my-request-header-filter .filter-right input:focus {
+                    outline: none;
+                }
+
+    .hrmv2-section .my-request-header .my-request-header-date {
+        float: right;
+        margin-right: 20px;
+    }
+
+        .hrmv2-section .my-request-header .my-request-header-date #month-my-request-datetimepicker {
+            margin-top: 10px;
+        }
+
+        .hrmv2-section .my-request-header .my-request-header-date .option-list.request-option.hrm-v2-font-13 {
+            float: left;
+            margin-right: 30px;
+        }
+
+        .hrmv2-section .my-request-header .my-request-header-date .fas.fa-columns {
+            float: left;
+            line-height: 48px;
+            color: #2CA01C;
+            cursor: pointer;
+        }
+         .hrmv2-section #list-workingday-supplement{
+        overflow: auto;
+        display: block;
+        max-height: 650px;
+     }
+        .hrmv2-section #my-request-box-right-body .request-other{
+            max-height: 285px;
+            overflow: auto;
+        }
+</style>
+
+@if (Model.ViewType == Hrm.Common.ViewType.List)
+{
+    <section class="hrmv2-section">
+
+        <div class="my-request-header">
+            <div class="my-request-header-date">
+                <span class="option-list request-option hrm-v2-font-13">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "month-my-request", DateFormat = "MM/yyyy", Value = Convert.ToDateTime(Model.Month.ToString() + "/" + Model.Year.ToString()) })
+                </span>
+                <span class="fas fa-columns" onclick="changeView(true)"></span>
+            </div>
+        </div>
+
+        <div class="list-supplement-workingday" style="margin-top:45px;">
+            <form id="frm-table-supplement">
+                <div class="table-workingday-supplement-need-approval" id="table-workingday-supplement-need-approval">
+                    @{
+                        var table = Model.Table;
+                        table.ItemsPerPage = Model.Table.ItemsPerPage;
+                        table.CurrentPage = Model.Table.CurrentPage;
+                    }
+                    @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+                </div>
+            </form>
+        </div>
+
+
+    </section>
+}
+else
+ {
+    <section class="hrmv2-section">
+        <div class="my-request-tab">
+            <div class="my-request-box-left pull-left">
+                <div class="my-request-filter">
+                    <div class="my-request-icon-search">
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <div class="my-request-input-search">
+                        <input placeholder="@T("Workingday.TitleFillterWorkingday")" type="text" onkeyup="searchWorkingdaySupplement($(this).val())" />
+                    </div>
+                    <div class="my-request-input-date">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "current-month-request-approvel", DateFormat = "MM/yyyy", Value = Convert.ToDateTime(Model.Month.ToString() + "/" + Model.Year.ToString()) })
+                    </div>
+                    <div class="my-request-icon-filter">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                </div>              
+                <div id="list-workingday-supplement" class="hrm-v2-scroll">
+                    @if (Model.WorkingdaySupplements.Count() > 0)
+                    {
+                        @Html.Partial(UrlHelpers.View("~/Views/Workingday/_ListNeedApproveWorkingdaySupplenment.cshtml"), Model)
+                    }
+                </div>
+            </div>
+            <div class="my-request-box-right pull-left">
+                <div id="my-request-box-right-body">
+                    @if (Model.NeedApprovalWorkingdaySupplementDetail.WorkingdaySupplement!=null && Model.NeedApprovalWorkingdaySupplementDetail.WorkingdaySupplement.Id != 0)
+                    {
+                        @Html.Partial(UrlHelpers.View("~/Views/Workingday/_NeedApproveWorkingdaySupplementDetail.cshtml"), Model.NeedApprovalWorkingdaySupplementDetail)
+                    }
+                </div>
+            </div>
+    </section>
+}
+
+
+<script>
+    function showFromNoteApproval(isApproval) {
+        var options = {
+            id: 'frmAddWorkingdaySupplement',
+            isNotificationPoup: false,
+            align: "center",
+            url: '/Workingday/FormNoteSaveApproval',
+            data:{
+                isApproval: isApproval
+            },
+            isDataTypeJson: true,
+            width: 600,
+            idform: 'frm-working-day-supplement',
+        };
+        CreatePopup(options);
+    }
+
+    function ApprovalListWorkingDaySupplement(id) {
+        var options = {
+            id: 'frmAddWorkingdaySupplement',
+            isNotificationPoup: false,
+            align: "center",
+            url: '/Workingday/FormNoteSaveApproval',
+            data: {
+                isApproval: true,
+                id: id
+            },
+            isDataTypeJson: true,
+            width: 600,
+            idform: 'frm-working-day-supplement',
+        };
+        CreatePopup(options);
+    }
+
+    function NotApprovedListWorkingDaySupplement(id) {
+        var options = {
+            id: 'frmAddWorkingdaySupplement',
+            isNotificationPoup: false,
+            align: "center",
+            url: '/Workingday/FormNoteSaveApproval',
+            data: {
+                isApproval: false,
+                id:id
+            },
+            isDataTypeJson: true,
+            width: 600,
+            idform: 'frm-working-day-supplement',
+        };
+        CreatePopup(options);
+    }
+</script>

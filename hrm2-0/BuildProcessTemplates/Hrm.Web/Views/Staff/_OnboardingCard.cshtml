@@ -1,0 +1,28 @@
+﻿@model Hrm.Framework.Models.StaffModel
+@using Hrm.Common
+<div class="onboarding-card drag-content" pipeline-step-id="@Model.PipelineStepId" staff-id="@Model.Id" pipeline-rule="@Model.PipelineRule">
+    <div class="sort-icon">
+        <i class="fas fa-grip-vertical"></i>
+    </div>
+    
+    <div class="staff-information">
+        <div class="staff-action"><i class="fas fa-ellipsis-v"></i><i class="fas fa-share"></i></div>
+        <a class="staff-name" href="~/staff-detail?StaffId=@Model.Id&&activetab=0">@Model.Name
+       @if (Model.Birthday.HasValue && DateTime.Now.Day == Model.Birthday.Value.Day && DateTime.Now.Month == Model.Birthday.Value.Month)
+       {<i class="fas fa-birthday-cake"></i>}
+        </a>
+        <div class="staff-classification">@M(Model.OfficePositionId.ToString() + ";" + DataType.MasterData + ";Name").ToString()</div>
+        @{ var onboardDate = string.Empty;
+            if (Model.OnboardingDate.HasValue) { onboardDate = Model.OnboardingDate.Value.ToString("dd/MM/yyyy"); } }
+        <div class="staff-date"><i class="fas fa-rocket"></i>@onboardDate</div>
+        <div class="staff-mail check-list-completed">
+            @if (Model.IsSendWelcomeKit)
+            {
+                <a href="/Admin/Checklist/WelcomeKit?viewType=View" style="color:#2CA01C"><i class="far fa-envelope-open"></i></a>
+            }
+            <span class="check"><i class="fas fa-check"></i></span>
+            <span>@Model.TotalCurrentCheckListDetailCompleted/@Model.TotalCurrentChecklistChild</span>
+        </div>
+        
+    </div>
+</div>

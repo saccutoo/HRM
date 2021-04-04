@@ -1,0 +1,30 @@
+﻿@model Hrm.Admin.ViewModels.MasterDataViewModel
+
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common;
+@{
+    ViewBag.Title = "_Category";
+    Layout = null;
+}
+
+@{
+    var datas = Model.MasterData;
+    if (datas != null && datas.Count > 0)
+    {
+        foreach (var data in datas)
+        {
+            <li  id="masterDataSelect-@data.Id" onkeyup="myFuntion()" onclick="FunctionCategory('@data.Id')" class="category-item" ng-click="clickCategory(@Json.Encode(data))" ng-style="Style">
+                <span>@M(data.Id.ToString()+";"+DataType.MasterData+";Name")
+                </span>
+            </li>
+        }
+    }
+}
+<script>
+    $(document).on('click', '.category-item', function () {
+        $('.category-item').removeClass('active');
+        $(this).addClass('active');
+    });
+
+</script>

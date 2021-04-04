@@ -1,0 +1,114 @@
+﻿
+@using HRM.App_LocalResources;
+<div class="container-fluid">
+    <div class="row" id="FileImport" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-heading"><b>@ViewBag.Title</b></div>
+                <hr />
+                <div class="panel-body">
+                    <form role="form" name="SaveForm" ng-submit="ImportAction(tableInfo.ImportUrl,SaveForm)" novalidate>
+                        <div class="format-file" style="height: 140px; border-bottom: 1px solid #D8DDE6; margin-bottom: 5%;">
+                            <div class="col-sm-2">
+                                <i class="fa fa-info-circle" style="font-size: 32px; opacity: 0.4; margin: 36% 33%;"></i>
+                            </div>
+                            <div class="col-sm-10 crm-padding-left-0" style="padding-top: 15px;">
+                                <div>
+                                    <span style="font-size: 14px;"> @AppRes.ImportMessage <br /> @AppRes.ImportMessage2</span>
+                                </div><br />
+                                <div class="select-format">
+                                    <div class="col-sm-5 crm-padding-left-0">
+                                        <span style="font-size: 14px;"><a id="LinkDownLoadFileTemplate" target="blank" href="{{tableInfo.DowmLoadFileTemplateImportUrl}}">@AppRes.DownloadFileTemplate </a> @AppRes.Formart</span>
+                                    </div>
+                                    <div class="col-sm-7 crm-padding-left-0 option-import-lead">
+                                        <select class="form-control" id="sel1">
+                                            <option selected value=".xlsx">.xlsx</option>
+                                            <option value=".xls">.xls</option>
+                                            <option value=".csv">.csv</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="import-file" style="text-align: center; margin-top: 10px;">
+                            <div style="margin-bottom: 4%;"><span id="FileUploadName"></span><sup style="color: red; cursor: pointer;" id="ClearFileImportLead">[x]</sup></div>
+                            <span class="btn btn-default pd-hr-10" id="FileUpload" style="border: 1px solid #d0cdcd; background: #D8DDE6;" ng-click="SelectFile()">
+                                <i class="fa fa-upload"></i> @AppRes.SelectFile
+                            </span>
+                            <br />
+                            <br />
+                            <button type="submit" class="btn btn-labeled btn-success" id="SubmitImportLead" ng-click="ImportFile()">
+                                <span class="btn-label">
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>@AppRes.ImportFile
+                            </button>
+                            <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                <span class="btn-label">
+                                    <i class="fa fa-remove"></i>
+                                </span>@AppRes.btnCancel
+                            </button>
+                            <span hidden>
+                                <input hidden class="btn btn-default pd-hr-10" id="FileUploadInput" type="file" accept=".xls, .xlsx, .csv" style="border: 1px solid #d0cdcd; background: #D8DDE6;" />
+                            </span>
+                            <br />
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#sel1').change(function (e) {
+        var param
+        if (window.location.pathname.toLowerCase() === "/ShareRateSalaryCost/Dept".toLowerCase()) {
+            param = "2"
+        }
+        else {
+            param = "1"
+        }
+
+        var strLink = $("#LinkDownLoadFileTemplate").attr("href").split('?')[0] + "?formatFile=" + $("#sel1").val() + "&param=" + param;
+        $("#LinkDownLoadFileTemplate").attr("href", strLink);
+    });
+
+    $('#FileUploadInput').change(function (e) {
+        var fileName = e.target.files[0].name;
+        $('#FileUploadName').text(fileName);
+        if (document.getElementById("FileUploadInput").files.length <= 0) {
+            $('#SubmitImportLead').removeClass("btn-save-import-lead");
+            $("#SubmitImportLead").attr("disabled", true);
+        } else {
+            $('#SubmitImportLead').addClass("btn-save-import-lead");
+            $("#SubmitImportLead").attr("disabled", false);
+            $("#ClearFileImportLead").show();
+        }
+    });
+    $('#ClearFileImportLead').click(function (e) {
+        $("#FileUploadInput").val("");
+        $('#FileUploadName').text("");
+        $('#SubmitImportLead').removeClass("btn-save-import-lead");
+        $("#SubmitImportLead").attr("disabled", true);
+        $("#ClearFileImportLead").hide();
+    });
+
+    $("#ClearFileImportLead").hide();
+    $("#SubmitImportLead").attr("disabled", true);
+    $(document).ready(function(){
+        
+
+        setTimeout(function () {
+            var param
+            if (window.location.pathname.toLowerCase() === "/ShareRateSalaryCost/Dept".toLowerCase()) {
+                param = "2"
+            }
+            else {
+                param = "1"
+            }
+            var strLink = $("#LinkDownLoadFileTemplate").attr("href")+"?param=" + param;
+            $("#LinkDownLoadFileTemplate").attr("href", strLink);
+        }, 500);
+    });
+</script>

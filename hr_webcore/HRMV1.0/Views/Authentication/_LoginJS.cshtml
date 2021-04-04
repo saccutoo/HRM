@@ -1,0 +1,21 @@
+﻿
+@using HRM.App_LocalResources;
+@using HRM.Common
+@using HRM.Constants
+<script type="text/javascript">
+    function ChangeLanguage(lang) {
+        if (lang == '@Constant.numLanguage.VN.GetHashCode()') {
+            $('#hdLanguage').val('@Constant.numLanguage.VN.GetHashCode()');
+            $('#optionVN').show();
+            $('#optionEN').hide();
+            $('#liVN').addClass("active");
+            $('#liEN').removeClass("active");
+        } else {
+            $('#hdLanguage').val('@Constant.numLanguage.EN.GetHashCode()');
+            $('#optionVN').hide();
+            $('#optionEN').show();
+            $('#liVN').removeClass("active");
+            $('#liEN').addClass("active");
+        }
+    };
+</script>

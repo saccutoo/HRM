@@ -1,0 +1,315 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@{
+    ViewBag.Title = "Hrm";
+    Layout = "~/Views/Shared/_MenuHome.cshtml";
+}
+<div class="wapper-container">
+    <p id="back-to-top">
+        <a href="#" class="fas fa-chevron-up"></a>
+    </p>
+    <div class="bx-wraper section-1">
+        <div class="bx-bn-left section-1">
+            <h1 class="title-app">Onpeople HRM</h1>
+            <p class="solution">Giải pháp quản trị nhân sự hàng đầu hiện nay</p>
+            <p class="slogan">Quản lý - Đánh giá - Thấu hiểu - Phát triển</p>
+            <div class="inp-trial-free">
+
+                <button type="button" class="hrm-v2-btn-save">Dùng thử miễn phí</button>
+            </div>
+        </div>
+        <div class="bx-bn-right pull-right">
+            <img src="@Url.Content("~/Content/Images/banner/ptl1.PNG")" alt="onpeople-hrm" />
+        </div>
+    </div>
+    <div class="bx-wraper section-2" style="margin-left: 75px">
+        <div class="content">
+            <img src="@Url.Content("~/Content/Images/banner/ptl3.PNG")" style="float:left;height:429px ;margin-top: 5px;margin-left: -160px;width:635px" id="abc-img" alt="staff-information" />
+            <div class="step-hrm right" style="float:left">
+                <div class="step" tabindex="1" onclick="changeImgAbc('/Content/Images/banner/ptl3.PNG')">
+                    <p class="title">
+                        HRM là gì?
+                        <i class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-up"></i>
+                    </p>
+                    <p class="step-content">Lấy nhân viên làm trung tâm, nhằm tạo ra trải nghiệm tốt nhất cho nhân viên</p>
+                </div>
+                <div class="step" tabindex="2" onclick="changeImgAbc('/Content/Images/banner/ptl4.PNG')">
+                    <p class="title">
+                        Vì sao chúng ta cần quản trị nhân sự?
+                        <i class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-up"></i>
+                    </p>
+                    <p class="step-content">Quản trị tập trung, tương tác dễ dàng</p>
+                </div>
+                <div class="step" tabindex="3" onclick="changeImgAbc('/Content/Images/banner/ptl3.PNG')">
+                    <p class="title">
+                        Đối tượng nào nên dùng quản trị nhân sự?
+                        <i class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-up"></i>
+                    </p>
+                    <p class="step-content">Tất cả thông tin đều được cung cấp mạch lạc, rõ ràng trên một màn hình</p>
+                </div>
+                <div class="step" tabindex="4" onclick="changeImgAbc('/Content/Images/banner/ptl4.PNG')">
+                    <p class="title">
+                        HRM trên nền tảng Cloud có gì đặc biệt?
+                        <i class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-up"></i>
+                    </p>
+                    <p class="step-content">Quản trị tập trung mọi thông tin và quá trình làm việc của nhân viên, giảm thời gian và chi phí</p>
+                </div>
+                <div class="step" tabindex="5" onclick="changeImgAbc('/Content/Images/banner/ptl5.PNG')">
+                    <p class="title">
+                        Triển khai phần mềm quản trị nhân sự như thế nào?
+                        <i class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-up"></i>
+                    </p>
+                    <p class="step-content">Quản trị tập trung mọi thông tin và quá trình làm việc của nhân viên, giảm thời gian và chi phí</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bx-wraper section-4">
+
+
+        <div class="feature-onpeople">
+            <h4 class="support" style="padding-top: 50px;">Lợi ích của Onpeople HRM?</h4>
+            <a class="feature  f-1" href="/Home/Staff">
+                <img src="@Url.Content("~/Content/Images/banner/feature-1.png")" alt="feature-1" />
+                <p>Nhân sự</p>
+            </a>
+            <a class="feature f-2" href="/Home/Onboarding">
+                <img src="@Url.Content("~/Content/Images/banner/feature-2.png")" alt="feature-1" />
+                <p>Onboarding</p>
+            </a>
+            <a class="feature f-3" href="/Home/WorkingDay">
+                <img src="@Url.Content("~/Content/Images/banner/feature-3.png")" alt="feature-1" />
+                <p>Quản trị công</p>
+            </a>
+            <a class="feature f-4" href="/Home/Salary">
+                <img src="@Url.Content("~/Content/Images/banner/feature-4.png")" alt="feature-1" />
+                <p>Quản trị lương (beta)</p>
+            </a>
+            <a class="feature f-5" href="/Home/Educate">
+                <img src="@Url.Content("~/Content/Images/banner/feature-5.png")" alt="feature-1" />
+                <p>Đào tạo (beta)</p>
+            </a>
+            <a class="feature f-6" href="/Home/Evaluate">
+                <img src="@Url.Content("~/Content/Images/banner/feature-4.png")" alt="feature-1" />
+                <p>Đánh giá (beta)</p>
+            </a>
+
+        </div>
+    </div>
+    <div class="bx-wraper section-5" id="why-onpeople">
+        <h4 class="reason text-center">Vì sao chọn Onpeople HRM?</h4>
+        <p class="text text-center">Onpeople là nền tảng cloud giúp doanh nghiệp quản lý nhân sự tập trung và hiệu quả.</p>
+        <div class="content" style="margin-top: 120px">
+            <div class="step-hrm left" style="margin-left: 100px">
+                <div class="step-hrm left">
+                    <div class="step" tabindex="5" onclick="changeImgAbc1('/Content/Images/banner/ptl4.PNG')">
+                        <p class="title">
+                            Tăng độ hài lòng nhân viên, giảm tỉ lệ nghỉ việc <i class="fas fa-angle-down"></i>
+                            <i class="fas fa-angle-up"></i>
+                        </p>
+                        <p class="step-content">Lấy nhân viên làm trung tâm, nhằm tạo ra trải nghiệm tốt nhất cho nhân viên </p>
+                    </div>
+                    <div class="step" tabindex="5" onclick="changeImgAbc1('/Content/Images/banner/ptl3.PNG')">
+                        <p class="title">
+                            Định vị tổ chức nhanh chóng <i class="fas fa-angle-down"></i>
+                            <i class="fas fa-angle-up"></i>
+                        </p>
+                        <p class="step-content">Quản trị tập trung mọi thông tin và quá trình làm việc của nhân viên, giảm thời gian và chi phí</p>
+                    </div>
+                    <div class="step" tabindex="5" onclick="changeImgAbc1('/Content/Images/banner/ptl5.PNG')">
+                        <p class="title">
+                            Báo cáo trực quan, phân tích chuyên sâu <i class="fas fa-angle-down"></i>
+                            <i class="fas fa-angle-up"></i>
+                        </p>
+                        <p class="step-content">Quản trị tập trung mọi thông tin và quá trình làm việc của nhân viên, giảm thời gian và chi phí</p>
+                    </div>
+                    <div class="step" tabindex="6" onclick="changeImgAbc1('/Content/Images/banner/ptl3.PNG')">
+                        <p class="title">
+                            Tương tác mọi lúc, mọi nơi <i class="fas fa-angle-down"></i>
+                            <i class="fas fa-angle-up"></i>
+                        </p>
+                        <p class="step-content">Sơ đồ tổ chức trực quan, linh hoạt, bao quát</p>
+                    </div>
+                    <div class="step" tabindex="7" onclick="changeImgAbc1('/Content/Images/banner/ptl4.PNG')">
+                        <p class="title">
+                            Chấm công nhanh chóng,chính xác <i class="fas fa-angle-down"></i>
+                            <i class="fas fa-angle-up"></i>
+                        </p>
+                        <p class="step-content">Hỗ trợ chấm công đa thiết bị, tổng hợp công</p>
+                    </div>
+                    <div class="step" tabindex="8" onclick="changeImgAbc1('/Content/Images/banner/ptl5.PNG')">
+                        <p class="title">
+                            Tính lương thưởng tự động(Beta) <i class="fas fa-angle-down"></i>
+                            <i class="fas fa-angle-up"></i>
+                        </p>
+                        <p class="step-content">Tăng tính chính xác, tiết kiệm nhân lực và thời gian của bộ phận nhân sự và kế toán</p>
+                    </div>
+                </div>
+
+                <img src="@Url.Content("~/Content/Images/banner/ptl5.PNG")" alt="onboarding" id="abc1-img" style="width:584px; height:394px;margin-top: -411px; margin-left: 442px " />
+
+            </div>
+        </div>
+
+        <div class="bx-wraper section-4">
+            <h4 class="support">Ý kiến chuyên gia và khách hàng</h4>
+            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <div class="hrm-carousel-home">
+                            <div class="carousel-item-header">
+                                <div class="col-md-3 quote-left caros-h-i">
+                                    <img src="@Url.Content("~/Content/Images/banner/quote-left.png")" alt="quote-left" />
+                                </div>
+                                <div class="col-md-6 company-img caros-h-i">
+                                    <img src="@Url.Content("~/Content/Images/banner/company-1.png")" alt="company-1" />
+                                </div>
+                                <div class="col-md-3 quote-right caros-h-i">
+                                    <img src="@Url.Content("~/Content/Images/banner/quote-right.png")" alt="quote-right" />
+                                </div>
+                            </div>
+                            <div class="col-md-12 carousel-item-container pull-left">
+                                <p> Nhờ Onpeople giúp tôi tiết kiệm được thời gian, chi phí và giúp quản lý con người hiệu quả. Không những thế còn điều hòa được những yêu cầu của nhân sự và doanh nghiệp, giúp tôi đưa ra được các chiến lược nhân sự đúng đắn.</p>
+                            </div>
+                            <div class="col-md-12 text-center pull-left" style="padding-bottom: 6px">
+                                <div class="line"></div>
+                            </div>
+                            <div class="col-md-12 carousel-item-footer pull-left">
+                                <div class="img-person col-md-6 pd-0 text-right">
+                                    <img src="@Url.Content("~/Content/Images/banner/person-1.png")" al alt="person-1" />
+                                </div>
+                                <div class="col-md-6 text-left">
+                                    <p class="name hrm-v2-font-13 hrm-v2-bold">Ông Mai Xuân Đạt</p>
+                                    <p class="position">CEO CEO Sage Academy</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="hrm-carousel-home">
+                            <div class="carousel-item-header">
+                                <div class="col-md-3 quote-left caros-h-i">
+                                    <img src="@Url.Content("~/Content/Images/banner/quote-left.png")" alt="quote-left" />
+                                </div>
+                                <div class="col-md-6 company-img caros-h-i">
+                                    <img src="@Url.Content("~/Content/Images/banner/company-1.png")" alt="company-1" />
+                                </div>
+                                <div class="col-md-3 quote-right caros-h-i">
+                                    <img src="@Url.Content("~/Content/Images/banner/quote-right.png")" alt="quote-right" />
+                                </div>
+                            </div>
+                            <div class="col-md-12 carousel-item-container pull-left">
+                                <p> Nhờ Onpeople giúp tôi tiết kiệm được thời gian, chi phí và giúp quản lý con người hiệu quả. Không những thế còn điều hòa được những yêu cầu của nhân sự và doanh nghiệp, giúp tôi đưa ra được các chiến lược nhân sự đúng đắn.</p>
+                            </div>
+                            <div class="col-md-12 text-center pull-left" style="padding-bottom: 6px">
+                                <div class="line"></div>
+                            </div>
+                            <div class="col-md-12 carousel-item-footer pull-left">
+                                <div class="img-person col-md-6 pd-0 text-right">
+                                    <img src="@Url.Content("~/Content/Images/banner/person-1.png")" al alt="person-1" />
+                                </div>
+                                <div class="col-md-6 text-left">
+                                    <p class="name hrm-v2-font-13 hrm-v2-bold">Ông mai Xuân Đạt</p>
+                                    <p class="position">CEO CEO Sage Academy</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="hrm-carousel-home">
+                            <div class="carousel-item-header">
+                                <div class="col-md-3 quote-left caros-h-i">
+                                    <img src="@Url.Content("~/Content/Images/banner/quote-left.png")" alt="quote-left" />
+                                </div>
+                                <div class="col-md-6 company-img caros-h-i">
+                                    <img src="@Url.Content("~/Content/Images/banner/company-1.png")" alt="company-1" />
+                                </div>
+                                <div class="col-md-3 quote-right caros-h-i">
+                                    <img src="@Url.Content("~/Content/Images/banner/quote-right.png")" alt="quote-right" />
+                                </div>
+                            </div>
+                            <div class="col-md-12 carousel-item-container pull-left">
+                                <p> Nhờ Onpeople giúp tôi tiết kiệm được thời gian, chi phí và giúp quản lý con người hiệu quả. Không những thế còn điều hòa được những yêu cầu của nhân sự và doanh nghiệp, giúp tôi đưa ra được các chiến lược nhân sự đúng đắn.</p>
+                            </div>
+                            <div class="col-md-12 text-center pull-left" style="padding-bottom: 6px">
+                                <div class="line"></div>
+                            </div>
+                            <div class="col-md-12 carousel-item-footer pull-left">
+                                <div class="img-person col-md-6 pd-0 text-right">
+                                    <img src="@Url.Content("~/Content/Images/banner/person-1.png")" al alt="person-1" />
+                                </div>
+                                <div class="col-md-6 text-left">
+                                    <p class="name hrm-v2-font-13 hrm-v2-bold">Ông mai Xuân Đạt</p>
+                                    <p class="position">CEO CEO Sage Academy</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="left carousel-control" data-target="#myCarousel" data-slide="prev">
+                    <i class="fas fa-arrow-left" style="color: #f5f5f5;"></i>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" data-target="#myCarousel" data-slide="next">
+                    <span class="fas fa-arrow-right" style="color: #f5f5f5;"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <div class="bx-wraper section-4">
+            <h4 class="support">Hệ sịnh thái NOVAON</h4>
+            <h4 class="text-center hrm-v2-italic">với hơn <b>65.000</b> khách hàng</h4>
+            <img src="@Url.Content("~/Content/Images/banner/ptl9.PNG")" alt="customer-img" />
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function ($) {
+        if ($('.home-page-body').scrollTop() > 200) {
+            $('#back-to-top').fadeIn();
+        }
+        else {
+            $('#back-to-top').fadeOut();
+        }
+        $('.home-page-body').scroll(function () {
+            if ($('.home-page-body').scrollTop() > 200) {
+                $('#back-to-top').fadeIn();
+            }
+            else {
+                $('#back-to-top').fadeOut();
+            }
+        });
+        $('#back-to-top').click(function () {
+            $('.home-page-body').animate({
+                scrollTop: 0
+            }, 600);
+            return false;
+        })
+    })
+    function changeImgAbc(ImgUrl) {
+        $("#abc-img").attr("src", ImgUrl)
+    }
+
+
+    function changeImgAbc1(ImgUrl) {
+        $("#abc1-img").attr("src", ImgUrl)
+    }
+</script>
+<link href="~/Content/hrm-v2/HomePage.css" rel="stylesheet" />

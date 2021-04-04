@@ -1,0 +1,135 @@
+﻿@model Hrm.Web.ViewModels.StaffDetailsViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.ViewModels
+@using Hrm.Framework.Helper
+@using Hrm.Common
+<section class="hrmv2-section">
+@Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.Experience").ToString(), WidthSecitonName = "180px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() { @*new IconRight { Icon = "fas fa-filter", Action = "onplus()" },*@ new IconRight { Icon = "fa fa-plus", Action = "addExperience()" } }
+})
+
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="exper-container hrm-v2-scroll ">
+                <div class="experience-box add-experience">
+                    <div class="experience-item-left"></div>
+                    <div class="experience-item-center">
+                        <div class="exper-line"></div>
+                    </div>
+                    <div class="experience-item-right" onclick="addExperience()">
+                        <span class="btn-add-experience">+ @T("Staff.Detail.Add")</span>
+                    </div>
+                </div>
+            @if (Model != null && Model.ListExperience != null && Model.ListExperience.Count > 0)
+            {
+                var previusTime = Model.ListExperience[0].FromDate;
+                foreach (var item in Model.ListExperience)
+                {
+                    <div class="experience-box">
+                        <div class="experience-item-left">
+
+                            @{
+                                var fromDateString = string.Empty;
+                                var minus = string.Empty;
+                                if (item.FromDate != null && item.FromDate != DateTime.MinValue)
+                                {
+                                    fromDateString = item.FromDate.Value.ToString("dd/MM/yyyy");
+                                }
+                                var toDateString = string.Empty;
+                                if (item.ToDate != null && item.ToDate != DateTime.MinValue)
+                                {
+                                    toDateString = item.ToDate.Value.ToString("dd/MM/yyyy");
+                                }
+                                else
+                                {
+                                    toDateString = T("Staff.Detail.Now").ToString();
+                                    item.ToDate = DateTime.Now;
+                                }
+                                if (fromDateString != string.Empty || toDateString != string.Empty)
+                                {
+                                    minus = " - ";
+                                }
+                                
+                                if ((Math.Round(item.ToDate.Value.Subtract(item.FromDate.Value).Days / (365.25), 1)) < 1)
+                                {
+                                    <span class="experience-year hrm-v2-bold">
+                                        @Math.Round((item.ToDate.Value.Subtract(item.FromDate.Value).Days / (365.25))*12) @T("Staff.Detail.Month")
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="experience-year hrm-v2-bold">
+                                        @(Math.Round(item.ToDate.Value.Subtract(item.FromDate.Value).Days / 365.0, 1)) @T("Staff.Detail.Year")
+                                    </span>
+                                }
+                                <span class="experience-year hrm-v2-bold">
+                                    
+                                </span>
+                                                    <span class="year-from-to">@fromDateString @minus @toDateString</span>
+                            }
+
+                        </div>
+                        <div class="experience-item-center">
+                            <div class="exper-line"></div>
+                        </div>
+                        <div class="experience-item-right">
+                            <div class="item-content Action ">
+                                <div class="area-content">
+                                    <span class="experience-title hrm-v2-bold">@M(item.OfficeRoleID.ToString() + ";" + DataType.MasterData + ";Name")</span>
+                                    <span class="experience-officeposition">
+                                        @Html.Partial(UrlHelpers.Template("_IconProperty.cshtml"), new IconPropertyModel() { Icon = "fas fa-briefcase", Text = M(item.OfficePositionID.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                                    </span>
+                                    <span class="experience-organization">
+                                        @Html.Partial(UrlHelpers.Template("_IconProperty.cshtml"), new IconPropertyModel() { Icon = "fas fa-building", Text = item.CompanyName })
+                                    </span>
+                                </div>
+                                <div class="action-table">
+                                    <button class="action-grid pull-left" onclick="experienceDetail(@item.Id,1)"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="action-grid pull-left" onclick="deletedExperience(@item.Id)"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                                <a class="pull-left hrm-v2-font-13" onclick="experienceDetail(@item.Id,0)">@T("Staff.Detail.ViewDetail")</a>
+                        </div>
+                    </div>
+                                    }
+                                }
+        </div>
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block">
+        @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.Certificate").ToString(), WidthSecitonName = "180px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() { @*new IconRight { Icon = "fas fa-filter", Action = "onplus()" },*@ new IconRight { Icon = "fa fa-plus", Action = "addCertification()" } }
+   })
+        <div class="section-certificate hrm-v2-scroll">
+            @if (Model != null && Model.ListCertificate != null && Model.ListCertificate.Count > 0)
+            {
+                foreach (var item in Model.ListCertificate)
+                {
+                    <div class="certificate-container Action">
+                        <div class="pull-left certificate-item">
+                            <div class="pull-left certificate-item-left">
+                                @if (item.IssuedDate != null)
+                                {
+                                    <span>@item.IssuedDate.Value.ToString("dd/MM/yyyy") </span>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </div>
+                            <div class="pull-left certificate-item-container">
+                                <span class="certificate-title" onclick="certificationDetail(@item.Id,0)">@item.Name</span>
+                                <span class="certificate-education">@item.IssuedBy</span>
+                            </div>
+                            <div class="pull-left certificate-item-right">
+                                <span class="certificate"><i class="fas fa-certificate"></i> @M(item.RankId.ToString() + ";" + DataType.MasterData + ";Name")</span>
+                                <span class="certificate"><i class="fas fa-certificate"></i> @item.Point</span>
+                            </div>
+                            <div class="action-table">
+                                <button class="action-grid pull-left" onclick="certificationDetail(@item.Id,1)"><i class="fas fa-pencil-alt"></i></button>
+                                <button class="action-grid pull-left" onclick="deletedCertification(@item.Id)"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                                        }
+                                    }
+        </div>
+    </div>
+</section>
+

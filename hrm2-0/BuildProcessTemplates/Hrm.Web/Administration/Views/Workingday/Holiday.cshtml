@@ -1,0 +1,79 @@
+﻿@model Hrm.Admin.ViewModels.WorkingdayHolidayViewModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@{
+    ViewBag.Title = "Holiday";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+<style>
+    .organization-table .Action.ellipsis {
+        top: 4px;
+    }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("WorkingdayHoliday.HolidayDate")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormAddWorkingdayHoliday()" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.WorkingdayHoliday + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 0, 0)" })
+
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.WorkingdayHoliday + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 1, 0)" })
+    </div>
+</div>
+<div class="holiday-table">
+    <div id="table-workingday-holiday">
+        @if (Model.Table != null)
+        {
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+        }
+    </div>
+</div>
+
+<script>
+    var tableName = '@Model.Table.TableName';
+    function ShowFormAddWorkingdayHoliday() {
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/Workingday/ShowFormAddWorkingdayHoliday',
+            width: 600,
+            isNotificationPoup: true,
+            align: "center",
+            //data: '{groupId: ' + masterDataId + '}',
+            idform: 'frmAddOrEditContract',
+        };
+        CreatePopup(options);
+    }
+    function showEditFormEditWorkingdayHoliday(id){
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/Workingday/ShowFormAddWorkingdayHoliday',
+            width: 600,
+            isNotificationPoup: true,
+            align: "center",
+            data: '{id: ' + id + '}',
+            idform: 'frmAddOrEditContract',
+        };
+        CreatePopup(options);
+    }
+    function deleteWorkingdayHoliday(id) {
+        $.ajax(
+       {
+           type: "POST",
+           url: "/Admin/Workingday/DeleteWorkingdayHoliday",
+           data: {
+               id:id
+           },
+           success: function (response) {            
+               if (response.result.Success == true) {
+                   ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                   changeItemsPerpage('table-workingday-holiday');
+               }
+               else {
+                   ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+               }
+           }
+       });
+    }
+</script>

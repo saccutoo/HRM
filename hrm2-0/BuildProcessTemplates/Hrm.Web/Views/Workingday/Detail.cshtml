@@ -1,0 +1,1286 @@
+﻿@model Hrm.Web.ViewModels.WorkingdayViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@using Hrm.Framework.Context
+@using Hrm.Common
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Quản lý công";
+    var timeVersion = "140320181446";
+    Layout = UrlHelpers.View("~/Views/Shared/_MenuSidebarTop.cshtml");
+}
+<style>
+    .summary-list table {
+        min-width: 100%;
+    }
+
+    .hrm-v2-calendar {
+        width: calc(100% - 160px);
+        border-collapse: collapse;
+        float: left;
+    }
+
+        .hrm-v2-calendar thead {
+            height: 20px;
+            line-height: 20px;
+            margin-bottom: 5px;
+        }
+
+            .hrm-v2-calendar thead > tr, .hrm-v2-calendar tbody > tr {
+                display: inline-flex;
+                align-items: center;
+                width: 100%;
+            }
+
+                .hrm-v2-calendar thead > tr > th {
+                    width: calc(100% / 7);
+                    color: #223133;
+                    background-color: #fff;
+                    text-align: center;
+                    font-family: Roboto-Regular;
+                    font-size: 13px;
+                    font-weight: normal;
+                }
+
+                .hrm-v2-calendar tbody > tr > td {
+                    text-align: left;
+                    width: calc(100% / 7);
+                    height: 100px;
+                    border: 1px solid #ECECEC;
+                    padding: 12px 15px;
+                    position: relative;
+                }
+
+                    .hrm-v2-calendar tbody > tr > td .fa-plus {
+                        font-size: 8px;
+                        color: #fff;
+                        width: 12px;
+                        height: 12px;
+                        background: #2ca01c;
+                        text-align: center;
+                        line-height: 12px;
+                        border-radius: 50%;
+                        position: absolute;
+                        right: 8px;
+                        z-index: 99;
+                        cursor: pointer;
+                        display: none;
+                    }
+
+                    .hrm-v2-calendar tbody > tr > td .fas.fa-eye {
+                        font-size: 13px;
+                        width: 12px;
+                        height: 12px;
+                        text-align: center;
+                        line-height: 12px;
+                        position: absolute;
+                        right: 30px;
+                        z-index: 99;
+                        cursor: pointer;
+                        display: none;
+                        opacity: 0.6;
+                    }
+
+                    .hrm-v2-calendar tbody > tr > td .fa-calendar-plus {
+                        font-size: 13px;
+                        color: #2ca01c;
+                        position: absolute;
+                        right: 8px;
+                        z-index: 99;
+                        cursor: pointer;
+                        bottom: 5px;
+                        display: none;
+                    }
+
+                    .hrm-v2-calendar tbody > tr > td:hover .fa-plus, .hrm-v2-calendar tbody > tr > td:hover .fa-calendar-plus {
+                        display: inline-block;
+                    }
+
+        .hrm-v2-calendar table tbody tr td:hover .fas.fa-eye {
+            display: block;
+        }
+
+        .hrm-v2-calendar .other-month .date-number {
+            color: #223133;
+        }
+
+        .hrm-v2-calendar .other-month {
+            background-color: whitesmoke;           
+        }
+
+        .hrm-v2-calendar .current-month .date-number {
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            background-color: #ddd;
+            text-align: center;
+            line-height: 20px;
+        }
+
+    .date-number .day {
+        opacity: 0.6;
+    }
+
+    .hrm-v2-calendar .workingday-card {
+        height: 50px;
+        /*background: #E1F0F9;*/
+        width: 100%;
+        margin: 8px 0px;
+        /*border-left: 8px solid #C8E3F4;*/
+        padding-left: 16px;
+    }
+
+        .hrm-v2-calendar .workingday-card .total-workingday {
+            line-height: 26px;
+        }
+
+        .hrm-v2-calendar .workingday-card .checkinout {
+            line-height: 20px;
+        }
+
+        .hrm-v2-calendar .workingday-card i {
+            width: 15px;
+            font-size: 13px;
+            color: #009cff;
+        }
+
+    #left-panel {
+        float: left;
+        width: 160px;
+    }
+
+    .header-month-control {
+        width: 100%;
+        height: 150px;
+        padding-top: 35px;
+        /*margin-bottom: 38px;*/
+    }
+
+    #left-panel .year-division {
+        text-align: center;
+    }
+
+    .month-control {
+        padding: 10px;
+        width: 100%;
+        height: 100px;
+        text-align: center;
+        position: relative;
+    }
+
+        .month-control .month-control-button i {
+            color: #858585;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+    .month-division {
+        width: calc(100% - 20px);
+    }
+
+        .month-division .month-value {
+            height: 50px;
+        }
+
+        .month-division .month-title {
+            font-family: "Roboto-Bold";
+            font-size: 24px;
+            font-weight: inherit;
+            line-height: 24px;
+            margin-top: 16px;
+        }
+
+        .month-control.month-next, .month-control .month-prev, .month-division .month {
+            float: left;
+        }
+
+    .month-control .month-control-button {
+        width: 10px;
+        height: 100%;
+        float: left;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .month-division .month {
+        width: 100%;
+        text-align: center;
+        font-size: 36px;
+    }
+
+    .workingday-summary, .hrm-v2-working-day {
+        float: left;
+        width: 100%;
+    }
+
+    .workingday-summary {
+        height: 99px;
+        margin-bottom: 30px;
+        width: 100%;
+        border: 1px solid #ECECEC;
+        border-radius: 5px;
+    }
+
+        .workingday-summary .infor {
+            float: left;
+            width: calc(40% / 4);
+            height: 54px;
+            position: relative;
+            margin: 23px;
+        }
+
+            .workingday-summary .infor .infor-header {
+                width: 100%;
+                height: 16px;
+            }
+
+            .workingday-summary .infor .infor-view {
+                margin-left: 9px;
+                font-size: 13px;
+                text-transform: UPPERCASE;
+                color: #3797D3;
+                border: 1px solid #3797D3;
+                width: 50px;
+                text-align: center;
+                border-radius: 12px;
+                height: 22px;
+                line-height: 20px;
+                position: relative;
+                top: -2px;
+                cursor: pointer;
+            }
+
+    .infor .infor-title {
+        color: #223133;
+        opacity: 0.3;
+    }
+
+    .infor-value .value {
+        font-size: 30px;
+        display: inline-block;
+    }
+
+    .infor-value .description {
+        font-size: 13px;
+        color: #223133;
+        line-height: 53px;
+        padding-left: 5px;
+    }
+
+    #workingday-summary .right-control {
+        float: right;
+        margin: 23px;
+        width: 100px;
+    }
+
+    .right-control i {
+        color: #2ca01c;
+        font-size: 13px;
+        float: right;
+        margin-top: 10px;
+        cursor: pointer;
+    }
+
+    .infor-number {
+        width: 14px;
+        height: 14px;
+        position: absolute;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        font-size: 8px;
+        text-align: center;
+        line-height: 11px;
+    }
+
+    .contaner-infor-number {
+        position: relative;
+        background: #fff;
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+        border-radius: 50%;
+        left: 0px;
+        top: -5px;
+    }
+
+    .select-chose-working-day {
+        border: transparent;
+        font-size: 13px;
+        font-family: Roboto-bold;
+        float: right;
+        position: relative;
+        top: -10px;
+    }
+
+        .select-chose-working-day .select2-selection__rendered {
+            line-height: 30px !important;
+            height: 30px;
+        }
+
+        .select-chose-working-day .hrm-v2-floating-form .select2-container--default .select2-selection--single {
+            padding-top: 0px;
+        }
+
+        .select-chose-working-day .hrm-v2-floating-form .select2-container--default {
+            height: 30px;
+        }
+
+        .select-chose-working-day .select2-selection__arrow {
+            top: 0px !important;
+        }
+
+    #select2-workingday-summary-staff-select-results .select2-results__option {
+        padding: 6px !important;
+    }
+
+    .description-day-off .day-off-item {
+        height: 24px;
+        line-height: 24px;
+    }
+
+    .description-day-off .day-off-color {
+        width: 3px;
+        height: 100%;
+        margin-right: 13px;
+    }
+
+    .description-day-off {
+        display: inline-block;
+        width: 100%;
+        margin-bottom: 35px;
+    }
+
+    .hrm-v2-calendar table tbody tr:hover {
+        background-color: #ffffff;
+    }
+
+    .hrm-v2-calendar table tbody tr td:hover {
+        background-color: #e8f2f9;
+        cursor: pointer;
+    }
+
+   
+
+    .my-request-tab .my-request-box-right .icon-view-all {
+       height: 50px;
+    }
+     .my-request-tab .my-request-box-right .icon-view-all span{
+       line-height:50px;
+       color:#2CA01C;
+       cursor:pointer;
+       float:right
+    }
+        .my-request-tab .my-request-box-right .request-header {
+            border-bottom: 2px solid #ECECEC;
+            width: 100%;
+        }
+
+            .my-request-tab .my-request-box-right .request-header .title {
+                font-size: 24px;
+                color: #223133;
+            }
+
+            .my-request-tab .my-request-box-right .request-header .status {
+                font-size: 13px;
+                color: white;
+                border-radius: 13px;
+                margin: 3px 12px;
+                height: 26px;
+                line-height: 26px;
+                padding: 0px 12px;
+            }
+
+
+    .my-request-filter {
+        width: 100%;
+        height: 40px;
+        border:none;
+        border-bottom: 1px solid #ECECEC;
+        font-size: 13px;
+        padding: 0px 30px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .my-request-icon-search {
+        position: absolute;
+        left: 10px;
+        top: 13px;
+        cursor: pointer;
+        opacity: 0.3;
+        float:left;
+    }
+
+    .my-request-icon-filter {
+        position: absolute;
+        right: 10px;
+        top: 13px;
+        color: #2CA01C;
+        font-size: 13px;
+        cursor: pointer;
+        height:100%;
+        float:left;
+    }
+    
+    .my-request-input-search input {
+        outline: none;
+        border: 1px solid transparent;
+        height: 100%;
+        width: 100%;
+    }
+
+        .my-request-input-search input::placeholder {
+            color: #223133;
+            opacity: 0.3;
+        }
+
+       
+        .my-request-input-date .floating-label {          
+             margin:0px;
+        }
+        .my-request-input-date .date-picker{     
+            padding:0px;
+        }
+        .my-request-input-date .date-picker:focus{     
+           border:0px;
+           
+        }
+    .option-filter {
+        width: 95%;
+        margin: 0 auto;
+        height: 30px;
+        line-height: 30px;
+    }
+
+        .option-filter .request-option {
+            width: 33%;
+            float: left;
+        }
+
+    .option-list.request-option .date-picker-container {
+        margin: 0px;
+    }
+
+        .option-list.request-option .date-picker-container .date-picker.floating-input {
+            padding-top: 5px;
+            height: 25px;
+            padding-left: 0px;
+        }
+
+        .option-list.request-option .date-picker-container .input-group-addon {
+            top: -2px !important;
+            right: 0px !important;
+        }
+
+    .option-filter .view-all {
+        text-decoration: underline;
+        color: #3797D3;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    .option-filter .view-suggest {
+        text-align: center;
+        opacity: 0.3;
+    }
+
+    .option-filter .option-list {
+        text-align: right;
+        border: 1px solid transparent;
+        width: 80px;
+        outline: none;
+        float: right;
+        cursor: pointer;
+        height: 30px;
+        line-height: 30px;
+    }
+
+    .my-request-box-left .request-type {
+        margin: 18px auto;
+        width: 95%;
+    }
+
+        .my-request-box-left .request-type h4 {
+            font-size: 14px;
+            text-transform: UPPERCASE;
+            line-height: 30px;
+            border-bottom: 1px solid #ECECEC;
+            font-family: Roboto-Regular;
+            padding: 0px 10px;
+        }
+
+        .my-request-box-left .request-type .item {
+            width: 100%;
+            height: 81px;
+            margin: 20px 0px;
+            position: relative;
+        }
+
+            .my-request-box-left .request-type .item .presentation {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                background: #B0DBAA;
+                text-align: center;
+                line-height: 60px;
+                font-size: 24px;
+                color: #FFFFFF;
+                font-family: Roboto-Regular;
+                float: left;
+                margin: 10px;
+            }
+
+            .my-request-box-left .request-type .item:hover, .my-request-box-left .request-type .item.active {
+                background-color: #E9F5E7;
+                cursor: pointer;
+            }
+
+            .my-request-box-left .request-type .item .cb-control {
+                position: relative;
+                width: 30px;
+                float: left;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                padding-left: 10px;
+            }
+
+            .my-request-box-left .request-type .item .description {
+                float: left;
+                margin-left: 10px;
+                font-size: 13px;
+                width: calc(100% - 120px);
+            }
+
+                .my-request-box-left .request-type .item .description .text {
+                    margin: 0px;
+                    line-height: 26px;
+                    color: #7C7C7C;
+                    width: 100%;
+                    float: left;
+                }
+
+                    .my-request-box-left .request-type .item .description .text:first-child {
+                        color: #223133;
+                    }
+
+                    .my-request-box-left .request-type .item .description .description-left {
+                       width: 60%;
+                       float: left;
+                    }
+                    .my-request-box-left .request-type .item .description .description-right {
+                       width: 40%;
+                       float: left;
+                       height: 100%;
+                       line-height:25px;
+                    }
+                    .my-request-box-left .request-type .item .description .description-right .from-to-date-or-description-right{
+                        /*height:50%;
+                        line-height:60px;*/
+                        color:red
+                       
+                    }
+            .my-request-box-left .request-type .item .action {
+                position: absolute;
+                top: 30px;
+                right: 5px;
+            }
+
+                .my-request-box-left .request-type .item .action i {
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    font-size: 10px;
+                    margin: 0px 2px;
+                    text-align: center;
+                    color: #fff;
+                    line-height: 18px;
+                }
+
+                .my-request-box-left .request-type .item .action .fa-check {
+                    background: #2CA01C;
+                }
+
+                .my-request-box-left .request-type .item .action .fa-times {
+                    background: #F86367;
+                }
+
+        .my-request-box-left .request-type h4 .cb-control {
+            float: left;
+            width: 30px;
+        }
+
+            .my-request-box-left .request-type h4 .cb-control .checkbox {
+                margin-top: 2px;
+            }
+
+    .employ-infor .infor-name {
+        color: #3797D3;
+        font-size: 13px;
+        line-height: 30px;
+        font-family: Roboto-Bold;
+    }
+
+        .employ-infor .infor-name .infor-org {
+            font-size: 13px;
+            text-transform: UPPERCASE;
+            margin-left: 5px;
+            line-height: 30px;
+        }
+
+    .my-request-box-right .request-other {
+        background-color: #F7F7F7;
+        padding: 15px 30px;
+    }
+
+        .my-request-box-right .request-other h4 {
+            margin: 15px 0px;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-family: Roboto-Regular;
+        }
+
+    .table-request-other tr {
+        width: 100%;
+    }
+
+        .table-request-other tr td {
+            font-size: 13px;
+            text-align: left;
+            line-height: 40px !important;
+            border-top: none !important;
+        }
+
+    .my-request-box-right .table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
+        background-color: #FFFFFF;
+    }
+
+    .my-request-box-right .table-striped tr td {
+        font-size: 13px;
+        font-family: Roboto-Regular;
+        line-height: 40px;
+    }
+
+    .workingday-summary-list .summary-list tbody {
+        display: block;
+        max-height: 650px;
+    }
+
+    .workingday-summary-list .summary-list tr {
+        width: 100%;
+        display: INLINE-FLEX;
+        padding-left: 30px;
+    }
+
+    .workingday-summary-list .summary-list thead tr {
+        background-color: #EFEFEF;
+        color: #808080;
+        font-size: 13px;
+        height: 100%;
+    }
+
+        .workingday-summary-list .summary-list thead tr th {
+            font-family: Roboto-Bold;
+        }
+
+    .workingday-summary-list .summary-list tr th, .workingday-summary-list .summary-list tr td {
+        width: calc(100% / 8);
+        display: BLOCK;
+        float: left;
+        text-align: left;
+        font-size: 13px;
+        font-family: Roboto-Regular;
+    }
+
+    .workingday-summary-list .summary-list tr th {
+        height: 50px;
+        line-height: 50px;
+        color: #808080;
+        font-weight: normal;
+    }
+
+    .workingday-summary-list .summary-list tr td {
+        height: 60px;
+        line-height: 60px;
+        color: #223133;
+        display: flex;
+        align-items: center;
+    }
+
+    .viewtype-list-right {
+        padding-right: 38px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    .dayoff-type-fixed {
+        position: fixed;
+        bottom: 0px;
+        height: 60px;
+        width: 500px;
+        background: #fff;
+        z-index: 99;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding-left: 30px;
+    }
+
+        .dayoff-type-fixed .description-day-off {
+            width: 200px;
+            margin: 0px;
+        }
+
+    .total-request {
+        width: 15px;
+        height: 15px;
+        font-size: 10px;
+        float: left;
+        line-height: 15px;
+        margin: 0px;
+        text-align: center;
+        margin-right: 8px;
+        border-radius: 50%;
+        background-color: #ECECEC;
+    }
+
+    .add-total-request {
+        font-size: 13px;
+        color: #2ca01c;
+        cursor: pointer;
+    }
+
+    .working-summary-final-table th, .working-summary-final-table td {
+        font-size: 13px;
+        font-family: Roboto-Regular;
+    }
+
+    .working-summary-final-table th {
+        line-height: 50px !important;
+        background-color: #EFEFEF;
+        border-bottom: none !important;
+        color: #808080;
+        font-weight: normal;
+        display: block !important;
+        float: left;
+    }
+
+        .working-summary-final-table th:first-child, .working-summary-final-table td:first-child {
+            padding-left: 37px;
+        }
+
+    .working-summary-final-table td {
+        line-height: 45px !important;
+        border-top: none !important;
+        height: 50px;
+    }
+
+    .working-summary-final-table .fas.fa-info-circle {
+        color: #bdbcbc;
+        font-size: 13px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .working-summary-final-table .popover-content {
+        display: none;
+    }
+
+    .working-summary-final-table .popover-title {
+        font-family: Roboto-Regular;
+        font-size: 13px;
+        border-bottom: none;
+    }
+
+    .normal-month.active .popover-detail-sumary, .other-month.active .popover-detail-sumary, .current-month.active .popover-detail-sumary {
+        display: inline-block !important;
+        position: absolute;
+        min-height: 200px;
+        width: 350px;
+        z-index: 999;
+        background-color: #fff;
+        right: -0px;
+        top: 30px;
+        box-shadow: 1px 1px 10px 1px #E7E7E7;
+        border-radius: 5px;
+    }
+
+    .normal-month .day-class {
+        background: #ccc;
+        border-radius: 50%;
+    }
+
+    .nav-item-popup {
+        width: 50%;
+        text-align: center;
+    }
+
+        .nav-item-popup.active {
+            background-color: #D9EBD7;
+        }
+
+    #working-day-view .workingday-standard {
+        float: right;
+        margin-right: 15px;
+        background-color: #e8e8e8;
+        text-align: center;
+        width: 40px;
+        height: 25px;
+        margin-top: 2px;
+    }
+
+        #working-day-view .workingday-standard span {
+            line-height: 27px;
+            font-family: Roboto-bold;
+        }
+        #working-day-view .workingday-standard-title{
+            float:right;
+            margin-right: 20px;
+            line-height: 34px;
+        }
+    #working-day-view .popover{
+       background-color: #0c0c0c;
+        color: white;
+        width:auto;
+        font-size:12px;
+    }
+
+    #working-day-view .workingday-standard-title {
+        float: right;
+        margin-right: 20px;
+        line-height: 34px;
+    }
+    [data-toggle="collapse"] .fa:before{
+            content:"\f077";
+
+    }
+    [data-toggle="collapse"].collapsed .fa:before{
+           content:"\f078";
+    }
+    .request-type-approval .request-type-header{
+        width: 100%;
+        height: 40px;
+        border-bottom:1px solid #ECECEC;
+    }
+     .request-type-approval .request-type-header .cb-control{
+       margin-left:10px;
+    }
+    .request-type-approval .request-type-header-checkbox{
+       float: left;
+        height: 100%;
+    }
+     .request-type-approval .request-type-header-collapse{
+       float: right;
+       height: 100%;
+    }
+     .request-type-approval .request-type-header-collapse span i{
+       line-height:50px !important;
+
+    }
+      .request-type-approval .request-type-head-supplement-type{
+        float: left;
+        height: 100%;
+    }
+        .request-type-approval .request-type-head-supplement-type span{
+        line-height:43px;
+    }
+     .request-type-approval .request-type-header .pull-left{
+        height: 100%;
+        margin-top: 4px;
+        margin-left: 5px;
+    }
+</style>
+<link href="@Url.Content("~/Content/hrm-v2/_staffdetails.css?v=" + timeVersion)" rel="stylesheet" type="text/css" />
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="hrm-v2-font-13 hrm-v2-bold" style="color:#7C7C7C">@T("Workingday.PublicAdministration")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><a href="#" class="bread-crumb-item">@T("WorkingDay.TimeKeeping")</a>
+    <div class="pull-right">
+        @{
+            var tableName = string.Empty;
+            var tableConfig = string.Empty;
+            if (Model.ActiveTab == 2)               
+            {
+                tableName = TableName.WorkingdayAllStaff;
+                tableConfig = TableConfig.WorkingdayAllStaff;
+            }
+            if (Model.ActiveTab == 3)
+            {
+                tableName = TableName.Furlough;
+                tableConfig = TableConfig.WorkingdayFurlough;
+            }
+        }
+        @if (Model.ActiveTab == 2 || Model.ActiveTab == 3)
+        {
+            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + tableConfig + "'" + "," + "'" + tableName + "'" + ", 0, 0)" })
+
+            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + tableConfig + "'" + "," + "'" + tableName + "'" + ", 1, 0)" })
+        }
+       
+    </div>
+</div>
+<div class="col-md-12 hrm-v2-inline-block pd-0">
+    <div id="working-day-view">
+        <div class="hrmv2-tab">
+            @{
+                var active = new Dictionary<int, string>();
+                for (var i = 0; i < 5; i++)
+                {
+                    if (i == Model.ActiveTab)
+                    {
+                        active.Add(i, "active in");
+                    }
+                    else
+                    {
+                        active.Add(i, string.Empty);
+                    }
+                }
+            }
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item @active[0]" index="0">
+                    <a class="nav-link" id="working-day-summary-tab" data-toggle="tab" data-target="#working-day-summary" role="tab" aria-controls="working-day-summary" aria-selected="true">@T("Workingday.TimeSheets")</a>
+                </li>
+                <li class="nav-item  @active[1]" index="1">
+                    <a class="nav-link" id="myrequest-tab" data-toggle="tab" data-target="#myrequest" role="tab" aria-controls="myrequest" aria-selected="false">@T("Workingday.MySuggest")</a>
+                </li>
+                <li class="nav-item  @active[2]" index="2">
+                    <a class="nav-link" id="working-summary-final-tab" data-toggle="tab" data-target="#working-summary-final" role="tab" aria-controls="working-summary-final" aria-selected="false">@T("Workingday.Synthesis")</a>
+                </li>
+                <li class="nav-item  @active[3]" index="3">
+                    <a class="nav-link" id="working-summary-furlong-tab" data-toggle="tab" data-target="#working-summary-furlong" role="tab" aria-controls="working-summary-furlong" aria-selected="false">@T("Workingday.PermissionManagement")</a>
+                </li>
+                <li class="nav-item  @active[4]" index="4">
+                    <a class="nav-link" id="need-approved-tab" data-toggle="tab" data-target="#need-approved" role="tab" aria-controls="need-approved" aria-selected="false">@T("Workingday.ProposalNeedsApproval")<div class="hrm-v2-alert-info contaner-infor-number"><span class="label hrm-v2-pink infor-number"> @Model.CountWorkingdaySupplementNeedApproval </span></div></a>
+                </li>
+                @if (Model.ActiveTab == 0)
+                {
+                    <div class="right-control viewtype-list-right pull-right">
+                        <button type="button" class="btn btn-primary hrm-v2-add-workingday" onclick="addWorkingday()">
+                            @T("Workingday.Button.Add")
+                        </button>
+                    </div>
+                }
+            </ul>
+            @if (Model.ActiveTab == 0)
+            {
+                <div class="right-control " style="padding:0px 37px 0px 30px;height:30px">
+                    <i class="fas fa-list-ul" onclick="changeView(true)"></i>
+                    <span class="select-chose-working-day" style="margin-top:10px">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { ValueField = "Id", DisplayField = "Name", Name = "workingday-summary-staff-select", Data = Model.StaffMangers, Value = Model.StaffIdFilter.ToString(), SearchField = true })
+                    </span>                   
+                </div>
+            }
+            <div class="tab-content pd-0" id="myTabContent-add">
+                @if (Model.ActiveTab == 0)
+                {
+                    <div class="tab-pane fade @active[0]" id="working-day-summary" role="tabpanel" aria-labelledby="working-day-summary-tab">
+                        @Html.Partial(UrlHelpers.View("~/Views/Workingday/_Summary.cshtml"), Model.WorkingdaySummary)
+                    </div>
+
+                }
+                @if (Model.ActiveTab == 1)
+                {
+                    <div class="tab-pane fade @active[1]" id="myrequest" role="tabpanel" aria-labelledby="myrequest-tab">
+                        @Html.Partial(UrlHelpers.View("~/Views/Workingday/_Supplement.cshtml"), Model.WorkingdaySupplement)
+                    </div>
+                }
+                @if (Model.ActiveTab == 2)
+                {
+                    <div class="tab-pane fade  @active[2]" id="working-summary-final" role="tabpanel" aria-labelledby="working-summary-final-tab">
+                        @Html.Partial(UrlHelpers.View("~/Views/Workingday/_SummaryAllStaff.cshtml"), Model.WorkingdayAllStaff)
+                    </div>
+
+                }
+                @if (Model.ActiveTab == 3)
+                {
+                    <div class="tab-pane fade  @active[3]" id="working-summary-furlong" role="tabpanel" aria-labelledby="working-summary-furlong-tab">
+                        @Html.Partial(UrlHelpers.View("~/Views/Workingday/_Furlough.cshtml"), Model.WorkingdayFurlough)
+                    </div>
+                }
+
+                @if (Model.ActiveTab == 4)
+                {
+                    <div class="tab-pane fade @active[4]" id="need-approved" role="tabpanel" aria-labelledby="need-approved-tab">
+                        @Html.Partial(UrlHelpers.View("~/Views/Workingday/_Approval.cshtml"), Model.WorkingdaySupplement)
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="page-staffid" value="@Model.StaffId" />
+<input type="hidden" id="page-viewtype" value="@Model.WorkingdaySummary.ViewType" />
+<script src="@Url.Content("~/Scripts/hrm-v2/Workingday/_detail.js?v=" + timeVersion)"></script>
+<script>
+    var currentUserId = '@Html.Raw(CurrentContext.User.UserId)';
+
+    stringJson="{Month:"+'@Model.Month'+",Year:"+'@Model.Year'+",StaffId:"+'@Model.StaffId'+"}";
+    window.history.pushState({},document.title,'/' + "workingday-detail")
+
+    $(document).on('click', '.hrmv2-tab .nav-item', function () {
+        $('#cover-spin').show();
+        changeView();
+    });
+    function changeView(isChangeView)
+    {
+        $('#cover-spin').show();
+        var activeTab = $('.hrmv2-tab .nav-item.active').attr("index");
+        var month = sessionStorage.getItem("tab-month");
+        var year = sessionStorage.getItem("tab-year");
+        var staffId = sessionStorage.getItem("tab-staffId");
+        var organizationId= sessionStorage.getItem("tab-organizationId");
+
+        @*if(staffId == null){
+            staffId = currentUserId;
+        }
+        if(month == null && year == null){
+            month = moment(new Date).format('MM');
+            year = moment(new Date).format('YYYY');
+            sessionStorage.setItem("tab-month", '@Model.Month' );
+            sessionStorage.setItem("tab-year", '@Model.Year' );
+            sessionStorage.setItem("tab-staffId", staffId );
+            sessionStorage.setItem("tab-organizationId", organizationId );
+        }*@
+
+        sessionStorage.setItem("tab-month", '@Model.Month' );
+        sessionStorage.setItem("tab-year", '@Model.Year' );
+        sessionStorage.setItem("tab-staffId", staffId );
+        sessionStorage.setItem("tab-organizationId", '@Model.OrganizationId' );
+
+        if(isChangeView) {
+            if (activeTab==0) {
+                if (@Html.Raw(Json.Encode(Model.WorkingdaySummary.ViewType)) == "Calendar")
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year + '&activeTab='+ activeTab +"&viewtype=List" + "&organizationId="+organizationId;
+                else if (@Html.Raw(Json.Encode(Model.WorkingdaySummary.ViewType)) == "Card") {
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year +'&activeTab='+ activeTab +"&viewtype=Calendar"+ "&organizationId="+organizationId;
+                }
+                else
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year +'&activeTab='+ activeTab +"&viewtype=Calendar"+ "&organizationId="+organizationId;
+            }
+            else if(activeTab==1){
+                if (@Html.Raw(Json.Encode(Model.WorkingdaySummary.ViewType)) =="Card")
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year + '&activeTab='+ activeTab +"&viewtype=List"+ "&organizationId="+organizationId;
+                else if(@Html.Raw(Json.Encode(Model.WorkingdaySummary.ViewType)) =="Calendar")
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year + '&activeTab='+ activeTab +"&viewtype=List"+ "&organizationId="+organizationId;
+                else
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year +'&activeTab='+ activeTab +"&viewtype=Card"+ "&organizationId="+organizationId;
+            }
+            else if(activeTab==4){
+                if (@Html.Raw(Json.Encode(Model.WorkingdaySummary.ViewType)) !="List" )
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year + '&activeTab='+ activeTab +"&viewtype=List"+ "&organizationId="+organizationId;
+                else
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year +'&activeTab='+ activeTab +"&viewtype=Card"+ "&organizationId="+organizationId;
+            }
+        }
+        else{
+            window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year + '&activeTab='+ activeTab +"&viewtype="+@Html.Raw(Json.Encode(Model.WorkingdaySummary.ViewType)) + "&organizationId="+organizationId;
+        }
+
+    }
+
+    function viewAllNeedAproval(){
+        var activeTab = $('.hrmv2-tab .nav-item.active').attr("index");
+        var month = sessionStorage.getItem("tab-month");
+        var year = sessionStorage.getItem("tab-year");
+        var staffId = sessionStorage.getItem("tab-staffId");
+        var organizationId= sessionStorage.getItem("tab-organizationId");
+        if(staffId == null){
+            staffId = currentUserId;
+        }
+        if(month == null && year == null){
+            month = moment(new Date).format('MM');
+            year = moment(new Date).format('YYYY');
+            sessionStorage.setItem("tab-month", month );
+            sessionStorage.setItem("tab-year", year );
+            sessionStorage.setItem("tab-organizationId", organizationId );
+        }
+        window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?month="+ month + "&year=" + year + '&activeTab='+ 4 +"&viewtype=Card" + "&organizationId="+organizationId;
+    }
+
+    $(function(){
+        $('#month-my-request-datetimepicker').on('dp.change',function(e){
+            $('#cover-spin').show();
+            var staffId = parseInt($("#page-staffid").val());
+            var activeTab = $('.hrmv2-tab .nav-item.active').attr("index");
+            var  dateChange = $('#month-my-request').val();
+            var organizationId= sessionStorage.getItem("tab-organizationId");
+            if(dateChange != null){
+                var dateNew = dateChange.split('/');
+                var m1 = dateNew[0];
+                var y1 = dateNew[1];
+                window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ m1 + "&year=" + y1 + '&activeTab='+ activeTab +"&viewtype="+@Html.Raw(Json.Encode(Model.WorkingdaySummary.ViewType))  + "&organizationId="+organizationId;
+            }
+        });
+
+        $('#current-month-request-approvel-datetimepicker').on('dp.change',function(e){
+            var monthYear=$('#current-month-request-approvel').val();
+            var activeTab = $('.hrmv2-tab .nav-item.active').attr("index");
+            var month = monthYear.split('/')[0];
+            var year = monthYear.split('/')[1];
+            var staffId = sessionStorage.getItem("tab-staffId");
+            var organizationId= sessionStorage.getItem("tab-organizationId");
+            sessionStorage.setItem("tab-month", month );
+            sessionStorage.setItem("tab-year", year );
+            if(staffId == null){
+                staffId = currentUserId;
+            }
+            //staffId = currentUserId;
+
+            if (activeTab==0) {
+                if (@Html.Raw(Json.Encode(Model.WorkingdaySummary.ViewType)) == "Calendar")
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year + '&activeTab='+ activeTab +"&viewtype=List"+ "&organizationId="+organizationId;
+                else
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year +'&activeTab='+ activeTab +"&viewtype=Calendar"+ "&organizationId="+organizationId;
+            }
+            else if(activeTab==1){
+                if (@Html.Raw(Json.Encode(Model.WorkingdaySummary.ViewType)) =="Card")
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year + '&activeTab='+ activeTab +"&viewtype=Card"+ "&organizationId="+organizationId;
+                else if(@Html.Raw(Json.Encode(Model.WorkingdaySummary.ViewType)) =="Calendar")
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year + '&activeTab='+ activeTab +"&viewtype=Card"+ "&organizationId="+organizationId;
+                else
+                    window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year +'&activeTab='+ activeTab +"&viewtype=List"+ "&organizationId="+organizationId;
+            }
+            else{
+                window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) + "workingday-detail?staffid="+ staffId + "&month="+ month + "&year=" + year + '&activeTab='+ activeTab +"&viewtype="+@Html.Raw(Json.Encode(Model.WorkingdaySummary.ViewType)) + "&organizationId="+organizationId;
+            }
+        });
+
+
+        $('#workingday-summary-staff-select').on('select2:selecting', function (e) {
+            sessionStorage.setItem("tab-staffId", e.params.args.data.id);
+            changeView();
+
+        });
+
+        $('#calendar td .fas.fa-eye').click(function(){
+            $('#calendar td').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+
+    })
+
+
+    function addWorkingday() {
+        var data = { data:@Html.Raw(JsonConvert.SerializeObject(Model.WorkingdaySummary.Workingdays)),isSendApproval: true }
+        var options = {
+            id: 'frmAddWorkingdaySupplement',
+            isNotificationPoup: false,
+            align: "center",
+            url: '/Workingday/AddWorkingdaySupplement',
+            isDataTypeJson:true,
+            width: 600,
+            data: data,
+            idform: 'frm-working-day-supplement',
+        };
+        CreatePopup(options);
+    }
+
+    function addWorkingdayByDate(date) {
+        var data={date:date,isSendApproval: true}
+        var options = {
+            id: 'frmAddWorkingdaySupplement',
+            isNotificationPoup: false,
+            align: "center",
+            url: '/Workingday/EditWorkingdaySupplement',
+            isDataTypeJson:true,
+            width: 600,
+            data: data,
+            idform: 'frm-working-day-supplement',
+        };
+        CreatePopup(options);
+    }
+
+    function viewWorkingdayByDay (staffId,dateabc,tab){
+        var data={staffId:staffId,date:dateabc,tab:tab}
+        var options = {
+            isNotificationPoup: true,
+            align: "center",
+            isDataTypeJson:true,
+            url: '/Workingday/FormWorkingdaySupplenmentAndSummaryDetail',
+            width: 600,
+            data: data
+        };
+        CreatePopup(options);
+    }
+
+    $('#cb-checkall-request').change(function () {
+        $('.request-type' + ' .chk_column').prop('checked', this.checked);
+        showButtonApprovelSupplement();
+    });
+    $('.request-type .item' + ' .chk_column').change(function () {
+        showButtonApprovelSupplement();
+        if ($('.request-type .item .chk_column:checked').length == $('.request-type .item .chk_column').length) {
+            $('#cb-checkall-request').prop('checked', true);
+        }
+        else {
+            $('#cb-checkall-request').prop('checked', false);
+        }
+    });
+    function showButtonApprovelSupplement() {
+        var active=@Model.ActiveTab;
+        $('#approved-supplement').hide();
+        $('#supplement-type').css("display","block");
+        if (active==4) {
+            $('#no-approved-supplement').hide();
+        }
+        var suppCheck = $('.request-type .item .chk_column:checked').length;
+        if (suppCheck > 0) {
+            $('#approved-supplement').show();
+            $('#supplement-type').css("display","none");
+
+            if (active==4) {
+                $('#no-approved-supplement').show();
+            }
+        }
+    }
+
+    function searchWorkingdaySupplement(searchKey)
+    {
+        var activeTab = $('.hrmv2-tab .nav-item.active').attr("index");
+        var month = sessionStorage.getItem("tab-"+activeTab+"-month");
+        var year = sessionStorage.getItem("tab-"+activeTab+"-year");
+        var staffId = sessionStorage.getItem("tab-"+activeTab+"-staffId");
+
+        if(staffId == null){
+            staffId = currentUserId;
+        }
+
+        if (event.which == 13)
+        {
+            //Search("/WorkingDay/SearchWorkingdaySupplement", searchKey, "list-workingday-supplement");
+            $.ajax(
+            {
+                type: "POST",
+                url: "/WorkingDay/SearchWorkingdaySupplement",
+                data: {
+                    activeTab:activeTab,
+                    month:month,
+                    year:year,
+                    staffId:staffId,
+                    searchKey:searchKey
+                },
+                success: function (response) {
+                    $('#list-workingday-supplement').html(response);
+                }
+            });
+        }
+    }
+    function viewDetailWorkingdaySupplement(id) {
+        $(".modal-backdrop").remove();
+        var data={id:id,isView:false}
+        var options = {
+            id: 'frmAddWorkingdaySupplement',
+            isNotificationPoup: false,
+            align: "center",
+            url: '/Workingday/EditWorkingdaySupplement',
+            isDataTypeJson:true,
+            width: 600,
+            data: data,
+            idform: 'frm-working-day-supplement',
+        };
+        CreatePopup(options);
+    }
+</script>

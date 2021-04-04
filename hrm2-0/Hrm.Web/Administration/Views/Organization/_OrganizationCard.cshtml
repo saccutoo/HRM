@@ -1,0 +1,21 @@
+﻿@model Hrm.Framework.Models.OrganizationModel
+@using Hrm.Common
+<div class="organization-card" id-value="@Model.Id">
+    <div style="width: 100%">
+        @*<div class="middle-bound">
+            <div class="avatar-circle ">
+                <div class="avatar-inside">N</div>
+            </div>
+        </div>*@
+        <div class="middle-bound profile-details">
+            <div class="name">@Model.OrganizationName</div>
+            @*@{
+                var format = Model.OfficePositionId.ToString() + ";" + DataType.MasterData + ";Name";
+                var positionName = M(format);
+            }
+            <div class="sec-text-color ellipsis" title="@positionName">@positionName</div>*@
+        </div>
+    </div>
+    <div class="rep-count">@Model.NumberOfChild</div>
+</div>
+

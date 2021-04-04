@@ -1,0 +1,12 @@
+﻿@model Hrm.Framework.Models.TextEditorModel
+@{
+    Layout = null;
+}
+<div class="floating-label">
+    <textarea class="floating-input floating-textarea" id="@Model.Name" name="@Model.Name" style="@Model.Style" type="@Model.Type" placeholder="@string.Format("{0}", " ")" onfocus="@Model.OnFocus" @Model.Attribute>@Model.Value</textarea>
+    @if (Model.IsAnimationLabel)
+    {
+    <label>@Model.LabelName@if (Model.IsRequired) {<span class="star"> *</span> }</label>
+    }
+    <span name="@Model.Name-error" class="hrm-v2-error" label-name="@Model.LabelName"></span>
+</div>

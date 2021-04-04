@@ -1,0 +1,55 @@
+﻿@model Hrm.Framework.ViewModels.ChecklistViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.ViewModels
+@using Hrm.Framework.Helper
+
+@{
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+}
+<!--Add Css View-->
+<link href="@Url.Content("~/Content/hrm-v2/_staffdetails.css?v="+timeVersion)" rel="stylesheet" type="text/css" />
+@*@{
+        ChecklistViewModel checklist_vm = Model.Checklist;
+        checklist_vm.StaffId = Model.Staff.Id;
+    }*@
+
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="bread-crumb-item"> @T("Staff.Staff")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span>
+</div>
+<div class="col-md-12 hrm-v2-inline-block pull-left" style="padding: 0px 37px 0px 30px;">
+    <div id="assgin-checklist-view" class="setting-checklist">
+        <form id="frm-assgin-checklist">
+            @Html.Partial(UrlHelpers.View("~/Views/Shared/Checklist/_ChecklistSummary.cshtml"), Model)
+        </form>
+    </div>
+</div>
+<script>
+    $("#frm-assgin-checklist span[name*='-error']").text("");
+    function saveStaffChecklist(){
+        var list=$('#frm-assgin-checklist').serializeArray();
+        for (var i = 0; i < list.length; i++) {
+            if(list[i].name.indexOf('IsFinished')>0){
+                if (list[i].value!='0' && list[i].value!=null) {
+                    list[i].value=true;
+                }
+                else{
+                    list[i].value=false;
+                }
+            }
+        }
+        $.ajax(
+         {
+             type: "POST",
+             url: "/Staff/SaveStaffCheckList",
+             data: list,
+             success: function (response) {
+                 ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 2000, 3000);
+                 if (response.result.Success==true) {
+                     location.reload();
+                 }
+
+             }
+         });
+    }
+</script>

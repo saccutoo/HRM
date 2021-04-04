@@ -1,0 +1,47 @@
+﻿@model Hrm.Admin.ViewModels.OrganizationViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using System.Linq
+@using Newtonsoft.Json;
+@{
+   
+}
+<div class="col-md-6 ">
+    <div class="form-group">
+        @{
+            List<OrganizationModel> result = JsonConvert.DeserializeObject<List<OrganizationModel>>(JsonConvert.SerializeObject(Model.Organizations));
+            var listData = result.Where(x => x.OrganizationType == Model.OrganizationType).ToList();
+            var data = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(listData));
+        }
+
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.Id", ValueField = "Id", Style = "width:100%", DisplayField = "OrganizationName", Data = data, LabelName = T("OrganizationAfterMerge").ToString(), IsAnimationLabel = true, IsMultipleLanguage = true, DataType = "Organization", PropertyName = "OrganizationName", Value = Model.Organization.Id.ToString() })
+    </div>
+    <div class="form-group">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.Status", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataStatus, LabelName = T("Organization.Status").ToString(), IsAnimationLabel = true, IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.Organization.Status.ToString() })
+    </div>
+    <div class="form-group">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.ParentId", ValueField = "Id", Style = "width:100%", DisplayField = "OrganizationName", Data = data, LabelName = T("Organization.Parent").ToString(), IsAnimationLabel = true, Value = Model.Organization.ParentId.ToString() })
+    </div>
+    <div class="form-group">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.CurrencyTypeId", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataCurrency, LabelName = T("Organization.Currency").ToString(), IsAnimationLabel = true, IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.Organization.CurrencyTypeId.ToString() })
+    </div>
+</div>
+
+<div class="col-md-6 ">
+    <div class="form-group">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.OrganizationCode", LabelName = T("Organization.Code").ToString(), Style = "width:100%;", IsAnimationLabel = true, IsRequired = true, Value = Model.Organization.OrganizationCode })
+    </div>
+    <div class="form-group">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.OrganizationType", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataCategoryCompany, LabelName = T("Organization.OrganizationType").ToString(), IsAnimationLabel = true, IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", IsRequired = true, Value = Model.Organization.OrganizationType.ToString() })
+    </div>
+    <div class="form-group">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.Branch", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataBrand, LabelName = T("Organization.Branch").ToString(), IsAnimationLabel = true, IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.Organization.Branch.ToString() })
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#data-Id').on('select2:selecting', function (e) {
+            $('#merger-organization-old').load('/Admin/Organization/ReloadMergerOrganizationOld', { id: e.params.args.data.id })
+        })
+    });
+</script>

@@ -1,0 +1,66 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Web.ViewModels.StaffExperienceViewModel
+@{
+    Layout = null;
+}
+<form id="save-experience-form">
+    <div class="detail-allowance-container display-inline-block">
+        @if (Model.StaffExperience.Id == 0)
+        {
+            <div class="hrm-v2-modal-header">@T("Staff.Detail.CreateExperience")</div>
+        }
+        else
+        {
+            <div class="hrm-v2-modal-header">@T("Staff.Detail.EditExperience")</div>
+        }
+        <input type="hidden" name="StaffId" id="ex-staffId" />
+        <input type="hidden" name="Id" id="Id" value="@Model.StaffExperience.Id" />
+        <div class="hrm-v2-modal-body" style="margin-top:0px">
+            <section class="hrmv2-section">
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                       @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "FromDate", LabelName = T("Staff.Detail.FromDate").ToString(), Value = Model.StaffExperience.FromDate, IsRequired = true, PlaceHolder = " " })
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "ToDate", LabelName = T("Staff.Detail.ToDate").ToString(), Value = Model.StaffExperience.ToDate, IsRequired = true, PlaceHolder = " " })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.OfficePositionId").ToString(), IsAnimationLabel = true, Data = Model.DataDropdownClassification, ValueField = "Id", DisplayField = "Name", Name = "OfficeRoleID", Value = Model.StaffExperience.OfficeRoleID.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Position").ToString(), IsAnimationLabel = true, Data = Model.DataDropdownPositionId, ValueField = "Id", DisplayField = "Name", Name = "OfficePositionID", Value = Model.StaffExperience.OfficePositionID.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.WorkingPlace").ToString(), IsAnimationLabel = true, Value = Model.StaffExperience.CompanyName, Name = "CompanyName" })
+                </div>
+                
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-9 pd-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Table.Title.SalaryLevel").ToString(), IsAnimationLabel = true, Name = "Salary", Value = Model.StaffExperience.Salary.ToString(), Type = "Number"})
+                    </div>
+                    <div class="col-md-3 pd-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = "", IsAnimationLabel = false, Data = Model.DataDropdownCurrency, ValueField = "Id", DisplayField = "Name", Name = "CurrencyId", Value = Model.StaffExperience.CurrencyId.ToString(), SearchField = true, IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block hrm-v2-floating-form are-template">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.ExperienceDescription").ToString(), Name = "Note", Value = Model.StaffExperience.Note, IsAnimationLabel = true })
+                </div>
+            </section>
+            <div class="footer">
+                <div class="footer-login">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                            @T("Staff.Detail.Cancel")
+                        </button>
+                        <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="saveExperience()">
+                            @T("Staff.Detail.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

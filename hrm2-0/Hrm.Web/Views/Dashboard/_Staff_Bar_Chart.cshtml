@@ -1,0 +1,53 @@
+﻿@{
+    Layout = null;
+}
+<div class="dash-board-left pull-left db-chart-3 visible-not-mobile" style="margin:18px 0px">
+    <div class="header" style="padding-top:16px;padding-right:45px">
+        <h4 class="col-md-5 pull-left hrm-v2-font-13 hrm-v2-bold" style="text-transform:uppercase">BIẾN ĐỘNG NHÂN SỰ</h4>
+        <!-- Date and time range -->
+        <div class="pull-right col-md-7 pd-r-0">
+            <button type="button" class="btn btn-default  hrm-v2-date-range pull-right" id="implementation-daterange-btn">
+                <i class="fa fa-calendar"></i>&nbsp; <span class="hrm-v2-font-12">defaut date</span>
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <select id="implementation-view-type" style="height:34px;margin-right:6px;" class="btn btn-default pull-right">
+                <option value="0">Hàng tháng</option>
+                <option value="1">Hàng quý</option>
+                <option value="2">Hàng tuần</option>
+            </select>
+            <input type="hidden" id="implementation-startdate" />
+            <input type="hidden" id="implementation-enddate" />
+        </div>
+        <!-- /.form group -->
+    </div>
+    <div class="contain-left">
+        <div id="hrm-v2-bar-chart"></div>
+        <style type="text/css">
+            /* 13. Basic Styling with CSS */
+
+            /* Style the lines by removing the fill and applying a stroke */
+            .line {
+                fill: none;
+                stroke: #ffab00;
+                stroke-width: 3;
+            }
+
+            .overlay {
+                fill: none;
+                pointer-events: all;
+            }
+
+            /* Style the dots by assigning a fill and stroke */
+            .dot {
+                fill: #ffab00;
+                stroke: #fff;
+            }
+
+            .focus circle {
+                fill: none;
+                stroke: steelblue;
+            }
+        </style>
+    </div>
+</div>
+

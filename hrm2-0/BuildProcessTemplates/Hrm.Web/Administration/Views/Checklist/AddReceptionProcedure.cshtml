@@ -1,0 +1,401 @@
+﻿@using System.Linq
+@using Hrm.Common
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@model Hrm.Admin.ViewModels.ChecklistDetailViewModel
+@{
+    ViewBag.Title = "Reception procedure";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var breadCrumbName = string.Empty;
+    if (Model.ActionName == ActionName.Add)
+    {
+        breadCrumbName = "CheckList.AddNewProcedure";
+    }
+    else if (Model.ActionName == ActionName.Edit)
+    {
+        breadCrumbName = "CheckList.UpdateProcedure";
+    }
+    else if (Model.ActionName == ActionName.Copy)
+    {
+        breadCrumbName = "CheckList.CopyProcedure";
+    }
+}
+<style>
+    .add-reception-procedure .add-reception-procedur-header{
+        padding-left:20px;
+         padding-right:20px;
+    }
+    .add-reception-procedure .add-reception-procedur-body{
+         padding-left:20px;
+         padding-right:20px;
+    }
+    .add-reception-procedure .add-reception-procedur-body .detail-title{
+         height: 50px;
+        line-height: 50px;
+    }
+    .add-reception-procedure .add-reception-procedur-body .detail-title span{
+         font-family: Roboto-bold;
+         color: #ccc;
+    }
+    .add-reception-procedure .add-reception-procedur-body .action{
+         height: 100px;
+         border: 1px dotted;
+         margin-top:10px;
+    }
+     .add-reception-procedure .add-reception-procedur-body .action .center{
+         width: 15%;
+        height: 100%;
+    }
+      .add-reception-procedure .add-reception-procedur-body .action .center .add-mision-group{
+         float: left;
+        height: 100%;
+        width: 220px;
+    }
+    .add-reception-procedure .add-reception-procedur-body .action .center .add-mision-group .icon-plus{
+        float:left;
+    }
+    .add-reception-procedure .add-reception-procedur-body .action .center .add-mision-group .icon-plus span{
+        line-height: 100px;
+        font-size: 40px;
+        color:dodgerblue;
+        cursor:pointer;
+    }
+    .add-reception-procedure .add-reception-procedur-body .action .center .add-mision-group .title-mision{
+        float: left;
+        line-height: 105px;
+        margin-left: 15px;
+        color:dodgerblue;
+        cursor:pointer;
+
+    }
+    .add-reception-procedure .add-reception-procedur-body .action .center .title-or{
+        float: left;
+        height: 100%;
+        line-height: 110px;
+        width: 90px;
+    }
+     .add-reception-procedure .add-reception-procedur-body .action .center .add-mision{
+        float: left;
+        width: 220px;
+        height: 100%;
+        margin-left: 25px;
+    }
+     .add-reception-procedure .add-reception-procedur-body .action .center .icon-plus{
+       float: left;
+    }
+    .add-reception-procedure .add-reception-procedur-body .action .center .icon-plus span{
+       line-height: 100px;
+       font-size: 40px;
+       color:dodgerblue;
+       cursor:pointer;
+
+    }
+    .add-reception-procedure .add-reception-procedur-body .action .center .add-mision .title-mision{
+       line-height: 110px;
+       float: left;
+       margin-left: 15px;
+       color:dodgerblue;
+       cursor:pointer;
+
+    }
+     .add-reception-procedur-body .
+     
+     {
+        height: 450px;
+        overflow: auto;
+    }
+    .add-reception-procedur-body .group-mission .list-group-mission{
+        height: 40px;
+        border: 1px solid #ccc;
+        height: auto;
+        margin-top:10px;
+    }
+    .add-reception-procedur-body .group-mission .group-mission-name{
+       line-height: 40px;
+       background-color: #e1ffd4;
+       margin-top:10px;
+    }
+     .add-reception-procedur-body .group-mission .group-mission-name .name{
+        font-family: Roboto-bold;
+        margin-left: 20px;
+        color:#2CA01C;
+    }
+     .checklist-detail-single .checklist-detail-single-checkbox{
+         width: 40px;
+         margin-left: 30px;
+     }
+     .checklist-detail-single{
+         height:50px;
+         clear:both;
+     }
+     .checklist-detail-single .checklist-detail-single-checkbox{
+         width: 40px;
+         margin-left: 30px;
+         float:left;
+     }
+     .checklist-detail-single .checklist-detail-single-name{
+        float: left;
+        line-height: 50px;
+        height: 50px;
+        width:400px;
+     }
+     .checklist-detail-single .checklist-detail-single-user{
+        float: left;
+        line-height: 50px;
+        height: 50px;
+        width:200px;
+        margin-left:20px;
+        color:#ccc
+     }
+     .checklist-detail-single .checklist-detail-single-action{
+        float: left;
+        height: 50px;
+        width: 100px;
+        line-height: 50px;
+        margin-left:30px;
+     }
+     .checklist-detail-single .checklist-detail-single-action span{
+        cursor:pointer;
+     }
+     .checklist-detail-single .checklist-detail-single-input-text{
+         float: left;
+         height: 50px;
+         width: 250px;
+     }
+     .list-group-mission .click-add-mission{
+         height: 30px;
+         margin-top:10px;
+     }
+     .list-group-mission .click-add-mission .icon-add{
+        float: left;
+        margin-left: 20px;
+        margin-top: 3px;
+        cursor:pointer;
+        color:dodgerblue;
+     }
+     .list-group-mission .click-add-mission .title-add{
+        float: left;
+        margin-left: 10px;
+        cursor:pointer;
+        color:dodgerblue;
+     }
+     .save-checklist{
+         height:60px;
+     }
+     .checklist-detail-single-input-text .date-picker-container{
+         margin-top:10px;
+     }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/Admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Checklist.ProbationaryReception")</span>&nbsp; &gt; &nbsp; <a href="/Admin/CheckList/List" class="bread-crumb-item">@T("CheckList.ReceptionProcedure")</a><span class="bread-crumb-item"> &nbsp; &gt; &nbsp; @T(breadCrumbName)</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left" })
+    </div>
+</div>
+<div class="gereral" style="height:auto;">
+    <form id="frm-save-checklist">
+        <div class="add-reception-procedure">
+            <div class="add-reception-procedur-header">
+                <div class="form-group">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "ChecklistName", LabelName = T("Checklist.Name").ToString(), Style = "width:100%;", IsAnimationLabel = true, IsRequired = true, Value = Model.Checklist.Name })
+                </div>
+                <div class="form-group">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "ChecklistNote", LabelName = T("Checklist.Description").ToString(), Style = "width:100%;", IsAnimationLabel = true, Value = Model.Checklist.Note })
+                </div>
+                <input type="text" id="checklistId" value="@Model.Checklist.Id" hidden />
+            </div>
+            <div class="add-reception-procedur-body">
+                <div class="detail-title">
+                    <span>@T("Checklist.Detail")</span>
+                </div>
+                <div class="group-mission" id="group-mission">
+                    @Html.Partial(UrlHelpers.TemplateAdmin("Checklist", "_ListCheckList.cshtml"), Model)
+                </div>
+                <div class="action">
+                    <center>
+                        <div class="center">
+                            <div class="add-mision-group"  style="cursor:pointer">
+                                <div class="icon-plus">
+                                    <span class="fas fa-plus-circle" onclick="ShowFormAddGroupChecklist()" ></span>
+                                </div>
+                                <div class="title-mision" onclick="ShowFormAddGroupChecklist()" >
+                                    @T("Checklist.AddGroupMission")
+                                </div>
+                            </div>
+                            @*<div class="title-or">
+                                <span>hoặc</span>
+                            </div>
+                            <div class="add-mision">
+                                <div class="icon-plus">
+                                    <span class="fas fa-plus-circle"></span>
+                                </div>
+                                <div class="title-mision">
+                                    Thêm nhiệm vụ
+                                </div>
+                            </div>*@
+                        </div>
+                    </center>
+                </div>
+
+            </div>
+        </div>
+    </form>   
+</div>
+<div class="save-checklist">
+    <div style="float:right;margin-right: 40px;margin-top:10px">
+        @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-master-data-continue", ClassName = "hrm-v2-btn-save", OnClick = "SaveFullCheckDetail()", Value = "Checklist.Save", Style = "width:100px;height:38px;", Type = "button" })
+    </div>
+    <div style="float:right;margin-right: 10px;margin-top:10px">
+        @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", ClassName = "hrm-v2-btn-close", Value = "Checklist.Close", Style = "width:100px;height:38px;", OnClick = "ColseSaveFullCheckDetail()" })
+    </div>
+</div>
+<script>
+    var listchecklistDetail=@Html.Raw(JsonConvert.SerializeObject(Model.ChecklistDetail));
+    function ShowFormAddChecklist(Index) {
+        var options = {
+            id: 'add-checklist',
+            url: '/Admin/Checklist/ShowFormAddChecklist',
+            sNotificationPoup: true,
+            align: "center",
+            width: 755,
+            data: '{index: '+Index+'}',
+            idform: 'frm-add-checklist',
+            isDataTypeJson: false
+            //urlback: '/Contract/GetContractCoaInfoList',
+            //databack: '{contractId:' + contractId + '}',
+            //divload: 'GridContractCoaInfo',
+            //fnNameReload: 'ResetSelectCoaInfo'
+        };
+        CreatePopup(options);
+    }
+    function ShowFormAddGroupChecklist() {
+        if (listchecklistDetail!=='') {
+            checklistDetail=listchecklistDetail
+        }
+        var options = {
+            id: 'add-groupchecklist',
+            url: '/Admin/Checklist/ShowFormAddGroupChecklist',
+            sNotificationPoup: true,
+            align: "center",
+            width: 750,
+            idform: 'frm-add-groupchecklist',
+            //urlback: '/Contract/GetContractCoaInfoList',
+            //databack: '{contractId:' + contractId + '}',
+            //divload: 'GridContractCoaInfo',
+            //fnNameReload: 'ResetSelectCoaInfo'
+        };
+        CreatePopup(options);
+    }
+    function DeleteCheckList(Index,ParentId){
+
+        for (var i = 0; i < listchecklistDetail.length; i++) {
+            if(listchecklistDetail[i].Index==Index && listchecklistDetail[i].ParentId==ParentId ){
+                listchecklistDetail.splice(i,1);
+            }
+           
+        }
+        if (ParentId==0) {
+            for (var i = 0; i < listchecklistDetail.length; i++) {
+                if(listchecklistDetail[i].ParentId==Index ){
+                    listchecklistDetail.splice(i,1);
+                }
+           
+            }
+        }
+        $.ajax(
+       {
+           type: "POST",
+           url: "/Admin/Checklist/ReloadChecklist",
+           data: { data: listchecklistDetail },
+           success: function (response) {
+               $('#group-mission').html(response);
+           }
+       });
+    }
+    function SaveFullCheckDetail(){
+        $("#frm-save-checklist span[name*='-error']").text("");
+        var checklist={Name:$("#checklistname").val(),Note:$("#checklistnote").val(),Id:$("#checklistId").val()};
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/Checklist/SaveChecklist",
+            data: { checklist:checklist,checklistDetail: listchecklistDetail },
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    for (var i = 0; i < validations.length; i++) {
+                        var list = validations[i].ColumnName.split('.');
+                        validations[i].ColumnName = list[1];
+                        if (validations[i].ColumnName=='Name') {
+                            validations[i].ColumnName='ChecklistName';
+                        }
+                    }
+                    RenderError(validations, "frm-save-checklist");
+                }
+                else{
+                    if (response.result.Success==true) {
+                        ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                        window.location.href="/Admin/Checklist/List";
+                    }
+                    else{
+                        ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+
+                    }
+                }
+            }
+        });
+    }
+    function EditCheckList(Index,ParentId){
+        var checklistDetailEdit={};
+        for (var i = 0; i < listchecklistDetail.length; i++) {
+            if(listchecklistDetail[i].Index==Index && listchecklistDetail[i].ParentId==ParentId ){
+                checklistDetailEdit=listchecklistDetail[i];
+                break;
+            }
+        }
+        var options = {
+            id: 'add-checklist',
+            url: '/Admin/Checklist/ShowFormEditChecklist',
+            sNotificationPoup: true,
+            align: "center",
+            width: 755,
+            data: checklistDetailEdit,
+            idform: 'frm-add-checklist',
+            isDataTypeJson: true
+            //urlback: '/Contract/GetContractCoaInfoList',
+            //databack: '{contractId:' + contractId + '}',
+            //divload: 'GridContractCoaInfo',
+            //fnNameReload: 'ResetSelectCoaInfo'
+        };
+        CreatePopup(options);
+    }
+
+    function EditCheckGroupList(Index,ParentId){
+        var checklistDetailEdit={};
+        for (var i = 0; i < listchecklistDetail.length; i++) {
+            if(listchecklistDetail[i].Index==Index && listchecklistDetail[i].ParentId==ParentId ){
+                checklistDetailEdit=listchecklistDetail[i];
+                break;
+            }
+        }
+        var options = {
+            id: 'add-checklist',
+            url: '/Admin/Checklist/ShowFormEditGroupChecklist',
+            sNotificationPoup: true,
+            align: "center",
+            width: 755,
+            data: checklistDetailEdit,
+            idform: 'frm-add-checklist',
+            isDataTypeJson: true
+            //urlback: '/Contract/GetContractCoaInfoList',
+            //databack: '{contractId:' + contractId + '}',
+            //divload: 'GridContractCoaInfo',
+            //fnNameReload: 'ResetSelectCoaInfo'
+        };
+        CreatePopup(options);
+    }
+    function ColseSaveFullCheckDetail(){
+        window.location.href="/Admin/CheckList/List";
+    }
+</script>

@@ -1,0 +1,127 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<style>
+    .OpenDay .chosen-choices{
+        max-height: 90px;
+        overflow: auto;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row" id="SaveOpeningAdditionalWork" style="margin: 0;">
+        <form role="form" name="OpeningAdditionalWork" ng-submit="SaveAction(OpeningAdditionalWork)" novalidate>
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;margin:0">@AppRes.OpeningAdditionalWork</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;"> @AppRes.Staff<span style="color:red"> (*) </span></label>
+                                </div>
+                                <div class="col-md-4">
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select class="form-control" chosen options="ListEmployees" on-no-result="doStuff" ng-required="true" data-modal="modal" ng-model="Data.StaffID" name="StaffID" ng-options="list.StaffID as (list.FullName + '-' + list.OrganizationUnitName) for list in ListEmployees" ng-change="ChangeStaff()">
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" chosen options="ListEmployees" on-no-result="doStuff" ng-required="true" data-modal="modal" ng-model="Data.StaffID" name="StaffID" ng-options="list.StaffID as (list.FullNameEN + '-' + list.OrganizationUnitName) for list in ListEmployees" ng-change="ChangeStaff()">
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+
+                                    <span style="color:red;line-height:30px;" ng-show="OpeningAdditionalWork.$submitted && OpeningAdditionalWork.StaffID.$error.required">@AppRes.ErrorSelectStaff</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.OpenDay<span style="color:red"> (*) </span></label>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="text" name="Date" class="form-control datepicker"  ng-required="true" ng-model="Data.FromMonth" ng-change="changDate()"/>
+                                    <span style="color:red;line-height:30px;" ng-show="OpeningAdditionalWork.$submitted && OpeningAdditionalWork.Date.$error.required ">@AppRes.ErrorSelectMonth</span>
+                                </div>
+                                <div class="col-md-3" ng-if="isShow==true">
+                                    <select class="form-control" chosen options="timekipping"  on-no-result="doStuff" ng-required="true" data-modal="modal" name="OpenDay" ng-model="Data.OpenDay" ng-options="list.CheckTime as list.CheckTime for list in timekipping" ng-change="changeListDate()">
+                                        <option value="">--@AppRes.Select--</option>
+                                    </select>
+                                    <span style="color:red;line-height:30px;" ng-show="OpeningAdditionalWork.$submitted && OpeningAdditionalWork.OpenDay.$error.required ">@AppRes.ErrorOpenDay</span>
+                                </div>
+                                <div class="col-md-3 OpenDay" ng-if="isShow==false">
+                                    <select class="form-control" chosen multiple options="timekipping" on-no-result="doStuff" ng-required="true" data-modal="modal" name="OpenDay" ng-model="Data.ListOpenDay" ng-options="list.CheckTime as list.CheckTime for list in timekipping" ng-change="changeListDate()">
+                                        <option value="" disabled>--@AppRes.Select--</option>
+                                    </select>
+                                    <span style="color:red;line-height:30px;" ng-show="OpeningAdditionalWork.$submitted && OpeningAdditionalWork.OpenDay.$error.required ">@AppRes.ErrorOpenDay</span>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label>@AppRes.Promotion_Status <span style="color:red">(*)</span></label>
+                                </div>
+                                <div class="col-md-4">
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select class="form-control" name="status" chosen options="getListStatus" on-no-result="doStuff" required data-modal="modal" ng-model="Data.Status" ng-options="list.Value as list.Name for list in getListStatus" ng-change="ChangeStatus()">
+                                            <option value="" selected>--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" name="status" chosen options="getListStatus" on-no-result="doStuff" required data-modal="modal" ng-model="Data.Status" ng-options="list.Value as list.NameEN for list in getListStatus" ng-change="ChangeStatus()">
+                                            <option value="" selected>--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    <span style="color:red;line-height:30px;" ng-show="OpeningAdditionalWork.$submitted && OpeningAdditionalWork.status.$error.required">@AppRes.ErrorStatus</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.Promotion_CreatedBy</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input ng-model="Data.CreatedName" class="form-control" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12">                              
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.ModifiedBy</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input ng-model="Data.ModifiedName" class="form-control" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-4 col-md-push-5">
+                                <button type="submit" class="btn btn-labeled btn-primary">
+                                    <span class="btn-label">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </span>@AppRes.btnUpdate
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CloseForm(OpeningAdditionalWork)">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+
+

@@ -1,0 +1,27 @@
+﻿@model Hrm.Framework.Models.LanguageSelectorModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@using Hrm.Framework.Context
+@{
+    Layout = null;
+}
+
+@Html.Partial(UrlHelpers.Template("_DropdownList.cshtml"), new DropdownListModel() { Name = "language-selector", IsUseImage = Model.UseImages, ValueField = "Id", Style = "width:160px;height:32px", DisplayField = "Name", Data = Model.Languages, Event = "changeLanguage()" })
+<script type="text/javascript">
+    function changeLanguage()
+    {
+        var languageId = $("#language-selector-value").val();
+        $.ajax({
+            type: "POST",
+            url: "/Common/SetLanguage",
+            data: {languageId : languageId},
+            success: function (response) {
+                if (response.Success)
+                {
+                    location.href = window.location;
+                }                
+            }
+        });
+    }
+</script>

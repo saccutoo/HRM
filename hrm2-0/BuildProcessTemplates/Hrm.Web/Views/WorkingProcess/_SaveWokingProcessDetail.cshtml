@@ -1,0 +1,189 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@model Hrm.Web.ViewModels.WorkingProcessViewModel
+@using Hrm.Common
+@{
+    Layout = null;
+}
+
+<form id="save-workingprocess-form">
+    <div class="detail-working-process-container display-inline-block">
+        <div class="hrm-v2-modal-header" style="border:none;">@M(Model.WorkingProcess.WorkingprocessTypeId.ToString() + ";" + DataType.MasterData + ";Name")</div>
+        <div class="hrm-v2-modal-body" style="margin-top:0px;">
+            <input hidden id="wp-staffId" name="WorkingProcess.StaffId" value="@Model.WorkingProcess.StaffId" />
+            <input hidden id="wp-staffId" name="WorkingProcess.Id" value="@Model.WorkingProcess.Id" />
+            <input hidden id="wp-workingprocessTypeIdText" name="WorkingprocessTypeIdText" value="@Model.WorkingProcess.WorkingprocessTypeId" />
+            <section class="hrmv2-section" id="working-process-decision">
+                @{
+                    if (Model.StaffOnboardInfo.IsOnboarding)
+                    {
+                        @Html.Partial(UrlHelpers.View("~/Views/WorkingProcess/_WorkingProcessDecisionOnboarding.cshtml"), Model)
+                    }
+                    else
+                    {
+                        @Html.Partial(UrlHelpers.View("~/Views/WorkingProcess/_WorkingProcessDecision.cshtml"), Model)
+                    }
+                }
+
+
+            </section>
+            <section class="hrmv2-section">
+                @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-file-contract", SectionName = T("Staff.Detail.WorkingPossition").ToString(), Style = "width:150px;", Width = "150px" })
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Shift").ToString(), IsAnimationLabel = true, Data = Model.DataDropdownShift, ValueField = "Id", DisplayField = "Name", Name = "WorkingProcess.ShiftId", Value = Model.WorkingProcess.ShiftId.ToString(), IsMultipleLanguage = true, DataType = DataType.Shift, PropertyName = "Name" })
+                    </div>
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.WorkingClassification").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownClassification, ValueField = "Id", DisplayField = "Name", SearchField = true, Name = "WorkingProcess.ClassificationId", Value = Model.WorkingProcess.ClassificationId.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Position").ToString(), IsAnimationLabel = true, Data = Model.DataDropdownPosition, ValueField = "Id", DisplayField = "Name", IsSelectedEmpty = false, Name = "WorkingProcess.PositionId", Value = Model.WorkingProcess.PositionId.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.StaffLevel").ToString(), IsAnimationLabel = true, Data = Model.DataDropdownStaffLevel, ValueField = "Id", DisplayField = "Name", Name = "WorkingProcess.StaffLevelId", Value = Model.WorkingProcess.StaffLevelId.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Organization").ToString(), IsAnimationLabel = true, Data = Model.DataDropdownOrganization, ValueField = "Id", DisplayField = "OrganizationName", Name = "WorkingProcess.OrganizationId", SearchField = true, Value = Model.WorkingProcess.OrganizationId.ToString(), IsMultipleLanguage = true, DataType = DataType.Organization, PropertyName = "OrganizationName" })
+                    </div>
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Manager").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownStaff, ValueField = "Id", DisplayField = "Name", Name = "WorkingProcess.ManagerId", SearchField = true, Value = Model.WorkingProcess.ManagerId.ToString() })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.HRManager").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownStaff, ValueField = "Id", DisplayField = "Name", Name = "WorkingProcess.HRManagerId", SearchField = true, Value = Model.WorkingProcess.HRManagerId.ToString() })
+                    </div>
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.WorkingStatus").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownWorkingStatus, ValueField = "Id", DisplayField = "Name", Name = "WorkingProcess.WorkingStatus", Value = Model.WorkingProcess.WorkingStatus.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                </div>
+                @*@{
+                        var temp = 0;
+                        if (Model != null && Model.ListOrganization != null && Model.ListOrganization.Count > 0)
+                        {
+                            for (int i = 0; i < Model.ListOrganization.Count / 2 + 1; i++)
+                            {
+                                <div class="col-md-12 pd-0 display-inline-block">
+                                    @{
+                                        if (i * 2 < Model.ListOrganization.Count)
+                                        {
+                                            <div class="col-md-7 pd-l-0">
+                                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = M(Model.ListOrganization[i * 2].OrganizationType.ToString() + ";" + DataType.MasterData + ";Name").ToString(), Text = M(Model.ListOrganization[i * 2].Id.ToString() + ";" + DataType.Organization + ";OrganizationName").ToString() })
+                                            </div>
+                                        }
+                                        if (i * 2 + 1 < Model.ListOrganization.Count)
+                                        {
+                                            <div class="col-md-5 pd-l-0">
+                                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = M(Model.ListOrganization[i * 2 + 1].OrganizationType.ToString() + ";" + DataType.MasterData + ";Name").ToString(), Text = M(Model.ListOrganization[i * 2 + 1].Id.ToString() + ";" + DataType.Organization + ";OrganizationName").ToString() })
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                                            }
+                                        }
+                    }*@
+            </section>
+            <input hidden id="ct-staffId" name="Contract.StaffId" value="@Model.Contract.StaffId" />
+            <input hidden id="ct-id" name="Contract.Id" value="@Model.Contract.Id" />
+            <section class="hrmv2-section">
+                @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-file-contract", SectionName = T("Staff.Detail.Contract").ToString(), Style = "width:180px;", Width = "180px" })
+                <div class="col-md-12 display-inline-block section-contract-upload">
+                    <span class="contract-name pull-left hrm-v2-font-13" style="color:#2ca01c;">HD_thu_viec_Nguyen_Van_A <i style="color:red;"> X</i></span>
+                    <div class="contract-composer contract-upload pull-left"><i class="fas fa-file-medical"></i><p class="hrm-v2-font-13">Soạn</p></div>
+                    <span class="pull-left hrm-v2-font-13">Hoặc</span>
+                    <div class="contract-upload-file contract-upload pull-left"><i class="fas fa-file-upload"></i><p class="hrm-v2-font-13">@T("Staff.Detail.Upload")</p></div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.ContractType").ToString(), IsAnimationLabel = true, Data = Model.DataDropdownContractType, ValueField = "Id", DisplayField = "Name", Name = "Contract.ContractTypeId", Value = Model.Contract.ContractTypeId.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.ContractNumber").ToString(), Name = "Contract.ContractCode", IsAnimationLabel = true, Value = Model.Contract.ContractCode })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.ContractStatus").ToString(), IsAnimationLabel = true, Data = Model.DataDropdownStatusAprove, ValueField = "Id", DisplayField = "Name", Name = "Contract.ContractStatus", Value = Hrm.Common.MasterDataId.ApprovedStatus.ToString(), Disabled = true, IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.ContractTime").ToString(), IsAnimationLabel = true, Data = Model.DataDropdownContractTime, ValueField = "Id", DisplayField = "Name", Name = "Contract.ContractTime", Value = Model.Contract.ContractTime.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "Contract.ContractStartDate", IsAnimationLabel = true, LabelName = T("Staff.Detail.StartDate").ToString(), Value = Model.Contract.ContractStartDate, PlaceHolder = " " })
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "Contract.ContractEndDate", IsAnimationLabel = true, LabelName = T("Staff.Detail.EndDate").ToString(), Value = Model.Contract.ContractEndDate, PlaceHolder = " " })
+                    </div>
+                </div>
+            </section>
+            <section class="hrmv2-section" id="salary-section">
+                @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "icon-append fa fa-user", SectionName = T("Staff.Detail.Salary").ToString(), Style = "width:100px;", Width = "100px" })
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.SalaryPolicy").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownPolicy, ValueField = "Id", DisplayField = "Name", Name = "WorkingProcess.PolicyId", Value = Model.WorkingProcess.PolicyId.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                    <div class="col-md-6 pd-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.BasicPay").ToString(), Name = "WorkingProcess.BasicPay", IsAnimationLabel = true, Value = Model.WorkingProcess.BasicPay.ToString(), Type = "Number" })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.EfficiencyBonus").ToString(), Name = "WorkingProcess.EfficiencyBonus", IsAnimationLabel = true, Value = Model.WorkingProcess.EfficiencyBonus.ToString(), Type = "Number" })
+                    </div>
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.PaymentForm").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownPaymentForm, ValueField = "Id", DisplayField = "Name", Name = "WorkingProcess.PaymentForm", Value = Model.WorkingProcess.PaymentForm.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.PaymentMethod").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownPaymentMethod, ValueField = "Id", DisplayField = "Name", Name = "WorkingProcess.PaymentMethod", Value = Model.WorkingProcess.PaymentMethod.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.SalaryNote").ToString(), Name = "WorkingProcess.SalaryNote", IsAnimationLabel = true, Value = Model.WorkingProcess.SalaryNote })
+                    </div>
+                </div>
+            </section>
+            @{
+                Model.ListAllowance.ViewType = 1;
+            }
+            <section class="hrmv2-section">
+                @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.Allowance").ToString(), WidthSecitonName = "100px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() })
+                @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListAllowance)
+            </section>
+            @{
+                Model.ListBenefit.ViewType = 1;
+            }
+            <section class="hrmv2-section">
+                @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.Benefit").ToString(), WidthSecitonName = "100px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() })
+                @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListBenefit)
+            </section>
+            <section class="hrmv2-section">
+                @*<div class="footer-add-staff">*@
+                <div class="footer-login">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                            @T("Staff.Detail.Cancel")
+                        </button>
+                        <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="saveWorkingProcess()">
+                            @T("Staff.Detail.Save")
+                        </button>
+                    </div>
+                </div>
+                @*</div>*@
+            </section>
+        </div>
+    </div>
+
+</form>
+<script>
+    $(document).on('select2:selecting', '#WorkingProcess-WorkingprocessTypeId', function (e) {
+        $('#WorkingProcess-WorkingprocessTypeId').val(e.params.args.data.id)
+        $('#working-process-decision').load('/WorkingProcess/ChangeWorkingprocessType', { model: $('#save-workingprocess-form').serializeObject() });
+    });
+</script>

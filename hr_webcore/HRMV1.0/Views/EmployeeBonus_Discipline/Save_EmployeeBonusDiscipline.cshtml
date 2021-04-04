@@ -1,0 +1,160 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<div class="container-fluid">
+    <div class="row SaveEmployeeBonusDiscipline" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+               
+                <div class="panel-heading"><b>@AppRes.RewardDiscipline</b></div>
+                <hr />
+                <div class="panel-body">
+                    <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)" novalidate>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                @*---------------------------------------------------------------Đầu tiên-------------------------------------------------------------------------------------------------------*@
+                              
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.RewardAndDisciplineGroups <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            @if (Global.CurrentLanguage == 5)
+                                            {
+                                                <select class="form-control" ng-required="true" name="GroupID" chosen options="getListGroup" on-no-result="doStuff" ng-disabled=is_readonly required data-modal="modal" ng-model="editData.GroupID" ng-options="list.GlobalListID as list.Name for list in getListGroup" convert-dropdown>
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>
+
+                                            }
+                                            else
+                                            {<select class="form-control" ng-required="true" name="GroupID" chosen options="getListGroup" on-no-result="doStuff" ng-disabled=is_readonly required data-modal="modal" ng-model="editData.GroupID" ng-options="list.GlobalListID as list.NameEN for list in getListGroup" convert-dropdown>
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>}
+                                            <span ng-show="EditForm.$submitted && EditForm.GroupID.$error.required" style="color: red">@AppRes.PleaseSelectRewardAndDisciplineGroups</span>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.FormOfRewardAndDiscipline<span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            @if (Global.CurrentLanguage==5)
+                                            {
+                                                <select class="form-control" ng-required="true" name="ActionID" chosen options="getListAction" on-no-result="doStuff" ng-disabled=is_readonly required data-modal="modal" ng-model="editData.ActionID" ng-options="list.GlobalListID as list.Name for list in getListAction" convert-dropdown>
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select class="form-control" ng-required="true" name="ActionID" chosen options="getListAction" on-no-result="doStuff" ng-disabled=is_readonly required data-modal="modal" ng-model="editData.ActionID" ng-options="list.GlobalListID as list.NameEN for list in getListAction" convert-dropdown>
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>}
+                                            <span ng-show="EditForm.$submitted && EditForm.ActionID.$error.required" style="color: red">@AppRes.PleaseSelectFormOfRewardAndDiscipline</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.DecisionNumber <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text"  ng-required="true" name="DecisionNo" ng-readonly=is_readonly class="form-control" ng-model="editData.DecisionNo"/>
+                                            <span ng-show="EditForm.$submitted && EditForm.DecisionNo.$error.required" style="color: red">@AppRes.PleaseEnterDecisionNumber</span>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.Content <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text"  ng-required="true" name="Content" ng-readonly=is_readonly ng-model="editData.Content" class="form-control"/>
+                                            <span ng-show="EditForm.$submitted && EditForm.Content.$error.required" style="color: red">@AppRes.PleaseEnterContent</span>
+                                        </div>
+                                    </div>
+                                   
+                                 
+
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.Currency </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select class="form-control" chosen options="getListCurrency" on-no-result="doStuff" ng-disabled=is_readonly data-modal="modal" ng-model="editData.CurrencyID" ng-options="list.GlobalListID as list.Name for list in getListCurrency" convert-dropdown>
+                                                <option value="" disabled selected>--@AppRes.Select--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.AmountOfMoney <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text"  ng-required="true" name="Amount" ng-readonly=is_readonly data-modal="modal" name="orderNo" class="form-control" ng-model="editData.Amount" currency-mask>
+                                            <span ng-show="EditForm.$submitted && EditForm.Amount.$error.required" style="color: red">@AppRes.PleaseEnterAmountOfMoney</span>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                            
+                         
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.SignDay </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="date" class="form-control" ng-readonly=is_readonly ng-model="editData.SignDate" format-date/>
+
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.ApplyDay</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="date" data-modal="modal" name="valueEN" ng-readonly=is_readonly class="form-control" ng-model="editData.ApplyDate" format-date>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.Note </label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <textarea class="form-control" ng-readonly=is_readonly ng-model="editData.Note"></textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        @*---------------------------------------------------------------Thêm mới và bỏ qua-------------------------------------------------------------------------------------------------------*@
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-4 col-md-push-5">
+                                <button type="submit" class="btn btn-labeled btn-success" ng-show="tablePermission.isEdit">
+                                    <span class="btn-label">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </span>@AppRes.btnUpdate
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>

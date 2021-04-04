@@ -1,0 +1,638 @@
+﻿@model Hrm.Framework.ViewModels.ChecklistViewModel
+@using Hrm.Framework.Models
+@using Hrm.Common
+@using Hrm.Framework.Helper
+@using System.Collections.Generic
+@using System.Globalization
+@using Newtonsoft.Json
+@{
+    var checklist = new ChecklistDetailModel();
+    if (Model.ChecklistDetail != null && Model.ChecklistDetail.Any())
+    {
+        checklist = Model.ChecklistDetail.FirstOrDefault();
+    }
+    var checklistDetail = new List<ChecklistDetailModel>();
+    var groups = new List<ChecklistDetailModel>();
+    var singles = new List<ChecklistDetailModel>();
+    if (Model.ChecklistDetail != null)
+    {
+        checklistDetail = Model.ChecklistDetail;
+        groups = checklistDetail.Where(x => x.ChecklistDetailTypeName == ChecklistDetailType.Group).ToList();
+        singles = checklistDetail.Where(x => x.ChecklistDetailTypeName == ChecklistDetailType.Single).ToList();
+    }
+}
+<style>
+    .setting-checklist {
+        padding-left: 20px;
+    }
+
+        .setting-checklist .box-control-type {
+            height: 90px;
+            width: 130px;
+            border: 1px solid #4daf3c;
+            color: #4daf3c;
+            float: left;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+    .box-control-type .box-icon, .box-control-type .box-title {
+        float: left;
+        width: 100%;
+        height: 50%;
+        display: flex;
+    }
+
+    .box-control-type .box-icon {
+        align-items: flex-end;
+        padding-bottom: 10px;
+    }
+
+        .box-control-type .box-icon .box-icon-main {
+            text-align: center;
+            width: 100%;
+        }
+
+            .box-control-type .box-icon .box-icon-main i {
+                font-size: 20px;
+            }
+
+    .box-control-type .box-title {
+        align-items: center;
+    }
+
+        .box-control-type .box-title .box-title-main {
+            text-align: center;
+            width: 100%;
+        }
+
+    .custom-text-box {
+        border: 1px solid;
+        width: 40px;
+        height: 23px;
+        border-radius: 3px;
+        font-family: "Times New Roman";
+        font-style: italic;
+        margin-left: calc(50% - 20px);
+        text-align: left;
+        padding-left: 5px;
+        font-size: 16px;
+    }
+
+    .setting-checklist .control-header, .setting-checklist .checklist-detail {
+        float: left;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .setting-checklist .checklist-detail-preview {
+        padding-left: 20px;
+        border: 1px solid #4daf3c;
+        border-radius: 5px;
+    }
+
+    .checklist-item {
+        display: flex;
+        align-items: center;
+        width: 60%;
+        float: left;
+    }
+
+    .assignee-to {
+        width: 100%;
+        text-align: right;
+        margin-top: 6px;
+        font-size: 13px;
+        opacity: 0.6;
+    }
+
+        .assignee-to.group {
+            font-family: Roboto-Bold;
+            opacity: 1;
+        }
+
+    .checklist-item .cntr {
+        width: auto;
+    }
+
+    .checklist-item .checklist-item-title {
+        margin-top: 6px;
+        white-space: nowrap;
+    }
+
+    .checklist-item .completed-counting {
+        margin-top: 6px;
+        margin-left: 5px;
+    }
+
+    .checklist-title {
+        font-family: "Roboto-Bold";
+        font-size: 16px;
+    }
+
+        .checklist-title .checklist-description {
+            font-size: 14px;
+        }
+
+    .checklist-item.checklist-detail-single {
+        padding-left: 30px;
+        width: 60%;
+        position: relative;
+        float: left;
+    }
+
+    .checklist-detail-group-container {
+        display: flex;
+    }
+
+    /*.checklist-detail-group-container .checklist-action {
+            float: left;
+            display: inline-block;
+            padding: 10px;
+            text-align: left;
+            min-width: 100px;
+        }
+
+        .checklist-detail-group-container .icon-right.action, .checklist-item.checklist-detail-group-container .icon-right.action {
+            width: 100px;
+            text-align: center;
+            z-index: 999;
+            display: none;
+            cursor: pointer;
+            float: right;
+        }
+
+        .checklist-detail-group-container:hover .icon-right.action, .checklist-item.checklist-detail-group-container:hover .icon-right.action {
+            display: block;
+        }*/
+
+    .checkboxes input[type="checkbox"] {
+        opacity: 0;
+    }
+
+    .checkboxes::before {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 1px solid;
+    }
+
+    .checkboxes::after {
+        content: "";
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background-color: red;
+        top: 4px;
+        left: 4px;
+    }
+
+    .checklist-detail-group.checklist-item {
+        /*background-color: #e1ffd4;*/
+        position: relative;
+    }
+
+    .checklist-header .checklist-header-left {
+        width: 40%;
+        float: left;
+    }
+
+    .checklist-header .checklist-header-right {
+        width: 60%;
+        float: left;
+    }
+
+    .checklist-header .checklist-header-right-icon {
+        float: left;
+        margin-left: 15px;
+    }
+
+    #onboarding-progress .circle-pipeline-step {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        float: left;
+    }
+
+    #onboarding-progress .pipeline-step {
+        float: left;
+    }
+
+    #onboarding-progress .pipeline-line-break {
+        float: left;
+        height: 60px;
+        display: flex;
+        align-items: center;
+    }
+
+    #onboarding-progress .pipeline-name {
+        display: flex;
+        align-items: center;
+        height: 60px;
+    }
+
+        #onboarding-progress .pipeline-name span, #onboarding-progress .pipeline-name i {
+            width: 60px;
+            text-align: center;
+            font-size: 36px;
+            color: #fff;
+        }
+
+        #onboarding-progress .pipeline-name span {
+            font-family: Roboto-Bold;
+        }
+
+    #onboarding-progress .line-break {
+        border: 1px solid #4daf3c;
+        width: 100px;
+        margin: 0 !important;
+    }
+
+    #onboarding-progress {
+        text-align: center;
+        height: 150px;
+        max-width: 1500px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        margin: 0 auto;
+        padding-left: 30px;
+        margin-bottom: 20px;
+    }
+
+        #onboarding-progress .center-pipeline {
+            height: 60px;
+            display: inline-block;
+        }
+
+        #onboarding-progress .pipeline-balloon {
+            width: 100%;
+            height: 100%;
+            display: inline-flex;
+        }
+
+        #onboarding-progress .pipeline-infor {
+            width: 100%;
+            height: 60px;
+            position: relative;
+        }
+
+        #onboarding-progress .step-infor {
+            display: inline-block;
+            position: absolute;
+            width: 120px;
+            padding-top: 10px;
+        }
+
+        #onboarding-progress .element-disabled {
+            color: white;
+            opacity: 0.2;
+            background-color: #666666 !important;
+            cursor: pointer !important;
+        }
+
+        #onboarding-progress line-break.element-disabled {
+            border-color: #666666 !important;
+            cursor: pointer !important;
+        }
+</style>
+@{
+    if (Model.Pipelines.PipelineSteps != null && Model.Pipelines.PipelineSteps.Count > 0)
+    {
+        <div style="height:35px">@T("Staff.PipelineStaffStatus")</div>
+        <div id="onboarding-progress">
+            <div class="center-pipeline">
+                <div class="pipeline-balloon">
+                    @{
+                        var pipelineSteps = new List<PipelineStepModel>();
+                        pipelineSteps = Model.Pipelines.PipelineSteps;
+                        var continueRender = string.Empty;
+                        var indexOb = 0;
+                        long pipelinePositionId = 0;
+                        if (Model.Pipelines.CurrentStep == 0)
+                        {
+                            continueRender = "element-disabled";
+                        }
+                        var data = pipelineSteps.Where(s => s.Id == Model.Pipelines.CurrentStep).ToList().FirstOrDefault();
+                        if (data!=null)
+                        {
+                            pipelinePositionId = data.PositionId;
+                        }
+                        foreach (var pipelineStep in pipelineSteps)
+                        {
+                            var onClick = string.Empty;
+                            indexOb++;
+                            if (indexOb > 1)
+                            {
+                                <div class="pipeline-line-break"><label class="line-break @continueRender"></label></div>
+                            }
+                            if (pipelineStep.PipelineDate != null)
+                            {
+                                continueRender = string.Empty;
+                            }
+                            else
+                            {
+                                if (pipelinePositionId == MasterDataId.EndSuccess || pipelinePositionId == MasterDataId.EndFailure)
+                                {
+                                    if ((pipelineStep.PositionId == MasterDataId.EndSuccess || pipelineStep.PositionId == MasterDataId.EndFailure) && pipelineStep.PipelineDate==null)
+                                    {
+                                        continueRender = "element-disabled";
+                                    }
+                                    else if ((pipelineStep.PositionId != MasterDataId.EndSuccess || pipelineStep.PositionId != MasterDataId.EndFailure) && pipelineStep.PipelineDate == null)
+                                    {
+                                        continueRender = "element-disabled";
+                                    }
+                                    else
+                                    {
+                                        continueRender = string.Empty;
+                                    }
+
+                                }
+                                //else if ((pipelinePositionId != MasterDataId.EndSuccess || pipelinePositionId != MasterDataId.EndFailure) && pipelineStep.Id < Model.Pipelines.CurrentStep)
+                                //{
+                                //    continueRender = "element-disabled";
+                                //}
+                                else
+                                {
+                                    if (pipelineStep.Id < Model.Pipelines.CurrentStep && pipelineStep.PipelineDate!=null)
+                                    {
+                                        continueRender = string.Empty;
+                                        onClick = string.Empty;
+                                    }
+                                    else
+                                    {
+                                        continueRender = "element-disabled";
+                                        //onClick = "onclick=" + "ChangeStatus(" + pipelineStep.Id + "," + pipelineStep.PipelineId + "," + pipelineStep.PipelineStaffStatusId + ")";
+                                    }
+                                }
+                            }
+                            if (continueRender == "element-disabled")
+                            {
+                                onClick = "onclick=" + "ChangeStatus(" + pipelineStep.Id + "," + pipelineStep.PipelineId + "," + pipelineStep.PipelineStaffStatusId + ")";
+                            }
+                            <div class="circle-pipeline-step @continueRender" style="background-color:@C(pipelineStep.PositionId.ToString()).ToString()" pipeline-id="@pipelineStep.Id" @onClick>
+                                <div class="pipeline-name">
+                                    @if (pipelineStep.PipelineStepSymbol != null && pipelineStep.PipelineStepSymbol.Contains("fa"))
+                                    {
+                                        <i class="@pipelineStep.PipelineStepSymbol"></i>
+                                    }
+                                    else
+                                    {
+                                        <span>@pipelineStep.PipelineStepSymbol</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+                <div class="pipeline-infor">
+                    @{
+                        var inforIndex = 0;
+
+                    }
+                    @foreach (var pipelineStep in pipelineSteps)
+                    {
+                        var total = pipelineSteps.Count() - 1;
+                        <div class="step-infor" style="left:calc(((100% - 60px) / @total) * @inforIndex - 30px)">
+                            <span>@pipelineStep.PipelineStepName</span>
+                            @if (@pipelineStep.PipelineDate.HasValue)
+                            {
+                                <span>@pipelineStep.PipelineDate.Value.ToShortDateString()</span>
+                            }
+                        </div>
+                        {
+                            inforIndex++;
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+                        }
+}
+@if (Model.IsSave == true)
+{
+    <div class="">@T("Staff.Checklist")</div>
+}
+<div id="checklist" class="checkbox-tree">
+    <div class="checklist-header hrm-v2-inline-block">
+        <div class="checklist-header-left">
+            <div class="checklist-title">
+                @checklist.ChecklistName
+            </div>
+            <div class="checklist-description">
+                @checklist.ChecklistNote
+            </div>
+        </div>
+        @if (Model.ControlAction == true)
+        {
+            <div class="checklist-header-right">
+                <div class="checklist-header-right-icon">
+                    <a href="/Admin/Checklist/AddReceptionProcedure?Id=@checklist.ChecklistId&ActionName=@ActionName.Copy" class="fas fa-plus-square" title=@T("table.button.copy")></a>
+                </div>
+                <div class="checklist-header-right-icon">
+                    <a href="/Admin/Checklist/AddReceptionProcedure?Id=@checklist.ChecklistId&ActionName=@ActionName.Edit" title=@T("Button.Edit") class="fas fa-pencil-alt" style="color:#2CA01C"></a>
+                </div>
+                <div class="checklist-header-right-icon">
+                    <a onclick="DeleteChecklist(@checklist.ChecklistId)" class="fas fa-trash-alt" style="color:red" title=@T("table.button.delete")></a>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="checklist-detail">
+        @if (groups != null && groups.Any())
+            {
+                var index = 0;
+                foreach (var detail in groups)
+                {
+                <div id="cb-group-"></div>
+                var childs = new List<ChecklistDetailModel>();
+                <div class="checklist-detail-group-container">
+                    <div class="checklist-detail-group checklist-item">
+                        @{
+                            var completed = 0;
+                            var totalChild = 0;
+                        }
+                        @if (singles != null && singles.Any())
+                    {
+                        childs = singles.Where(x => x.ParentId == detail.Id).ToList();
+                        completed = childs.Where(x => x.IsFinished).Count();
+                        totalChild = childs.Count();
+                    }
+                        @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-" + detail.Id.ToString(), Value = detail.Id.ToString(), Attribute = "parent-id=" + detail.ParentId + (completed == totalChild ? " checked" : ""), OnClick = "check(this, " + detail.Id + ", " + detail.ParentId + ")", IsMixedState = completed > 0 && completed != totalChild, AttributeValue=Model.IsSave==true?"":"disabled" })
+                        <span class="checklist-item-title"> @detail.Name</span>
+                        @if (singles != null && singles.Any())
+                    {
+                            <span class="completed-counting">(@completed/@totalChild)</span>
+                        }
+                    </div>
+                    @*<div class="checklist-action">
+                            <span class="assignee-to group "> @detail.Name Team </span>
+                            <div class="icon-right action">
+                                <i class="fas fa-pencil-alt" style="color: #2CA01C" onclick="editChecklist()"></i>
+                                <i class="fas fa-trash-alt" style="color: #F86367;"></i>
+                            </div>
+                        </div>*@
+                </div>
+                            if (childs != null && childs.Any())
+                            {
+                                foreach (var child in childs)
+                                {
+
+                                    //string updatedDateStr = string.Empty;
+                                    //if (child.UpdatedDate != DateTime.MinValue)
+                                    //{
+                                    //    updatedDateStr = "-" + child.UpdatedDate.ToString("dd/MM/yyyy");
+                                    //}
+
+                                    <div class="checklist-detail-group-container">
+                                        <div class="checklist-detail-single checklist-item">
+                                            @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-" + child.Id.ToString(), Value = child.Id.ToString(), Attribute = "parent-id=" + child.ParentId + (child.IsFinished ? " checked" : ""), OnClick = "check(this, " + child.Id + ", " + child.ParentId + ")", Id = "list[" + index + "].IsFinished", AttributeValue = Model.IsSave == true ? "" : "disabled" })
+                                            <input type="text" id="typeControlId" name="list[@index].TypeControlId" value="@child.TypeControlId" hidden />
+                                            <input type="text" id="Id" name="list[@index].Id" value="@child.Id" hidden />
+                                            <input type="text" id="controlTypeName" name="list[@index].ControlTypeName" value="@child.ControlTypeName" hidden />
+                                            <input type="text" id="columnLink" name="list[@index].ColumnLink" value="@child.ColumnLink" hidden />
+                                            @if (child.ControlTypeName == ControlType.Checkbox)
+                                            {
+                                                <span class="checklist-item-title"> @child.Name</span>
+                                                index++;
+                                            }
+                                            else
+                            if (child.ControlTypeName == ControlType.FieldUpdating)
+                                            {
+                                                <span class="checklist-item-title"> @child.Name </span>
+                                                <div class="checklist-detail-field" style="width:50%;margin-left:20px">
+                                                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "list[" + index + "].Value", PlaceHolder = M(child.ColumnLink + ";" + DataType.TableName + ";ColumnName").ToString(), IsAnimationLabel = false, Value = child.Value, Attribute = Model.IsSave == true ? "" : "disabled" })
+                                                </div>
+                                                index++;
+                                            }
+                                            else
+                            if (child.ControlTypeName == ControlType.TextEditor)
+                                            {
+                                                <span class="checklist-item-title"> @child.Name </span>
+                                                <div class="checklist-detail-field" style="width:50%;margin-left:20px">
+                                                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "list[" + index + "].Value", PlaceHolder = child.Name, IsAnimationLabel = false, Value = child.Value , Attribute = Model.IsSave == true ? "" : "disabled" })
+                                                </div>
+                                                index++;
+                                            }
+                                            else
+                            if (child.ControlTypeName == ControlType.Datepicker)
+                                            {
+                                                <span class="checklist-item-title"> @child.Name</span>
+                                                <div class="checklist-detail-field hrm-v2-floating-form" style="width:150px;margin-left:20px">
+                                                    @if (string.IsNullOrEmpty(child.Value))
+                                                    {
+                                                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel()
+                                                   {
+                                                       Name = "list[" + index + "].Value",
+                                                       Value = null,
+                                                       DateFormat = "dd/MM/yyyy",
+                                                       Vertical = "top",
+                                                       Attribute = Model.IsSave == true ? "" : "disabled"
+                                                   });
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel()
+                                                   {
+                                                       Name = "list[" + index + "].Value",
+                                                       Value = DateTime.ParseExact(child.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                                                       DateFormat = "dd/MM/yyyy",
+                                                       Vertical = "top",
+                                                       Attribute = Model.IsSave == true ? "" : "disabled"
+                                                   })
+                                                    }
+                                                </div>
+                                                index++;
+                                            }
+                                        </div>
+                                        @*<div class="checklist-action">
+                                                <span class="assignee-to">@child.AssigneeName  @updatedDateStr</span>
+                                                <div class="icon-right action">
+                                                    <i class="fas fa-pencil-alt" style="color: #2CA01C" onclick="editChecklist(@child.Id)"></i>
+                                                    <i class="fas fa-trash-alt" style="color: #F86367;"></i>
+                                                </div>
+                                            </div>*@
+                                    </div>
+                                        }
+                                    }
+                                }
+                            }
+    </div>
+    @{
+        if (Model.StaffId != 0)
+        {
+            <input type="text" id="staffId" name="StaffId" value="@Model.StaffId" hidden />
+        }
+    }
+
+</div>
+@if (Model.IsSave == true)
+{
+    <div class="right-control viewtype-list-right pull-right">
+        <button type="button" class="btn btn-primary hrm-v2-add-workingday" onclick="saveStaffChecklist()">
+            @T("Staff.Detail.Save")
+        </button>
+    </div>
+}
+
+
+<script type="text/javascript">
+    function ChangeStatus(pipelineStepId, pipelineId, pipelineStaffStatusId) {
+        bootbox.confirm({
+            message: '@T("Message.Chẹcklist.QuestionSave")',
+            buttons: {
+                confirm: {
+                    label: '@T("Checklist.Save")',
+                    className: 'hrm-v2-btn-save'
+                },
+                cancel: {
+                    label: '@T("Checklist.Close")',
+                    className: 'hrm-v2-btn-close'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                        var pipelineStep = {
+                            Id: pipelineStepId,
+                            PipelineId: pipelineId,
+                            PipelineStaffStatusId: pipelineStaffStatusId,
+                        };
+                        $.ajax(
+                    {
+                        type: "POST",
+                        url: "/Staff/SaveStatusPipeline",
+                        data: {
+                            pipelineStep: pipelineStep,
+                            staffId:@Model.StaffId,
+                        },
+                        success: function (response) {
+                            if (response.result.Success==true) {
+                                window.location.reload();
+                            }
+                            ShowMessage(response.result.Success, response.responeseResources, 0, 500,  3000);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    function editChecklist(){
+        var options = {
+            id: 'frmEditCheckList',
+            isNotificationPoup: false,
+            align: "center",
+            url: '/Staff/EditChecklistModal',
+            width: 600,
+            //data:{
+            //    id : id,
+            //    staffName : name,
+            //    officePositionId : officePositionId
+            //},
+            isDataTypeJson: true,
+            idform: 'frm-edit-checklist'
+        };
+        CreatePopup(options);
+    }
+</script>

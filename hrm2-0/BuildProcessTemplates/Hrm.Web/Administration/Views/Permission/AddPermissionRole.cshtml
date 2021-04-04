@@ -1,0 +1,120 @@
+﻿@model Hrm.Admin.ViewModels.MenuPermissionViewModel
+@using System.Linq
+@using Hrm.Common
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@{
+    Layout = null;
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+
+}
+<style>
+    .permission-role-right-body-list-content {
+        padding-left: 0px;
+    }
+
+    .permission-role-right-body {
+        border: 1px solid #ccc;
+    }
+
+        .permission-role-right-body.checkbox-tree {
+            overflow: auto;
+        }
+
+    .positon-fixed {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        height: 60px;
+        border-top: 1px solid #ccc;
+        background: white;
+        z-index: 999;
+    }
+    
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="bread-crumb-item prev-bread-crumb"> @T("Setting.Setting")</a>
+    <a href="/Admin" class="bread-crumb-item prev-bread-crumb">&nbsp; &gt; &nbsp; @T("Setting.Permisson")</a>
+    <a href="/Admin/Permission/PermissionRole" class="bread-crumb-item prev-bread-crumb"> &nbsp; &gt; &nbsp; @T("Setting.Role")</a>
+    <span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Permission.AddPermissonRole")</span>
+</div>
+<form id="frm-permission-role">
+    <div class="col-md-12">
+        <div class="form-group">
+            @*@Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "RoleId", LabelName = T("Permission.Name").ToString(), Style = "width:100%;max-width:100%" , IsAnimationLabel=true,Data=Model.Roles,Value= Model.Role.Id.ToString()})*@
+            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "Name", LabelName = T("Permission.Name").ToString(), Style = "width:100%;max-width:100%", IsAnimationLabel = true, Value = Model.Role.Name, IsRequired = true })
+
+            <input type="text" id="RoleId" value="@Model.Role.Id" hidden />
+        </div>
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "Description", LabelName = T("Permission.Description").ToString(), Style = "width:100%;max-width:100%", IsAnimationLabel = true, Value = Model.Role.Description })
+        </div>
+    </div>
+    <div class="col-md-12 add-permission-role">
+
+        <div class="permission-role-right-title-permission" style="margin-left:20px;margin-bottom:10px;">
+            <span style="background: #fff;">@T("Permission.ListPermission")</span>
+        </div>
+        <div class="permission-role-right-body">
+            @{
+                @Html.Partial(UrlHelpers.TemplateAdmin("Permission", "_ListPermission.cshtml"), Model)
+            }
+        </div>
+    </div>
+    <div class="col-md-12 positon-fixed">
+        <div style="float:right">
+            @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-permission-role", OnClick = "SavePermissionRole()", Value = "Permission.Save", Style = "width:100px;height:38px;margin-top:10px;margin-right:60px;", Type = "button", ClassName = "hrm-v2-btn-save" })
+        </div>
+        <div style="float:right;margin-right: 20px;">
+            @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Permission.Close", Style = "width:100px;height:38px;margin-top:10px", ClassName = "hrm-v2-btn-close" })
+        </div>
+    </div>
+</form>
+
+<script>
+    function SavePermissionRole() {
+        $("#frm-permission-role span[name*='-error']").text("");
+        var listCheckPermissionRole = [];
+        var checkPermissionRole = document.getElementsByName('cb-checklist-permission-user');
+        for (var i = 0; i < checkPermissionRole.length; i++) {
+            if (checkPermissionRole[i].checked == true) {
+                var permissionId = checkPermissionRole[i].getAttribute("value-id");
+                var menuId = checkPermissionRole[i].getAttribute("menu-id");
+                var obj = { PermissionId: permissionId, MenuId: menuId, IsCheck: true };
+                listCheckPermissionRole.push(obj);
+            }
+        }
+        var staffRolePermisson = {};
+        staffRolePermisson.DataId = $("#RoleId").val();
+        staffRolePermisson.DataTypeName = '@DataType.Role';
+        staffRolePermisson.Description = $("#description").val();
+        staffRolePermisson.Name = $("#name").val();
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/Permission/SavePermission",
+            data: { staffRolePermisson: staffRolePermisson, menuPermission: listCheckPermissionRole },
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    for (var i = 0; i < validations.length; i++) {
+                        var list = validations[i].ColumnName.split('.');
+                        validations[i].ColumnName = list[1];
+                    }
+                    RenderError(validations, "frm-permission-role");
+                }
+                else {
+                    if (response.result.Success == true) {
+                        window.location.href = "/Admin/Permission/PermissionRole";
+                        ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    }
+                    else {
+                        ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    }
+                }
+
+            }
+        });
+    }
+</script>

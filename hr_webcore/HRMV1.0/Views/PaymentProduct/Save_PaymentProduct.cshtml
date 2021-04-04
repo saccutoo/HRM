@@ -1,0 +1,197 @@
+﻿@using HRM.App_LocalResources;
+<div class="container-fluid">
+    <div class="row" id="PaymentProduct" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-heading"><b>@AppRes.PaymentProduct</b></div>
+                <hr />
+                <div class="panel-body">
+                    <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)" novalidate>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                @*---------------------------------------------------------------Đầu tiên-------------------------------------------------------------------------------------------------------*@
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.CustId </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div style="position: relative; display:inline-block; border:0px solid blue; width:100%">
+                                            <input type="text" id="txtCustomerId" ng-model="editData.CustomerID" class="form-control" style="display: none;" auto-complete>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Status </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" chosen options="getListStatus" on-no-result="doStuff" data-modal="modal" ng-disabled="true" ng-model="editData.Status" ng-options="list.GlobalListID as list.Name for list in getListStatus" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.BD </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" chosen options="getListStaffWhereRoleBD" on-no-result="doStuff" data-modal="modal" ng-disabled=is_readonly ng-model="editData.StaffID" ng-required="true" name="UserID" ng-options="list.StaffID as list.FullName for list in getListStaffWhereRoleBD" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Product</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" chosen options="getListProduct" on-no-result="doStuff" data-modal="modal" ng-disabled=is_readonly ng-model="editData.ProductID" ng-required="true" name="ProductID" ng-options="list.GlobalListID as list.Name for list in getListProduct" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        @*<span ng-show="EditForm.$submitted && EditForm.CustomerID.$error.required" style="color: red">@AppRes.ValidationStatus</span>*@
+                                    </div>
+
+                                   
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.OrganizationUnit </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" ng-required="true" name="OrganizationUnitID" chosen options="getListOrganizationUnit" on-no-result="doStuff" ng-model="editData.OrganizationUnitID" ng-options="list.OrganizationUnitID as list.Name for list in getListOrganizationUnit" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.C_PaymentDate</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="date" class="form-control" ng-readonly=is_readonly ng-required="true" name="PaymentDate" ng-model="editData.PaymentDate" format-date />
+                                    </div>
+
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.CommitmentApprovedBy </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" ng-disabled="true" chosen options="getListStaff" on-no-result="doStuff" ng-required="true" name="CreatedBy" ng-model="editData.CreatedBy" ng-options="list.UserID as list.FullName for list in getListStaff" convert-dropdown>
+                                            <option value="" selected>--@AppRes.Select--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Margin </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" data-modal="modal" class="form-control" ng-required="true" name="Amount" ng-readonly=is_readonly ng-model="editData.Amount" currency-mask />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.CommitmentApprovedOn </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="date" class="form-control" ng-readonly=is_readonly ng-required="true" name="Amount" ng-model="editData.CreatedDate" format-date />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Note </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <textarea class="form-control">
+
+                                        </textarea>
+                                        
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        @*---------------------------------------------------------------Thêm mới và bỏ qua-------------------------------------------------------------------------------------------------------*@
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-4 col-md-push-5">
+                                <button type="submit" class="btn btn-labeled btn-success" ng-show="tablePermission.isEdit">
+                                    <span class="btn-label">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </span>@AppRes.SaveData
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>
+<script>
+    var textS = "";
+    
+    $(document).ready(function () {
+    var widthText = $("#txtCustomerId").width();
+    if (widthText < 610) {
+        widthText = 610;
+    }
+    textS = $("#txtCustomerId").val();
+    var txtSearch = $("#txtCustomerId").autocomplete({
+        width: widthText + 23,
+        columns: ['@AppRes.Name', '@AppRes.Website', '@AppRes.Fanpage'],
+        // columns: [ 'Họ tên', 'Website', 'Fanpage'],
+        data: function () {
+            var data = [];
+            try {
+                $.ajax({
+
+                    url: "/PaymentProduct/GetCustomerContractByUserAndKey",
+                    type: "GET",
+                    async: false,
+                    data: { key: $("#txtSearchCustomer").val() },
+                    success: function (result) {
+                        data = result;
+                    }
+                });
+            } catch (e) {
+                alert(e)
+            }
+            var filterData = [];
+
+            var searchCustomer = eval("/" + txtSearch.searchdata() + "/gi");
+            if (textS == $("#txtSearchCustomer").val()) {
+                return data;
+            }
+
+            $.each(data, function (i, v) {
+                if (v.FullName.search(new RegExp(searchCustomer)) != -1
+                    || v.Website.search(new RegExp(searchCustomer)) != -1
+                    || v.Fanpage.search(new RegExp(searchCustomer)) != -1
+                    || (v.FullName + "_" + v.Website).search(new RegExp(searchCustomer)) != -1
+                    || (v.FullName + "_" + v.Fanpage).search(new RegExp(searchCustomer)) != -1) {
+                    filterData.push(v);
+                }
+
+            });
+            return filterData;
+        },
+        callback: function () {
+            var custId = $('#txtCustomerId').val();
+            if (custId != txtSearch.id()) {
+                $("#txtCustomerId").val(txtSearch.id());
+                textS = $("#txtSearchCustomer").val();
+            }
+        }
+
+    }, null, "txtSearchCustomer", "txtCustomerId", "ContractCode", 3, true);
+});
+
+</script>

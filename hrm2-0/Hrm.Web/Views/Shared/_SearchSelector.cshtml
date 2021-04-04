@@ -1,0 +1,32 @@
+﻿@model List<dynamic>
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@using Hrm.Framework.Context
+@{
+    Layout = null;
+}
+@Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel()
+{
+    LabelName = string.Empty,
+    IsRequired = false,
+    IsAnimationLabel = false,
+    Data = Model,
+    ValueField = "MenuName",
+    DisplayField = "MenuName",
+    Name = "SearchSelector",
+    IsMultipleLanguage = true,
+    DataType = "Menu",
+    PropertyName = "MenuName",
+    IsUseIcon = true
+})
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).mouseup(function (e) {
+            if (e.which == 1) {
+                showMenu('.global-search', '#global-search-result', e);
+                //showMenu('.btn-search', '#global-search-result', e);
+            }
+        });
+    });
+</script>

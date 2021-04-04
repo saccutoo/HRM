@@ -1,0 +1,72 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+@{
+    ViewBag.Title = AppRes.CheckFormular;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div class="container-fluid"  ng-app="tableApp">
+    <form name="checkFomular" novalidate>
+        <div class="col-md-12"><h4 class="header-checkformular" style="font-weight:bold;margin-top:30px"> @AppRes.CheckFomular</h4></div>
+        <div class="row" style="position:relative;top:30px">
+            <div ng-controller="mytable" ng-init="Init()">
+                <div class="col-md-12 no-padding">
+                    <div class="form-group col-md-3">
+                        <div class="col-md-3" style="line-height:30px;">
+                            <label>@AppRes.Month <span style="color:red">(*)</span></label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" placeholder="@AppRes.Month" class="form-control is-month" name="month" data-modal="modal" ng-model="CheckFormularModel.Month" required convert-to-month/>
+                            <span ng-show="IsClickExcel && checkFomular.month.$invalid" style="color:red;line-height:30px;" ng-cloak>@AppRes.ErrorMonth</span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <div class="col-md-3" style="line-height:30px;">
+                            <label>@AppRes.Year <span style="color:red">(*)</span></label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" placeholder="@AppRes.Year" class="form-control datePicker12345" name="year" data-modal="modal" ng-model="CheckFormularModel.Year" convert-to-year required />
+                            <span ng-show="IsClickExcel && checkFomular.year.$invalid" style="color:red;line-height:30px;" ng-cloak>@AppRes.ErrorYear</span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <div class="col-md-4" style="line-height:30px;">
+                            <label>@AppRes.BonusStatus <span style="color:red">(*)</span></label>
+                        </div>
+                        <div class="col-md-8">
+                            @if (Global.CurrentLanguage == 5)
+                        {
+                                <select class="form-control" chosen options="listRewardSource" data-modal="modal" name="RewardStatus" ng-model="CheckFormularModel.RewardStatus" ng-options="list.GlobalListID as list.Name for list in listRewardSource" required>
+                                    <option value="" selected>--@AppRes.Select--</option>
+                                </select>
+                        }
+                        else
+                        {
+                                <select class="form-control" chosen options="listRewardSource" data-modal="modal" name="RewardStatus" ng-model="CheckFormularModel.RewardStatus" ng-options="list.GlobalListID as list.NameEN for list in listRewardSource" required>
+                                    <option value="" selected>--@AppRes.Select--</option>
+                                </select>
+                        }
+                            <span ng-show="IsClickExcel && checkFomular.RewardStatus.$invalid" style="color:red;line-height:30px;" ng-cloak>@AppRes.ErrorTypeBonus</span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <button title="@AppRes.btnCheck" type="button" ng-click="ExcelClick(checkFomular)" class="btn btn-labeled btn-primary">
+                            <span class="btn-label">
+                                <i class="fa fa-file-excel-o"></i>
+                            </span>@AppRes.btnCheck
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/PolicyDetail/CheckFormularUntil.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script>
+    BuildTable('tableApp', 'mytable');
+</script>
+
+

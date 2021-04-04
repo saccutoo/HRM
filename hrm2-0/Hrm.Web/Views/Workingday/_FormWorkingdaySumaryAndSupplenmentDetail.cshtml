@@ -1,0 +1,224 @@
+﻿@model Hrm.Web.ViewModels.FormWorkingdaySupplenmentAndSummaryDetailViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@using Hrm.Framework.Context
+@using Hrm.Common
+@{
+
+}
+<style>
+    .working-summary-supplement {
+        width: 100%;
+    }
+
+        .working-summary-supplement .title-date {
+            font-size: 12px;
+            font-family: Roboto;
+        }
+
+        .working-summary-supplement .hrm-v2-modal-body {
+            margin-top: 0px;
+        }
+
+        .working-summary-supplement .hrmv2-tab-model-working .nav-item .active {
+            color: #2CA01C;
+            background-color: #d4f3c6;
+        }
+
+    .hrmv2-tab-model-working .nav-tabs {
+        border-bottom: none;
+        height: 50px;
+        background-color: #F8F8F8;
+    }
+
+    .working-summary-supplement .hrmv2-tab-model-working .nav-item a:hover {
+        border: 0px;
+        background-color: none;
+    }
+
+    .hrmv2-tab-model-working .tab-content {
+        overflow: auto;
+        max-height: 515px;
+        padding: 15px 30px;
+        float: left;
+        width: 100%;
+    }
+
+        .hrmv2-tab-model-working .tab-content .tab-pane.active {
+            display: block;
+        }
+
+    .hrmv2-tab-model-working .nav-tabs > li.active > a, .hrmv2-tab .nav-tabs > li.active > a:hover, .hrmv2-tab .nav-tabs > li.active > a:focus {
+        border: 1px solid transparent;
+        color: #2CA01C;
+        background-color: inherit;
+    }
+
+    .hrmv2-tab-model-working .nav-item {
+        text-align: center;
+        height: 100%;
+        min-width: 130px;
+        background-color: #F8F8F8;
+    }
+
+        .hrmv2-tab-model-working .nav-item:first-child {
+            min-width: 160px;
+        }
+
+        .hrmv2-tab-model-working .nav-item.active {
+            background-color: #D9EBD7;
+        }
+
+    .hrmv2-tab-model-working .nav-tabs > li > a {
+        color: #223133;
+        font-size: 13px;
+        font-family: Roboto-Bold;
+        height: 100%;
+        line-height: 50px;
+        padding: 0px;
+    }
+     /*.hrmv2-tab-model-working .nav-tabs .nav-item.show .nav-item, .nav-tabs .nav-item.active {
+       display:block;
+    }*/
+    .working-summary-supplement table {
+        margin-top:10px;
+    }
+     .working-summary-supplement table tr td {
+        border:none;
+        background:white;
+        font-size:14px;
+        font-family:Roboto;
+    }
+      .working-summary-supplement table tr  {
+        height:50px;
+    }
+      .working-summary-supplement table tr td i {
+        font-size:11px;
+        margin-left:10px;
+    }
+    .working-summary-supplement tr td .title-minute{
+        font-size:11px;
+    }
+    .working-summary-supplement table td .popover{
+       background-color: #0c0c0c;
+        color: white;
+    }
+     .working-summary-supplement table td ul{
+       list-style: none;
+        margin: 0px;
+        padding: 0px;
+    }
+     .working-summary-supplement .tab-content .list-workingday-supplement{
+         margin-top: 10px;
+         max-height: 310px;
+         overflow: auto;
+         clear: both;
+     }
+      .working-summary-supplement .tab-content .list-workingday-supplement .request{
+         height: 80px;
+         clear:both
+     }
+      .working-summary-supplement .tab-content .list-workingday-supplement .request .request-type{
+        height: 35%;
+        line-height: 30px;
+        border-bottom:1px solid #ccc;
+     }
+       .working-summary-supplement .tab-content .list-workingday-supplement .request .description{
+       height: 65%;
+     }
+       .working-summary-supplement .tab-content .list-workingday-supplement .request .description .left{
+        float: left;
+        width: 90%;
+        height: 100%;
+     }
+       .working-summary-supplement .tab-content .list-workingday-supplement .request .description .right{
+            float: left;
+            text-align: center;
+            width: 10%;
+            height: 100%;
+     }
+       .working-summary-supplement .tab-content .list-workingday-supplement .request .description .fas.fa-pencil-alt{
+            line-height: 50px;
+            color: #2CA01C;
+            cursor:pointer;
+     }
+     .working-summary-supplement .tab-content .list-workingday-supplement .request .description .name{
+        font-family: Roboto-bold;
+        line-height: 25px;
+        margin-left: 15px;
+        margin-top:5px;
+     }
+     .working-summary-supplement .tab-content .list-workingday-supplement .request .description .date-and-working .wokingday{
+        font-family: Roboto-Bold;
+        margin-left: 15px;
+     }
+</style>
+<div class="working-summary-supplement display-inline-block">
+    <form id="frm-working-summary-and-supplement">
+        <div class="hrm-v2-modal-header">@T(Model.Date.ToString("dddd")) <span class="title-date">@Model.Date.ToString("dd/MM/yyyy")</span></div>
+        <div class="hrm-v2-modal-body">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="hrmv2-tab-model-working">
+                    <ul class="nav nav-tabs" id="myTababc" role="tablist">
+                        <li class="nav-item" id="working-day-summary-detail-tab"  data-toggle="tab" data-target="#working-day-summary-detail"  role="tab" aria-controls="working-day-summary-detail" aria-selected="true">
+                            @{ 
+                                var active = string.Empty;
+                                if (Model.ActiveTap == 0)
+                                {
+                                    active = "active";
+                                }
+                            }
+                            <a class="@active" >@T("Workingday.Synthesis")</a>
+                        </li>
+                        <li class="nav-item" id="working-day-supplement-detail-tab"  data-toggle="tab" data-target="#working-day-supplement-detail"  role="tab" aria-controls="working-day-supplement-summary-detail" aria-selected="false"> 
+                            @{
+                                 active = string.Empty;
+                                if (Model.ActiveTap == 1)
+                                {
+                                    active = "active";
+                                }
+                            }
+                            <a class="@active">@T("Workingday.TableHeader.Request") <span style="font-family:Roboto">(@Model.WorkingdaySupplements.Count())</span></a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content pd-0" id="my-tab-content">
+                        @{ 
+                            active = string.Empty;
+                            if (Model.ActiveTap==0)
+                            {
+                                active = "in active";
+                            }
+                        }
+                        <div class="tab-pane fade @active" id="working-day-summary-detail" role="tabpanel" aria-labelledby="working-day-summary-detail-tab">
+                            @Html.Partial(UrlHelpers.View("~/Views/Workingday/_BodyWorkingdaySummaryDetail.cshtml"), Model)
+                        </div>
+                        @{
+                            active = string.Empty;
+                            if (Model.ActiveTap == 1)
+                            {
+                                active = "in active";
+                            }
+                        }
+                        <div class="tab-pane fade @active" id="working-day-supplement-detail" role="tabpanel" aria-labelledby="working-day-supplement-detail-tab">
+                            @Html.Partial(UrlHelpers.View("~/Views/Workingday/_BodyWorkingdaySupplementDetail.cshtml"), Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="footer">
+            <div class="footer-login">
+
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).on('click', '.nav-item', function () {
+        $('.nav-item a').removeClass('active');
+        $(this).addClass('active');
+    });
+</script>

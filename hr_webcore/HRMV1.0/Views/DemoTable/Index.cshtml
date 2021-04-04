@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Demo";
+    Layout = "~/Views/Shared/MyLayout.cshtml";
+}
+<div  class="container-fluid" ng-app="tableApp">
+    <div class="row" ng-controller="mytable">
+        @Html.Action("TableServerSide", "Common")
+        <div style="display: none;">
+            @Html.Action("EditEmp", "DemoTable")
+        </div>
+        <div style="display: none;">
+            @Html.Action("AddEmp", "DemoTable")
+        </div>
+       
+      
+    </div>
+</div>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/TableUntil.js"></script>
+<script>
+    BuildTable('tableApp', 'mytable','/Staff/GetOrganazationUnit');
+</script>
+
+    
+    

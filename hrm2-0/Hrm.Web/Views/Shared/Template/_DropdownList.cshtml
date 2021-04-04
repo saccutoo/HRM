@@ -1,0 +1,70 @@
+﻿@model Hrm.Framework.Models.DropdownListModel
+@using Hrm.Framework.Context;
+@using Newtonsoft.Json;
+@using Hrm.Framework.Helper;
+@{
+    Layout = null;
+}
+<div id="@Model.Name">
+    <div class="hrmv2-dropdown-container" id="@Model.Name-hrmv2-dropdown" style="@Model.Style">
+        <a class="hrmv2-dropdown-choice">
+            @if (Model.Data.Count > 0)
+            {
+                var firstElement = Model.Data.ToList().FirstOrDefault(x => x.IsSelected == true);
+                if (Model.Id != 0)
+                {
+                    firstElement = Model.Data.Where(x => x.Id == Model.Id).ToList();
+                    firstElement = firstElement[0];
+                }
+                if (firstElement == null)
+                {
+                    firstElement = Model.Data[0];
+                }
+                if (Model.IsUseImage)
+                {
+                    var imageUrl = CurrentContext.WebBaseUrl + firstElement.ImageName;
+                    <span class="dropdown-chosen"><img id="@Model.Name-selected-image" src="@imageUrl" style="margin-right:10px" /><span id="@Model.Name-selected-value">@firstElement[Model.DisplayField]</span></span>
+                }
+                else
+                {
+                    <span class="dropdown-chosen" id="@Model.Name-selected-value">@firstElement[Model.DisplayField]</span>
+                }
+                <span class="drodown-arrow">
+                    <i class="fa fa-angle-down"></i>
+                </span>
+                <input id="@Model.Name-value" name="@Model.Name" value="@firstElement[Model.ValueField]" hidden />
+
+            }
+        </a>
+
+        <div class="dropdown-drop">
+            <ul class="dropdown-results">
+                @foreach (var item in Model.Data)
+                {
+                    <li class="dropdown-result-selectable" onclick="select('@item[Model.ValueField]', '@Model.Name');@Model.Event" ng-click="@Model.NgClick">
+                        @if (Model.IsUseImage)
+                        {
+                            var imageUrl = CurrentContext.WebBaseUrl + item.ImageName;
+                            <div class="dropdown-results-option"><img src="@imageUrl" style="margin-right:10px" />@item[Model.DisplayField]</div>
+                        }
+                        else
+                        {
+                            <div class="dropdown-results-option">@item[Model.DisplayField]</div>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    ControlModel[@Html.Raw(Json.Encode(Model.Name))] = @Html.Raw(Json.Encode(Model));
+    ControlModel[@Html.Raw(Json.Encode(Model.Name))].Data = @Html.Raw(JsonConvert.SerializeObject(Model.Data));
+    var baseUrl =  @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl));
+    $(document).ready(function(){
+        $('#' + @Html.Raw(Json.Encode(Model.Name)) + '-value').trigger('change');
+    });
+</script>
+

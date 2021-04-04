@@ -1,0 +1,22 @@
+﻿@model Hrm.Framework.Models.ButtonModel
+@{
+    Layout = null;
+}
+<style>
+    .normal-button{
+        background:#2ca01c;
+        height:30px;
+        color:white;
+        border-radius: 100px;
+        border:none;
+    }
+    .normal-button:focus{
+        box-shadow:none;
+        outline:0px !important;
+    }
+</style>
+<input id="@Model.Name" class="normal-button @Model.ClassName" type="@Model.Type" value="@T(Model.Value)"  onclick="@Model.OnClick" Style="@Model.Style"/>
+<script type="text/javascript">
+
+</script>
+

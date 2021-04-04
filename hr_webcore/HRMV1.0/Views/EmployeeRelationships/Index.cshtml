@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<div class="container-fluid" ng-controller="EmployeeRelationships">
+    <div class="row">
+        <div style="display: none;">
+            @Html.Action("Save_EmployeeRelationships", "EmployeeRelationships")
+        </div>
+        <build-table table-url="urlEmployeeRelationships"
+                     table-edit="editClick"
+                     table-delete="deleteClick"
+                     table-excel-click="ExcelClick"
+                     table-add="addClick"
+                     table-param-filter="wpFilter"
+                     table-model="ERTableData"
+                     >
+        </build-table>
+    </div>
+</div>
+
+

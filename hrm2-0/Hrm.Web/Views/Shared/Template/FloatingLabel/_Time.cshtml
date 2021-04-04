@@ -1,0 +1,19 @@
+﻿@model Hrm.Framework.Models.TextEditorModel
+@{
+    Layout = null;
+}
+
+
+<div class="hrm-v2-floating-form">
+    <div class="floating-label">
+        <div class="input-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true" id="@Model.Name.Replace(".","-").ToString()" style="@Model.Style">
+            <input type="text" class="form-control floating-input " value="@Model.Value" name="@Model.Name">
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>
+            </span>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#@Model.Name.Replace(".", "-").ToString()').clockpicker();
+</script>

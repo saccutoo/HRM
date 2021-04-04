@@ -1,0 +1,69 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = @AppRes.CheckSalaryErp;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #PerformanceReport span.label-btn.col-6 {
+        padding-right: 10px;
+        float: left;
+        line-height: 30px;
+    }
+    #PerformanceReport select.form-control.col-6 {
+        width: 50%;
+        float: left;
+    }
+    #PerformanceReport .col-md-1-2 {
+        width: 15%;
+        float: left;
+    }
+    #PerformanceReport label.col-sm-3.col-form-label {
+        line-height: 30px;
+    }
+    #PerformanceReport input.form-control.col-sm-6 {
+        width: 50px;
+        float: left;
+    }
+    #PerformanceReport label.col-md-2 {
+        line-height: 30px;
+    }
+    label.col-sm-3.col-form-label {
+        width: auto;
+    }
+    h3.ng-binding {
+        display: none;
+    }
+    .col-md-12.ng-isolate-scope > .col-md-12 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .hide-element {
+        display: none!important;
+    }
+    .align{text-align: right}
+</style>
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<br />
+
+
+<div class="container-fluid" ng-app="tableApp" ng-cloak>
+    <div id="AttendanceManagement" class="row" style="margin: 0;" ng-controller="CheckSalaryErp" ng-init="init()">
+        <div class="col-md-12" id="PerformanceReport">
+            <check-salary-erp table-url="'@ViewBag.url'"
+                              table-change-page-size="changePageSize"
+                              table-page-changed="pageChanged" notification="'@(AppRes.Notification)'">
+            </check-salary-erp>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/CheckSalaryErp/CheckSalaryErp.js"></script>
+
+<script>
+    BuildTable('tableApp', 'CheckSalaryErp', '@(ViewBag.url)',@(ViewBag.viewType));
+   
+</script>

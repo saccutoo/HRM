@@ -1,0 +1,83 @@
+﻿@using HRM.App_LocalResources;
+<div class="container-fluid">
+    <div class="row" id="SaveMCC_BMlnHouse" style="margin: 0px;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;"> MCC_BMInHouse</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:35px;">BM_MCC <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" ng-model="Data.BM_MCCId" ng-change="ChangeBM_MCC()"/>
+                                        <span style="color:red;line-height:30px;">{{ErrorBM_MCCId}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.AdsAccountType <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" chosen options="ListAccount" on-no-result="doStuff" required data-modal="modal" ng-model="Data.AccountType" ng-options="list.GlobalListID as list.Name for list in ListAccount" ng-change="ChangeAccountType()">
+                                            <option value="" selected>@AppRes.Select</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorAccountType}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />       
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:35px;">@AppRes.Tool <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" chosen options="ListType" on-no-result="doStuff" required data-modal="modal" ng-model="Data.Type" ng-options="list.Value as list.Name for list in ListType" ng-change="ChangeListType()">
+                                            <option value="" selected>@AppRes.Select</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorType}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.isPartner </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="Data.IsPartner" class="form-control"/>
+                                        <span style="color:red;line-height:30px;">{{ErrorPartner}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>               
+                    </div>
+                </div>
+                <!-- END panel-->
+                <center>
+                    <button type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>@AppRes.btnUpdate
+                    </button>
+                    <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                        <span class="btn-label">
+                            <i class="fa fa-close"></i>
+                        </span>@AppRes.btnCancel
+                    </button>
+                </center>
+            </div>
+        </form>
+    </div>
+</div>

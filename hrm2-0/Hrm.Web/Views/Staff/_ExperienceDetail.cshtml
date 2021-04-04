@@ -1,0 +1,84 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@using System.Collections
+@model Hrm.Framework.Models.StaffExperienceModel
+@{
+    Layout = null;
+}
+<div class="detail-benifit-container">
+    <div class="hrm-v2-modal-header">@M(Model.OfficePositionID.ToString() + ";" + DataType.MasterData + ";Name")</div>
+    <div class="hrm-v2-modal-body" style="margin-top:0px">
+        <section class="hrmv2-section">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Position").ToString(), Text = M(Model.OfficeRoleID.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.WorkingPlace").ToString(), Text = Model.CompanyName })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    
+                    @{
+                        var fromDateString = string.Empty;
+                        var minus = string.Empty;
+                        if (Model.FromDate != null && Model.FromDate != DateTime.MinValue)
+                        {
+                            fromDateString = Model.FromDate.Value.ToString("dd/MM/yyyy");
+                        }
+                        var toDateString = string.Empty;
+                        if (Model.ToDate != null && Model.ToDate != DateTime.MinValue)
+                        {
+                            toDateString = Model.ToDate.Value.ToString("dd/MM/yyyy");
+                        }
+                        else
+                        {
+                            toDateString = T("Staff.Detail.Now").ToString();
+                            Model.ToDate = DateTime.Now;
+                        }
+                        if (fromDateString != string.Empty || toDateString != string.Empty)
+                        {
+                            minus = " - ";
+                        }
+                    }
+                        <div class="hrmv2-property-field width-100-percent">
+                            <div class="width-100-percent property-label">@T("Staff.Detail.Time")</div>
+                            <div class="width-100-percent property-text">
+                                @if ((Math.Round(Model.ToDate.Value.Subtract(Model.FromDate.Value).Days / (365.25), 1)) < 1)
+                                {
+                                <span class="experience-year hrm-v2-bold">
+                                    @Math.Round((Model.ToDate.Value.Subtract(Model.FromDate.Value).Days / (365.25)) * 12) @T("Staff.Detail.Month")
+                                </span>
+                                }
+                                else
+                                {
+                                <span class="experience-year hrm-v2-bold">
+                                    @(Math.Round(Model.ToDate.Value.Subtract(Model.FromDate.Value).Days / 365.0, 1)) @T("Staff.Detail.Year")
+                                </span>
+                                }
+                                <span class="property-label" style="padding-left: 10px;">
+                                    @fromDateString  @minus  @toDateString
+                                </span>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.ExperienceDescription").ToString(), Text = Model.Note })
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="footer">
+        <div class="footer-login">
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary hrm-v2-btn-close close-popup" data-dismiss="modal">
+                    @T("Staff.Close")
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

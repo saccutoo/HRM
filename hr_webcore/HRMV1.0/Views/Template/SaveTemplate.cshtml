@@ -1,0 +1,263 @@
+﻿
+@using HRM.App_LocalResources;
+@using HRM.Common;
+<div class="container-fluid">
+    <div class="row" id="SaveTemplate" style="margin: 0;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;">@AppRes.TemplateSalary</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.ColumnName <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <textarea ng-model="Data.Name" class="form-control" ng-change="ChangeName()"></textarea>
+                                        <span style="color:red;line-height:30px;">{{ErrorName}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.ColumnNameEN <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <textarea type="text" ng-model="Data.NameEN" class="form-control" ng-change="ChangeNameEN()"></textarea>
+                                        <span style="color:red;line-height:30px;">{{ErrorNameEN}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Value </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen ng-model="Data.Value" options="ListColumn" on-no-result="doStuff" data-modal="modal" ng-options="list.ColumnName as list.DisplayName for list in ListColumn" ng-change="ChangeValue()">
+                                                <option value="" selected>@AppRes.Select</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen ng-model="Data.Value" options="ListColumn" on-no-result="doStuff" data-modal="modal" ng-options="list.ColumnName as list.DisplayNameEn for list in ListColumn" ng-change="ChangeValue()">
+                                                <option value="" selected>@AppRes.Select</option>
+                                            </select>
+                                        }
+                                        <span style="color:red;line-height:30px;">{{ErrorValue}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.DataFormat <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen ng-model="Data.Type" options="ListTypeFormat" on-no-result="doStuff" data-modal="modal" ng-options="list.Value as list.Name for list in ListTypeFormat" ng-change="ChangeType()">
+                                                @*<option value="" selected>@AppRes.Select</option>*@
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen ng-model="Data.Type" options="ListTypeFormat" on-no-result="doStuff" data-modal="modal" ng-options="list.Value as list.NameEN for list in ListTypeFormat" ng-change="ChangeType()">
+                                                @*<option value="" selected>@AppRes.Select</option>*@
+                                            </select>
+                                        }
+                                        
+                                        <span style="color:red;line-height:30px;">{{ErrorType}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Datatypes <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen ng-model="Data.DisplayType" options="ListType" on-no-result="doStuff" data-modal="modal" ng-options="list.Value as list.Name for list in ListType" ng-change="ChangeDisplayType()"></select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen ng-model="Data.DisplayType" options="ListType" on-no-result="doStuff" data-modal="modal" ng-options="list.Value as list.NameEN for list in ListType" ng-change="ChangeDisplayType()"></select>
+                                        }
+                                        <span style="color:red;line-height:30px;">{{ErrorDisplayType}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.AlignTheMargin</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control" ng-model="Data.Align"></textarea>
+                                        <span style="color:red;line-height:30px;">{{ErrorAlign}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.HideColumn</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <select chosen ng-model="Data.Hide" ng-change="ChangeHide()">
+                                            <option value="true" selected>@AppRes.HideColumn</option>
+                                            <option value="" selected>@AppRes.ShowColumn</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorHide}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.CssFormat </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control" ng-model="Data.Css"></textarea>
+                                        <span style="color:red;line-height:30px;">{{ErrorCss}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.CurrencyFormat </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen ng-model="Data.DataFormat" options="ListDataFormat" on-no-result="doStuff" data-modal="modal" ng-options="list.Value as list.Name for list in ListDataFormat">
+                                                <option value="" selected>@AppRes.NoFormatNumber</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen ng-model="Data.DataFormat" options="ListDataFormat" on-no-result="doStuff" data-modal="modal" ng-options="list.Value as list.NameEN for list in ListDataFormat">
+                                                <option value="" selected>@AppRes.NoFormatNumber</option>
+                                            </select>
+                                        }
+                                        
+                                        <span style="color:red;line-height:30px;">{{ErrorDataFormat}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.NumberOfCellsCombined </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="number" class="form-control" ng-model="Data.Colspan" ng-change="ChangeColspan()" ng-disabled="true"/>
+                                        <span style="color:red;line-height:30px;">{{ErrorColspan}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.HideTheGoods </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <select chosen ng-model="Data.HideRow" >
+                                            <option value="" selected>@AppRes.ShowTheGoods</option>
+                                            <option value="true" selected>@AppRes.HideTheGoods</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorHideRow}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.CustomizeHTML</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control" ng-model="Data.CustomHTML"></textarea>
+                                        <span style="color:red;line-height:30px;">{{ErrorCustomHTML}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row" ng-show="isShowOrderNo">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.OrderNo <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="number" class="form-control" ng-model="Data.OrderNo" ng-change="ChangeOrderNo()"/>
+                                        <span style="color:red;line-height:30px;">{{ErrorOrderNo}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- END panel-->
+            </div>
+            <br />
+            <center>
+                <button type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                    <span class="btn-label">
+                        <i class="fa fa-save"></i>
+                    </span>@AppRes.btnUpdate
+                </button>
+                <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                    <span class="btn-label">
+                        <i class="fa fa-close"></i>
+                    </span>@AppRes.btnCancel
+                </button>
+            </center>
+        </form>
+    </div>
+</div>
+
+

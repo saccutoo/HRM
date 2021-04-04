@@ -1,0 +1,107 @@
+﻿@model Hrm.Web.ViewModels.DashboardPersonalViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@{
+    Layout = null;
+}
+<div style="margin:30px 0px">
+    <div class="personal-tab-header pull-left">
+        <div class="left">
+            <div class="header hrm-v2-font-16">@T("Dashboard.Label.CurrentName"),<span class="hrm-v2-bold">  @T("Calendar.Date." + DateTime.Now.DayOfWeek.ToString())</span> @DateTime.Now.ToString("dd/MM/yyyy")</div>
+            @{
+                string timeIn = string.Empty;
+                string timeOut = string.Empty;
+                if (Model.TimeIn != DateTime.MinValue)
+                {
+                    timeIn = Model.TimeIn.ToString("HH:mm");
+
+                }
+                if (Model.TimeOut != DateTime.MinValue)
+                {
+                    timeOut = Model.TimeOut.ToString("HH:mm");
+
+                }
+            }
+            <div class="item">
+                <label class="time-lbl">@T("Dashboard.Label.TimeIn")</label>
+                @if (timeIn != string.Empty)
+                {
+                    <label class="txt-time">@timeIn</label>
+                }
+                else
+                {
+                    <label class="txt-time txt-time-template">--:--</label>
+                }
+
+            </div>
+            <div class="item">
+                <label class="time-lbl">@T("Dashboard.Label.TimeOut")</label>
+                @if (timeOut != string.Empty)
+                {
+                    <label class="txt-time">@timeOut</label>
+                }
+                else
+                {
+                    <label class="txt-time txt-time-template">--:--</label>
+                }
+            </div>
+        </div>
+        <div class="right select-chose-working-day">
+            <div class="dsh-header-title">
+                <div class="title hrm-v2-font-16">@T("Dashboard.Title.WorkingSummary")</div>
+                <div class="month" style="width:120px">@Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "dashboard-wkday-month", DateFormat = "MM/yyyy", Value = DateTime.UtcNow })</div>
+            </div>
+            <div id="working-summary-chart"></div>
+        </div>
+    </div>
+    <div class="contain-chart pull-left visible-not-mobile">
+        <div class="tab-wk-content">
+            <div class="header-wk-chart">
+                <div class="title">Tình hình làm việc</div>
+                <select id="workingday-view-type" style="height:34px;" class="btn btn-default">
+                    <option value="0">Công</option>
+                    <option value="1">Làm thêm</option>
+                    <option value="2">Nghỉ phép</option>
+                    <option value="3">Nghỉ không lương</option>
+                </select>
+                <div class="year pull-right" style="width:120px">@Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "dashboard-wkday-year", DateFormat = "yyyy", Value = DateTime.UtcNow })</div>
+                <span class="select-chose-working-day pull-right">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { ValueField = "Id", DisplayField = "Name", Name = "summary-chart-staff-select", Data = Model.StaffMangers, Value = Model.StaffId.ToString() })
+                </span>
+            </div>
+            <div id="working-day-chart"></div>
+        </div>
+        <style type="text/css">
+            /* 13. Basic Styling with CSS */
+
+            /* Style the lines by removing the fill and applying a stroke */
+            .line {
+                fill: none;
+                stroke: #ffab00;
+                stroke-width: 3;
+            }
+
+            .overlay {
+                fill: none;
+                pointer-events: all;
+            }
+
+            /* Style the dots by assigning a fill and stroke */
+            .dot {
+                fill: #ffab00;
+                stroke: #fff;
+            }
+
+            .focus circle {
+                fill: none;
+                stroke: steelblue;
+            }
+
+            #working-day-chart {
+                font-size: 24px;
+                text-align: center;
+            }
+        </style>
+    </div>
+</div>

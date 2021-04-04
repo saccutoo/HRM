@@ -1,0 +1,55 @@
+﻿@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@model Hrm.Admin.ViewModels.WorkingdaySupplementConfigurationViewModel
+@{
+    ViewBag.Title = "Luồng duyệt";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+
+<style>
+    .gereral-left {
+        text-align: left;
+    }
+
+    .gereral-right .permission-role-content {
+        text-align: left;
+    }
+
+    .checkbox-tree {
+        max-height: 730px;
+        overflow: auto;
+        border: 1px solid #7C7C7C;
+        border-radius: 5px;
+    }
+
+    .gereral-right {
+        background-color: whitesmoke;
+    }
+
+        .gereral-right .permission-role-right-body {
+            background-color: whitesmoke;
+            border: none;
+            background: white;
+        }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a>
+    <span class="bread-crumb-item">
+        &nbsp; &gt; &nbsp;
+    </span>
+    <a href="/admin" class="bread-crumb-item"> @T("WorkingDay.BreadCrumb.ApprovalFlow")</a>
+    <span class="bread-crumb-item">&nbsp; &gt; &nbsp;@T("Table.Title.WorkingdaySupplement")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormAddWorkingdaySupplementConfiguration()" })
+    </div>
+</div>
+<ul class="nav">
+    <li class="" index="1">
+        <a class="" href="/Admin/WorkingdaySupplementConfiguration/WorkingdaySupplementConfiguration">@T("Tab.Default")</a>
+    </li>
+    <li class="active" index="1">
+        <a class="" href="/Admin/WorkingdaySupplementConfiguration/WorkingdaySupplementConfiguration/Exception">@T("Tab.Exception")</a>
+    </li>
+</ul>

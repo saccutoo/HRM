@@ -1,0 +1,78 @@
+﻿
+@model Hrm.Framework.ViewModels.InlineEditingViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using System.Globalization
+@{
+    Layout = null;
+    var columns = new List<TableColumnModel>();
+    if (Model.Columns != null && Model.Columns.Any())
+    {
+        columns = Model.Columns;
+    }
+    var fields = new List<FieldModel>();
+    if (Model.Fields != null && Model.Fields.Any())
+    {
+        fields = Model.Fields;
+    }
+}
+@{
+        var valueId = 0;
+        if (Model.EditType)
+        {
+            var nameId = Model.TableName + "[" + Model.Index + "].Id";
+            valueId = Model.Data == null ? 0 : Model.Data["Id"];
+            var nameDelete = Model.TableName + "[" + Model.Index + "].IsDeleted";
+            var valueDelete = Model.Data == null ? "False" : Model.Data["IsDeleted"];
+           <td hidden>
+               <input type="hidden" class="item-id" name="@nameId" value="@valueId" />
+               <input type="hidden" class="item-isDeleted" name="@nameDelete" value="@valueDelete" />
+           </td>
+    }
+}
+
+@foreach (var column in columns)
+{
+    var field = fields.FirstOrDefault(x => x.FieldName == column.ColumnName);
+    if (Model.EditType && valueId > 0)
+    {
+        if (field.DataFormat == "Date" && Model.Data[column.ColumnName] != null && !string.IsNullOrEmpty(Model.Data[column.ColumnName].ToString()))
+        {
+            DateTime date;
+            var result = DateTime.TryParseExact(Model.Data[column.ColumnName].ToString(), "dd/MM/yyyy hh:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+            if (result)
+            {
+                column.ColumnValue = date.ToShortDateString();
+            }
+        }
+        else
+        {
+            column.ColumnValue = Model.Data[column.ColumnName].ToString();
+        }
+        column.ColumnDataId = Model.Data["Id"];
+    }
+    if (field != null)
+    {
+        var fieldWidth = string.Empty;
+        if (!field.Width.ToLower().Contains("px")) { fieldWidth = field.Width + "px"; }
+        var fieldVisible = field.Visible ? "inline-block" : "none";
+        //var ellipsis = field.DataFormat == "Date" ? string.Empty : "ellipsis";
+        <td style="width:@fieldWidth;display:@fieldVisible;text-align:@field.Alignment!important" class="@field.FieldName.ToLower()">
+            <div class="hrm-v2-td-template">
+                @Html.Action("RowInlineEditor", "Filter", new { column = column, index = Model.Index, tableName = Model.TableName })
+            </div>
+        </td>
+    }
+    else
+    {
+        <td style="width:100px;display:inline-block">
+            @Html.Action("RowInlineEditor", "Filter", new { column = column, index = Model.Index, tableName = Model.TableName })
+        </td>
+    }
+}
+<td style="width:20px;display:inline-block;text-align:Left!important" class="action ellipsis" data-format="Text">
+    <div class="action-table">
+        <button type="button" class="action-grid pull-left" onclick="removeRow(this,@Model.Index)"><i class="fas fa-times-circle"></i></button>
+    </div>
+</td>

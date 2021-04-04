@@ -1,0 +1,66 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<div class="container-fluid">
+    <div class="row" id="cboxCheckSFormular" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-heading" style="line-height: 40px;"><div style="text-transform: none;font-size:16px;height:25px">@AppRes.CheckFormular</div></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4" style="line-height:30px;">
+                                    <label>@AppRes.Recipe</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <textarea class="form-control" ng-model="PolicyDetailFormularModel.Formular" disabled></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4" style="line-height:30px;">
+                                    <label>@AppRes.ReplaceValue</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <textarea class="form-control" ng-model="PolicyDetailFormularModel.FormularReplace"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4" style="line-height:15px;">
+                                    <label>@AppRes.Result:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <label class="text-success" ng-if="PolicyDetailFormularModel.ResultFormular !== 'Error' && PolicyDetailFormularModel.ResultFormular !== undefined" ng-bind="PolicyDetailFormularModel.ResultFormular"></label>
+                                    <span style="color:red;line-height:30px;" ng-if="PolicyDetailFormularModel.ResultFormular == 'Error'">@AppRes.FormulaNotAccurate</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+        <center>
+            <button type="button" class="btn btn-success btn-labeled" ng-click="CheckSFormular()">
+                <span class="btn-label">
+                    <i class="fa fa-save"></i>
+                </span>Kiểm tra
+            </button>
+            <button type="reset" class="btn btn-labeled" ng-click="CloseCheckSFormular()">
+                <span class="btn-label">
+                    <i class="fa fa-close"></i>
+                </span>@AppRes.btnCancel
+            </button>
+        </center>
+    </div>
+</div>

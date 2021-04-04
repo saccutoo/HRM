@@ -1,0 +1,13 @@
+﻿@model Hrm.Framework.Models.StaffModel
+<div class="onboarding-welcome-kit">
+    @if (Model.IsSendWelcomeKit)
+    {
+        <i class="fas fa-envelope-open-text"></i>@T("Table.Content.Sent")
+        <span style="float:left;width:100%;margin-top:10px;"><a href="/Admin/Checklist/AddWelcomeKit?id=@Model.Id">@T("Table.Content.ResendWelcomeKit")</a></span>
+    }
+    else
+    {
+        <i class="fas fa-rocket"></i><a href="/Admin/Checklist/AddWelcomeKit?id=@Model.Id">@T("Table.Content.SendWelcomeKit")</a>
+    }
+</div>
+

@@ -1,0 +1,50 @@
+﻿@model Hrm.Web.ViewModels.WorkingdayFurloughViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@using Newtonsoft.Json
+<section class="hrmv2-section" style="min-height: 350px">
+    <div class="col-md-12">
+        <div class="col-md-2">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Table.Title.OrganizationName").ToString(), Data = Model.Organizations, ValueField = "Id", Name = "organization", IsMultipleLanguage = true, DataType = "Organization", PropertyName = "OrganizationName",Value=Model.OrganizationId.ToString() })
+        </div>
+        <div class="col-md-2" id="drop-down-staff">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { ValueField = "Id", DisplayField = "Name", Name = "staff-summary-furlong", Data = Model.StaffMangers, SearchField = true, LabelName = T("Dropdown.Label.Staff").ToString(),Value=Model.StaffIdFilter.ToString() })
+        </div>
+        <div class="col-md-1 hrm-v2-inline-block hrm-v2-font-13 pull-right">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "month-working-summary-furlong", DateFormat = "yyyy", Value = Convert.ToDateTime(Model.Month.ToString() + "/" + Model.Year.ToString()) })
+        </div>
+    </div>
+    <div class="working-summary-final-table">
+        <div id="table-furlough-contaner">
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+        </div>
+    </div>
+    <input id="table-name-furlough" value="@Model.Table.TableName" hidden />
+    <script>
+        $('[data-toggle="popover-right"]').popover({
+            placement : 'right'
+            ,trigger: 'hover'
+        });
+
+        $('#organization').on('select2:selecting', function (e) {
+            referenceId=e.params.args.data.id;
+            sessionStorage.setItem("tab-organizationId", referenceId );
+            $.ajax(
+             {
+                 type: "POST",
+                 url: "/Workingday/ReloadDropdownStaff",
+                 data: {
+                     id: e.params.args.data.id,
+                     listStaffs:@Html.Raw(JsonConvert.SerializeObject(Model.StaffMangers)),
+                     tab:3
+                 },
+                 success: function (response) {
+                     $('#drop-down-staff').html(response);
+                     changeItemsPerpage('@TableName.Furlough');
+                 }
+             });
+        });
+
+    </script>
+</section>

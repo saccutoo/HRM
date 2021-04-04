@@ -1,0 +1,107 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<div class="container-fluid">
+    <div class="row" id="SaveMerge" style="margin: 0;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;margin:0" >@AppRes.PublicTransfer</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    <label style="line-height:30px;">@AppRes.OldTimekeeper<span style="color:red"> (*) </span></label>
+                                </div>
+                                <div class="col-md-9">
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select class="form-control" chosen options="getListHR_WorkingDayMachine" on-no-result="doStuff" ng-required="true" data-modal="modal" ng-model="editData.WorkingDayMachineIDOld" name="WorkingDayMachineIDOld" ng-options="list.WorkingDayMachineID as list.Name for list in getListHR_WorkingDayMachine" ng-change="ChangeWorkingDayMachineIDOld()">
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" chosen options="getListHR_WorkingDayMachine" on-no-result="doStuff" ng-required="true" data-modal="modal" ng-model="editData.WorkingDayMachineIDOld" name="WorkingDayMachineIDOld" ng-options="list.WorkingDayMachineID as list.NameEN for list in getListHR_WorkingDayMachine" ng-change="ChangeWorkingDayMachineIDOld()">
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    <span style="color:red;line-height:30px;" ng-bind="ErrorWorkingDayMachineIDOld"></span>
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    <label style="line-height:30px;">@AppRes.NewTimekeeper<span style="color:red"> (*) </span></label>
+                                </div>
+                                <div class="col-md-9">
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select class="form-control" chosen options="getListHR_WorkingDayMachine" on-no-result="doStuff" required data-modal="modal" ng-model="editData.WorkingDayMachineIDNew" ng-options="list.WorkingDayMachineID as list.Name for list in getListHR_WorkingDayMachine" ng-change="ChangeWorkingDayMachine()">
+                                            <option value="" selected>--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" chosen options="getListHR_WorkingDayMachine" on-no-result="doStuff" required data-modal="modal" ng-model="editData.WorkingDayMachineIDNew" ng-options="list.WorkingDayMachineID as list.NameEN for list in getListHR_WorkingDayMachine" ng-change="ChangeWorkingDayMachine()">
+                                            <option value="" selected>--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    <span style="color:red;line-height:30px;" ng-bind="ErrorWorkingDayMachineIDNew"></span>
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    <label style="line-height:30px;">@AppRes.DeliveryDate<span style="color:red"> (*) </span></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control FromDate" ng-model="editData.FromDate" ng-change="changeDate()" />
+                                    <span style="color:red;line-height:30px;" ng-bind="ErrorFromDate"></span>
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    <label style="line-height:30px;">@AppRes.Staff<span style="color:red"> (*) </span></label>
+                                </div>
+                                <div class="col-md-9">
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select class="form-control" chosen multiple options="ListEmployeeWhereWorkingDayMachine" on-no-result="doStuff" required data-modal="modal" ng-model="editData.StaffID" ng-options="list.StaffID as list.FullName for list in ListEmployeeWhereWorkingDayMachine" ng-change="ChangeStaff()"></select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" chosen multiple options="ListEmployeeWhereWorkingDayMachine" on-no-result="doStuff" required data-modal="modal" ng-model="editData.StaffID" ng-options="list.StaffID as list.FullNameEN for list in ListEmployeeWhereWorkingDayMachine" ng-change="ChangeStaff()"></select>
+                                    }
+                                    <span style="color:red;line-height:30px;" ng-bind="ErrorStaff"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-4 col-md-push-5">
+                                <button type="button" class="btn btn-labeled btn-primary" ng-click="transferTimekeeper()">
+                                    <span class="btn-label">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </span>@AppRes.Merge
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CancelMerge()">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+            </div>
+          
+        </form>
+    </div>
+</div>
+

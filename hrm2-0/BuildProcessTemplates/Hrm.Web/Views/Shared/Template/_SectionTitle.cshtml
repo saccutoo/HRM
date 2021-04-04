@@ -1,0 +1,10 @@
+﻿@model Hrm.Framework.Models.SectionTitleModel
+@{
+<div class="col-md-12 pd-0 section section-template">
+    <div class="section-title pull-left" style="@Model.Style" >
+        <span><i class="@Model.Icon"></i></span>
+        <span>@Model.SectionName</span>
+    </div>
+    <div class="line-title pull-left" style="width:calc(100% - @Model.Width)"></div>
+</div>
+    }

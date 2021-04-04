@@ -1,0 +1,150 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@model Hrm.Admin.ViewModels.AddWorkingdayHolidayViewModel
+
+<style>
+    .check-annualLeave .cb-control{
+        float:left;
+    }
+</style>
+<div class="add-working-supplement-container display-inline-block">
+    <form id="frm-add-workingday-holiday">
+        @if (@Model.WorkingdayHoliday.Id == 0)
+        {
+            <div class="hrm-v2-modal-header">@T("WorkingdayHoliday.HolidayAddDate").ToString()</div>
+        }
+        else
+        {
+            <div class="hrm-v2-modal-header">@T("WorkingdayHoliday.HolidayDateEdit").ToString()</div>
+        }
+        <div class="hrm-v2-modal-body" style="margin-top:5px;">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    <input type="text" name="model.Id" value="@Model.WorkingdayHoliday.Id" hidden />
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.Name", IsRequired = true, LabelName = T("WorkingdayHoliday.HolidayName").ToString(), IsAnimationLabel = true, Value = Model.WorkingdayHoliday.Name })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("WorkingdayHoliday.HolidayClassify").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.Classifys, ValueField = "Id", Name = "model.ClassifyId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.WorkingdayHoliday.ClassifyId.ToString() })
+                </div>
+            </div>
+
+            <div class="col-md-12 pd-0 display-inline-block" style="margin-top:10px">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "model.FromDate", LabelName = T("WorkingdayHoliday.HolidayFromDate").ToString(), IsAnimationLabel = true, Value = Model.WorkingdayHoliday.FromDate == null ? null : Model.WorkingdayHoliday.FromDate, DateFormat = "dd/MM/yyyy" })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "model.ToDate", LabelName = T("WorkingdayHoliday.HolidayToDate").ToString(), IsAnimationLabel = true, Value = Model.WorkingdayHoliday.ToDate == null ? null : Model.WorkingdayHoliday.ToDate, DateFormat = "dd /MM/yyyy" })
+                </div>
+            </div>
+
+            <div class="col-md-12 pd-0 display-inline-block" style="margin-top:10px">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("WorkingdayHoliday.HolidayDesistRegime").ToString(), IsAnimationLabel = true, Data = Model.DesistRegimes, ValueField = "Id", Name = "model.DesistRegimeId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.WorkingdayHoliday.DesistRegimeId.ToString() })
+                </div>
+
+                <div class="check-annualLeave col-md-6">
+                    @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "ck-checked", Value = "true", Id = "model.IsAnnualLeave" ,Attribute=Model.WorkingdayHoliday.IsAnnualLeave==true?"checked":""})
+                    <span style="float:left;line-height:44px;" class="hrm-v2-font-13">@T("Workingday.Holiday.AnnualLeave")</span>
+                </div>
+            </div>
+
+            <div class="col-md-12 pd-0 display-inline-block" style="margin-top:10px;">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("WorkingdayHoliday.HolidaySalaryRegime").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.SalaryRegimes, ValueField = "Id", Name = "model.SalaryRegimeId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.WorkingdayHoliday.SalaryRegimeId.ToString() })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.OvertimeRate", IsRequired = true, LabelName = T("WorkingdayHoliday.HolidayOvertimeRate").ToString(), IsAnimationLabel = true, Type = "Number", Value = Model.WorkingdayHoliday.OvertimeRate.ToString() })
+                </div>
+            </div>
+
+
+            <div class="col-md-12 pd-0 display-inline-block" style="margin-top:10px;">               
+                @Html.Partial(UrlHelpers.Template("_MultiSelect.cshtml"), new DropdownListModel() { LabelName = T("Workingday.WorkingShiftsApply").ToString(), IsAnimationLabel = true, Data = Model.WorkingdayShifts, ValueField = "Id", DisplayField = "Name", Name = "model.ListShift", ValueMultiSelect = Model.WorkingdayHoliday.ListShift })
+            </div>
+
+            <div class="col-md-12 pd-0 display-inline-block hrm-v2-floating-form">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("WorkingdayHoliday.HolidayNote").ToString(), IsAnimationLabel = true, Name = "model.Note", Value = Model.WorkingdayHoliday.Note })
+            </div>
+            @*@{
+                string check = string.Empty;
+                if (Model.WorkingdayHoliday.IsAnnualLeave)
+                {
+                    check = "checked";
+                }
+            }
+            <div class="col-md-12 pd-0 display-inline-block" style="margin-top: 10px;margin-bottom: 5px;">
+                <label class="switch" style="float:left">
+                    <input type="checkbox" name="model.IsAnnualLeave" onchange="checkAnnualLeave()" value="true" @check />
+                    <span class="slider round"></span>
+                </label>
+                <span style="float:left;margin-left:10px;" class="hrm-v2-font-13">@T("Workingday.Holiday.AnnualLeave")</span>
+            </div>*@
+
+            @*@if (Model.WorkingdayHoliday.IsAnnualLeave)
+            {
+                <section class="hrmv2-section" id="add-working-holidy-section" style="border:1px solid whitesmoke;">
+                    @Html.Partial(UrlHelpers.TemplateAdmin("Workingday", "_AddWorkingdayHolidayBody.cshtml"), Model)
+                </section>
+            }
+
+            <div class="col-md-12 pd-0 display-inline-block" style="margin-top:10px;">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("WorkingdayHoliday.HolidaySalaryRegime").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.SalaryRegimes, ValueField = "Id", Name = "model.SalaryRegimeId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.WorkingdayHoliday.SalaryRegimeId.ToString() })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.OvertimeRate", IsRequired = true, LabelName = T("WorkingdayHoliday.HolidayOvertimeRate").ToString(), IsAnimationLabel = true, Type = "Number", Value = Model.WorkingdayHoliday.OvertimeRate.ToString() })
+                </div>
+            </div>
+           *@
+        </div>
+        <div class="footer">
+            <div class="footer-login">
+                <div class="pull-right">
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", OnClick = "saveWorkingdayHoliday()", Value = "Workingday.Save", Type = "button", ClassName = "hrm-v2-btn-save", Style = "float:left;margin-right:10px" })
+
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Workingday.Close", ClassName = "hrm-v2-btn-close", Style = "float:left" })
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $('.Number').autoNumeric("init");
+
+    function checkAnnualLeave() {
+        $.ajax(
+         {
+             type: "POST",
+             url: "/Admin/Workingday/WorkingdayHolidayBody",
+             data: $('#frm-add-workingday-holiday').serializeArray(),
+             success: function (response) {
+                 $('#add-working-holidy-section').html(response);
+             }
+         });
+    }
+    function saveWorkingdayHoliday() {
+        $("#frm-add-workingday-holiday span[name*='-error']").text("");
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/Workingday/SaveWorkingdayHoliday",
+            data: $('#frm-add-workingday-holiday').serializeArray(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-add-workingday-holiday");
+                }
+                if (response.result.Success == true) {
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    $('#myModal').modal('hide');
+                    changeItemsPerpage('table-workingday-holiday');
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                }
+            }
+        });
+    }
+
+</script>

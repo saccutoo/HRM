@@ -1,0 +1,102 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Common
+@using Hrm.Framework.Helper
+@using System.Linq
+@model Hrm.Framework.ViewModels.MenuViewModel
+@{
+    ViewBag.Title = "Cài đặt";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var menus = new List<MenuModel>();
+    if (Model.Menus != null && Model.Menus.Any())
+    {
+        menus = Model.Menus;
+    }
+}
+<style>
+    .footer-icon {
+        width: 100%;
+    }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span>
+</div>
+<div class="col-md-12" style="padding: 0px 37px 0px 30px;">
+    @{
+        foreach (var menu in menus.Where(x => x.MenuGroupType == 0 && x.ParentId == 11))
+        {
+            <section class="hrmv2-section">
+             
+                @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight()
+           {
+               SectionName = M(menu.Id.ToString() + ";" + DataType.Menu + ";MenuName").ToString(),
+               WidthSecitonName = "130px",
+               WidthSectionIconRight = "0px"
+           })
+                <div class="col-md-12 pd-0 display-inline-block setting-general">
+                    @foreach (var subMenu in menus.Where(x => x.ParentId == menu.Id))
+                    {
+                        if (subMenu.MenuGroupType == 1)
+                        {
+                            <div class="col-md-4 pd-l-0">
+                                <div class="footer-icon">
+                                    <div class="left">
+                                        <a href="#" style="color:black">
+                                            <div class="icon" style="padding:10px">
+                                                <i class="@subMenu.Icon">
+                                                </i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="right-setting" style="margin-top:5px">
+                                        <div class="lable">
+                                            <a style="color:#223133">@M(subMenu.Id.ToString() + ";" + DataType.Menu + ";MenuName").ToString()</a>
+                                        </div>
+                                        <br />
+                                        @{
+                                            var index = 0;
+                                        }
+                                        @foreach (var childMenu in menus.Where(x => x.ParentId == subMenu.Id))
+                                        {
+                                            {
+                                                if (index > 0)
+                                                {
+                                                    <span style="float: left;"> | </span>
+                                                }
+                                                index++;
+                                            }
+                                            <div class="lable" style="padding-right: 9px;">
+                                                <a href="@childMenu.RouteUrl">@M(childMenu.Id.ToString() + ";" + DataType.Menu + ";MenuName").ToString()</a>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-md-4 pd-l-0">
+                                                    <div class="footer-icon">
+                                                        <div class="left">
+                                                            <a href="#" style="color:black">
+                                                                <div class="icon" style="padding:10px">
+                                                                    <i class="@subMenu.Icon">
+                                                                    </i>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <div class="right-setting" style="margin-top:11px">
+                                                            <div class="lable">
+                                                                <a href="@subMenu.RouteUrl">@M(subMenu.Id.ToString() + ";" + DataType.Menu + ";MenuName").ToString()</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                }
+                                            }
+                </div>
+            </section>
+                                            }
+    }
+</div>

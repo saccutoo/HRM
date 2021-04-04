@@ -1,0 +1,136 @@
+﻿@model Hrm.Admin.ViewModels.OrganizationViewModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+<style>
+    .organization-table .Action.ellipsis{
+        top:4px;
+    }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item prev-bread-crumb"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Setting.OrganizationalStructure")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormAddOrganization()" })
+
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.Organization + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 0)" })
+
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.Organization + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 1)" })
+
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-columns", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "comeBack()" })
+</div>
+<div class="organization-table">
+    <div id="table-staff-contaner">
+        @{
+            var table = Model.Table;
+            table.ItemsPerPage = 20;
+            table.CurrentPage = 1;
+            table.TableDataUrl = "Admin/Organization/GetDataOrganization";
+        }
+        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), table)
+    </div>
+</div>
+<script>
+    function ShowFormEditOrganization(item) {
+        var options = {
+            id: 'add-organization',
+            url: '/Admin/Organization/ShowFormAddOrganization',
+            isNotificationPoup: true,
+            align: "center",
+            data: '{id: ' + item + '}',
+            idform: 'frm-add-Organization',
+        };
+        CreatePopup(options);
+
+    }
+    function ShowFormAddOrganization() {
+        var options = {
+            id: 'add-organization',
+            url: '/Admin/Organization/ShowFormAddOrganization',
+            isNotificationPoup: true,
+            align: "center",
+            idform: 'frm-add-Organization',
+        };
+        CreatePopup(options);
+    }
+    function DeleteOrganization(item) {
+        bootbox.confirm({
+            message: '@T("Message.Delete.QuestionDelete")',
+            buttons: {
+                confirm: {
+                    label: '@T("Message.Delete.Yes")',
+                    className: 'hrm-v2-btn-save'
+                },
+                cancel: {
+                    label: '@T("Message.Delete.No")',
+                    className: 'hrm-v2-btn-close'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                   $.ajax(
+                   {
+                       type: "POST",
+                       url: "/Admin/Organization/DeleteOrganization",
+                       data: {
+                           id:item
+                       },
+                       success: function (response) {
+                           if (response.IsSucces == true) {
+                               var tableName = "table-organization";
+                               var currentPage = $('#table-organization-paging-current-page').val();
+                               var itemsPerPage = $('#table-organization-paging-items-per-page').val();
+                               var dataUrl = "/Admin/Organization/GetDataOrganization";
+                               var currentPageNew = parseInt(currentPage);
+                               reloadTable(tableName, dataUrl, currentPageNew, itemsPerPage, filterStr, referenceId);
+                               ShowMessage(response.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                           }
+                           else {
+                               ShowMessage(response.Success, msgFalse, response.responeseResources, 500, 3000);
+                           }
+                       }
+                   });
+                }
+            }
+        });
+    }
+    function comeBack() {
+        window.location.href = "/admin/Organization/List";
+    }
+
+
+    function Merge() {
+        var data = [];
+        var j = 0;
+        var list = document.getElementsByName("chk-column-row");
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].checked) {
+                data.push({ name: "listData[" + j + "].Id", value: list[i].value });
+                j++;
+            }
+        }
+        var options = {
+            id: 'merger-0rganization',
+            url: '/Admin/Organization/ShowFormMergerOrganization',
+            isNotificationPoup: true,
+            align: "center",
+            data: data,
+            isDataTypeJson:true,
+            idform: 'frm-merger-organization',
+            //urlback: '/Contract/GetContractCoaInfoList',
+            //databack: '{contractId:' + contractId + '}',
+            //divload: 'GridContractCoaInfo',
+            //fnNameReload: 'ResetSelectCoaInfo'
+        };
+        CreatePopup(options);
+
+    }
+
+
+        
+</script>

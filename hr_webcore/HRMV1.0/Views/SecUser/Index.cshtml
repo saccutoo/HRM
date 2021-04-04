@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Sec User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row" ng-controller="mytable">
+        @Html.Action("TableServerSide", "Common")
+    </div>
+</div>
+
+<script src="~/Scripts/mycustom/SecUser/SecUserUntil.js"></script>
+<script src="~/Scripts/mycustom/SecUser/SecUserService.js"></script>
+
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+</script>
+
+
+
+

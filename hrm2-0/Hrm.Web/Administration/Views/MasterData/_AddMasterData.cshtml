@@ -1,0 +1,415 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@model Hrm.Admin.ViewModels.MasterDataViewModel
+@using Hrm.Common
+@{
+    ViewBag.Title = "MasterDataForm";
+   
+}
+
+<style>
+    .language:focus {
+        box-shadow: none;
+        outline: 0px;
+    }
+
+    .button-save {
+        width: 75px;
+        border: 1px solid #90B553;
+        color: #90B553;
+    }
+
+        .button-save:hover {
+            border: 1px solid #90B553;
+            color: #90B553;
+            background: white;
+        }
+
+        .button-save:focus {
+            border: 1px solid #90B553;
+            color: #90B553;
+            background: white;
+            box-shadow: none;
+            outline: 0px;
+        }
+
+    .button-close {
+        width: 75px;
+    }
+
+    .button-save-and-continue {
+        background: #90B553;
+        color: white;
+    }
+
+        .button-save-and-continue:hover {
+            background: #90B553;
+            color: white;
+        }
+
+        .button-save-and-continue:focus {
+            background: #90B553;
+            color: white;
+            box-shadow: none;
+            outline: 0px;
+        }
+
+    .master-data-color {
+        clear: both;
+        width: 100%;
+        height: 60px;
+    }
+
+        .master-data-color .lable-color {
+            float: left;
+            width: 150px;
+            height: 40px;
+        }
+
+        .master-data-color .more-color {
+            float: right;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+        }
+
+        .master-data-color .list-color {
+            float: left;
+            height: 40px;
+        }
+
+        .master-data-color .lable-color span {
+            line-height: 40px;
+        }
+
+        .master-data-color .list-color ul {
+            list-style: none;
+            height: 100%;
+            padding: 0px;
+        }
+
+            .master-data-color .list-color ul li {
+                height: 40px;
+                width: 40px;
+                float: left;
+            }
+
+                .master-data-color .list-color ul li div {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    margin-top: 10px;
+                    float: left;
+                    cursor: pointer;
+                }
+
+                .master-data-color .list-color ul li i {
+                    color: white;
+                    line-height: 40px;
+                    margin-left: -17px;
+                    color: white;
+                }
+
+        .master-data-color .lable-color .selected-color {
+            width: 25px;
+            height: 25px;
+            background-color: #2ca01c;
+            margin: 7px 10px;
+        }
+
+    .slash {
+        height: 1px;
+        width: 19px;
+        background: red;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        transform: rotate(-45deg);
+    }
+
+    .sp-container {
+        position: absolute;
+        top: 240px !important;
+        left: 1150px !important;
+    }
+
+    .sp-replacer {
+        display: none;
+    }
+
+    .close-lst-master-data, .close-lst-master-data:focus, .close-lst-master-data:hover {
+        margin-right: 10px;
+        float: right;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: red;
+        color: #fff;
+        text-align: center;
+        font-size: 13px;
+        line-height: 16px;
+        padding-top: 2px;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .add-master-data-languge {
+        float: left;
+        font-size: 13px;
+        width: 100%;
+        text-align: left;
+    }
+    /*.add-master-data input:-internal-autofill-selected{
+         background-color:transparent!important;
+     }*/
+    .item-master-data-by-language {
+        background-color: #f5f5f5;
+        height: 120px;
+        padding: 8px;
+        margin-bottom: 10px;
+    }
+
+        .item-master-data-by-language:last-child {
+            margin-bottom: 0px;
+        }
+</style>
+
+
+<div>
+    @if (Model.GroupId == 0)
+    {
+        if (Model.MasterData.Id != 0)
+        {
+            <div class="hrm-v2-modal-header">@M(Model.MasterData.Id.ToString() + ";" + DataType.MasterData + ";Name")</div>
+        }
+        else
+        {
+            <div class="hrm-v2-modal-header">@T("MasterData.CategoryAdd")</div>
+        }
+    }
+    else
+    {
+        <div class="hrm-v2-modal-header">@M(Model.GroupId + ";" + DataType.MasterData + ";Name")</div>        
+    }
+
+    <div class="hrm-v2-modal-body add-master-data">
+        <form id="frm-master-data">
+            <div class="add-master-data-body  hrm-v2-scroll">
+                <div class="col-md-12 pd-0">
+                    <div class="col-md-6 pd-r-0" style="padding-left:10px;">
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.Name", LabelName = T("MasterData.Name").ToString(), Style = "width:100%;", AngularModel = "MasterData.Name", IsAnimationLabel = true, IsRequired = true, Value = Model.MasterData.Name })
+                        </div>                  
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.Description", LabelName = T("MasterData.Description").ToString(), Style = "width:100%; ", AngularModel = "MasterData.Description", IsAnimationLabel = true, Value = Model.MasterData.Description })
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 pd-r-0" style="padding-left:10px;">
+                        @if (Model.GroupId == 0)
+                        {
+                            <div class="form-group">
+                                <div class="hrm-v2-floating-form">
+                                    <div class="floating-label">
+                                        <select id="GroupId" class="floating-select">
+                                            <option value="0" selected>@T("MasterData.CategoryFather")</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.Value", LabelName = T("MasterData.Value").ToString(), Style = "width:100%; ", IsAnimationLabel = true,Value=Model.MasterData.Value })
+                        </div>
+                        @if (Model.GroupId != 0)
+                        {
+                            <div class="form-group">
+                                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.Code", LabelName = T("MasterData.Code").ToString(), Style = "width:100%; ", IsAnimationLabel = true, Value = Model.MasterData.Code })
+                            </div>
+                        }
+                        <input type="text" id="GroupId" name="data.GroupId" value="@Model.GroupId" hidden />
+                        <input type="text" id="Id" name="data.Id" value="@Model.MasterData.Id" hidden />
+                        <input type="text" id="LocalizedId" name="data.LocalizedId" value="@Model.MasterData.LocalizedId" hidden />
+                    </div>
+                    @if (Model.GroupId != 0)
+                    {
+                        <div class="col-md-12 pd-0 master-data-color">
+                            <div class="form-group">
+                                <div class="lable-color ">
+                                    <span class="pull-left hrm-v2-font-13 hrm-v2-bold">@T("MasterData.ColorShow")</span>
+                                    @if (Model.MasterData.Color == null)
+                                    {
+                                        Model.MasterData.Color = "white";
+                                    }
+                                    <div class="selected-color" style="float:left;background-color:@Model.MasterData.Color">
+                                        @*<span class="slash" ></span>*@
+                                        <input id="Color" name="data.Color" type="text" value="@Model.MasterData.Color" hidden />
+                                    </div>
+                                    <span>|</span>
+                                </div>
+                                <div class="list-color">
+                                    <ul>
+                                        <li>
+                                            <div style="color:white;border:1px solid #2ca01c;position:relative" onclick="ClickColor('white')">
+                                                <span class="slash"></span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div style="background-color:#2ca01c" onclick="ClickColor('#2ca01c')"></div>
+                                        </li>
+                                        <li>
+                                            <div style="background-color:#ffbb42" onclick="ClickColor('#ffbb42')"></div>
+                                        </li>
+                                        <li>
+                                            <div style="background-color:#cd52fe" onclick="ClickColor('#cd52fe')"></div>
+                                        </li>
+                                        <li>
+                                            <div style="background-color:blue" onclick="ClickColor('blue')"></div>
+                                        </li>
+                                        <li>
+                                            <div style="background-color:#ccc" onclick="ClickColor('#ccc')"></div>
+                                        </li>
+                                        <li>
+                                            <div style="background-color:black" onclick="ClickColor('black')"></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="more-color">
+                                    <a href="#" onclick="clickMoreColor()" id="click-more-color"><span class="hrm-v2-font-13 pull-right">@T("MasterData.MoreColor")</span></a>
+                                    <input type="text" id="more-color" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+
+                </div>
+                <div class="col-md-12 pd-0" style="margin-top:10px;overflow-x:hidden">
+                    <input id="index" name="index" hidden />
+                    <div class="list-language-master-data">
+                        @Html.Partial("~/Administration/Views/MasterData/_ListMasterDataByLanguage.cshtml", Model)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 pd-0">
+                <a href="#" onclick="AddDataLanguage()" class="add-master-data-languge"><i class="fa fa-plus-circle"></i> <span>@T("MasterData.LanguageAdd") </span></a>
+            </div>
+
+            <div class="col-md-12">
+                @if (Model.MasterData.IsDisbleEditing == true)
+                {
+                    <div style="float:right">
+                        @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", OnClick = "SaveMasterData(1)", Value = "MasterData.SaveAndContinue", Style = "width:120px;height:38px;font-size:12px;", Type = "button",ClassName="hrm-v2-btn-save" })
+                    </div>
+                    <div style="float:right;margin-right: 10px;">
+                        @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-master-data-continue", OnClick = "SaveMasterData(2)", Value = "MasterData.Save", Style = "width:100px;height:38px;font-size:12px;background:#fff;border:1px solid #2ca01c;color:#2ca01c", Type = "button", ClassName = "hrm-v2-btn-save" })
+                    </div>
+                }            
+                <div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "MasterData.Close", Style = "width:100px;height:38px;font-size:12px;font-family:Roboto-Regular", ClassName = "hrm-v2-btn-close" })
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $("#more-color").spectrum({
+        color: "#f00",
+        showInput: true,
+        showInitial: true,
+        allowEmpty: true,
+        chooseText:'@T("MasterData.Select")',
+        cancelText:'@T("Permission.Close")',
+        change: function (color) {
+            if (color == null) {
+                $(".selected-color").css("background-color", '');
+            }
+            else {
+                $(".selected-color").css("background-color", color.toHexString());
+                $("#Color").val(color.toHexString());
+            }
+        }
+    });
+
+    $("#click-more-color").click(function () {
+        $("#more-color").spectrum("toggle");
+        return false
+    })
+
+    function ClickColor(color) {
+        $(".selected-color").css("background-color", color);
+        $("#Color").val(color);
+    }
+
+    function AddDataLanguage() {
+        $.ajax(
+         {
+             type: "POST",
+             url: "/Admin/MasterData/AddDataLanguage",
+             data: $('#frm-master-data').serializeArray() ,
+             success: function (response) {
+                 $('.list-language-master-data').html(response);
+
+             }
+         });
+
+    }
+
+    function RemoveMasterData(index) {
+        $('#index').val(index);
+        $.ajax(
+         {
+             type: "POST",
+             url: "/Admin/MasterData/RemoveDataLanguage",
+             data: $('#frm-master-data').serializeArray(),
+             success: function (response) {
+                 $('.list-language-master-data').html(response);
+
+             }
+         });
+    }
+
+    function SaveMasterData(typeSave) {
+        $("#frm-master-data span[name*='-error']").text("");
+        $.ajax({
+            type: "POST",
+            url: "/Admin/MasterData/SaveListMasterData",
+            data: $('#frm-master-data').serializeArray(),
+            success: function (response) {
+                if (response.Invalid)
+                {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-master-data");
+                }
+                else
+                {
+                    if (response.result.Success == true) {
+                        if (typeSave==2) {
+                            $('#myModal').modal('hide');
+                        }
+                        else{
+                            if (checkAdd==true) {
+                                $('#frm-master-data').trigger("reset");
+                            }
+                        }
+                        if (@Model.GroupId!=0) {
+                            ClickCategory(@Model.GroupId);
+                        }
+                        else{
+                            $("#category-body-ul-id").load('/Admin/MasterData/ReloadCategory');
+                        }
+                        ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    }
+                    else {
+                        ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    }
+                }
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,29 @@
+﻿@model List<Hrm.Framework.Models.AttachmentModel>
+@using Hrm.Common
+@{
+    Layout = null;
+}
+@foreach (var item in Model)
+{
+    <div class="document-attachment-frames">
+        <div class="document-attachment-left">
+            <span class="fas fa-file" style="color:#a6efef"></span>
+        </div>
+        <div class="document-attachment-right">
+            
+            <div class="document-attachment-right-top">
+                <span>@item.Name</span>
+            </div>
+            <div class="document-attachment-right-bottom">
+                <span>
+                   @item.Description
+                </span>
+               
+            </div>
+        </div>
+        <div class="action-top">
+            <span class="fas fa-pencil-alt" onclick="editDocument(@item.Id)" style="color:#2CA01C"></span>
+            <span class="fas fa-trash-alt" style="margin-left:10px;color:red;margin-right:10px" onclick="deleteDocument(@item.Id)"></span>
+        </div>
+    </div>
+}

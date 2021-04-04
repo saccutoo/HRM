@@ -1,0 +1,13 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@model IconButtonModel
+<div class="hrm-v2-action-bar">
+    <span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-download", OnClick = "test()" })</span>
+    <span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", OnClick = "test()" })</span>
+    <span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", OnClick = "changeView()" })</span>
+    @if (Model.ViewType == 1)
+    {
+        <span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fa fa-plus", OnClick = "createActionBar()" })</span>
+    }
+    
+</div>

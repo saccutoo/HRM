@@ -1,0 +1,77 @@
+﻿@using Hrm.Common
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@model Hrm.Web.ViewModels.LogAdditionalWorkViewModel
+@{
+    ViewBag.Title = "_FormNoteSaveApproval";
+}
+<style>
+    #frm-log-additional-work .bootstrap-datetimepicker-widget{
+        z-index:999;
+        position:fixed;
+    }
+</style>
+<div>
+    <div class="hrm-v2-modal-header">@T("WorkingdayAllStaff.SelectShift")</div>
+    <div class="hrm-v2-modal-body">
+        <form id="frm-log-additional-work">
+            <div class="add-master-data-body  hrm-v2-scroll">
+                <div class="col-md-12 pd-0">
+                    <div class="col-md-12 pd-r-0" style="padding-left:10px;">
+                        <div class="form-group">
+                            <div class="col-md-12 pd-0 display-inline-block">
+                                @Html.Partial(UrlHelpers.Template("_MultiSelect.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Shift").ToString(), IsAnimationLabel = true, Data = Model.Shifts, ValueField = "Id", DisplayField = "Name", Name = "listData",IsRequired=true })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12 pd-0 display-inline-block">
+                                <div class="col-md-6 pd-0 display-inline-block">
+                                    @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "model.StartDate", IsRequired = true, LabelName = T("Workingday.Label.StartDate").ToString(), Value=DateTime.Now, DateFormat = "dd/MM/yyyy",Vertical="Top" })
+                                </div>
+                                <div class="col-md-6 pd-0 display-inline-block">
+                                    @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "model.EndDate", IsRequired = true, LabelName = T("Workingday.Label.EndDate").ToString(), Value = DateTime.Now, DateFormat = "dd/MM/yyyy", Vertical = "Top" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>                                     
+                </div>              
+            </div>
+            <div class="col-md-12">
+                <div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = T("Workingday.Button.Approved").ToString(), OnClick = "LogAdditional()", Value = "WorkingdayAllStaff.Lock", ClassName= "hrm-v2-btn-save", Type = "button" })
+                </div>
+                <div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "MasterData.Close",  ClassName = "hrm-v2-btn-close" })
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>    
+    function LogAdditional() {
+       
+        $("#frm-log-additional-work span[name*='-error']").text("");
+        var data = $('#frm-log-additional-work').serializeArray(); 
+        data.push({ name: "stringJson", value: stringJson });
+
+        $.ajax({
+            type: "POST",
+            url: "/Workingday/LogAdditionalWork",
+            data: data,
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-log-additional-work");
+                }
+                if (response.result.Success == true) {
+                    $("#myModal").modal("hide");
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                }
+            
+            }
+        });
+    }
+</script>

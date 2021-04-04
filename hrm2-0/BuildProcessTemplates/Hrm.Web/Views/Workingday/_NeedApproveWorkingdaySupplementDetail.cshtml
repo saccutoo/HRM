@@ -1,0 +1,279 @@
+﻿@model Hrm.Web.ViewModels.NeedApprovalWorkingdaySupplementDetailViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@using Newtonsoft.Json
+@{
+    Layout = null;
+}
+
+<div class="request-header pull-left">
+    <div class="icon-view-all">
+        <span class="fas fa-list-ul"  onclick="changeView(true)"></span>
+    </div>
+    <span class="title pull-left">@M(Model.WorkingdaySupplement.SupplementTypeId.ToString() + ";" + DataType.MasterData + ";Name")</span>
+    @{
+        var color = C(Model.WorkingdaySupplement.RequestStatusId.ToString()).ToString();
+    }
+    <span class="status pull-left" style="background-color:@color">@M(Model.WorkingdaySupplement.RequestStatusId.ToString() + ";" + DataType.MasterData + ";Name")</span>
+    <div class="pull-right employ-infor">
+        <a class="infor-name">@Model.WorkingdaySupplement.StaffName</a>
+        <span class="infor-org">@M(Model.WorkingdaySupplement.OrganizationId.ToString() + ";" + DataType.Organization + ";OrganizationName")</span>
+    </div>
+</div>
+
+<form id="frm-need-approval-workingday-supplement">
+    <div class="request-container">
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-4 pd-l-0">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("WorkingdayHoliday.Date").ToString(), Text = Model.WorkingdaySupplement.Date.Value.ToString("dd/MM/yyyy") })
+            </div>
+            @if (Model.WorkingdaySupplement.SupplementTypeId == MasterDataId.LateDuration || Model.WorkingdaySupplement.SupplementTypeId == MasterDataId.EarlyDuration)
+            {             
+
+                <div class="col-md-3 pd-l-0">
+                    @{
+                        var checkin = "__:__";
+                        var checkout = "__:__";
+                        if (Model.WorkingdaySupplement.CheckIn != null)
+                        {
+                            checkin = Model.WorkingdaySupplement.CheckIn.Value.ToString("HH:mm");
+                        }
+                        if (Model.WorkingdaySupplement.CheckOut != null)
+                        {
+                            checkout = Model.WorkingdaySupplement.CheckOut.Value.ToString("HH:mm");
+                        }
+                    }
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Workingday.OriginalTime").ToString(), Text = checkin + " - " + checkout })
+                </div>
+
+                <div class="col-md-3 pd-l-0">
+                    @{
+                        string timeDuration = string.Empty;
+                        if (Model.WorkingdaySupplement.MissingTimeDuration != null)
+                        {
+                            timeDuration = "-" + Model.WorkingdaySupplement.MissingTimeDuration.Value.TimeOfDay.Minutes.ToString() + " " + T("Workingday.Unit.Minute");
+                        }
+                    }
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Workingday.Unit.NumberMinute").ToString(), Text = timeDuration, StyleValue = "color:red" })
+                </div>
+        }
+        else if(Model.WorkingdaySupplement.SupplementTypeId != MasterDataId.LateDuration && Model.WorkingdaySupplement.SupplementTypeId != MasterDataId.EarlyDuration)
+        {              
+
+                <div class="col-md-3 pd-l-0">
+                    @{
+                        var checkin = "__:__";
+                        var checkout = "__:__";
+                        if (Model.WorkingdaySupplement.CheckIn != null)
+                        {
+                            checkin = Model.WorkingdaySupplement.CheckIn.Value.ToString("HH:mm");
+                        }
+                        if (Model.WorkingdaySupplement.CheckOut != null)
+                        {
+                            checkout = Model.WorkingdaySupplement.CheckOut.Value.ToString("HH:mm");
+                        }
+                    }
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Thời gian gốc").ToString(), Text = checkin + " - " + checkout })
+                </div>
+                <div class="col-md-2 pd-l-0">
+                    @{
+                        TimeSpan time = new TimeSpan();
+                        var timeDuration = string.Empty;
+                        if (Model.WorkingdaySupplement.StartTime != null && Model.WorkingdaySupplement.EndTime != null)
+                        {
+                            time = Model.WorkingdaySupplement.EndTime.Value.Subtract(Model.WorkingdaySupplement.StartTime.Value);
+                            timeDuration = time.ToString(@"hh\:mm");
+                        }
+                    }
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Workingday.ConversionTime").ToString(), Text = timeDuration + " " + T("Workingday.Unit.Hour").ToString(), StyleValue = "color:red" })
+                </div>
+                        if (Model.WorkingdaySupplement.SupplementTypeId == MasterDataId.AdditionalWorkOverTime)
+                        {
+                    <div class="col-md-2 pd-l-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Workingday.Label.OverTimeRate").ToString(), Text = Model.WorkingdaySupplement.OvertimeRate.ToString() })
+                    </div>
+             }
+
+        }
+            
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-4 pd-l-0">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Workingday.Label.Reason").ToString(), Text = M(Model.WorkingdaySupplement.ReasonTypeId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+            </div>
+            @if (Model.WorkingdaySupplement.SupplementTypeId != MasterDataId.EarlyDuration && Model.WorkingdaySupplement.SupplementTypeId != MasterDataId.LateDuration)
+            {
+                <div class="col-md-2 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Workingday.TheConversion").ToString(), Text = Model.WorkingdaySupplement.TotalWorkingday.ToString() })
+                </div>
+            }
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-4 pd-l-0">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Workingday.Label.Description").ToString(), Text = Model.WorkingdaySupplement.Note })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-4 pd-l-0">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Workingday.CreateDate").ToString(), Text = Model.WorkingdaySupplement.CreatedDate.ToString("dd/MM/yyyy HH:mm")  })
+            </div>
+        </div>
+
+        <div class="col-md-12 pd-0 display-inline-block hrm-v2-floating-form">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("Workingday.NoteApprove").ToString(), IsAnimationLabel = true,Name="NoteWorkingSupplement",IsRequired=true })
+        </div>
+
+
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="footer-login">
+                <div class="pull-right">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Workingday.Button.NotApproved", OnClick = "approved(" + Model.WorkingdaySupplement.Id + "," + Model.WorkingdaySupplement.RequestStatusId + "," + MasterDataId.Reject + ")", ClassName = "hrm-v2-btn-close" })
+
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = T("Workingday.Button.Approved").ToString(), OnClick = "approved("+ Model.WorkingdaySupplement.Id+","+Model.WorkingdaySupplement.RequestStatusId+","+ MasterDataId.Approve + ")", Value = "Workingday.Button.Approved", ClassName = "hrm-v2-btn-save", Type = "button" })               
+                </div>
+            </div>
+        </div>
+
+        @if (Model.WorkingdaySupplements.Count() > 0)
+        {
+            <div class="col-md-12 display-inline-block request-other">
+                @{
+                long requestStatusId = Model.WorkingdaySupplement.RequestStatusId;
+                var count = Model.WorkingdaySupplements.Where(s => s.RequestStatusId == requestStatusId).ToList().Count();
+                }
+                <h4>@T("Workingday.OtherRequirements").ToString().ToUpper() (@count/@Model.WorkingdaySupplements.Count)</h4>
+                <table class="table table-striped">
+                    <tbody>
+                        @foreach (var item in Model.WorkingdaySupplements)
+                    {
+                            <tr>
+                                <td style="font-family:Roboto-bold">@M(item.SupplementTypeId.ToString()+";" + DataType.MasterData + ";Name")</td>
+                                <td style="font-family:Roboto-bold">@item.StaffName</td>
+                                <td>@T(item.Date.Value.ToString("dddd")) @item.Date.Value.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    @{ 
+                                        var checkin = "__:__";
+                                        var checkout = "__:__";
+                                        if (Model.WorkingdaySupplement.CheckIn != null)
+                                        {
+                                            checkin = Model.WorkingdaySupplement.CheckIn.Value.ToString("HH:mm");
+                                        }
+                                        if (Model.WorkingdaySupplement.CheckOut != null)
+                                        {
+                                            checkout = Model.WorkingdaySupplement.CheckOut.Value.ToString("HH:mm");
+                                        }
+                                    }
+                                    @checkin - @checkout
+                                </td>
+                                @if (item.SupplementTypeId == MasterDataId.EarlyDuration || item.SupplementTypeId == MasterDataId.LateDuration)
+                                {                                        
+                                        <td  style="color:red">
+                                            <div class="from-to-date-or-description-right">
+                                                @{
+                                                    var missingTimeDuration = string.Empty;
+                                                    if (item.MissingTimeDuration != null)
+                                                    {
+                                                        missingTimeDuration = item.MissingTimeDuration.Value.TimeOfDay.Minutes.ToString();
+                                                    }
+                                                }
+                                                <span>- @missingTimeDuration @T("Workingday.Unit.Minute")</span>
+                                            </div>
+
+                                        </td>
+                                }
+                                else
+                                {
+                                   <td>
+                                       @{
+                                           var startTime = string.Empty;
+                                           var endTime = string.Empty;
+                                           if (item.StartTime != null)
+                                           {
+                                               startTime = item.StartTime.Value.ToString("HH:mm");
+                                           }
+                                           if (item.EndTime != null)
+                                           {
+                                               endTime = item.EndTime.Value.ToString("HH:mm");
+                                           }
+                                       }
+                                       <span style="color:red">@startTime - @endTime</span>
+                                   </td>
+                                }
+                                <td>@M(item.ReasonTypeId.ToString() + ";" + DataType.MasterData + ";Name")</td>
+                                <td>@item.Note</td>
+                                <td><span style="color:@C(item.RequestStatusId.ToString()).ToString()">@M(item.RequestStatusId.ToString() + ";" + DataType.MasterData + ";Name")</span></td>
+                            </tr>
+                    }
+
+                    </tbody>
+                </table>
+            </div>
+    }
+
+    </div>
+</form>
+<script>
+    function approved(requestId, requestStatusId, requestActionId) {       
+        $("#frm-need-approval-workingday-supplement span[name*='-error']").text("");
+        var listId = [];
+        listId.push({ requestId: requestId, requestStatusId: requestStatusId, requestActionId: requestActionId, Note: $("#NoteWorkingSupplement").val() })
+        if (requestActionId==333) {
+            var data={ Note: $("#NoteWorkingSupplement").val()};
+            $.ajax({
+                type: "POST",
+                url: "/Workingday/CheckNoteApproval",
+                data: data,
+                success: function (response) {
+                    if (response.Invalid)
+                    {
+                        var validations = response.Result;
+                        validations[0].ColumnName="NoteWorkingSupplement";
+                        RenderError(validations, "frm-need-approval-workingday-supplement");
+                        return;
+                    }
+                    if (response.Result) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/Workingday/SaveSubmitApproval",
+                            data: {
+                                listModel: listId,
+                                isApproval: true,
+                            },
+                            success: function (response) {
+                                if (response.result.Success == true) {
+                                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                                    window.location.reload();
+                                }
+                                else {
+                                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                                }
+                            }
+                        });
+                    }
+                    
+                }
+            });
+        }
+        else{
+            $.ajax({
+                type: "POST",
+                url: "/Workingday/SaveSubmitApproval",
+                data: {
+                    listModel: listId,
+                    isApproval: true,
+                },
+                success: function (response) {
+                    if (response.result.Success == true) {
+                        ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                        window.location.reload();
+                    }
+                    else {
+                        ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    }
+                }
+            });
+        }
+       
+    }
+</script>

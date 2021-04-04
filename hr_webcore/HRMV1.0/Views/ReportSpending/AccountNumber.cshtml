@@ -1,0 +1,261 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.ReportSpendingByAccountNumber;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div class="container-fluid" ng-app="tableApp">
+    <style>
+        #ReportSpendingByAccountNumber span.label-btn.col-6 {
+            padding-right: 10px;
+            float: left;
+            line-height: 30px;
+        }
+
+        #ReportSpendingByAccountNumber select.form-control.col-6 {
+            width: 50%;
+            float: left;
+        }
+
+        #ReportSpendingByAccountNumber .col-md-1-2 {
+            width: 15%;
+            float: left;
+        }
+
+        #ReportSpendingByAccountNumber label.col-sm-3.col-form-label {
+            line-height: 30px;
+        }
+
+        #ReportSpendingByAccountNumber input.form-control.col-sm-6 {
+            width: 50px;
+            float: left;
+        }
+
+        #ReportSpendingByAccountNumber label.col-md-2 {
+            line-height: 30px;
+        }
+
+        label.col-sm-3.col-form-label {
+            width: auto;
+        }
+
+        h3.ng-binding {
+            display: none;
+        }
+
+        .col-md-12.ng-isolate-scope > .col-md-12 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .hide-element {
+            display: none;
+        }
+    </style>
+    <style>
+        #AttendanceManagement span.label-btn.col-6 {
+            padding-right: 10px;
+            float: left;
+            line-height: 30px;
+        }
+
+        #AttendanceManagement select.form-control.col-6 {
+            width: 60%;
+            float: left;
+        }
+
+        #AttendanceManagement .col-md-1-2 {
+            width: 15%;
+            float: left;
+        }
+
+        #AttendanceManagement label.col-sm-3.col-form-label {
+            line-height: 30px;
+        }
+
+        #AttendanceManagement input.form-control.col-sm-6 {
+            width: 50px;
+            float: left;
+        }
+
+        #AttendanceManagement label.col-md-2 {
+            line-height: 30px;
+        }
+
+        label.col-sm-3.col-form-label {
+            width: auto;
+        }
+
+        h3.ng-binding {
+            display: none;
+        }
+
+        .col-md-12.ng-isolate-scope > .col-md-12 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .hide-element {
+            display: none !important;
+        }
+
+        button.btn.btn-labeled.btn-warning {
+            top: -51px !important;
+        }
+
+        .col-md-12.search-panel {
+            margin-left: 105px;
+            width: calc(100% - 105px);
+        }
+    </style>
+
+    <div id="AttendanceManagement" class="row" style="margin: 0; padding-top: 15px;" ng-controller="ReportSpendingByAccountNumber" ng-init="init()">
+        @*<div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">*@
+        <div id="tabs">
+
+            <ul class="ul-tab">
+                <li class="li-tab"><a href="#tabs1" ng-click="LoadTab('tabs1')">@AppRes.ReportSpendingByAccountNumber</a></li>
+                <li class="li-tab"><a href="#tabs2" ng-click="LoadTab('tabs2')">@AppRes.GeneralSpendingReport</a></li>
+                @*<li><a ng-show="isQL" href="#tabs2" ng-click="LoadTab('tabs2')">@AppRes.WorkingDaySupplement</a></li>
+                    <li><a href="#tabs4" ng-click="LoadTab('tabs4')">@AppRes.WorkingDaySummary</a></li>
+                    <li><a href="#tabs5" ng-click="LoadTab('tabs5')">@AppRes.Timekeeping_Manager</a></li>
+                    <li><a href="#tabs6" ng-click="LoadTab('tabs6')">@AppRes.Timekeeping_ManagerVacation</a></li>*@
+            </ul>
+            <div id="tabs1">
+                <div ng-if="flagShow == 'tabs1' || flagShow == undefined" class="col-md-12" id="ReportSpendingByAccountNumber" style="padding: 0">
+                    <br />
+                    <div class="row">
+                        <build-fixed-table table-url="'/ReportSpending/GetReportSpendingByAccountNumber'"
+                                           table-excel-click="ExcelClick" notification="'@(AppRes.Notification)'" validate-datetime="'@(AppRes.ValidateFromDateToDate)'" />
+                    </div>
+                </div>
+            </div>
+            <div id="tabs2">
+
+                <div ng-if="flagShow == 'tabs2'" @*compile="tab2Data"*@>
+                    <div class="row" style="margin-top: 10px;  margin-bottom: 10px;">
+                        <div class="col-md-12 search-panel">
+                            <div style="float: left; padding-left: 10px;" class="col">
+                                <button ng-click="ExcelReportGeneralSpending()" title="@AppRes.btnExcel" type="button" class="btn btn-labeled btn-primary">
+                                    <span class="btn-label">
+                                        <i class="fa fa-download"></i>
+                                    </span>@AppRes.btnExcel
+                                </button>
+
+                            </div>
+                            <div class="col" style="float: left; padding-left: 10px;     width: 90px;" ng-if="data.filter8==3?false:true">
+                                <select class="form-control col-4" ng-model="data.filter5">
+                                    <option selected="selected">--@AppRes.Year--</option>
+                                    <option ng-repeat="item in Listyears" value="{{item}}">{{item}}</option>
+                                </select>
+                            </div>
+                            <div class="col" style="float: left; padding-left: 10px;">
+                                <span class="label-btn col-6">@AppRes.FromMonth</span>
+                                <div class="col-md-1-2" style="width: 65px;">
+
+                                    <select class="form-control no-padding col-6" ng-model="data.filter1"  ng-change="showColumn()">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option selected="selected" value="12">12</option>
+                                    </select>
+                                </div>
+
+                                <span class="label-btn col-6">@AppRes.ToMonth</span>
+                                <div class="col-md-1-2" style="width: 65px;">
+                                    <select class="form-control no-padding col-6" ng-model="data.filter2"  ng-change="showColumn()">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12" selected="selected">12</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col" style="float: left; padding-left: 10px;">
+                                <select chosen options="" on-no-result="doStuff" ng-model="data.filter7" convert-dropdown>
+                                    <option value="" disabled>-- @AppRes.TypeOfReport --</option>
+                                    <option value="1" selected>@AppRes.Spending</option>
+                                    <option value="2">@AppRes.Eligible</option>
+
+                                </select>
+                            </div>
+                            <div class="col-md-2" style="float: left; padding-left: 10px;">
+                                <button ng-click="childmethodGeneral();" id="submit" title="@AppRes.FindFilter"
+                                        type="button" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        @*<div class="col-md-8">
+
+
+                            </div>*@
+                        <div class="col-md-12" id="General" style="padding: 0">
+                            <br />
+                            <div class="row">
+                                <build-fixed-table table-url="'/ReportSpending/GetReportGeneralSpending'"
+                                                   table-excel-click="ExcelClick" notification="'@(AppRes.Notification)'" validate-datetime="'@(AppRes.ValidateFromDateToDate)'" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @*<div id="tabs3">
+                        <div ng-if="flagShow == 'tabs3'" compile="tab3Data"></div>
+                    </div>
+                    <div id="tabs5">
+                        <div ng-if="flagShow == 'tabs5'" compile="tab5Data"></div>
+                    </div>
+                    <div id="tabs4">
+                        <div ng-if="flagShow == 'tabs4'" compile="tab4Data"></div>
+                    </div>
+                    <div id="tabs6">
+                        <div ng-if="flagShow == 'tabs6'" compile="tab6Data"></div>
+                    </div>*@
+                <!-- END panel-->
+            </div>
+            @*</div>
+                    </div>
+                </div>*@
+
+
+
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $("#tabs").tabs();
+        });
+    </script>
+
+    <script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+    <script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+    <script src="~/Scripts/mycustom/TableService.js"></script>
+    <script src="~/Scripts/mycustom/ReportSpending/ReportSpendingByAccountNumber.js"></script>
+    <script>
+        BuildTable('tableApp', 'ReportSpendingByAccountNumber', '@(ViewBag.url)');
+    </script>
+    <script src="~/Scripts/directive/datePicker(NewDate)/datePicker.js"></script>
+
+
+

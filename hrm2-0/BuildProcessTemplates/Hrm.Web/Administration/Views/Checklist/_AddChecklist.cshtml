@@ -1,0 +1,459 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Common
+@model Hrm.Admin.ViewModels.StaffViewModel
+@{
+    ViewBag.Title = "Checklist form";
+    var isCheckBox = "display:none";
+    var isFieldUpdating = "display:none";
+    var isTextEditor = "display:none";
+    var isDatepicker = "display:none";
+    var isActiveCheckBox = string.Empty;
+    var isActivesFieldUpdating = string.Empty;
+    var isActiveTextEditor = string.Empty;
+    var isActiveDatepicker = string.Empty;
+    var check = 1;
+
+    if (Model.ChecklistDetailEdit.Name!=null && Model.ChecklistDetailEdit.ControlTypeName== ControlType.Checkbox)
+    {
+        isCheckBox= "display:block";
+        isActiveCheckBox = "active";
+        check = 1;
+    }
+    else if (Model.ChecklistDetailEdit.Name != null && Model.ChecklistDetailEdit.ControlTypeName == ControlType.FieldUpdating)
+    {
+        isFieldUpdating = "display:block";
+        isActivesFieldUpdating = "active";
+        check = 2;
+    }
+    else if (Model.ChecklistDetailEdit.Name != null && Model.ChecklistDetailEdit.ControlTypeName == ControlType.TextEditor)
+    {
+        isTextEditor = "display:block";
+        isActiveTextEditor = "active";
+        check = 3;
+    }
+    else if (Model.ChecklistDetailEdit.Name != null && Model.ChecklistDetailEdit.ControlTypeName == ControlType.Datepicker)
+    {
+        isDatepicker = "display:block";
+        isActiveDatepicker = "active";
+        check = 4;
+    }
+    else
+    {
+        isCheckBox = "display:block";
+        isActiveCheckBox = "active";
+        check = 1;
+    }
+}
+<style>
+    .add-checklist-select-box .box-control-type {
+        height: 90px;
+        width: 130px;
+        /*color: #4daf3c;*/
+        color:black;
+        float: left;
+        margin-right: 5px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+    }
+    .add-checklist-select-box .box-control-type.active{
+         border: 1px solid #4daf3c;
+         color: #4daf3c;
+    }
+        .add-checklist-select-box .box-control-type .box-icon, .box-control-type .box-title {
+            float: left;
+            width: 100%;
+            height: 50%;
+            display: flex;
+        }
+
+        .add-checklist-select-box .box-control-type .box-icon {
+            align-items: flex-end;
+            padding-bottom: 10px;
+        }
+
+            .add-checklist-select-box .box-control-type .box-icon .box-icon-main {
+                text-align: center;
+                width: 100%;
+            }
+
+                .add-checklist-select-box .box-control-type .box-icon .box-icon-main i {
+                    font-size: 20px;
+                }
+
+        .add-checklist-select-box .box-control-type .box-title {
+            align-items: center;
+        }
+
+            .add-checklist-select-box .box-control-type .box-title .box-title-main {
+                text-align: center;
+                width: 100%;
+            }
+            .add-checklist-select-box .custom-text-box {
+            border: 1px solid;
+            width: 40px;
+            height: 23px;
+            border-radius: 3px;
+            font-family: "Times New Roman";
+            font-style: italic;
+            margin-left: calc(50% - 20px);
+            text-align: left;
+            padding-left: 5px;
+            font-size: 16px;
+        }
+    .add-checklist-select-box {
+        height:110px;
+    }
+    .add-checklist-body .box-type{
+        border: 1px solid #ccc;
+        background-color: #ececec;
+    }
+    .add-checklist-body .box-type .title{
+        margin-top: 10px;
+        margin-left: 20px;
+    }
+    .add-checklist-body .box-type .box-type-select-box{
+        margin-left: 20px;
+        height: 50px;
+    }
+    .add-checklist-body .box-type .box-type-checkbox{
+        margin-left: 20px;
+        float:left;
+        width:20px;
+    }
+     .add-checklist-body .box-type .box-type-single-name{
+        float: left;
+        line-height: 43px;
+        margin-left:20px;
+    }
+     .add-checklist-body .box-type .box-type-single-input{
+       float: left;
+       margin-left:20px;
+    }
+      .add-checklist-body .box-type .box-type-single-input-email{
+       float: left;
+       margin-left:20px;
+    }
+     .add-checklist-body .box-type .box-type-single-input-datepicker{
+       float: left;
+       margin-left:20px;
+       /*padding-top:4px;*/
+    }
+      .add-checklist-body .box-type .box-type-single-input  .hrm-v2-floating-form .floating-label{
+        margin-top:0px;
+    }
+        .add-checklist-body .box-type .box-type-single-input-email  .hrm-v2-floating-form .floating-label{
+        margin-top:0px;
+    }
+        .add-checklist-body .box-type .box-type-single-input-datepicker .hrm-v2-floating-form .floating-label{
+        margin-top:0px;
+    }
+     .add-checklist-body .box-type .box-select .box-type-single-name{
+       width: calc(100% - 80px);
+    }
+     /*.add-checklist-body .box-type .box-select .box-update-field .box-type-single-name{
+       width: 320px;
+    }*/
+      .add-checklist-body .box-type  .box-update-field .box-type-single-input{
+        width: 310px;
+    }
+       .add-checklist-body .box-type  .box-update-field .box-type-single-name{
+        width: 260px;
+        height: 40px;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: normal;
+    }
+       .add-checklist-body .box-type .box-update-enter .box-type-single-input{
+       width: calc(100% - 80px);
+    }
+       .add-checklist-body .box-type  .box-datepicker .box-type-single-input-datepicker{
+       width: calc(100% - 80px);
+    }
+</style>
+<div>
+    @if (Model.ActionName == ActionName.Edit)
+    {
+        <div class="hrm-v2-modal-header ">@T("CheckList.UpdateMission") </div>
+    }
+    else
+    {
+        <div class="hrm-v2-modal-header ">@T("Checklist.AddMission") </div>
+    }
+    <div class="hrm-v2-modal-body add-master-data">
+        <form id="frm-add-single-checklist">
+            <div class="add-checklist-select-box">
+                <div class="control-header">
+                    <div class="box-control-type @isActiveCheckBox" onclick="ClickBoxControler('@ControlType.Checkbox')">
+                        <div class="box-icon">
+                            <span class="box-icon-main">
+                                <i class="far fa-check-square"></i>
+                            </span>
+                        </div>
+                        <div class="box-title">
+                            <span class="box-title-main">@T("Checklist.CheckBoxCC")</span>
+                        </div>
+                    </div>
+                    <div class="box-control-type @isActivesFieldUpdating" onclick="ClickBoxControler('@ControlType.FieldUpdating')">
+                        <div class="box-icon">
+                            <span class="box-icon-main">
+                                <i class="fas fa-sync-alt"></i>
+                            </span>
+                        </div>
+                        <div class="box-title">
+                            <span class="box-title-main">@T("Checklist.Update") <br /> @T("Checklist.InformationField")</span>
+                        </div>
+                    </div>
+                    <div class="box-control-type  @isActiveTextEditor" onclick="ClickBoxControler('@ControlType.TextEditor')">
+                        <div class="box-icon">
+                            <div class="box-icon-main">
+                                <div class="custom-text-box">I</div>
+                            </div>
+                        </div>
+                        <div class="box-title">
+                            <span class="box-title-main">@T("Checklist.EnterText")</span>
+                        </div>
+                    </div>
+                    <div class="box-control-type @isActiveDatepicker" onclick="ClickBoxControler('@ControlType.Datepicker')">
+                        <div class="box-icon">
+                            <span class="box-icon-main">
+                                <i class="far fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                        <div class="box-title">
+                            <span class="box-title-main">@T("Checklist.EnterDate")</span>
+                        </div>
+                    </div>
+                    <div class="box-control-type" onclick="ClickBoxControler('@ControlType.FileAttachment')">
+                        <div class="box-icon">
+                            <span class="box-icon-main">
+                                <i class="fas fa-paperclip"></i>
+                            </span>
+                        </div>
+                        <div class="box-title">
+                            <span class="box-title-main">@T("Checklist.AttachedFile")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="add-checklist-body">
+                <div class="form-group ">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "Name", LabelName = T("Checklist.Title").ToString(), Style = "width:100%;", IsAnimationLabel = true, IsRequired = true,OnChange="ChangeText()",Value=Model.ChecklistDetailEdit.Name})
+                </div>
+
+                <div class="form-group input-update-field" style="@isFieldUpdating">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "ColumnLink", ValueField = "Id", Style = "width:100%", DisplayField = "ColumnName", Data = Model.TableColum, LabelName = T("Checklist.Working").ToString(), IsAnimationLabel = true, OnChange = "ChangeColumnName()", Value = Model.ChecklistDetailEdit.ColumnLink, SearchField = true, IsMultipleLanguage =true,DataType=DataType.TableName,PropertyName="ColumnName",IsRequired=true
+               })
+                </div>
+                <div class="form-group">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "AssigneeId", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.Staff, LabelName = T("Checklist.MissionAssignmentArrived").ToString(), IsAnimationLabel = true,Value=Model.ChecklistDetailEdit.AssigneeId.ToString(), SearchField = true })
+                </div>
+                <div class="form-group box-type">
+                    <div class="title">@T("Checklist.Preview")</div>
+
+                    <div class="box-type-select-box box-select" style="@isCheckBox">
+                        <div class="box-type-checkbox">
+                            @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist" ,Attribute="disabled"})
+                        </div>
+                        <div class="box-type-single-name">
+                            <span>@Model.ChecklistDetailEdit.Name</span>
+                        </div>                                       
+                    </div>
+                    <div class="box-type-select-box box-update-field" style="@isFieldUpdating" >
+                        <div class="box-type-checkbox">
+                            @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist" })
+                        </div>
+                        <div class="box-type-single-name">
+                            <span>@Model.ChecklistDetailEdit.Name</span>
+                        </div>  
+                        <div class="box-type-single-input">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "input-text", LabelName = "", Style = "width:100%;", IsAnimationLabel = true })
+                        </div>
+                    </div>
+
+                    <div class="box-type-select-box box-update-enter" style="@isTextEditor">
+                        <div class="box-type-checkbox">
+                            @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist" })
+                        </div>
+                        <div class="box-type-single-input">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "input-text-enter", PlaceHolder = Model.ChecklistDetailEdit.Name, Style = "width:100%;", IsAnimationLabel = false })
+                        </div>
+                    </div>
+
+                    <div class="box-type-select-box box-datepicker"  style="@isDatepicker">
+                        <div class="box-type-checkbox">
+                            @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist" })
+                        </div>
+                        <div class="box-type-single-input-datepicker">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "datepicker-text", PlaceHolder = Model.ChecklistDetailEdit.Name, Style = "width:100%;", IsAnimationLabel = false })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="add-checklist-button">
+                <div style="float:right">
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", ClassName = "hrm-v2-btn-save", OnClick = "SaveCheckDetail(2)", Value = "Checklist.SaveAndContinue", Style = "width:120px;height:38px;",Type="button" })
+                </div>
+                <div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-master-data-continue", ClassName= "hrm-v2-btn-save", OnClick = "SaveCheckDetail(1)", Value = "Checklist.Save", Style = "width:100px;height:38px;",Type = "button" })
+                </div>
+                <div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", ClassName = "hrm-v2-btn-close", Value = "Checklist.Close", Style = "width:100px;height:38px;" })
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+<script>   
+    var listTableColumn=@Html.Raw(JsonConvert.SerializeObject(Model.TableColum));
+    var checklistEdit=@Html.Raw(JsonConvert.SerializeObject(Model.ChecklistDetailEdit));
+
+    $(document).on('click', '.box-control-type', function () {
+        $('.box-control-type').removeClass('active');
+        $(this).addClass('active');
+    });
+    var check =@Html.Raw(check);
+
+    function ClickBoxControler(text) {
+        $(".box-select .box-type-single-name span").html("");
+        $(".box-update-field .box-type-single-name span").html("");
+        $(".box-update-enter #input-text-enter").val("");
+        $(".box-datepicker #datepicker-text").val("");
+        $("#Name").val("");
+        if (text == '@ControlType.Checkbox') {
+            check = 1;
+            $(".box-type-select-box.box-select").css("display", "block");
+            $(".box-type-select-box.box-update-field").css("display", "none");
+            $(".box-type-select-box.box-update-enter").css("display", "none");
+            $(".box-type-select-box.box-datepicker").css("display", "none");
+            $(".add-checklist-body .input-update-field").css("display", "none");
+
+        }
+        if (text == '@ControlType.FieldUpdating') {
+            check = 2;
+            $(".box-type-select-box.box-select").css("display", "none");
+            $(".box-type-select-box.box-update-field").css("display", "block");
+            $(".box-type-select-box.box-update-enter").css("display", "none");
+            $(".box-type-select-box.box-datepicker").css("display", "none");
+            $(".add-checklist-body .input-update-field").css("display", "block");
+        }
+        if (text == '@ControlType.TextEditor') {
+            check = 3;
+            $(".box-type-select-box.box-select").css("display", "none");
+            $(".box-type-select-box.box-update-field").css("display", "none");
+            $(".box-type-select-box.box-update-enter").css("display", "block");
+            $(".box-type-select-box.box-datepicker").css("display", "none");
+            $(".add-checklist-body .input-update-field").css("display", "none");
+
+        }
+        if (text == '@ControlType.Datepicker') {
+            check = 4;
+            $(".box-type-select-box.box-select").css("display", "none");
+            $(".box-type-select-box.box-update-field").css("display", "none");
+            $(".box-type-select-box.box-update-enter").css("display", "none");
+            $(".box-type-select-box.box-datepicker").css("display", "block");
+            $(".add-checklist-body .input-update-field").css("display", "none");
+        }
+    }
+
+    function ChangeText() {
+        if (check == 1) {
+            $(".box-select .box-type-single-name span").html($("#name").val());
+        }
+        else if (check == 2) {
+            $(".box-update-field .box-type-single-name span").html($("#name").val());
+        }
+        else if (check == 3) {
+            $(".box-update-enter #input-text-enter").val($("#name").val());
+        }
+        else if (check == 4) {
+            $(".box-datepicker #datepicker-text").val($("#name").val());
+        }
+    }
+    $("#ColumnLink").trigger('change');
+    $(document.body).on("change","#ColumnLink",function(){
+        $(".box-update-field .box-type-single-input #input-text").val($("#ColumnLink option:selected").text());
+    });
+
+    function SaveCheckDetail(typeSave){
+        $("#frm-add-single-checklist span[name*='-error']").text("");
+        var checklist={};
+        checklist.Name= $("#name").val();
+        checklist.Note= $("#name").val();
+        checklist.AssigneeId= $("#AssigneeId").val();
+        checklist.AssigneeName= $("#AssigneeId option:selected").text();
+        checklist.ChecklistDetailTypeName= '@ChecklistDetailType.Single';
+        checklist.ParentId=@Json.Encode(Model.Index);
+
+        if (check==1) {
+            checklist.ControlTypeName= '@ControlType.Checkbox';
+        }
+        else if (check==2) {
+            checklist.ControlTypeName= '@ControlType.FieldUpdating';
+            checklist.ColumnLink=$("#ColumnLink").val();
+        }
+        else if (check==3) {
+            checklist.ControlTypeName= '@ControlType.TextEditor';
+        }
+        else if (check==4) {
+            checklist.ControlTypeName='@ControlType.Datepicker';
+        }
+        if(checklistEdit.Index!=0){
+            for (var i = 0; i < listchecklistDetail.length; i++) {
+                if(listchecklistDetail[i].Index==checklistEdit.Index && listchecklistDetail[i].ParentId==checklistEdit.ParentId)
+                {
+                    checklist.Index=@Html.Raw(Model.ChecklistDetailEdit.Index);
+                    checklist.ParentId=@Html.Raw(Model.ChecklistDetailEdit.ParentId);
+                    checklist.Id=@Html.Raw(Model.ChecklistDetailEdit.Id);
+                    checklist.AssignId=@Html.Raw(Model.ChecklistDetailEdit.AssignId);
+                    listchecklistDetail[i]=checklist;
+                    break;
+                }
+
+            }
+        }
+        else if (listchecklistDetail.length>0) {
+            var listObj = listchecklistDetail.filter(function (item) {
+                return item.TypeControlId != 0;
+            });
+            checklist.Index= (listObj.length)+1;
+        }
+        else{
+            checklist.Index=1;
+        }
+        $.ajax(
+        {
+              type: "POST",
+              url: "/Admin/Checklist/AddChecklist",
+              data: { checklist: checklist },
+              success: function (response) {
+                  if (response.Invalid) {
+                      var validations = response.Result;
+                      for (var i = 0; i < validations.length; i++) {
+                          var list = validations[i].ColumnName.split('.');
+                          validations[i].ColumnName = list[1];
+                      }
+                      RenderError(validations, "frm-add-single-checklist");
+                  }
+                  else {
+                      if (response.IsSucces) {
+                          if (checklistEdit.Index==0) {
+                              listchecklistDetail.push(checklist);
+                          }                      
+                          $("#group-mission").load('/Admin/Checklist/ReloadChecklist', { data: listchecklistDetail });
+                          if (typeSave==1) {
+                              $("#myModal").modal("hide");
+                          }
+                      }
+                  }
+
+              }
+          });
+    }
+</script>

@@ -1,0 +1,77 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.WorkingDayConfig;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        overflow-x: hidden;
+    }
+
+    .menu-department {
+        height: 95vh;
+        border-right: 1px solid #f3f3f3;
+    }
+
+    .demo-section1 {
+        display: block;
+        margin-top: 32px;
+        height: 500px;
+        margin-right: -50px;
+        overflow: scroll;
+        margin-left: -28px;
+    }
+
+        .demo-section1 li {
+            display: inline-block;
+            width: 100%;
+        }
+</style>
+<script>
+    var errorDate= @Html.Raw(Json.Encode(AppRes.ErrorDate));
+    var selectTimekeeper= @Html.Raw(Json.Encode(AppRes.SelectTimekeeper));
+    var errorDateBeginBetween= @Html.Raw(Json.Encode(AppRes.ErrorDateBeginBetween));
+    var errorDateEndBetween= @Html.Raw(Json.Encode(AppRes.ErrorDateEndBetween));
+    var errorDateFromNumber= @Html.Raw(Json.Encode(AppRes.ErrorDateFromNumber));
+    var errorDateToNumber= @Html.Raw(Json.Encode(AppRes.ErrorDateToNumber));
+    var errorDateOfApplication= @Html.Raw(Json.Encode(AppRes.ErrorDateOfApplication));
+
+</script>
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row">
+        <div ng-controller="mytable" ng-init="init()">
+            <div style="display: none;">
+                @Html.Action("SaveHR_WorkingDayConfig", "HR_WorkingDayConfig")
+            </div>
+            <build-fixed-table table-url="'@(ViewBag.url)'"
+                               table-edit="editClick"
+                               table-delete="deleteClick"
+                               table-excel-click="ExcelClick"
+                               table-add="addClick"
+                               table-param-filter="employeeFilter"
+                               table-model="HR_WorkingDayConfigData">
+            </build-fixed-table>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/HR_WorkingDayConfig/HR_WorkingDayConfigUntil.js"></script>
+
+
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+</script>
+<script type="text/javascript">
+    var endYear = new Date(new Date().getFullYear(), 11, 31);
+    $(".datePickerTime").datepicker({
+        format: "dd MM yyyy - hh:ii",
+        linkField: "mirror_field",
+        linkFormat: "yyyy-mm-dd hh:ii"
+    });
+</script>
+
+
+

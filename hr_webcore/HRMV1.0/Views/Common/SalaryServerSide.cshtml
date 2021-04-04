@@ -1,0 +1,216 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<style>
+    .titleTotal {
+        color: blue;
+    }
+    .dataFomat {
+        text-align: right;
+        
+    }
+    .smart-style-3 .dropdown-menu > .latches > a:hover {
+        background-color: #EC9519;
+    }
+    .smart-style-3 .dropdown-menu > .removeLatches > a:hover {
+        background-color: #3276b1;
+    }
+    .smart-style-3 .dropdown-menu > .sendmail > a:hover {
+        background-color: #a90329;
+    }
+</style>
+<div>
+    <br />
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Button trigger modal -->
+            <button title="" type="button" ng-show="tablePermission.isEdit" ng-click="CreatePayslip()" class="btn btn-labeled btn-success">
+                <span class="btn-label">
+                    <i class="fa fa-plus"></i>
+                </span>@AppRes.CreatePayslip
+            </button>
+            <button ng-show="tablePermission.isExcel" title="@AppRes.btnImportExcel" type="button" class="btn btn-labeled btn-success" data-toggle="modal" data-target="#exampleModal">
+                <span class="btn-label">
+                    <i class="fa fa-upload"></i>
+                </span>@AppRes.btnImportExcel
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <b>@AppRes.Choose_file</b>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type=file class="form-control" my-files="files" />
+                        </div>
+                        <button ng-click="upload()" class="form-control btn btn-primary">Upload</button>
+                    </div>
+                </div>
+            </div>
+
+            <button ng-show="tablePermission.isExcel" ng-click="ExcelClick()" title="@AppRes.btnExcel" type="button" class="btn btn-labeled btn-primary">
+                <span class="btn-label">
+                    <i class="fa fa-download"></i>
+                </span>@AppRes.btnExcel
+            </button>
+           
+            <div class="dropdown" style="display:inline-block" ng-show="tablePermission.isEdit">
+                <button class="btn btn-warning dropdown-toggle" type="button" data-toggle="dropdown">
+                    @AppRes.LatchesPayslip
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    @*LatchesWorkDay(lần,loại):- lần :1,2,3,4
+                                               - loại: 1 chốt,2 gỡ chốt*@   
+                    <li class="latches"><a href="#"  ng-click="LatchesWorkDay(1,1)">@AppRes.Peroid 1</a></li>
+                    <li class="latches"><a href="#"  ng-click="LatchesWorkDay(2,1)">@AppRes.Peroid 2</a></li>
+                    <li class="latches"><a href="#" ng-click="LatchesWorkDay(3,1)">@AppRes.Peroid 3</a></li>
+                    <li class="latches"><a href="#" ng-click="LatchesWorkDay(4,1)">@AppRes.Peroid 4</a></li>
+                </ul>
+            </div>
+            
+            <div class="dropdown" style="display:inline-block" ng-show="tablePermission.isEdit">
+                <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">
+                     @AppRes.LatchRelease
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    @*LatchesWorkDay(lần,loại):- lần :1,2,3,4
+                                               - loại: 1 chốt,2 gỡ chốt*@   
+                    <li class="removeLatches"><a href="#" ng-click="LatchesWorkDay(1,2)">@AppRes.Peroid 1</a></li>
+                    <li class="removeLatches"><a href="#" ng-click="LatchesWorkDay(2,2)">@AppRes.Peroid 2</a></li>
+                    <li class="removeLatches"><a href="#" ng-click="LatchesWorkDay(3,2)">@AppRes.Peroid 3</a></li>
+                    <li class="removeLatches"><a href="#" ng-click="LatchesWorkDay(4,2)">@AppRes.Peroid 4</a></li>
+                </ul>
+            </div>
+            
+            <div class="dropdown" style="display:inline-block" ng-show="tablePermission.isEdit">
+                <button class="btn btn-danger dropdown-toggle" type="button" data-toggle="dropdown">
+                    @AppRes.SendPayslip
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li class="sendmail"><a href="#"  ng-click="SendMail(1)">@AppRes.Peroid 1</a></li>
+                    <li class="sendmail"><a href="#" ng-click="SendMail(2)">@AppRes.Peroid 2</a></li>
+                    <li class="sendmail"><a href="#" ng-click="SendMail(3)">@AppRes.Peroid 3</a></li>
+                    <li class="sendmail"><a href="#" ng-click="SendMail(4)">@AppRes.Peroid 4</a></li>
+                </ul>
+            </div>
+            <button ng-show="tablePermission.isEdit" ng-click="UpdateBonus(3535)" title="@AppRes.btnBonusMonth" type="button" class="btn btn-labeled btn-primary">
+                <span class="btn-label">
+                    <i class="fa fa-download"></i>
+                </span>@AppRes.btnBonusMonth
+            </button>
+            <button ng-show="tablePermission.isEdit" ng-click="UpdateBonus(3536)" title="@AppRes.btnBonusQuarter" type="button" class="btn btn-labeled btn-primary">
+                <span class="btn-label">
+                    <i class="fa fa-download"></i>
+                </span>@AppRes.btnBonusQuarter
+            </button>
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+
+        <div class="col-md-1">
+            <input type="text" ng-model="FromMonth" class="form-control" id="datePicker" autocomplete="off">
+        </div>
+        <div class="col-md-1">
+            <input type="text" ng-model="ToMonth" class="form-control" id="datePicker2" autocomplete="off">
+        </div>
+        <div class="col-md-2">
+            <select chosen options="getListAllOrganizationUnit" on-no-result="doStuff" ng-model="OrganizationUnitID" ng-options="list.OrganizationUnitID as list.Name for list in getListAllOrganizationUnit" ng-change="onOrganizationUnitChange()" convert-dropdown>
+                <option value="" selected>-- @AppRes.Department --</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select chosen options="ListEmployeeWhereOrganizationUnit" on-no-result="doStuff"  ng-model="StaffID" ng-options="list.StaffID as list.NamePB for list in ListEmployeeWhereOrganizationUnit" ng-change="onStaffChange()" convert-dropdown>
+                <option value="" selected>-- ALL --</option>
+            </select>
+        </div>
+        <div class="col-md-1">
+            <button ng-click="GetListData();" id="submit" title="@AppRes.FindFilter"
+                    type="button" class="btn btn-primary">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+        <div class="col-md-4" ng-show="tablePermission.isEdit">
+            <div class="center-on-page">
+                <input type="checkbox" ng-model="AllStaff" name="cb" id="cb1" class="cb1" />
+                <label for="cb1" id="cbAll">@AppRes.AllStaff</label>
+            </div>
+        </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="container-fluid">
+                <table class="table table-striped table-bordered table-hover tabel-condensed" id="PayBill">
+                    <thead>
+                    <tr class="success">
+                        <th ng-show="SetHiddenActionColumn(tablePermission.isEdit,tablePermission.isDelete)" style="min-width:32px">
+                            <input type="checkbox" ng-model="checkboxAll" ng-click="toggleCheck()">
+                            {{Column.Css}}
+                        </th>
+                        <th ng-repeat="Column in Columns | orderBy:'OrderNo'" style="{{Column.Css}}">
+                            <span ng-bind='@Global.CurrentLanguage==5?Column.DisplayName:Column.DisplayNameEn'  ng-click="sort(Column.ColumnName)" style="cursor: pointer;"></span><br />
+                        </th>
+                    </tr>
+                    </thead>
+                    <thead>
+                    <tr class="success">
+                        <th ng-show="SetHiddenActionColumn(tablePermission.isEdit,tablePermission.isDelete)" style="min-width:34px">
+                        
+                        </th>
+                        <th ng-repeat="Column in Columns | orderBy:'OrderNo'" class="titleTotal {{Column.DataFomat==2?'dataFomat':''}}" style="{{Column.Css}}">
+                            <span ng-bind="SetTotalByColumns(Column.ShowTotal,Column.DataFomat)"></span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="employee in employees | orderBy:'OrderNo'">
+
+                            <td ng-show="SetHiddenActionColumn(tablePermission.isEdit,tablePermission.isDelete)" style="min-width:34px">
+                                <input type="checkbox" checklist-model="list.employees" ng-model="justAnotherCheckedVar" checklist-value="employee">
+                            </td>
+                            <td ng-repeat="Column in Columns | orderBy:'OrderNo'" class="{{Column.DataFomat==2?'dataFomat':''}}" ng-if="Column.isVisible" style="{{Column.Css}}">
+                                <div ng-if="Column.CustomHTML != null"
+                                     compile="Column.CustomHTML" title="{{employee[Column.ColumnName]}}"></div>
+                                <span ng-if="Column.CustomHTML == null && Column.Type==3"
+                                      ng-bind="employee[Column.ColumnName]| date:'dd/MM/yyyy'" title="{{employee[Column.ColumnName]}}"></span>
+                                <span ng-if="Column.CustomHTML == null && Column.Type==2"
+                                      ng-bind='employee[Column.ColumnName]| number:Column.DataFomat' title="{{employee[Column.ColumnName]}}"></span>
+                                <span ng-if="Column.CustomHTML == null && Column.Type!=2&& Column.Type!=3"
+                                      ng-bind='employee[Column.ColumnName]' title="{{employee[Column.ColumnName]}}"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-2 pull-right total">
+                        View 1 to {{pageSizeSelected}} of {{totalCount}} total records
+                    </div>
+                    <div class="col-md-1 pull-right">
+                        <select class="form-control control-color" style="margin-top: 17px;"
+                                ng-model="pageSizeSelected"
+                                ng-change="changePageSize()" convert-to-number>
+                            <option ng-repeat="pageSizeItem in lstPageSize " value="{{pageSizeItem}}">{{pageSizeItem}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 pull-right">
+                        <ul style="float:right" uib-pagination total-items="totalCount" ng-change="pageChanged()"
+                            items-per-page="pageSizeSelected" direction-links="true" ng-model="pageIndex"
+                            max-size="maxSize" class="pagination" boundary-links="true"
+                            rotate="false" num-pages="numPages"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

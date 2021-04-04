@@ -1,0 +1,40 @@
+﻿
+@using HRM.App_LocalResources
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row" ng-controller="mytable">
+        <div class="SwitchTable" style="margin-left: 70px;">
+            <form action="">
+                <input type="radio" ng-model="checkboxModel.value" ng-click="CallClick()" name="gender" value="Insurance"> @AppRes.InformationRateOfinsurancePremiums &nbsp;&nbsp;&nbsp;
+                <input type="radio" ng-model="checkboxModel.value" ng-click="CallClick2()" name="gender" value="InsurancePosition"> @AppRes.LevelInsuranceByRank
+            </form>
+        </div>
+            @Html.Action("TableServerSide", "Common")
+            <div id="Insurance" ng-if="checkboxModel.value==='Insurance'?true:false">
+                    <div style="display: none;">
+                        @Html.Action("SaveInsurance", "Insurance")
+                    </div>          
+            </div>
+            <div id="InsurancePosition" ng-if="checkboxModel.value==='InsurancePosition'?true:false">
+                <div style="display: none;">
+                    @Html.Action("AddInsurancePosition", "InsurancePosition")
+                </div>
+                <div style="display: none;">
+                    @Html.Action("EditInsurancePosition", "InsurancePosition")
+                </div>
+            </div>
+    </div>
+</div>
+
+<script src="~/Scripts/mycustom/Insurance/InsuranceService.js"></script>
+<script src="~/Scripts/mycustom/Insurance/InsuranceUntil.js"></script>
+<script src="~/Scripts/MyScript/accounting.js"></script>
+
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+</script>
+

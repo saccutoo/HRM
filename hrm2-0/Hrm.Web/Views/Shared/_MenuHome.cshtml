@@ -1,0 +1,124 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Context;
+@{
+    Layout = UrlHelpers.View("~/Views/Shared/_Layout.cshtml");
+}
+
+<div class="home-container home-page">
+    <header class="main-header">
+        <div class="logo">
+            <img src="/Content/Images/logo.png">
+            <p class="text">ONPEOPLE</p>
+        </div>
+        <div class="pull-right">
+            <div class="menu pull-left mn-top">
+                <ul class="menu-main-header">
+                    <li><a>Sản phẩm</a>
+                        <ul class="sub-menu-header-home">
+                            <li><a href=@CurrentContext.WebBaseUrl>OnPeople Hrm</a></li>
+                        </ul>
+                    </li>
+                      @{ var urlPrice = CurrentContext.WebBaseUrl + "Home/PriceList";}
+                    <li><a href="@urlPrice">Bảng giá</a></li>
+                    <li><a>Khách hàng</a></li>
+                    <li><a>Hỗ trợ</a></li>
+                </ul>
+            </div>
+            <div class="menu right">
+                <ul class="menu-main-header">
+                    <li class="not-uppercase"><a href="/login">Đăng nhập</a></li>
+                    <li class="btn-free-trial"><a class="hrm-v2-btn-save not-uppercase" href="/registration">Dùng thử miễn phí</a></li>
+                    <li>
+                        <a class="menu-flag"><img src="@Url.Content("~/Content/Images/flags/vn.png")" style="width: 30px;" /> <i class="fas fa-chevron-down"></i></a>
+                        <ul class="sub-menu-flag">
+                            <li><a class="not-uppercase hrm-v2-font-14" style="color:#7E7E7E;pointer-events:none;">Ngôn ngữ</a></li>
+                            <li class="item not-uppercase"><a href="#"><img src="@Url.Content("~/Content/Images/flags/vn.png")" style="width: 36px;margin-right:10px;" /> Tiếng việt</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <div class="col-md-12 hrm-v2-scroll-style-1 home-page-body pd-0">
+        @RenderBody()
+        <hr />
+        <div class="wapper-footer">
+            <div class="wp-footer-container">
+                <div class="wp-menu-footer col-md-12 pd-0">
+                    <div class="col-md-2 pd-0 item">
+                        <a class="uppercase" style="font-weight: 700">Về OnPeople</a>
+                      
+                        <a>Giới thiệu</a>
+                        <a>Liên hệ</a>
+                        <a>Cộng đồng Onpeople</a>
+                    </div>
+
+                    <div class="col-md-2 pd-0 item">
+                        <a class="uppercase" style="font-weight: 700">Tài nguyên </a>
+                       
+                        <a>Câu hỏi thường gặp</a>
+                        <a>Trung tâm hỗ trợ</a>
+                        <a>Bảng giá</a>
+                    </div>
+                    <div class="col-md-2 pd-0 item">
+                        <a class="uppercase" style="font-weight: 700">Sản phẩm khác</a>
+                      
+                        <a>NovaonAds</a>
+                        <a>AutoAds</a>
+                        <a>NovaonX</a>
+                        <a>OnShop</a>
+                        <a>OnSales</a>
+                    </div>
+                    <div class="col-md-2 pd-0 item">
+                        <a class="uppercase" style="font-weight: 700">Hỗ trợ</a>
+                       
+                        <a>Thông tin liên hệ</a>
+                        <a><i class="fas fa-envelope"></i> support@onpeople.asia</a>
+                        <a><i class="fas fa-phone-alt"></i> (+84) 253 202 600</a>
+                        <a><i class="fas fa-print"></i> (+84) 28 6687 8888</a>
+                    </div>
+                    <div class="col-md-4 pd-0 item">
+                        <a class="uppercase" style="font-weight: 700">Kết nối với chúng tôi</a>
+                        <hr style="width:25px; float:left;margin-top:-5px" />
+                        <span class="connect-fb-youtube">
+                            <a class="fb"><i class="fab fa-facebook-f"></i></a>
+                            <a class="you" style="padding-top: 10px"><i class="fab fa-youtube"></i></a>
+                            <a class="you" style="padding-top: 10px;margin-left: 20px"><i class="fab fa-twitter"></i></a>                          
+                        </span>
+                        <a>Đăng ký để nhận thông tin mới nhất</a>
+                        <a>
+                            <div class="inp-trial-free">
+                                <div class="hrm-v2-floating-form" style="width:calc(100% - 100px)">
+                                    <div class="floating-label">
+                                        <input class="floating-input" placeholder="@string.Format("{0}", " ")">
+                                        <label>Nhập email của bạn</label>
+                                        <button type="button" class="hrm-v2-btn-save1" style="border-bottom-right-radius: 20px!important; border-top-right-radius: 20px!important;right:95px;border-top-left-radius: 20px!important;border-bottom-left-radius: 20px!important">Đăng kí</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-12 pull-left">
+                    <div class="col-md-3">
+                        <img src="@Url.Content("~/Content/Images/banner/ptl10.png")" />
+                    </div>
+                    <div class="col-md-3 text-center" >
+                        <img src="@Url.Content("~/Content/Images/banner/ptl11.png")" style="padding-top:10px" />
+                    </div>
+                    <div class="col-md-3 text-center" >
+                        <img src="@Url.Content("~/Content/Images/banner/ptl12.png")" style="padding-top:10px" />
+                    </div>
+                    <div class="col-md-3" >
+                        <img src="@Url.Content("~/Content/Images/banner/ptl13.png")" />
+                    </div>
+                </div>
+                <div class="col-md-12 pull-left">
+                    <p style="padding:20px;color:#fff;border-top: 1px solid #f7f7f7">2019 - Bản quyền thuộc về NOVAON. Tất cả các quyền được bảo lưu.       <span class="hrm-v2-bold" style="margin-left:20px">Điều khoản và chính sách</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,114 @@
+﻿@using HRM.Common
+@using HRM.App_LocalResources;
+<div class="container-fluid">
+    <div class="row" id="PaymentProduct" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-heading"><b>@AppRes.ExcludeAcc</b></div>
+                <hr />
+                <div class="panel-body">
+                    <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)" novalidate>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                @*---------------------------------------------------------------Đầu tiên-------------------------------------------------------------------------------------------------------*@
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.AccountNumber </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div style="position: relative; display:inline-block; border:0px solid blue; width:100%">
+                                            <input type="text"  ng-model="editData.AccountNumber" class="form-control">
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Status </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control"  data-modal="modal" ng-model="editData.Status" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                            <option value="0">@AppRes.NotActive</option>
+                                            <option value="1">@AppRes.Active</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.StartDate </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input ng-readonly=is_readonly type="date" class="form-control" ng-model="editData.StartDate" format-date />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.EndDate</label>
+                                    </div>
+                                    <div class="col-md-4">                                     
+                                        <input ng-readonly=is_readonly type="date" class="form-control" ng-model="editData.EndDate" format-date />
+                                        @*<span ng-show="EditForm.$submitted && EditForm.CustomerID.$error.required" style="color: red">@AppRes.ValidationStatus</span>*@
+                                    </div>
+
+
+                                </div>
+                                <br />
+                            
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.CreatedBy </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" ng-disabled="true" chosen options="getListStaff" on-no-result="doStuff" ng-required="true" name="CreatedBy" ng-model="editData.CreatedBy" ng-options="list.UserID as list.FullName for list in getListStaff" convert-dropdown>
+                                            <option value="" selected>--@AppRes.Select--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Note </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <textarea class="form-control" ng-model="editData.Note">
+
+                                        </textarea>
+
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>@AppRes.CreatedDate </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="date" class="form-control" ng-readonly=is_readonly ng-required="true" name="Amount" ng-model="editData.CreatedOn" format-date />
+                                    </div>
+                                  
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        @*---------------------------------------------------------------Thêm mới và bỏ qua-------------------------------------------------------------------------------------------------------*@
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-4 col-md-push-5">
+                                <button type="submit" class="btn btn-labeled btn-success" ng-show="tablePermission.isEdit">
+                                    <span class="btn-label">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </span>@AppRes.SaveData
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>

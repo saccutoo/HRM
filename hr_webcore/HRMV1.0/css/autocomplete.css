@@ -1,0 +1,141 @@
+.adropdown {
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+    display: block;
+    top: 0px;
+    left: 0px;
+    text-align: left;
+    position: absolute;
+    border: 0px solid red;
+}
+
+   .adropdown table thead {
+        display: block;
+        overflow: auto;
+        color: #fff;
+        background: #000;
+    }
+
+   .adropdown table tbody {
+        display: block;
+        height: 200px;
+        background: #FFF;
+        overflow: auto;
+    }
+    .adropdown th {
+         border-right: none;
+     }
+   .adropdown table th, td {
+      
+        text-align: left;
+        vertical-align: top;
+        word-wrap: break-word;
+    }
+    .adropdown table {
+        margin: 35px 1px 0px 1px;
+        border-collapse: collapse;
+        border: 1px solid #E3E3E3;
+        border-spacing: 0px;
+        display: none;
+        color: #000;
+        cursor: pointer;
+    }
+
+        .adropdown table thead tr {
+            border-bottom: 1px solid #cccccc;
+        }
+
+            .adropdown table thead tr th {
+                /*border-right: 1px solid #EEE;*/
+            }
+
+
+        .adropdown table tbody tr td {
+            border-right: 1px solid #E3E3E3;
+             word-wrap: break-word;
+        }
+
+    .adropdown tr:hover {
+        background: #ecf3f8 !important;
+        color: #000;
+    }
+
+    .adropdown th {
+        background: #E3E3E3;
+        color: #000;
+       
+        font-size: 12px;
+        padding: 5px 10px;
+        text-align: center;
+        border-width: 1px;
+    }
+
+    .adropdown tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .adropdown tr td {
+        margin: 0;
+        font-variant: normal;
+        font-size: 12px;
+        padding: 5px;
+        min-height: 15px;
+        border-bottom: 1px solid #eee;
+        border-left: 0px;
+        border-right: 0px;
+        border-top: 0px;
+        text-align: left;
+         word-wrap: break-word;
+    }
+
+    .adropdown .selected {
+        background: #d9edf7 !important;
+        padding-bottom: 8px;
+        color: #000;
+    }
+
+    .adropdown div {
+        position: absolute;
+    }
+
+    .adropdown table caption {
+        caption-side: bottom;
+        padding: 10px;
+        display: none;
+    }
+
+.highlight {
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.10), 0px 10px 20px rgba(0,0,0,0.05), 0px 20px 20px rgba(0,0,0,0.05), 0px 30px 20px rgba(0,0,0,0.05);
+    z-index: 999;
+}
+
+.adropdown-input {
+    padding: 6px;
+    outline: 0;
+    border: 1px solid #ccc;
+    margin: 0px;
+    font-size: 12px;
+    width: 100% !important;
+}
+
+    .adropdown-input::-ms-clear {
+        width: 0;
+        height: 0;
+    }
+
+.inputfocus {
+    outline: 0;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    min-width: 140px;
+    padding: 6px;
+    background: none;
+    margin: 2px 0px 2px 0px !important;
+    position: relative;
+    z-index: 1000;
+}
+
+.loading {
+    background: url(img/loading.gif) no-repeat right center;
+}

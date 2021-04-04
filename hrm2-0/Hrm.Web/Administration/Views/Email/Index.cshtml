@@ -1,0 +1,327 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@model Hrm.Admin.ViewModels.EmailViewModel
+@{
+    ViewBag.Title = "Email";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+<style>
+    .gereral-left {
+        text-align: left;
+    }
+
+        .gereral-left.gereral-left-email {
+            border-right: 1px solid #ccc;
+            padding-right: 10px;
+        }
+
+    .email-left-top {
+        width: 100%;
+        height: 50px;
+    }
+
+    .email-left-bottom {
+        width: 100%;
+        height: calc(100% - 50px );
+    }
+
+    .email-left-top-left {
+        height: 100%;
+        width: 90%;
+        float: left;
+    }
+
+        .email-left-top-left input {
+            line-height: 30px;
+            height: 35px;
+            margin-top: 6px;
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #ccc;
+        }
+
+            .email-left-top-left input:focus {
+                outline: none;
+            }
+
+    .email-left-top-right {
+        width: 10%;
+        float: left;
+        height: 100%;
+    }
+
+    .icon-filter {
+        width: 100%;
+        height: 41px;
+        border-bottom: 1px solid #ccc;
+        text-align: center;
+    }
+
+        .icon-filter span {
+            color: #2CA01C;
+            font-size: 20px;
+            line-height: 50px;
+        }
+
+    .category-email {
+        margin-top: 10px;
+        width: 100%;
+        height: 95px;
+        cursor: pointer;
+        overflow: auto;
+    }
+
+        .category-email:hover {
+            margin-top: 10px;
+            width: 100%;
+            background: black;
+            background-image: linear-gradient(45deg,#4DAF3C, #1DAB8C);
+            height: 95px;
+        }
+
+    .category-email-name {
+        width: 100%;
+        font-family: Roboto-bold;
+        height: 35px;
+    }
+
+        .category-email-name span {
+            margin-left: 10px;
+            line-height: 40px;
+        }
+
+    .category-email-content {
+        width: 100%;
+        height: 25px;
+    }
+
+        .category-email-content span {
+            font-size: 13px;
+            margin-left: 10px;
+        }
+
+    .category-email-attchment {
+        width: 100%;
+        height: 30px;
+    }
+
+        .category-email-attchment .count-file {
+            float: left;
+            height: 100%;
+            width: 20px;
+            border-radius: 50%;
+            background: black;
+            background-color: #8fe8f7;
+            height: 20px;
+            text-align: center;
+            margin-left: 10px;
+        }
+
+        .category-email-attchment .icon-attch {
+            float: left;
+            height: 100%;
+            width: 30px;
+            text-align: center;
+        }
+
+            .category-email-attchment .icon-attch span {
+                line-height: 20px;
+            }
+
+    .gereral-right.gereral-right-email {
+        height: 100%;
+    }
+
+    .email-right-top {
+        width: 100%;
+        height: 65px;
+    }
+
+    .email-right-top-right {
+        width: 50%;
+        float: left;
+    }
+
+        .email-right-top-right .title-email {
+            width: 100%;
+            height: 50px;
+            font-size: 25px;
+            line-height: 50px;
+        }
+
+        .email-right-top-right .list-receiver {
+            width: 100%;
+            height: 30px;
+            color: #ccc;
+        }
+
+            .email-right-top-right .list-receiver .list-receiver-right {
+                float: left;
+                height: 100%;
+                width: 120px;
+            }
+
+            .email-right-top-right .list-receiver .list-receiver-left {
+                float: left;
+                height: 100%;
+                width: calc(100% - 120px);
+            }
+
+    .email-top-left {
+        float: left;
+        height: 100%;
+        width: 50%;
+    }
+
+        .email-top-left .top-left-icon {
+            float: right;
+            height: 100%;
+        }
+
+            .email-top-left .top-left-icon a {
+                line-height: 100px;
+                margin-left: 20px;
+                color: #2CA01C;
+            }
+
+    .email-right-body {
+        width: 100%;
+        height: 520px;
+        overflow: auto;
+    }
+
+    .email-right-footer {
+        width: 100%;
+        height: 132px;
+    }
+
+        .email-right-footer .attackment-top {
+            width: 100%;
+            height: 35px;
+        }
+
+        .email-right-footer .attackment-bottom {
+            width: 100%;
+            height: calc(100% - 35px);
+        }
+
+        .email-right-footer .attackment-bottom-content {
+            height: 100%;
+            width: 300px;
+            float: left;
+        }
+
+            .email-right-footer .attackment-bottom-content .attackment-left-icon {
+                height: 100%;
+                width: 40%;
+                text-align: center;
+                float: left;
+            }
+
+                .email-right-footer .attackment-bottom-content .attackment-left-icon span {
+                    font-size: 70px;
+                }
+
+            .email-right-footer .attackment-bottom-content .attackment-right-content {
+                float: left;
+                height: 100%;
+                width: 60%;
+            }
+
+                .email-right-footer .attackment-bottom-content .attackment-right-content .attackment-right-name {
+                    font-family: Roboto-Bold;
+                    font-size: 16px;
+                    height: 40px;
+                    line-height: 55px;
+                }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/Admin/Setting/Index" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Email.EmailTemplate")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left" })
+    </div>
+</div>
+<div class="gereral">
+    <div class="gereral-left gereral-left-email">
+        <div class="email-left-top">
+            <div class="email-left-top-left">
+                <input type="text" placeholder="@T("Email.SearchEmail")" />
+            </div>
+            <div class="email-left-top-right">
+                <div class="icon-filter">
+                    <span class="fas fa-filter"></span>
+                </div>
+            </div>
+        </div>
+        <div class="email-left-bottom">
+            @{
+                var data = Model.ListEmail;
+                if (data != null && data.Count > 0)
+                {
+                    @Html.Partial(UrlHelpers.TemplateAdmin("Email", "_ListEmail.cshtml"), Model.ListEmail)
+                }
+            }
+        </div>
+
+
+    </div>
+    <div class="gereral-right gereral-right-email" id="email-template-detail">
+        @Html.Partial(UrlHelpers.TemplateAdmin("Email", "_EmailDetail.cshtml"), Model.EmailDetail)
+    </div>
+</div>
+<script>
+    function clickEmail(id) {
+        $("#email-template-detail").load('/Admin/Email/ReloadEmailDetail', { id: id });
+    }
+
+    var FileUpload = [];
+    var JustUpload = [];
+
+    function changeInputFile() {
+        var file = $('#attachment')[0].files[0];
+        var formData = new FormData();
+        formData.append('attachment', file);
+        $.ajax({
+            type: 'POST',
+            url: "/Admin/Email/Save",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.IsSuccess) {
+                    var current = {
+                        extension: file.name.split(".")[1],
+                        size: file.size,
+                        name: response.Result[0].name,
+                        realname: response.Result[0].realname,
+                    }
+                    FileUpload.push(current);
+                }
+                $("#list-attackment").load('/Admin/Email/ReloadEmailAttachment', { atchments: FileUpload });
+            },
+        });
+    }
+
+    function removeFile(realName) {
+        var formData = new FormData();
+        formData.append('realName', realName);
+        $.ajax({
+            type: 'POST',
+            url: "/Admin/Email/Remove",
+            data:formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                debugger
+                if (response.IsSuccess) {                  
+                    JustUpload = FileUpload.filter(function (value) {
+                        return value.realname != realName
+                    })
+                    FileUpload = JustUpload;
+                }
+                $("#list-attackment").load('/Admin/Email/ReloadEmailAttachment', { atchments: FileUpload });
+            },
+        });
+    }
+
+</script>

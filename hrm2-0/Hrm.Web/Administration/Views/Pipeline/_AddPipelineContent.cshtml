@@ -1,0 +1,95 @@
+﻿@using Hrm.Admin.ViewModels
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Pipeline";
+}
+
+<style>
+    .select2-selection{
+        height:35px;
+    }
+    .add-pipeline-body-center .select2-selection__rendered{
+        min-height:30px!important;
+        max-height:30px!important;
+        overflow:auto!important;
+    }
+</style>
+@if (Model.Count > 0)
+{
+    int index = 0;
+    foreach (var item in Model)
+    {
+        var unsortable = string.Empty;
+        var boxitem = "box-item";
+        var style = "30px";
+        if (item.PositionName != MasterGroup.PositionName)
+        {
+            unsortable = "unsortable";
+            boxitem = string.Empty;
+            style = "130px";
+        }
+        <div class="add-pipeline-body-center @boxitem" >
+            <div class="stage">
+                <div class="stage-left">
+                    @{ 
+                        var newIndex = index + 1;
+                    }
+                    <span class="span-index">@newIndex </span>
+                </div>
+                @*@{
+                    var name = M(item.Id + ";" + DataType.Pipeline + ";" + "PipelineStepName");
+                    var Value = string.Empty;
+                    if (item.Id != 0)
+                    {
+                        Value = name.Text;
+                    }
+                    else
+                    {
+                        Value = item.PipelineStepName;
+                    }
+                }*@
+                <div class="stage-center" style="width: calc(100% - @style);">
+                    @Html.Partial(UrlHelpers.Template("_TextEditor.cshtml"), new TextEditorModel() { Name = "PipelineStep[" + index+"].PipelineStepName", Style = "width:100%;border-left: 0px;border-radius: 0px;height:35px;padding-right: 100px;padding-left: 10px;", Value = item.PipelineStepName,Type="text" })
+                    <input value="" name="PipelineStep[@index].OrderNo"  hidden/>
+                </div>
+                @{
+                    var color = C(item.PositionId.ToString()).ToString();
+                    if (item.PositionId != 42)
+                    {
+                        <div class="stage-right" style="background:@color">
+                            <span>@M(item.PositionId + ";" + DataType.MasterData + ";" + "Name")</span>
+                        </div>
+                    }
+
+                }
+            </div>
+
+            <div class="licensed @unsortable">
+                <div class="licensed-input">
+                    @Html.Partial(UrlHelpers.Template("_DropdownListTags.cshtml"), new DropdownListModel() { Name = "PipelineStep[" + index+"].ListStringPipelineRule",Style= "width:100%;height:35px;",CountOption=Model.Count,ValueField=item.PipelineRule })                   
+                </div>
+                <div class="licensed-remove" onclick="removePipelineStep(@index)">
+                    <span class="fas fa-times-circle"></span>
+                </div>
+                <div class="licensed-sort">
+                    <span class="fas fa-grip-vertical"></span>
+                </div>
+            </div>
+        </div>
+        <input type="text" value="@item.Id" name="PipelineStep[@index].Id" hidden id="pilineStepId"/>
+        <input type="text" value="@item.PipelineId" name="PipelineStep[@index].PipelineId" hidden id="pipelineId"/>
+        <input type="text" value="@item.PositionName" name="PipelineStep[@index].PositionName" hidden id="positionName" />
+        <input type="text" value="@item.PositionId" name="PipelineStep[@index].PositionId" hidden id="positionId" />
+        <input type="text" value="@index" hidden id="indexId" name="PipelineStep[@index].Index"/>
+        <input type="text" value="@item.PipelineStepSymbol" hidden id="pipelineStepSymbol"  name="PipelineStep[@index].PipelineStepSymbol" />
+        index++;
+      }
+}
+<script>
+    $(document).ready(function () {      
+        $(".unsortable").addClass("disabledbutton");
+    });
+</script>

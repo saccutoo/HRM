@@ -1,0 +1,30 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = "Report_L_By_Staff_BDX";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div class="container-fluid" ng-app="tableApp" ng-cloak>
+
+    <div id="AttendanceManagement" class="row" style="margin: 0;" ng-controller="mytable" ng-init="init()">
+        <div class="col-md-12" id="PerformanceReport"><br />
+            <div>
+                
+                <div class="row">
+                    <build-fixed-table table-url="'/ReportLBDX/Report_L_By_Department_BDX'"
+                                       table-model="reportl">
+                    </build-fixed-table>
+                </div>
+            </div>
+
+    </div>
+</div>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/ReportL/ReportLUntil.js"></script>
+
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+</script>

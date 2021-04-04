@@ -1,0 +1,52 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@model Hrm.Framework.Models.BaseModel
+<style>
+    .popover-content {
+        padding: 0px;
+        padding-bottom: 7px;
+        width: 150px;
+    }
+    .popover-content ul{   
+        width: 100%;
+        padding: 0px;
+        margin: 0px;
+        margin-top: 5px;
+    }
+    .popover-content ul li:hover{
+        background-color: #c1c1c1;
+    }
+    .popover-content ul li a{
+       color: white;
+        list-style: none;
+        margin-left: 10px;
+    }
+</style>
+@{
+    var tooltip = "tooltip-list-supplement-" + Model.ValueCommon.Replace("/", "-").Replace(" ", "-").Replace(":", "-");
+    var date = Convert.ToDateTime(Model.ValueCommon);   
+
+    <div class="icon-supplement" style="margin-left:10px" id="tooltip-list-supplement-@Model.ValueCommon.Replace("/","-").Replace(" ","-").Replace(":", "-")"  tabindex="0" data-toggle="tooltip-list-supplement-@Model.ValueCommon.Replace("/","-").Replace(" ","-").Replace(":", "-")">
+        <i class="far fa-calendar-plus add-total-request"></i>
+    </div>
+}
+<script>
+    $.ajax({
+            type: "POST",
+            url: "/Workingday/GetSupplementByDate",
+            data: {
+                date: '@Convert.ToDateTime(Model.ValueCommon)',
+                staffId: '@Model.Id'
+            },
+            success: function (response) {
+               $('[data-toggle="@tooltip"]').popover({
+                    placement: 'right'
+                    , trigger: 'horver'
+                    , html: true
+                    , content: response
+                });
+            }
+        });
+        
+
+</script>

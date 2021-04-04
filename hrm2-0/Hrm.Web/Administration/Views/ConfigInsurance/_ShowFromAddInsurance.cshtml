@@ -1,0 +1,53 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Admin.ViewModels.ConfigInsuranceViewModel
+@{
+    Layout = null;
+}
+<form id="save-personal-income-tax-form">
+    <div class="detail-allowance-container display-inline-block">
+
+        <div class="hrm-v2-modal-header">@T("Setting.Insurance.Set")</div>
+
+        <div class="hrm-v2-modal-body" style="margin-top:0px">
+            <section class="hrmv2-section">
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "ConfigInsurance.FromDate", LabelName = T("Setting.PersonalIncomeTax.FromDate").ToString(), Value = Model.ConfigInsurance.FromDate })
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "ConfigInsurance.ToDate", LabelName = T("Setting.PersonalIncomeTax.ToDate").ToString(), Value = Model.ConfigInsurance.ToDate })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+
+                    <div class="col-md-12 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Setting.ConfigInsurance.Note").ToString(), IsAnimationLabel = true, Name = "ConfigInsurance.Description.", Value = Model.ConfigInsurance.Note, PlaceHolder = "" })
+                    </div>
+                </div>
+            </section>
+            <section class="hrmv2-section">
+                @{
+                    Model.Table.ViewType = 1;
+                }
+                <div class="col-md-12 display-inline-block text-uppercase">
+                    @T("Config_Insurance")
+                </div>
+                @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+            </section>
+            <div class="footer">
+                <div class="footer-login">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                            @T("Button.Cancel")
+                        </button>
+                        <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="saveBonusDiscipline('create-discipline-form')">
+                            @T("Button.Update")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

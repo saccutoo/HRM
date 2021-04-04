@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Sec_Role_Organizationunit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row" loading-pane>
+        <div class="col-sm-6" ng-controller="mytable">
+            @Html.Action("SecRoleMenuServerSide", "Common")
+        </div>
+        <div class="col-sm-6" ng-controller="mytable1">
+            @Html.Action("SecOrganizationunitMenuServerSide", "Common")
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/mycustom/Sec_Role_Organizationunit/Sec_Role_OrganizationunitService.js"></script>
+<script src="~/Scripts/mycustom/Sec_Role_Organizationunit/Sec_Role_OrganizationunitUntil.js"></script>
+
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.urlSecRole)');
+    BuildTable('tableApp', 'mytable1', '@(ViewBag.urlOrganizationUnit)');
+</script>
+
+

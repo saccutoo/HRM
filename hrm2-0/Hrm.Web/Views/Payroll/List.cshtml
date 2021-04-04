@@ -1,0 +1,137 @@
+﻿@model Hrm.Web.ViewModels.PayrollViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Context
+@using Hrm.Common
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@{
+    ViewBag.Title = T("Payroll.BreadCrumb.List");
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+    TableViewModel tableViewModel = JsonConvert.DeserializeObject<TableViewModel>(JsonConvert.SerializeObject(Model.Table.Clone()));
+    tableViewModel.TableData = new List<dynamic>();
+    tableViewModel.lstItemsPerPage = new List<dynamic>();
+
+}
+<style>
+    .dropdown-toggle:after {
+        display: none;
+    }
+
+    /*.pull-right{
+        display: inline-flex;
+    }*/
+
+    .pull-right > .header-dropdown-menu {
+        line-height: 1em;
+        top: 75%;
+        right: 7.53em;
+    }
+
+    /* Header button */
+    .header-dropbtn {
+        background-color: #4CAD50;
+        color: white;
+        font-size: .7em;
+        border: none;
+    }
+
+    .header-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .header-dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #F1F1F1;
+        width: 10em;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        left: .75em;
+    }
+
+        .header-dropdown-content span {
+            color: black;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+            line-height: 2.5em;
+            padding: .0em 1em;
+        }
+
+            .header-dropdown-content span:hover {
+                background-color: #DDD;
+            }
+
+    .header-dropdown:hover .header-dropdown-content {
+        display: block;
+    }
+
+    .header-dropdown:hover .dropbtn {
+        background-color: #3E8E41;
+    }
+    /* END Header button */
+
+    /* Bulk action */
+    .header-action-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .header-action-dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #F1F1F1;
+        min-width: 8em;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        left: .75em;
+    }
+
+        .header-action-dropdown-content span {
+            color: black;
+            padding: 1em 1em;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+        }
+
+            .header-action-dropdown-content span:hover {
+                background-color: #DDD;
+            }
+
+    .header-action-dropdown:hover .header-action-dropdown-content {
+        display: block;
+    }
+
+    .header-action-dropdown:hover .dropbtn {
+        background-color: #3E8E41;
+    }
+    /* END Header button */
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="bread-crumb-item"> @T("Payroll.BreadCrumb.List")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span>
+    <div class="pull-right">
+        @if (FunctionHelpers.ControlPermission(ActionName.Update, TableConfig.Payroll))
+        {
+            <div class="header-dropdown pull-left">
+                <button type="button" class="filter btn-bread-crumb header-dropbtn"><i class="fas fa-plus"></i></button>
+                <div class="header-dropdown-content">
+                    <span onclick="location.href='/Payroll/Add'">Thêm bảng lương</span>
+                    <span>Link 2</span>
+                </div>
+            </div>
+        }
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter('Payroll', " + Html.Raw(Json.Encode(Model.Table.TableName)) + ", 1, 0)" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-upload", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "exportData('" + Model.Table.TableName + "', '/Payroll/ExportPayroll')" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-download", BtnClass = "filter btn-bread-crumb pull-left" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter('Payroll',  " + Html.Raw(Json.Encode(Model.Table.TableName)) + ",  1, 0)" })
+    </div>
+</div>
+<div class="payroll-table">
+    <div id="table-payroll-contaner">
+        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/hrm-v2/Payroll/_list.js?v=" + timeVersion)"></script>

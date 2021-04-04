@@ -1,0 +1,257 @@
+﻿
+.ajax-dropdown-nova > :first-child {
+    margin: 0 0 3px;
+    padding: 0 0 5px;
+    font-size:16px;
+}
+
+.ajax-dropdown-nova {
+    position: absolute;
+    display: none;
+    z-index: 905;
+    top: 48px;
+    right: 16px;
+    width: 344px;
+    max-height: 425px;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-box-shadow: 0 2px 4px rgba(30,30,100,.25);
+    -moz-box-shadow: 0 2px 4px rgba(30,30,100,.25);
+    box-shadow: 0 2px 4px rgba(30,30,100,.25);
+    /*padding: 10px;*/
+    background: #fff;
+    border: 1px solid #b3b3b3;
+    background-color:#f8f8f8;
+    /*padding-left:8px;
+    padding-right:8px;*/
+}
+
+    .ajax-dropdown-nova:after, .ajax-dropdown-nova:before {
+        bottom: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .ajax-dropdown-nova:after {
+        border-color: rgba(255,255,255,0);
+        border-bottom-color: #fff;
+        border-width: 7px;
+        left: 86%;
+        margin-left: -7px;
+    }
+
+    .ajax-dropdown-nova:before {
+        border-color: rgba(131,131,131,0);
+        border-bottom-color: #838383;
+        border-width: 8px;
+        left: 86%;
+        margin-left: -8px;
+    }
+
+    .ajax-dropdown-nova .btn-group .btn {
+        font-weight: 700;
+        text-transform: capitalize;
+    }
+
+    .ajax-dropdown-nova .btn-group > :nth-child(2) {
+        border-right-width: 0;
+        border-left-width: 0;
+    }
+
+    .ajax-dropdown-nova .btn-group > :last-child {
+        border-right-width: 1px !important;
+    }
+
+    .ajax-dropdown-nova .btn-group .btn:active {
+        top: 0;
+        left: 0;
+    }
+
+    .ajax-dropdown-nova > :last-child {
+        font-size: 13px;
+        display: block;
+        padding: 5px 0;
+        line-height: 22px;
+        font-weight: 400;
+    }
+
+    .ajax-dropdown-nova .fa-4x.fa-border {
+        border-width: 3px;
+        border-radius: 50%;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        display: block;
+        margin: 0 auto;
+        width: 46px;
+        text-align: center;
+        color: #D1D1D1;
+        border-color: #D1D1D1;
+    }
+
+.custom-scroll-default::-webkit-scrollbar {
+    -webkit-overflow-scrolling: touch;
+    height: 10px;
+    width: 1px;
+}
+    
+
+.custom-scroll-nova::-webkit-scrollbar {
+    width: 10px;
+    height:10px;
+      
+}
+ 
+.custom-scroll-nova::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.8); 
+    border-radius: 6px;
+    background-color: grey;
+}
+ 
+.custom-scroll-nova::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.9); 
+    background-color: grey;
+}
+
+
+
+.ajax-notifications-nova {
+    max-height: 357px;
+    display: block;
+    overflow: auto;
+    margin-right: -10px;
+    margin-left: -10px;
+    border-bottom: 1px solid #CECECE;
+    border-top: 1px solid #CECECE;
+    background: #FFFFFF;
+}
+
+    .ajax-notifications-nova .alert.alert-transparent {
+        background-color: transparent;
+        border-color: transparent;
+        color: #757575;
+        margin: 13px 10px;
+    }
+
+    .ajax-notifications-nova .alert > :first-child {
+        margin-bottom: 10px;
+        font-weight: 400;
+    }
+
+    .btn-group-justified-nova
+    {
+        padding:5px !important;
+    }
+
+
+    
+.notification-body-nova *, .notification-body-nova:after *, .notification-body-nova:before * {
+    box-sizing: border-box !important;
+    -webkit-box-sizing: border-box !important;
+    -moz-box-sizing: border-box !important;
+}
+
+.notification-body-nova {
+    padding: 0 0 0 3px;
+    margin: 0;
+    list-style: none;
+    padding-left:8px;
+    padding-right:8px;
+}
+
+    .notification-body-nova > li {
+        border-bottom: 1px solid #E9E9E9;
+        position: relative;
+        min-height:50px;
+    }
+
+        .notification-body-nova > li > span {
+            background: #fff;
+            display: block;
+            min-height: 25px;
+            overflow: hidden;
+            /*padding: 8px 10px 13px;*/
+            /*padding-top:5px;*/
+            white-space: normal;
+        }
+
+            .notification-body-nova > li > span:hover {
+                background: #F0F4F7;
+                color: #667F8F;
+            }
+
+        .notification-body-nova > li a.msg {
+            padding-left: 50px !important;
+        }
+
+        .notification-body-nova > li a, .notification-body-nova > li a span {
+            /*display: block;*/
+            /*position: relative;*/
+            overflow: hidden;
+        }
+
+            .notification-body-nova > li a, .notification-body-nova > li a:hover {
+                text-decoration: none;
+            }
+
+        .notification-body-nova > li:hover .progress {
+            background: #fff;
+            box-shadow: 0 1px 0 rgba(0,0,0,0),0 0 0 1px #a7a7a7 inset;
+            -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0),0 0 0 1px #ccc inset;
+            -moz-box-shadow: 0 1px 0 transparent,0 0 0 1px #fff inset;
+        }
+
+        .notification-body-nova > li:hover .text-muted {
+            color: #333;
+        }
+
+    .notification-body-nova .from {
+        font-size: 14px;
+        line-height: normal;
+        color: #333;
+        font-weight: 400;
+        margin-right: 60px;
+        margin-bottom: 6px;
+        height: 20px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .notification-body-nova .unread .from {
+        font-weight: 700;
+    }
+
+    .notification-body-nova .unread {
+        background: #FFFFE0;
+    }
+
+    .notification-body-nova time {
+        position: absolute;
+        top: 3px;
+        right: 0;
+        font-size: 11px;
+        font-weight: 400;
+        color: #058dc7;
+    }
+
+    .notification-body-nova .msg-body, .notification-body-nova .subject {
+        font-size: 13px;
+        color: #A0A0A0;
+        max-height: 35px;
+        width: 100%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .notification-body-nova .subject {
+        font-size: 13px;
+        color: #333;
+        max-height: 22px;
+    }

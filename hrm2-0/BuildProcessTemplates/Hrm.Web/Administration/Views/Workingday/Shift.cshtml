@@ -1,0 +1,64 @@
+﻿@model Hrm.Admin.ViewModels.WorkingdayShiftViewModel
+@using Hrm.Common
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+<style>
+    .organization-table .Action.ellipsis {
+        top: 4px;
+    }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Workingday.Shift.Shift")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormAddWorkingdayShift()" })
+
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.WorkingdayShift + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 0, 0)" })
+
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.WorkingdayShift + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 1, 0)" })
+    </div>
+</div>
+<div class="shift-table">
+    <div id="table-workingday-shift">
+        @if (Model.Table != null)
+        {
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+        }
+    </div>
+</div>
+
+<script>
+    var tableName = '@Model.Table.TableName';
+    function ShowFormAddWorkingdayShift() {
+        window.location.href = "/Admin/Workingday/AddShift";
+    }
+    function showFormEditWorkingdayShift(id) {
+        window.location.href = "/Admin/Workingday/AddShift?id="+id;
+    }
+    function deleteWorkingdayShift(id) {
+        debugger
+        $.ajax(
+          {
+              type: "POST",
+              url: "/Admin/Workingday/DeleteWorkingdayShift",
+              data: {
+                  id: id
+              },
+              success: function (response) {
+                  if (response.result.Success == true) {
+                      ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                      changeItemsPerpage(tableName);
+                  }
+                  else {
+                      ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                  }
+              }
+          });
+    }
+
+</script>

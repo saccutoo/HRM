@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "EmployeeList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>EmployeeList</h2>
+@foreach (var item in Model)
+{
+    @item.EmployeeName;
+}
+

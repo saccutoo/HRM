@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{99C1F626-8C44-40F2-8E25-97C7FB38978D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HRM.DataAccess</RootNamespace>
+    <AssemblyName>HRM.DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\References\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Enyim.Caching, Version=2.11.0.0, Culture=neutral, PublicKeyToken=cec98615db04012e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Enyim.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="ERP.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\ERP.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\CacheUtils.cs" />
+    <Compile Include="Common\DisplayUtils.cs" />
+    <Compile Include="Common\EmailUtils.cs" />
+    <Compile Include="Common\EnumCompanyRoomList.cs" />
+    <Compile Include="Common\Global.cs" />
+    <Compile Include="Common\ListFilterParam.cs" />
+    <Compile Include="Common\MoneyRead.cs" />
+    <Compile Include="Common\SystemMessageConst.cs" />
+    <Compile Include="Common\Utilities.cs" />
+    <Compile Include="Common\UtilityFormat.cs" />
+    <Compile Include="Constants\ConfigKey.cs" />
+    <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Constants\Enum.cs" />
+    <Compile Include="Constants\FolderUpload.cs" />
+    <Compile Include="Constants\TextConstants.cs" />
+    <Compile Include="DAL\ApprovalHistoryDAL.cs" />
+    <Compile Include="DAL\CampaignDAL.cs" />
+    <Compile Include="DAL\CheckSalaryErpDAL.cs" />
+    <Compile Include="DAL\CommonDal.cs" />
+    <Compile Include="DAL\Config_AllowanceDAL.cs" />
+    <Compile Include="DAL\Config_PersonalIncomeTax_DAL.cs" />
+    <Compile Include="DAL\CustomerDAL.cs" />
+    <Compile Include="DAL\CustomerTransferHistoryDAL.cs" />
+    <Compile Include="DAL\DetailAccountReportDAL.cs" />
+    <Compile Include="DAL\EmployeeAllowanceDAL.cs" />
+    <Compile Include="DAL\EmployeeBonus_DisciplineDAL.cs" />
+    <Compile Include="DAL\EmployeeDAL.cs" />
+    <Compile Include="DAL\EmployeeRelationshipsDAL.cs" />
+    <Compile Include="DAL\GlobalDal.cs" />
+    <Compile Include="DAL\GlobalListDal.cs" />
+    <Compile Include="DAL\Config_InsuranceDal.cs" />
+    <Compile Include="DAL\HistoryUpdateSpendingDAL.cs" />
+    <Compile Include="DAL\HR_HolidayDAL.cs" />
+    <Compile Include="DAL\HR_OpeningAdditionalWorkDAL.cs" />
+    <Compile Include="DAL\HR_WorkingDayConfigDAL.cs" />
+    <Compile Include="DAL\HR_WorkingDayDAL.cs" />
+    <Compile Include="DAL\HR_WorkingDayMachineDetail_DAL.cs" />
+    <Compile Include="DAL\HR_WorkingDayMachine_DAL.cs" />
+    <Compile Include="DAL\HR_WorkingDaySummaryDal.cs" />
+    <Compile Include="DAL\HR_WorkingDaySupplementDal.cs" />
+    <Compile Include="DAL\ImportExcelDal.cs" />
+    <Compile Include="DAL\InsurancePositionDal.cs" />
+    <Compile Include="DAL\Log_DAL.cs" />
+    <Compile Include="DAL\MCCAccountExcludeDAL.cs" />
+    <Compile Include="DAL\MCC_BMInHouse_DAL.cs" />
+    <Compile Include="DAL\MergeDAL.cs" />
+    <Compile Include="DAL\NovaonAdDBM.cs" />
+    <Compile Include="DAL\DBM.cs" />
+    <Compile Include="DAL\DemoDal.cs" />
+    <Compile Include="DAL\OrganizationUnitDAL.cs" />
+    <Compile Include="DAL\OrganizationUnitPlanImplementation_DAL.cs" />
+    <Compile Include="DAL\OrganizationUnitPlan_DAL.cs" />
+    <Compile Include="DAL\PaymentProductDAL.cs" />
+    <Compile Include="DAL\PerformanceReportDAL.cs" />
+    <Compile Include="DAL\PersonalIncomeTax_DAL.cs" />
+    <Compile Include="DAL\PolicyAllowance_DAL.cs" />
+    <Compile Include="DAL\PolicyDetail_DAL.cs" />
+    <Compile Include="DAL\Policy_DAL.cs" />
+    <Compile Include="DAL\Province_DAL.cs" />
+    <Compile Include="DAL\RecommendedListDAL.cs" />
+    <Compile Include="DAL\ReportAccountByStaffDAL.cs" />
+    <Compile Include="DAL\ReportAccountCS_DAL.cs" />
+    <Compile Include="DAL\ReportIncreaseSpendingDAL.cs" />
+    <Compile Include="DAL\ReportLDAL.cs" />
+    <Compile Include="DAL\ReportSourceLeadDAL.cs" />
+    <Compile Include="DAL\ReportSpendingDAL.cs" />
+    <Compile Include="DAL\SalaryDAL.cs" />
+    <Compile Include="DAL\SalaryKPIDAL.cs" />
+    <Compile Include="DAL\Sec_ControllerDal.cs" />
+    <Compile Include="DAL\Sec_MenuDal.cs" />
+    <Compile Include="DAL\Sec_RoleDAL.cs" />
+    <Compile Include="DAL\Sec_RoleMenuDAL.cs" />
+    <Compile Include="DAL\Sec_Role_OrganizationunitDAL.cs" />
+    <Compile Include="DAL\Sec_Role_UserDal.cs" />
+    <Compile Include="DAL\Sec_StaffMarginLevelDAL.cs" />
+    <Compile Include="DAL\Sec_UserDal.cs" />
+    <Compile Include="DAL\Sec_UserMenuDAL.cs" />
+    <Compile Include="DAL\Sec_User_ViewCompanyDAL.cs" />
+    <Compile Include="DAL\ShareRateSalaryCostDAL.cs" />
+    <Compile Include="DAL\ShareRateForPerformanceReportDAL.cs" />
+    <Compile Include="DAL\SocialInsuranceDetailDAL.cs" />
+    <Compile Include="DAL\StaffPlanFundRateDAL.cs" />
+    <Compile Include="DAL\StaffPlanImplementation_DAL.cs" />
+    <Compile Include="DAL\StaffPlanRenewalRateDAL.cs" />
+    <Compile Include="DAL\StaffPlan_DAL.cs" />
+    <Compile Include="DAL\StandardSpending_DAL.cs" />
+    <Compile Include="DAL\Sys_Table_Column_DAL.cs" />
+    <Compile Include="DAL\Sys_Table_Role_ActionDal.cs" />
+    <Compile Include="DAL\TableDal.cs" />
+    <Compile Include="DAL\Template_DAL.cs" />
+    <Compile Include="DAL\TimekeepingDal.cs" />
+    <Compile Include="DAL\Timekeeping_ManagerVacationDAL.cs" />
+    <Compile Include="DAL\Timekeeping_TimeSSNDal.cs" />
+    <Compile Include="DAL\utl_Control_Permission_DAL.cs" />
+    <Compile Include="DAL\utl_Grid_Permission_DAL.cs" />
+    <Compile Include="DAL\utl_Role_Permission_DAL.cs" />
+    <Compile Include="DAL\WorkingDayMachineSatList_DAL.cs" />
+    <Compile Include="DAL\WorkingProcessDAL.cs" />
+    <Compile Include="Entity\CampaignReopened.cs" />
+    <Compile Include="Entity\CheckFormularModel.cs" />
+    <Compile Include="Entity\CustomerTransferHistory.cs" />
+    <Compile Include="Entity\DateApproval.cs" />
+    <Compile Include="Entity\Employee1.cs" />
+    <Compile Include="Entity\Config_PersonalIncomeTax.cs" />
+    <Compile Include="Entity\Customer.cs" />
+    <Compile Include="Entity\CustomerContact.cs" />
+    <Compile Include="Entity\Department %282%29.cs" />
+    <Compile Include="Entity\DetailReportAccount.cs" />
+    <Compile Include="Entity\EmloyeeDemoView.cs" />
+    <Compile Include="Entity\EntityPartial\GlobalList.cs" />
+    <Compile Include="Entity\EntityPartial\HR_WorkingDaySupplement.cs" />
+    <Compile Include="Entity\EntityPartial\OrganizationUnit.cs" />
+    <Compile Include="Entity\EntityPartial\PaymentProduct.cs" />
+    <Compile Include="Entity\EntityPartial\Salary.cs" />
+    <Compile Include="Entity\EntityPartial\SalaryWorkingday.cs" />
+    <Compile Include="Entity\EntityPartial\Sec_Menu.cs" />
+    <Compile Include="Entity\EntityPartial\Sec_User.cs" />
+    <Compile Include="Entity\ApprovalHistory.cs" />
+    <Compile Include="Entity\Cofig_Allowance.cs" />
+    <Compile Include="Entity\Department.cs" />
+    <Compile Include="Entity\Designation.cs" />
+    <Compile Include="Entity\Employee.cs" />
+    <Compile Include="Entity\EmployeeAllowance.cs" />
+    <Compile Include="Entity\EmployeeBonus_Discipline.cs" />
+    <Compile Include="Entity\EmployeeRelationships.cs" />
+    <Compile Include="Entity\EntityPartial\Employee.cs" />
+    <Compile Include="Entity\EntityPartial\EmployeeBonus_Discipline.cs" />
+    <Compile Include="Entity\EntityPartial\EmployeeRelationships.cs" />
+    <Compile Include="Entity\EntityPartial\SalaryDetail.cs" />
+    <Compile Include="Entity\EntityPartial\SocialInsuranceDetail.cs" />
+    <Compile Include="Entity\EntityPartial\WorkingProcess.cs" />
+    <Compile Include="Entity\CheckSalaryErp.cs" />
+    <Compile Include="Entity\GlobalList_Map_Language.cs" />
+    <Compile Include="Entity\GridModel.cs" />
+    <Compile Include="Entity\HistoryUpdateSpending.cs" />
+    <Compile Include="Entity\HR_Holiday.cs" />
+    <Compile Include="Entity\HR_OpeningAdditionalWork.cs" />
+    <Compile Include="Entity\HR_WorkingDay.cs" />
+    <Compile Include="Entity\HR_WorkingDayConfig.cs" />
+    <Compile Include="Entity\HR_WorkingDayMachine.cs" />
+    <Compile Include="Entity\HR_WorkingDayMachineSatList.cs" />
+    <Compile Include="Entity\HR_WorkingDayMarchineDetail.cs" />
+    <Compile Include="Entity\HR_WorkingDaySummary.cs" />
+    <Compile Include="Entity\Config_Insurance.cs" />
+    <Compile Include="Entity\HR_WorkingDaySupplement.cs" />
+    <Compile Include="Entity\Languages.cs" />
+    <Compile Include="Entity\Log.cs" />
+    <Compile Include="Entity\MCCAccountExclude.cs" />
+    <Compile Include="Entity\MCC_BMInHouse.cs" />
+    <Compile Include="Entity\Merge.cs" />
+    <Compile Include="Entity\OrganizationUnit.cs" />
+    <Compile Include="Entity\OrganizationUnitPlan.cs" />
+    <Compile Include="Entity\PaymentProduct.cs" />
+    <Compile Include="Entity\PaymentProductRefer.cs" />
+    <Compile Include="Entity\PerformenceReport.cs" />
+    <Compile Include="Entity\PersonalIncomeTax.cs" />
+    <Compile Include="Entity\PersonalIncomeTaxRate.cs" />
+    <Compile Include="Entity\PersonalIncomeTaxRateDetail.cs" />
+    <Compile Include="Entity\Policy.cs" />
+    <Compile Include="Entity\PolicyAllowance.cs" />
+    <Compile Include="Entity\PolicyDetail.cs" />
+    <Compile Include="Entity\PolicyDetail_Kpi.cs" />
+    <Compile Include="Entity\PolicyKpi.cs" />
+    <Compile Include="Entity\Province.cs" />
+    <Compile Include="Entity\RecommendedList.cs" />
+    <Compile Include="Entity\Region.cs" />
+    <Compile Include="Entity\ReportAccountByStaff.cs" />
+    <Compile Include="Entity\ReportAccountCS.cs" />
+    <Compile Include="Entity\ReportGeneralSpending.cs" />
+    <Compile Include="Entity\ReportIncreaseSpending.cs" />
+    <Compile Include="Entity\ReportL.cs" />
+    <Compile Include="Entity\ReportSourceLead.cs" />
+    <Compile Include="Entity\ReportSpendingByAccountNumber.cs" />
+    <Compile Include="Entity\ReportsPerformanceBD.cs" />
+    <Compile Include="Entity\Role.cs" />
+    <Compile Include="Entity\Salary.cs" />
+    <Compile Include="Entity\SalaryDetail.cs" />
+    <Compile Include="Entity\SalaryKPI.cs" />
+    <Compile Include="Entity\SalaryProcess.cs" />
+    <Compile Include="Entity\SalarySource.cs" />
+    <Compile Include="Entity\SalarySourceConfig.cs" />
+    <Compile Include="Entity\SalarySourceMapEmployeeDetail.cs" />
+    <Compile Include="Entity\SalaryWorkingday.cs" />
+    <Compile Include="Entity\Sec_Role_Organizationunit.cs" />
+    <Compile Include="Entity\Sec_StaffMarginLevel.cs" />
+    <Compile Include="Entity\Sec_User_Menu.cs" />
+    <Compile Include="Entity\Sec_User_ViewCompany.cs" />
+    <Compile Include="Entity\SendSyncEmail.cs" />
+    <Compile Include="Entity\ShareRateForPerformanceReport.cs" />
+    <Compile Include="Entity\ShareRateSalaryCost.cs" />
+    <Compile Include="Entity\SocialInsurance.cs" />
+    <Compile Include="Entity\SocialInsuranceDetail.cs" />
+    <Compile Include="Entity\SpendingAdjustmentRate.cs" />
+    <Compile Include="Entity\Staff.cs" />
+    <Compile Include="Entity\StaffPlan.cs" />
+    <Compile Include="Entity\StaffPlanFundRate.cs" />
+    <Compile Include="Entity\StaffPlanFundRateModel.cs" />
+    <Compile Include="Entity\StaffPlanRenewalRate.cs" />
+    <Compile Include="Entity\StandardSpending.cs" />
+    <Compile Include="Entity\SystemMessage.cs" />
+    <Compile Include="Entity\Sys_Menu.cs" />
+    <Compile Include="Entity\Sys_Role_Menu.cs" />
+    <Compile Include="Entity\Sys_Table.cs" />
+    <Compile Include="Entity\Sys_Table_Column.cs" />
+    <Compile Include="Entity\Sys_Table_Column_list.cs" />
+    <Compile Include="Entity\Sys_Table_Column_Role.cs" />
+    <Compile Include="Entity\Sys_Table_Column_User.cs" />
+    <Compile Include="Entity\Sys_Table_Role_Action.cs" />
+    <Compile Include="Entity\TableColumnsTotal.cs" />
+    <Compile Include="Entity\Template2.cs" />
+    <Compile Include="Entity\Timekeeping_ManagerVacation.cs" />
+    <Compile Include="Entity\TimeKeeping_TimeSSN.cs" />
+    <Compile Include="Entity\ToTalMonth.cs" />
+    <Compile Include="Entity\UserDefinedType\HR_WorkingDaySupplementSaveListType.cs" />
+    <Compile Include="Entity\UserDefinedType\HR_WorkingDaySupplementType.cs" />
+    <Compile Include="Entity\UserDefinedType\IUserDefinedType.cs" />
+    <Compile Include="Entity\UserDefinedType\ShareRateSalaryCostType.cs" />
+    <Compile Include="Entity\UserDefinedType\Sys_Table_Column_Type.cs" />
+    <Compile Include="Entity\Users.cs" />
+    <Compile Include="Entity\UserStatus.cs" />
+    <Compile Include="Entity\User_Map_Role.cs" />
+    <Compile Include="Entity\utl_Control_Permission.cs" />
+    <Compile Include="Entity\utl_Grid_Permission.cs" />
+    <Compile Include="Entity\utl_Role_Permission.cs" />
+    <Compile Include="Entity\WorkingProcess.cs" />
+    <Compile Include="Entity\GlobalList.cs" />
+    <Compile Include="Entity\Config_Insurance_Position.cs" />
+    <Compile Include="Entity\Language.cs" />
+    <Compile Include="Entity\Sec_Controller.cs" />
+    <Compile Include="Entity\Sec_Menu.cs" />
+    <Compile Include="Entity\Sec_Role.cs" />
+    <Compile Include="Entity\Sec_Role_Menu.cs" />
+    <Compile Include="Entity\Sec_Role_User.cs" />
+    <Compile Include="Entity\Sec_User.cs" />
+    <Compile Include="Entity\Table_Map_Language.cs" />
+    <Compile Include="Helpers\DalHelpers.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Encrypt.cs" />
+    <Compile Include="Utils\EnumUtils.cs" />
+    <Compile Include="Utils\Md5Utils.cs" />
+    <Compile Include="Utils\MessageUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\framework-v2\ERP.Framework.csproj">
+      <Project>{81843b60-e599-4ca1-9106-beee82f14806}</Project>
+      <Name>ERP.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

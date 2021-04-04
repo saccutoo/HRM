@@ -1,0 +1,80 @@
+﻿@using Hrm.Admin.ViewModels
+@using Hrm.Common
+@{
+    Layout = null;
+}
+@{
+    ViewBag.Title = "_Pipeline";
+}
+@if (Model.PipelineView.Count > 0)
+{
+    var listPipeline = Model.PipelineView;
+    foreach (var item in listPipeline)
+    {
+        var pipeline = item.ListPipelineModel;
+       
+        <div class="pipeline" style="background-color:rgba(242,242,242,1)">
+            <div class="pipeline-header">
+                <div class="pipeline-header-left">
+                   @if (pipeline.Count > 0)
+                   {
+                       var firstElement = pipeline[0];
+                       <span>@firstElement.Name</span>
+                   }
+                </div>
+                @*<div class="pipeline-header-center">
+                    <div>
+                        <span class="fas fa-check"></span>
+                    </div>
+                </div>*@
+                <div class="pipeline-header-right" onclick="EditPipeline(@Json.Encode(item))">
+                    <span class="fas fa-pencil-alt"></span>
+                </div>
+            </div>
+            <div class="pipeline-body">
+                @foreach (var itemPipeline in pipeline)
+                {
+                    <div class="frames-input">
+                        @{ 
+                            var color = C(itemPipeline.PositionId.ToString()).ToString();
+                        }
+                        <div class="input-text" style="background-color:@color">
+                            <span>
+                                @*@M(itemPipeline.PipelineStepId + ";"+ DataType.Pipeline + ";"+ "PipelineStepName")*@
+                                @itemPipeline.PipelineStepName
+                            </span>
+                        </div>
+                    </div>
+                }          
+            </div>
+        </div>
+
+    }
+    <div class="pipeline" style="border:1px solid #ccc" >
+        <div class="pipeline-click" onclick="ShowFormAddPipeline()">
+            <div class="pipeline-icon-add">
+                <span class="fas fa-plus-circle">
+                </span>
+            </div>
+            <div class="pipeline-span-add">
+                <span>@T("Pipeline.AddnNewPipeline")</span>
+            </div>
+        </div>
+        
+    </div>
+}
+else
+{
+    <div class="pipeline" style="border:1px solid #ccc" >
+        <div class="pipeline-click" onclick="ShowFormAddPipeline()">
+            <div class="pipeline-icon-add">
+                <span class="fas fa-plus-circle">
+                </span>
+            </div>
+            <div class="pipeline-span-add">
+                <span>@T("Pipeline.AddnNewPipeline")</span>
+            </div>
+        </div>
+
+    </div>
+}

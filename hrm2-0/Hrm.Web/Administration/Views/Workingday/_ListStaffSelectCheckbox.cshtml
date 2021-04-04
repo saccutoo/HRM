@@ -1,0 +1,41 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Common
+@model Hrm.Admin.ViewModels.AddWorkingdayAnnualLeaveViewModel
+
+
+@{
+    var index = 0;
+    var style = string.Empty;
+    foreach (var item in Model.Staffs)
+    {
+        if (index > 0)
+        {
+            style = "margintop:10px;";
+        }
+        <div class="staff-body" style="@style">
+            <div class="body-checked">
+                @{ 
+                    string check = string.Empty;
+                    var data = Model.ListCheckbox.Where(s => s ==Convert.ToInt32(item.Id)).ToList();
+                    if (data!=null && data.Count()>0)
+                    {
+                        check = "checked";
+                    }
+                }
+                @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-"+item.Id,Value=item.Id.ToString(),OnClick="clickChecked("+item.Id+")",Attribute= check })
+            </div>
+            <div class="body-name">
+                <span>@item.Name</span>
+            </div>
+            <div class="body-organization">
+                <span>@M(item.OrganizationId.ToString()+";" +DataType.Organization+ ";OrganizationName")</span>
+            </div>
+        </div>
+    }
+    index++;
+}
+
+
+

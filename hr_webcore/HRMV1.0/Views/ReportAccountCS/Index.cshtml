@@ -1,0 +1,62 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.ReportAccountNumberCS;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div class="container-fluid" ng-app="tableApp" ng-controller="mytable" ng-init="init()">
+    <div class="row">
+        <div class="form-group col-md-12" style="margin-top:15px">
+            <div class="col-md-2" style="line-height:32px">
+                <label>@AppRes.Timekeeping_CheckTimeSSN:</label>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" ng-model="FromDate" my-date-picker ng-change="changeDate()">
+            </div>
+            <div class="col-md-2">
+                <button  ng-click="ExcelClick()" title="@AppRes.btnExcel" type="button" class="btn btn-labeled btn-primary">
+                    <span class="btn-label">
+                        <i class="fa fa-file-excel-o"></i>
+                    </span>@AppRes.btnExcel
+                </button>
+            </div>
+        </div>
+        <div class="form-group col-md-12" style="margin-top:15px">
+            <div class="col-md-2" style="line-height:32px">
+                <label>@AppRes.TotalAccountNumberCS2:</label>
+            </div>
+            <b>{{SumCS2}}</b>
+        </div>
+        <div class="form-group col-md-12" style="margin-top:15px">
+            <div class="col-md-2" style="line-height:32px">
+                <label>@AppRes.TotalAccountNumberActive:</label>
+            </div>
+            <b>{{TotalAccountActive}}</b>
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <build-fixed-table table-url="'@(ViewBag.url)'"
+                               table-excel-click="ExcelClick"
+                               table-param-filter="employeeFilter"
+                               table-model="PolicyDetailData">
+            </build-fixed-table>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/ReportAccountCS/ReportAccountCSUntil.js"></script>
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+</script>
+<script>
+    var endYear = new Date(new Date().getFullYear(), 11, 31);
+    $(".datePicker123").datepicker({
+        autoclose: true,
+        format: "dd/mm/yyyy"
+    }).datepicker("setDate", new Date());
+</script>
+
+

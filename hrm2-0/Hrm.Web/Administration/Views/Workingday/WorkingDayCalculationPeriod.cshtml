@@ -1,0 +1,156 @@
+﻿@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Admin.ViewModels.WorkingDayCalculationPeriodViewModel
+@{
+    ViewBag.Title = "Kỳ tính công";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+<style>
+    .organization-table .Action.ellipsis {
+        top: 4px;
+    }
+
+    .presentation-status .first-row {
+        text-align: left !important;
+    }
+
+    #table-workingday-calculation-period .col-md-12 {
+        height: 87%;
+        overflow: auto;
+    }
+
+    .table-content.hrm-v2-table {
+        overflow: unset;
+    }
+    /*Hrm-v2 style Scroll*/
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 5px;
+        width: 1px;
+        height: 1px;
+    }
+
+    ::-webkit-scrollbar-track {
+        border: 1px solid #ccc;
+        background-color: #F5F5F5;
+        border-radius: 5px;
+        width: 1px;
+        height: 1px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+        background: #F5F5F5;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar {
+        width: 5px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #7E7E7E;
+    }
+
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar {
+        width: 5px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #a2a0a0;
+    }
+    /*response*/
+    @@media only screen and (max-width: 1366px) {
+        #table-workingday-calculation-period .col-md-12 {
+            height: 81%;
+            overflow: auto;
+        }
+    }
+    /*End*/
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item" style="color: #888;"> @T("Setting.Setting")</a>
+    <span class="bread-crumb-item" style="color: #888;">
+        &nbsp; &gt; &nbsp;
+    </span>
+    <a href="/admin" class="bread-crumb-item" style="color: #888;"> @T("WorkingDay.TimeKeeping")</a>
+    <span class="bread-crumb-item">&nbsp; &gt; &nbsp;@T("Workingday.Shift.Period")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormAddWorkingdayCalculationPeroid()" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter( " + Html.Raw(Json.Encode(Model.Table.TableConfigName)) + ", " + Html.Raw(Json.Encode(Model.Table.TableName)) + ", 0, 0)" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter( " + Html.Raw(Json.Encode(Model.Table.TableConfigName)) + ",  " + Html.Raw(Json.Encode(Model.Table.TableName)) + ",  1, 0)" })
+    </div>
+</div>
+<div class="workingday-calculation-period master-wrapper-table-content">
+    <div id="table-workingday-calculation-period">
+        @if (Model.Table != null)
+        {
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+        }
+    </div>
+</div>
+
+<script>
+    var tableName = '@Model.Table.TableName';
+    function ShowFormAddWorkingdayCalculationPeroid() {
+        window.location.href = "/Admin/Workingday/AddWorkingDayCalculationPeriod";
+    }
+    function showEditFormEditWorkingdayCalculationPeroid(id) {
+        window.location.href = "/Admin/Workingday/AddWorkingDayCalculationPeriod/" + id;
+    }
+    function deleteWorkingdayCalculationPeroid(id) {
+        bootbox.confirm({
+            message: '@T("Message.Delete.QuestionDelete")',
+            buttons: {
+                confirm: {
+                    label: '@T("Message.Delete.Yes")',
+                    className: 'hrm-v2-btn-save'
+                },
+                cancel: {
+                    label: '@T("Message.Delete.No")',
+                    className: 'hrm-v2-btn-close'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Admin/Workingday/DeleteWorkingdayCalculationPeroid",
+                        data: {
+                            id: id,
+                        },
+                        success: function (response) {
+                            if (response.result.Success == true) {
+                                ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                                changeItemsPerpage('@TableName.TableWorkingdayCalculationPeriod');
+                            }
+                            else {
+                                ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+</script>

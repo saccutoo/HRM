@@ -1,0 +1,124 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common;
+<style>
+    .table-responsive {
+        display: block;
+        border: 1px solid none;
+        padding: 5px;
+        margin-top: 5px;
+        width: auto;
+        height: 308px;
+        overflow: scroll;
+    }
+
+    #btn-circle {
+        width: 30px;
+        height: 30px;
+        padding: 6px 0px;
+        border-radius: 15px;
+        text-align: center;
+        font-size: 12px;
+        line-height: 1.42857;
+    }
+</style>
+<div id="ColumnFormat" class="row" style="margin: 0;">
+    <div class="panel">
+        <div class="panel-body">
+            <div class="row">
+                <h3>@AppRes.ColumnFormat</h3>
+            </div>
+            <div class="row" style="border: 1px solid #D3D3D3;">
+                <div class="col-md-7" style="border-right: 1px solid #D3D3D3;">
+                    <div class="row" style="padding-top: 5px; padding-bottom: 5px;">
+                        <div class="col-md-6" style="padding-top: 5px; padding-bottom: 5px;">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="txtSearchColumn" name="txtSearchColumn" ng-model="txtSearchColumn" ng-change="findtextcolumn()">
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="padding-top: 12px; padding-bottom: 5px; padding-right: 30px; text-align: right">
+                            <a style="cursor: pointer" ng-click="deleteFind()">@AppRes.ClearSearch</a>
+                        </div>
+                    </div>
+                    <div class="row" style="background-color: #e6e6fa; height: 30px; padding-top: 5px;">
+                        <div class="col-md-8">
+                            <b>CỘT DỮ LIỆU</b>
+                        </div>
+                        <div class="col-md-4" style="text-align: right">
+                            <a ng-if="ColseSelectAllColumn" style="cursor: pointer" ng-click="clickColseSelectAllColumns()"><span id="spnSelectAll">@AppRes.UnSelectAll</span></a>
+                            <a ng-if="SelectAllColumn" style="cursor: pointer" ng-click="clickSelectAllColumns()"><span id="spnSelectAll">@AppRes.SelectAll</span></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <div ng-repeat="tblColumn in listColumnFormat | filter:txtSearchColumn | orderBy:'Order'">
+                                <div class="checkbox" style="margin:15px">
+                                    <label>
+                                        <input name="chkGridCustomerSelect" ng-checked="tblColumn.isActive" id="{{tblColumn.TableColumnId}}" ng-click="SelectColumnEx(tblColumn)" type="checkbox" class="checkbox style-0" value="{{tblColumn.TableColumnId}}">
+                                        <span ng-if="tblColumn.ColumnName=='Action'" class="font-xs" id="{{tblColumn.ColumnName}}">{{tblColumn.ColumnName}}</span>
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <span class="font-xs" id="{{tblColumn.ColumnName}}">{{tblColumn.DisplayName}}</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="font-xs" id="{{tblColumn.ColumnName}}">{{tblColumn.DisplayNameEn}}</span>
+                                        }
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-5" style="background-color: #e6e6fa;">
+                    <div class="row">
+                        <div style="height: 32px; padding: 5px;">
+                            <b><span id="countSelected">{{TotalColumnSelect}}</span> @AppRes.GirdColumSelected</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <ul class="sortable" id="sortable">
+
+                                @if (Global.CurrentLanguage == 5)
+                                {
+                                    <li ng-repeat="column in listColumnSortable | orderBy:'Order'" id="column-{{column.ColumnName}}" ng-show="column.isActive==true" >
+                                        <span id="span" style="margin-left:15px;" ng-if="column.ColumnName!='Action'">{{column.DisplayName}} </span>
+                                        <span id="span" style="margin-left:15px;" ng-if="column.ColumnName=='Action'">{{column.ColumnName}} </span>
+                                        <button style="float:right;" type="button" id="btn-circle" class="btn btn-primary" ng-click="removeColumn(column)"><i class="glyphicon glyphicon-remove"></i></button>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li ng-repeat="column in listColumnSortable" id="column-{{column.ColumnName}}" ng-show="column.isActive==true">
+                                        <span id="span" style="margin-left:15px;"  ng-if="column.ColumnName!='Action'">{{column.DisplayNameEn}} </span>
+                                        <span id="span" style="margin-left:15px;" ng-if="column.ColumnName=='Action'">{{column.ColumnName}} </span>
+                                        <button style="float:right;" type="button" id="btn-circle" class="btn btn-primary" ng-click="removeColumn(column)"><i class="glyphicon glyphicon-remove"></i></button>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <div style="height:50px;"></div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top:30px;">
+                    <div class="col-md-9"></div>
+                    <div class="col-md-3">
+                        <div class="col-md-12" style="margin-top: 10px;margin-bottom: 10px;">
+                            <button type="button" class="btn btn-primary" ng-click="SaveCustomerColumns()">@AppRes.btnUpdate</button>
+                            <button type="button" class="btn btn-default" ng-click="CloseColumnFormat()">@AppRes.btnCancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //$(document).ready(function () {
+    //    $(function () {
+    //        $('#sortable').sortable();
+    //    });
+    //})
+</script>

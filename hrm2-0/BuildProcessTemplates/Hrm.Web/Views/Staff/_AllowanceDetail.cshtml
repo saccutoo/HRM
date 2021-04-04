@@ -1,0 +1,61 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model StaffAllowanceModel
+@{
+    Layout = null;
+}
+<div class="detail-allowance-container">
+    <div class="hrm-v2-modal-header">@M(Model.AllowanceType.ToString() + ";" + DataType.MasterData + ";Name")</div>
+    <div class="hrm-v2-modal-body" style="margin-top:0px">
+        <section class="hrmv2-section">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Table.Title.AllowanceAmount").ToString(), Text = String.Format("{0:#,##0.##}", Model.Amount) + " " + M(Model.CurrencyId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Table.Title.Status").ToString(), Text = M(Model.Status.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @if (Model.StartDate != null && Model.StartDate != DateTime.MinValue)
+                    {
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.StartDate").ToString(), Text = Model.StartDate.Value.ToString("dd/MM/yyyy") })
+                    }
+                    else
+                    {
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.StartDate").ToString(), Text = "" })
+                    }
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @if (Model.StartDate != null && Model.StartDate != DateTime.MinValue)
+                    {
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.EndDate").ToString(), Text = Model.EndDate.Value.ToString("dd/MM/yyyy") })
+                    }
+                    else
+                    {
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.EndDate").ToString(), Text = "" })
+                    }
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Table.Title.Description").ToString(), Text = Model.Content })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @*@Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Table.Title.Note").ToString(), Text = Model.Note })*@
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="footer">
+        <div class="footer-login">
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary hrm-v2-btn-close close-popup" data-dismiss="modal">
+                    @T("Staff.Close")
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

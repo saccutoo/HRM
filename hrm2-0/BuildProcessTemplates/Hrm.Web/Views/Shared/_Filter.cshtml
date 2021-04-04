@@ -1,0 +1,332 @@
+﻿@model Hrm.Framework.ViewModels.FilterViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@{
+    Layout = null;
+    var columns = new List<TableColumnModel>();
+    if (Model.Columns != null && Model.Columns.Any())
+    {
+        columns = Model.Columns.Where(x => x.IsFilter == true).ToList();
+    }
+    var operators = new List<MasterDataModel>();
+    if (Model.Operators != null && Model.Operators.Any())
+    {
+        operators = Model.Operators;
+    }
+}
+<style>
+    #filter .filter-list-column {
+        list-style: none;
+        padding-left: 30px;
+        width: 450px;
+    }
+
+    #filter .filter-column {
+        display: inline-block;
+        width: 100%;
+    }
+
+    .hrm-filter .filter-column-config {
+        background-color: #FFFFFF;
+        border: 1px solid #ECECEC;
+        box-sizing: content-box;
+        border-radius: 5px;
+        float: left;
+        width: 100%;
+        padding: 0px 16px;
+        min-height: 75px;
+    }
+
+        .hrm-filter .filter-column-config .hrm-v2-floating-form {
+            height: 40px;
+        }
+
+    .tag-remove {
+        outline: none;
+    }
+
+    .hrm-filter .filter-column-config .hrm-v2-floating-form .select2-container--default {
+        border-bottom: none;
+        float: left;
+        height: auto;
+    }
+
+    .filter-column-config .tagsinput {
+        border: none;
+        float: left;
+        width: 100% !important;
+    }
+
+        .filter-column-config .tagsinput .tag {
+            height: 30px;
+            font-size: 13px;
+            font-family: Roboto-Regular;
+            background: #dae0d9;
+            border-radius: 5px;
+            color: #333;
+        }
+
+    .filter-column-config .hrm-v2-floating-form .floating-label {
+        margin-top: 0 !important;
+    }
+
+    .filter-column-config .select2-container--default .select2-selection--multiple {
+        border: none;
+    }
+
+    .filter-column-config .select2-container--default .select2-selection--multiple {
+        border-bottom: 1px solid #ECECEC;
+    }
+
+    .filter-column-config .hrm-v2-floating-form .floating-label {
+        float: left;
+        margin-bottom: 0px;
+    }
+
+    .filter-column-config .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        height: 30px;
+        line-height: 30px;
+        color: #333;
+        background: #dae0d9;
+        font-size: 13px;
+        border: none;
+        padding-right: 0px;
+    }
+
+        .filter-column-config .select2-container--default .select2-selection--multiple .select2-selection__choice .select2-selection__choice__remove {
+            float: right;
+            width: 20px;
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 16px;
+            margin: 0px;
+        }
+
+    .filter-column-config .tagsinput input {
+        outline: none;
+        border-bottom: 1px solid #ECECEC;
+    }
+
+    .hrm-filter .filter-column-checkbox {
+        height: 40px;
+        width: 20px;
+        float: left;
+    }
+
+    .hrm-filter .filter-column-title {
+        height: 40px;
+        width: calc(100% - 20px);
+        float: left;
+        display: inline-flex;
+        align-items: center;
+        padding-left: 11px;
+    }
+
+    .hrm-filter .label-cbx .checkbox {
+        top: 0 !important;
+    }
+</style>
+<div class="filter-container display-inline-block" style="width: 100%">
+    <div class="hrm-v2-modal-header">
+        @if (Model.IsFilter == "1")
+        {
+            @T("Popup.Header.Filter")
+        }
+        else if (Model.IsFilter == "0")
+        {
+            @T("Popup.Header.ShowHideColumn")
+        }
+    </div>
+    <div class="hrm-v2-modal-body">
+        <section class="hrmv2-section">
+            <div id="filter" class="hrm-filter">
+                @* filter *@
+                <ul class="filter-list-column">
+                    @foreach (var column in columns)
+            {
+                        <li class="filter-column">
+                            <div class="filter-column-checkbox">
+                                @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel()
+                           {
+                               Name = "cb-filter-column-" + column.Id.ToString(),
+                               Value = column.Id.ToString(),
+                               OnClick = "columnCheck(" + column.Id.ToString() + ")",
+                               Attribute = Model.IsFilter == "1" ? (column.IsChecked ? "checked" : string.Empty) + (" column-name=" + column.SqlAlias + "." + column.ColumnName + " column-type=" + column.ColumnDataTypeId + "") : (column.IsDisplay ? " column-name=" + column.ColumnName + " checked" : "column-name = " + column.ColumnName)
+                           })
+                            </div>
+                            <div class="filter-column-title">
+                                <span>
+                                    @M(column.Id.ToString() + ";TableColumn;ColumnName")
+                                </span>
+                            </div>
+                            @if (Model.IsFilter == "1")
+                {
+                    var hidden = string.Empty;
+                    if (!column.IsChecked)
+                    {
+                        hidden = "hidden";
+                    }
+                    var operatorColumn = operators.Where(x => ("," + x.Description + ",").Contains("," + column.ColumnDataTypeId.ToString() + ",")).ToList();
+                    var lstOperator = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(operatorColumn));
+                                <div class="filter-column-config" column-id="@column.Id" @hidden>
+                                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel()
+                               {
+                                   IsAnimationLabel = false,
+                                   SearchField = true,
+                                   Data = lstOperator,
+                                   IsMultipleLanguage = true,
+                                   ValueField = "Id",
+                                   DisplayField = "Name",
+                                   PropertyName = "Name",
+                                   DataType = "MasterData",
+                                   Name = "operator-" + column.Id,
+                                   Value = column.OperatorId.ToString()
+                               })
+                                    @Html.Action("FilterSelector", "Filter", new { column = column })
+                                </div>
+                            }
+                        </li>
+                    }
+                </ul>
+                <div class="footer">
+                    <div class="footer-login">
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                                @T("Staff.Detail.Cancel")
+                            </button>
+                            <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="filter( '@Html.Raw(Json.Encode(Model.TableName)).ToString()', '@Html.Raw(Model.TableUrl).ToString()', '@Html.Raw(Model.IsFilter).ToString()')">
+                                @T("Staff.Detail.Save")
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    var filterOperators = @Html.Raw(Json.Encode(operators));
+    var groupId = 0;
+    if(@Model.GroupId !=0 ){
+        groupId =@Model.GroupId;
+    }
+    function columnCheck(columnId) {
+        if ($('#cb-filter-column-' + columnId).prop("checked") == true) {
+            $('.filter-column-config[column-id=' + columnId + ']').css("display", "inline-block");
+        }
+        else {
+            $('.filter-column-config[column-id=' + columnId + ']').hide();
+        }
+    }
+    function filter(tableName, tabelSrc, isFilter) {
+        $('#cover-spin').show();
+        var filter = [];
+        var lstColumnVisibled = [];
+        var query = '';
+        var lstColumn = $('.filter-column-checkbox input');
+        for (var i = 0; i < lstColumn.length; i++) {
+            if(isFilter == "1"){
+                if ($(lstColumn[i]).prop("checked") == true) {
+                    var filterColumn = {};
+                    //filterColumn.ColumnId = $(lstColumn[i]).val();
+                    //filterColumn.OperatorId = $('#operator-' + filterColumn.ColumnId).val();
+                    //filterColumn.FilterValue = $(document.getElementsByName('filter-value-' + filterColumn.ColumnId)[0]).val() != null ? $(document.getElementsByName('filter-value-' + filterColumn.ColumnId)[0]).val() : "";
+                    filterColumn.Id = $(lstColumn[i]).val();
+                    filterColumn.OperatorId = $('#operator-' + filterColumn.Id).val();
+                    var filterVal = $(document.getElementsByName('filter-value-' + filterColumn.Id)[0]).val() != null ? $(document.getElementsByName('filter-value-' + filterColumn.Id)[0]).val() : "";
+                    if ($(lstColumn[i]).attr('column-type') == 473)
+                    {
+                        filterColumn.FilterValue = JSON.stringify(filterVal).replace(/"/g, "\\'");
+                    }
+                    else
+                    {
+                        filterColumn.FilterValue = filterVal;
+                    }
+                    filter.push(filterColumn);
+                    var operator = filterOperators.filter(function(item){
+                        return item && item.Id == filterColumn.OperatorId;
+                    });
+                    if (operator.length > 0 && operator[0].Value != null && operator[0].Value != undefined)
+                    {
+                        var columnName = $(lstColumn[i]).attr('column-name');
+                        var columnType = $(lstColumn[i]).attr('column-type');
+                        var singleFilter = '';
+                        var arrValue = [];
+                        if (columnType == 473)
+                        {
+                            arrValue = filterVal;
+
+                        }
+                        else
+                            if (columnType == 470 || columnType == 471)
+                            {
+                                arrValue = filterColumn.FilterValue.split(',');
+                            }
+                            else
+                                if (filterColumn.FilterValue!= "" && columnType == 472)
+                                {
+                                    var d = new Date(filterColumn.FilterValue.split("/").reverse().join("-"));
+                                    var dd = d.getDate();
+                                    var mm = d.getMonth() + 1;
+                                    var yy = d.getFullYear();
+                                    var newDate = yy+"-"+mm+"-"+dd;
+                                    arrValue.push(newDate);
+                                }
+                        for (var j = 0; j < arrValue.length; j++) {
+                            if (singleFilter == '')
+                            {
+                                singleFilter += operator[0].Value.format(columnName, arrValue[j]);
+                            }
+                            else
+                            {
+                                singleFilter += ' OR ' + operator[0].Value.format(columnName, arrValue[j]);
+                            }
+                        }
+                        if (singleFilter != '')
+                        {
+                            query += ' AND ({0})'.format(singleFilter);
+                        }
+                    }
+                }
+            }else{
+                var isDisplayColumn = {};
+                isDisplayColumn.Visible = $(lstColumn[i]).prop("checked");
+                isDisplayColumn.ColumnName = $(lstColumn[i]).attr('column-name') != 'undefined'? $(lstColumn[i]).attr('column-name') : '';
+                lstColumnVisibled.push(isDisplayColumn);
+            }
+        }
+        //filter -> config
+        //query -> de add vao sql loc lai
+        $.ajax(
+      {
+          url: "/Filter/SaveUserTableConfig",
+          type: "POST",
+
+          data: {
+              tableName: "@Model.TableName",
+              queryData : query,
+              FilterData: JSON.stringify(filter),
+              isFilter: isFilter,
+              lstColumnVisibled: lstColumnVisibled
+          },
+          success: function (response) {
+              $('#myModal').modal('hide');
+              debugger
+              if (response.TableId != 0 ) {
+                  if(isFilter == '1'){
+                      reloadTable(ControlModel[tabelSrc].TableName, ControlModel[tabelSrc].TableDataUrl, ControlModel[tabelSrc].CurrentPage, ControlModel[tabelSrc].ItemsPerPage,query.replace(/{{HOTFIX_QUOTE}}/g, ""),0,stringJson);
+                  }
+                  else if(isFilter == '0') {
+                      reloadTableConfig(ControlModel[tabelSrc].TableName, ControlModel[tabelSrc].TableReloadConfigUrl, ControlModel[tabelSrc].CurrentPage, ControlModel[tabelSrc].ItemsPerPage,query.replace(/{{HOTFIX_QUOTE}}/g, " "), 0, ControlModel[tabelSrc].TableConfigName, groupId);
+                  }
+              }
+          }
+      });
+    }
+    $(document).ready(function(){
+        $('#filter-value-3').select2({minimunResultsForSearch: Infinity});  
+        //filter-value-133
+    });
+</script>

@@ -1,0 +1,180 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<div class="container-fluid">
+    <div class="row" id="SaveHR_WorkingDayMachineDetail" style="margin: 0;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;">@AppRes.WorkingDayMachineDetail</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.WorkingDayMachine <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select class="form-control" chosen options="WorkingDayMachineList" on-no-result="doStuff" required data-modal="modal" ng-model="Data.WorkingDayMachineID" ng-options="list.WorkingDayMachineID as list.Name for list in WorkingDayMachineList" ng-change="ChangeWorkingDayMachine()">
+                                                <option value="" selected>@AppRes.Select</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select class="form-control" chosen options="WorkingDayMachineList" on-no-result="doStuff" required data-modal="modal" ng-model="Data.WorkingDayMachineID" ng-options="list.WorkingDayMachineID as list.NameEN for list in WorkingDayMachineList" ng-change="ChangeWorkingDayMachine()">
+                                                <option value="" selected>@AppRes.Select</option>
+                                            </select>
+                                        }
+
+                                        <span style="color:red;line-height:30px;">{{ErrorWorkingDayMachine}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Promotion_Status <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select ng-model="Data.Status" chosen options="getListStatus" on-no-result="doStuff" required data-modal="modal" ng-options="list.Value as list.Name for list in getListStatus" ng-change="ChangeStatus()">
+                                                <option value="" selected>@AppRes.Select</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select ng-model="Data.Status" chosen options="getListStatus" on-no-result="doStuff" required data-modal="modal" ng-options="list.Value as list.NameEN for list in getListStatus" ng-change="ChangeStatus()">
+                                                <option value="" selected>@AppRes.Select</option>
+                                            </select>
+                                        }
+                                        <span style="color:red;line-height:30px;">{{ErrorStatus}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.StartTime <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @*<input type="text" id="timeformatExample1" class="clockpicker form-control" ng-model="Data.StartTime" ng-change="ChangeStartTime()" />*@
+                                        <div class="input-group clockpicker">
+                                            <input type="text" class="form-control" ng-readonly="true" ng-model="Data.StartTime" ng-change="ChangeStartTime()" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-time"></span>
+                                            </span>
+                                        </div>
+                                        <span style="color:red;line-height:30px;">{{ErrorStartTime}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.EndTime <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @*<input type="text" id="timeformatExample2" class="clockpicker form-control" ng-model="Data.EndTime" ng-change="ChangeEndTime()" />*@
+                                        <div class="input-group clockpicker">
+                                            <input type="text" class="form-control" ng-readonly="true" ng-model="Data.EndTime" ng-change="ChangeEndTime()" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-time"></span>
+                                            </span>
+                                        </div>
+                                        <span style="color:red;line-height:30px;">{{ErrorEndTime}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.HR_FromDate <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.StartDate" class="StartDate form-control" ng-change="ChangeStartDate()" />
+                                        <span style="color:red;line-height:30px;">{{ErrorStartDate}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.HR_ToDate </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="EndDate form-control" ng-model="Data.EndDate" ng-change="ChangeEndDate()" />
+                                        <span style="color:red;line-height:30px;">{{ErrorEndDate}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.WorkIsCalculated</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="Timekeeping form-control" ng-model="Data.Timekeeping" ng-change="ChangeTimekeeping()" />
+                                        <span style="color:red;line-height:30px;">{{ErrorTimekeeping}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.WorkingType <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <select class="form-control" chosen ng-model="Data.WorkingType" ng-change="ChangeWorkingType()">
+                                            <option value="" selected>@AppRes.Select</option>
+                                            <option value="true">True</option>
+                                            <option value="false">False</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorWorkingType}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+            </div>
+            <br />
+            <center>
+                <button type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                    <span class="btn-label">
+                        <i class="fa fa-save"></i>
+                    </span>@AppRes.btnUpdate
+                </button>
+                <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                    <span class="btn-label">
+                        <i class="fa fa-close"></i>
+                    </span>@AppRes.btnCancel
+                </button>
+            </center>
+        </form>
+    </div>
+</div>

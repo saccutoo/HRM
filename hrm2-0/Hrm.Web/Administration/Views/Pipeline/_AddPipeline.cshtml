@@ -1,0 +1,219 @@
+﻿@model Hrm.Admin.ViewModels.AddPipelineViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@{
+    ViewBag.Title = "Pipeline";
+}
+<style>
+    .padding {
+        padding: 0px;
+    }
+
+    .add-pipeline-body {
+        background: rgba(242,242,242,1);
+        height: 300px;
+    }
+
+    .add-pipeline-body-header {
+        height: 30px;
+    }
+    .add-pipeline-body-header-left{
+        float: left;
+        width: 65%;
+    }
+    .add-pipeline-body-header-right{
+        float: left;
+        width: calc(100% - 65%);
+    }
+        .add-pipeline-body-header span {
+            font-family: Roboto-bold;
+            line-height: 30px;
+        }
+    .add-pipeline-body-center{
+        height:55px;
+    }
+    .stage {
+        width: 65%;
+        height: 40px;
+        padding: 0px 10px 0px 00px;
+        float: left;
+        margin-top:10px;
+    }
+
+    .stage-left {
+        height: 35px;
+        width: 30px;
+        float: left;
+        background: rgba(224,236,246,0.8);
+        text-align: center;
+        line-height: 35px;
+    }
+
+    .stage-center {
+        float: left;
+        height: 100%;
+        width: calc(100% - 130px);
+    }
+
+    .stage-right {
+        height: 35px;
+        width: 100px;
+        color: blue;
+        z-index: 10;
+        float: left;
+        text-align: center;
+        line-height: 35px;
+        color: white;
+    }
+    .licensed{
+        width: calc(100% - 65%);
+        float: left;
+        height: 40px;
+        margin-top:10px;
+
+    }
+    .licensed-input{
+        width: 70%;
+        float: left;
+    }
+    .licensed-remove{
+        height: 100%;
+        width: 15%;
+        float: left;
+        text-align:center;
+        cursor:pointer;
+    }
+    .licensed-sort{
+        float: left;
+        width: calc(100% - 70% - 15%);
+        height: 100%;
+        text-align:center;
+        cursor:pointer;
+    }
+    .licensed-remove span{
+        line-height: 35px;
+        color: red;
+        font-size: 15px;
+    }
+    .licensed-sort span{
+        line-height: 35px;
+        font-size:15px;
+    }
+    .add-stage{
+        width: 100%;
+        height: 40px;
+    }
+    .add-stage-left{
+        float:left;
+        cursor:pointer;
+    }
+    .add-stage-left span{
+        color:blue;
+        line-height: 40px;
+    }
+    .add-stage-right{
+        float:left;
+        cursor:pointer;
+    }
+    .add-stage-right span{
+        line-height: 40px;
+        margin-left: 15px;
+        color:blue;
+    }
+    .add-pipeline-footer{
+        width: 100%;
+        height: 90px;
+    }
+    .disabledbutton{
+        pointer-events:none;
+        opacity:0.4;
+    }
+</style>
+
+
+<div>
+    @if (Model.Pipeline.Name != null)
+    {
+        <div class="hrm-v2-modal-header">@T("Pipeline.EditPipeline")</div>
+    }
+    else
+    {
+        <div class="hrm-v2-modal-header">@T("Pipeline.AddNewPipeline")</div>
+    }
+    <form id="frm-pipeline">
+        <div class="hrm-v2-modal-body" style="padding: 0px 0px;">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-12 pd-l-0 hrm-v2-floating-form">
+                    <input type="text" value="@Model.Pipeline.Id" name="Pipeline.Id" id="pipelineId" hidden />
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "Pipeline.Name", PlaceHolder = "Pipeline.Name", Style = "width:100%;height:35px;", Value = Model.Pipeline.Name, LabelName = T("Pipeline.Name").ToString(), IsAnimationLabel = true, IsRequired = true })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">              
+                <div class="col-md-12 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { Name = "Pipeline.MenuId", IsUseImage = false, ValueField = "Id", Style = "width:100%; ", DisplayField = "MenuName", Data = Model.Menu, Id = Model.Pipeline.MenuId, LabelName = T("Pipeline.Type").ToString(), IsAnimationLabel = true, IsRequired = true, Value = Model.Pipeline.MenuId.ToString() })
+                </div>
+            </div>
+            <div >
+                @{
+                    string check = string.Empty;
+                    if (Model.Pipeline.IsDefault)
+                    {
+                        check = "checked";
+                    }
+                }
+                <div class="checkbox" style="float:left;padding:0px">
+                    @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "ck-checked", Value = "true", Attribute = check, Id = "Pipeline.IsDefault" })
+                </div>
+                <span style="float: left;line-height:65px;">@T("Pipeline.Default")</span>
+            </div>
+
+            <div class="col-md-12 add-pipeline-body" style="clear:both;">
+                <div class="col-md-12 padding">
+                    <div class="add-pipeline-body-header">
+                        <div class="add-pipeline-body-header-left">
+                            <span>
+                                @T("Pipeline.Stage")
+                            </span>
+                        </div>
+                        <div class="add-pipeline-body-header-right">
+                            <span>
+                                @T("Pipeline.License") <i class="fa fa-info-circle"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div style="height: 230px;overflow: auto;" id="sortable">
+                        @Html.Partial(UrlHelpers.TemplateAdmin("Pipeline", "_AddPipelineContent.cshtml"), Model.PipelineStep)
+                    </div>
+                    <div class="add-stage">
+                        <div class="add-stage-left" onclick="AddStage()">
+                            <span class="fas fa-plus-circle"></span>
+                        </div>
+                        <div class="add-stage-right" onclick="AddStage()">
+                            <span>@T("Pipeline.AddStage")</span>
+                        </div>
+
+                    </div>
+                    <input id="index-remove" name="index" hidden/>
+                </div>
+
+            </div>
+            <div class="col-md-12 add-pipeline-footer">
+                <div style="float:left;margin-right: 10px;padding-top: 27px">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Organization.Close", Style = "width:100px;height:38px;margin-left: 240px;" })
+                </div>
+                <div style="float:left;margin-right: 10px;padding-top: 27px">
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-organization", OnClick = "SavePipeline()", Value = "Organization.Save", Style = "width:100px;height:38px;", Type = "button" })
+                </div>
+            </div>
+        </div>
+    </form>   
+</div>
+<script>
+    $(document).ready(function () {
+        $('#sortable').sortable({
+            items: ".box-item",                      
+        });
+        $(".unsortable").addClass("disabledbutton");
+    });
+</script>

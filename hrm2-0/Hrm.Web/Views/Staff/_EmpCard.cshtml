@@ -1,0 +1,20 @@
+﻿@model Hrm.Framework.Models.StaffModel
+@using Hrm.Common
+<div class="emp-card" id-value="@Model.Id">
+    <div>
+        <div class="middle-bound">
+            <div class="avatar-circle ">
+                <div class="avatar-inside">N</div>
+            </div>
+        </div>
+        <div class="middle-bound profile-details">
+            <div class="name">@Model.Name</div>
+            @{ 
+                var format = Model.OfficePositionId.ToString() + ";" + DataType.MasterData + ";Name";
+                var positionName = M(format);
+            }
+            <div class="sec-text-color ellipsis" title="@positionName">@positionName</div>
+        </div>
+    </div>
+    <div class="rep-count">@Model.NumberOfChild</div>
+</div>

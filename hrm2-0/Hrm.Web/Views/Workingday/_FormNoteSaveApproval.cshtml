@@ -1,0 +1,141 @@
+﻿@using Hrm.Common
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@model Hrm.Web.ViewModels.WorkingdaySupplementViewModel
+@{
+    ViewBag.Title = "_FormNoteSaveApproval";
+}
+<div>
+    @if (Model.IsApproval == true)
+    {
+        <div class="hrm-v2-modal-header">@T("Workingday.NoteApproval")</div>
+    }
+    else
+    {
+        <div class="hrm-v2-modal-header">@T("Workingday.NoteNotApproval")</div>
+
+    }
+    <div class="hrm-v2-modal-body">
+        <form id="frm-note-approval">
+            <div class="add-master-data-body  hrm-v2-scroll">
+                <div class="col-md-12 pd-0">
+                    <div class="col-md-12 pd-r-0" style="padding-left:10px;">
+                        <div class="form-group">
+                            <div class="col-md-12 pd-0 display-inline-block hrm-v2-floating-form">
+                                @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("Workingday.Input").ToString(), IsAnimationLabel = true, Name = "NoteNoApprovalWorkingSupplement",IsRequired= Model.IsApproval==true ? false:true })
+                            </div>
+                        </div>
+                    </div>                                     
+                </div>              
+            </div>
+
+            <div class="col-md-12">
+                <div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = T("Workingday.Button.Approved").ToString(), OnClick = "approvedList()", Value = "MasterData.Save", Style = "width:100px;height:38px;font-size:12px;background:#fff;border:1px solid #2ca01c;color:#2ca01c",ClassName= "hrm-v2-btn-save", Type = "button" })
+                </div>
+                <div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "MasterData.Close", Style = "width:100px;height:38px;font-size:12px;font-family:Roboto-Regular", ClassName = "hrm-v2-btn-close" })
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>    
+    function approvedList() {      
+        $("#frm-note-approval span[name*='-error']").text("");
+        var listId = [];
+        var approvalId=@Model.Id;
+        var isApproval=@Model.IsApproval.ToString().ToLower();
+        if (isApproval==true) {
+            requestActionId=@MasterDataId.Approve;
+        }
+        else{
+            requestActionId=@MasterDataId.Reject;
+        }
+        if (approvalId==0)
+        {
+            if (($('#table-workingday-supplement-need-approval').length)>0) {
+                var list = document.getElementsByName('chk-column-row');
+            }
+            else{
+                var list = document.getElementsByName('chk-working-supplement');
+            }
+            var isApproval=@Model.IsApproval.ToString().ToLower();
+            var requestActionId=0;
+            if (isApproval==true) {
+                requestActionId=@MasterDataId.Approve;
+            }
+            else{
+                requestActionId=@MasterDataId.Reject;
+            }
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].checked == true) {
+                    //if ($('.item-' + list[i].length)>0) {
+                    //    var requestStatusId = $('.item-' + list[i].value)[0].getAttribute('request-status-id')
+                    //}
+                    listId.push({ RequestId: list[i].value, RequestStatusId: 0, RequestActionId:requestActionId,Note:$("#NoteWorkingSupplement").val() })
+                }
+            }
+        }
+        else{
+            listId.push({ RequestId: @Model.Id, RequestStatusId: 0, RequestActionId:requestActionId,Note:$("#NoteWorkingSupplement").val() })
+        }
+        if (isApproval==false) {
+            var data={ Note: $("#NoteNoApprovalWorkingSupplement").val()};
+            $.ajax({
+                type: "POST",
+                url: "/Workingday/CheckNoteApproval",
+                data: data,
+                success: function (response) {
+                    if (response.Invalid)
+                    {
+                        var validations = response.Result;
+                        validations[0].ColumnName="NoteNoApprovalWorkingSupplement";
+                        RenderError(validations, "frm-note-approval");
+                        return;
+                    }
+                    if (response.Result) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/Workingday/SaveSubmitApproval",
+                            data: {
+                                listModel: listId,
+                                isApproval:true,
+                            },
+                            success: function (response) {
+                                if (response.result.Success == true) {
+                                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                                    window.location.reload();
+                                }
+                                else {
+                                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        else{
+            $.ajax({
+                type: "POST",
+                url: "/Workingday/SaveSubmitApproval",
+                data: {
+                    listModel: listId,
+                    isApproval:true,
+                },
+                success: function (response) {
+                    if (response.result.Success == true) {
+                        ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                        window.location.reload();
+                    }
+                    else {
+                        ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    }
+                }
+            });
+        }
+       
+    }
+    
+</script>

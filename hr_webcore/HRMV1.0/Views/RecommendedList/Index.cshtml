@@ -1,0 +1,30 @@
+﻿@using HRM.App_LocalResources
+@{
+    ViewBag.Title = " RecommendedList";
+}
+<script>
+    var errorWorkAlreadyExists= @Html.Raw(Json.Encode(AppRes.ErrorWorkAlreadyExists));
+    var errorReasonToForgetToTimekeeping= @Html.Raw(Json.Encode(AppRes.ErrorReasonToForgetToTimekeeping));
+    var errorAdditionalPermissionsExceeded= @Html.Raw(Json.Encode(AppRes.ErrorAdditionalPermissionsExceeded));
+    var errorPastThirtyMinutes= @Html.Raw(Json.Encode(AppRes.ErrorPastThirtyMinutes));
+    var errorTimeIsZero= @Html.Raw(Json.Encode(AppRes.ErrorTimeIsZero));
+    var errorWork= @Html.Raw(Json.Encode(AppRes.ErrorWork));
+
+    var errorDate=@Html.Raw(Json.Encode(AppRes.ErrorDate));
+    var errorCompareTime=@Html.Raw(Json.Encode(AppRes.ErrorCompareTime));
+    var errorMinute=@Html.Raw(Json.Encode(AppRes.ErrorMinute));
+    var errorNotSubmittedorApproval=@Html.Raw(Json.Encode(AppRes.ErrorNotSubmittedorApproval));
+    var errorPending=@Html.Raw(Json.Encode(AppRes.ErrorPending));
+    var errorApproved=@Html.Raw(Json.Encode(AppRes.ErrorApproved));
+    var errorCompareDateAndTime=@Html.Raw(Json.Encode(AppRes.ErrorCompareDateAndTime));
+    var errorCreatingMerit= @Html.Raw(Json.Encode(AppRes.ErrorCreatingMerit));
+    var errorTardinessLeaveEarly= @Html.Raw(Json.Encode(AppRes.ErrorTardinessLeaveEarly));
+
+</script>
+<div class="row" ng-controller="RecommendedList" ng-init="init()">
+    @Html.Action("TimeKeepingServerSide", "Common")
+    <div style="display: none;">
+        @Html.Action("Edit_Recommended", "RecommendedList")
+    </div>
+</div>
+

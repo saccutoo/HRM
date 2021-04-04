@@ -1,0 +1,12 @@
+﻿1.SecRole Controller
+- chạy file
+- lấy dữ liệu SecRole từ RoleID
++ chạy file để tiến hành lấy dữ liệu RoleID SecRole_sec_Role_GetByID
+- thêm mới SecRole
++ chạy file để tiến hành thêm mới SecRole SecRole_SecRole_Save
+- cập nhật SecRole
++ chạy file để tiến hành lấy dữ liệu RoleID SecRole_sec_Role_GetByID
++ chạy file để tiến hành cập nhật SecRole SecRole_SecRole_Save
+- xóa dữ liệu SecRole
++ chạy file để tiến hành lấy dữ liệu RoleID SecRole_sec_Role_GetByID
++ chạy file để tiến hành xóa dữ liệu SecRole SecRole_sec_Role_Delete

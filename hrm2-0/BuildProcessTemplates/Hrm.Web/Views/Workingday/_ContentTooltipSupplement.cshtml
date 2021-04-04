@@ -1,0 +1,17 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@model List<Hrm.Framework.Models.WorkingdaySupplementModel>
+
+<ul>
+    @if (Model.Count()>0)
+    {
+        foreach (var item in Model)
+        {
+            <li>
+                 <a onclick="viewDetailWorkingdaySupplement(@item.Id)">@M(item.SupplementTypeId.ToString()+";"+DataType.MasterData+";Name").ToString()</a>
+            </li>
+        }
+    }
+</ul>
+

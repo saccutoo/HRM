@@ -1,0 +1,265 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+
+<style>
+
+    table tr td {
+        text-align: center;
+    }
+
+    table th {
+        text-align: center;
+    }
+
+    .show-total {
+        color: blue
+    }
+
+    #e1 {
+        width: 50px;
+    }
+
+    .modal-backdrop {
+        position: unset;
+    }
+</style>
+
+<br />
+<div class="row">
+    <div class="col-md-5" ng-show="tablePermission.isEdit">
+        <!-- Button trigger moda -->
+        <button ng-show="isShow1" title="@AppRes.btnImportExcel" type="button" class="btn btn-labeled btn-success" data-toggle="modal" data-target=".exampleModal">
+            <span class="btn-label">
+                <i class="fa fa-upload"></i>
+            </span>@AppRes.btnImportExcel
+        </button>
+        <!-- Modal -->
+        <div ng-show="isShow1" class="modal fade exampleModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <b>@AppRes.Choose_file</b>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type=file class="form-control" my-files="files" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+                    </div>
+                    <button ng-click="upload()" class="form-control btn btn-primary">Upload</button>
+                </div>
+            </div>
+        </div>
+
+        <button ng-show="isShow1" ng-click="ExcelClick()" title="Export Excel" type="button" class="btn btn-labeled btn-primary">
+            <span class="btn-label">
+                <i class="fa fa-file-excel-o"></i>
+            </span>@AppRes.btnExcel
+        </button>
+        <button ng-show="isShow2" ng-click="ExcelClick2()" title="Export Excel" type="button" class="btn btn-labeled btn-primary">
+            <span class="btn-label">
+                <i class="fa fa-file-excel-o"></i>
+            </span>@AppRes.btnExcel
+        </button>
+        <button class="btn btn-warning" ng-show="isShow1" ng-click="LatchesWorkDay(AllStaff,1)" type="button">
+            @AppRes.Latches
+        </button>
+        <button class="btn btn-info" ng-show="isShow1" ng-click="LatchesWorkDay(AllStaff,2)" type="button">
+            @AppRes.LatchRelease
+        </button>
+
+        @*<button ng-click="LatchesWorkDay(AllStaff)" ng-show="isShow1" title="@AppRes.Latches" type="button" class="btn btn-labeled btn-warning">
+                <span class="btn-label">
+                    <i class="fa fa-file-excel-o"></i>
+                </span>@AppRes.Latches
+            </button>*@
+
+    </div>
+
+</div>
+<br />
+<div class="row">
+    <div class="col-md-1">
+        <input type="text" ng-model="FromMonth" class="form-control datePicker123" autocomplete="off" ng-change="chageDate()">
+    </div>
+    <div class="col-md-2">
+        <select chosen options="getListAllOrganizationUnit" on-no-result="doStuff" ng-model="OrganizationUnitID" ng-options="list.OrganizationUnitID as list.Name for list in getListAllOrganizationUnit" ng-change="onOrganizationUnitChange()" convert-dropdown>
+            <option value="" selected>-- @AppRes.Department --</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select style="height:50px;" chosen options="ListEmployeeWhereOrganizationUnit" on-no-result="doStuff" ng-model="StaffID" ng-options="list.StaffID as list.NamePB for list in ListEmployeeWhereOrganizationUnit" ng-change="onStaffChange()" convert-dropdown>
+            <option value="" selected>-- @AppRes.TitleAll --</option>
+        </select>
+    </div>
+    <div class="col-md-4" ng-show="isShowRecommended">
+        <input type="radio" ng-model="status" value="0" /> @AppRes.All
+        <input type="radio" ng-model="status" style="margin-left:10px;" value="1" /> @AppRes.Timekeeping_optStatusWait
+        <input type="radio" ng-model="status" style="margin-left:10px;" value="2" /> @AppRes.Timekeeping_Approval
+        <input type="radio" ng-model="status" style="margin-left:10px;" value="3" />@AppRes.Timekeeping_NoApproval
+    </div>
+    <div class="col-md-3" ng-show="isShow">
+        <div class="col-md-6">
+            <button title="@AppRes.publicbrowsing" type="button" class="btn" ng-click="DuyetCong(1)">
+                @AppRes.publicbrowsing
+            </button>
+        </div>
+        <div class="col-md-6">
+            <button title="@AppRes.nopublicbrowsing" type="button" class="btn" ng-click="DuyetCong(0)">
+                @AppRes.nopublicbrowsing
+            </button>
+        </div>
+    </div>
+    <div class="col-md-4" style="width:auto">
+        <div class="col-md-5" ng-if="isShow">
+            @if (Global.CurrentLanguage == 5)
+            {
+                <select ng-disabled="checkbox" chosen options="getListStatus" on-no-result="doStuff" ng-model="Data.statusfind" ng-options="list.Value as list.Name for list in getListStatus" ng-change="onStatus()">
+                    <option value="" selected>-- @AppRes.StatusName --</option>
+                </select>
+            }
+            else
+            {
+                <select ng-disabled="checkbox" chosen options="getListStatus" on-no-result="doStuff" ng-model="Data.statusfind" ng-options="list.Value as list.NameEN for list in getListStatus" ng-change="onStatus()">
+                    <option value="" selected>-- @AppRes.StatusName --</option>
+                </select>
+            }
+        </div>
+        <div class="col-md-4" ng-show="isShow">
+            <div class="checkbox">
+                <span><input type="checkbox" ng-model="checkbox">@AppRes.Timekeeping_optStatusWait</span>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button ng-click="GetListData();" id="submit" title="@AppRes.FindFilter"
+                    type="button" class="btn btn-primary">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+
+        <div class="col-md-6" ng-show="isShowTimeSSN" style="margin-left:50px;">
+            <button title="@AppRes.Timekeeping" type="button" class="btn" ng-click="BoSungCong()">
+                @AppRes.Timekeeping
+            </button>
+        </div>
+
+    </div>
+    <div class="col-md-2">
+        <div class="center-on-page" ng-show="isShow1" style="padding: 5px;">
+            <input type="checkbox" ng-model="AllStaff"/>
+            <label>@AppRes.AllStaff</label>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="col-md-12" style="padding:0;">
+    <div class="table-responsive ">
+
+        <br />
+        <table class="table table-striped table-bordered table-hover tabel-condensed" style="{{width}}">
+            @if (Global.CurrentLanguage == 5)
+            {
+                <thead>
+                    <tr class="success">
+                        <th ng-show="isShowtd" style="width:80px;"></th>
+                        <th ng-repeat="Column in Columns | orderBy:'OrderNo'" style="text-align:left;{{Column.Css}}">
+                            <span ng-if="Column.CustomHTML != null" compile="Column.DisplayName" style="cursor: pointer;"></span>
+                            <span ng-if="Column.CustomHTML == null && Column.Benchmark == null" ng-bind='Column.DisplayName' ng-click="sort(Column.ColumnName)" style="cursor: pointer;"></span>
+                            <span style="text-align: right;" ng-if="Column.Benchmark == 1">@AppRes.Time : </span>
+                            <span style="text-align: left" ng-if="Column.Benchmark == 2">{{lstTotal.Total9}}</span>
+                        </th>
+                    </tr>
+                    <tr class="success" ng-show="isTonghopcong">
+                        <th ng-repeat="Column in Columns | orderBy:'OrderNo'">
+                            <span ng-if="Column.CustomHTML == null && Column.Benchmark != null" ng-bind='Column.DisplayName' ng-click="sort(Column.ColumnName)" style="cursor: pointer;"></span><br />
+                        </th>
+                    </tr>
+                    <tr class="success" ng-show="!isRequestOrApproval">
+                        <th ng-show="isShowtd"></th>
+                        <th ng-repeat="Column in Columns | orderBy:'OrderNo'" style="text-align:right;">
+                            <span class="titleTotal" ng-bind="lstTotal[Column.ShowTotal]"></span>
+                        </th>
+                    </tr>
+                </thead>
+            }
+            else
+            {
+                <thead>
+                    <tr class="success">
+                        <th ng-show="isShowtd" style="width:80px;"></th>
+                        <th ng-repeat="Column in Columns | orderBy:'OrderNo'" style="text-align:left;{{Column.Css}}">
+                            <span ng-if="Column.CustomHTML != null" compile="Column.DisplayNameEn" style="cursor: pointer;"></span>
+                            <span ng-if="Column.CustomHTML == null && Column.Benchmark == null" ng-bind='Column.DisplayNameEn' ng-click="sort(Column.ColumnName)" style="cursor: pointer;"></span>
+                            <span style="text-align: right;" ng-if="Column.Benchmark == 1">@AppRes.Timekeeping_TimeTitle : </span>
+                            <span style="text-align: left" ng-if="Column.Benchmark == 2">{{lstTotal.Total9}}</span>
+                        </th>
+                    </tr>
+                    <tr class="success" ng-show="isTonghopcong">
+                        <th ng-repeat="Column in Columns | orderBy:'OrderNo'">
+                            <span ng-if="Column.CustomHTML == null && Column.Benchmark != null" ng-bind='Column.DisplayNameEn' ng-click="sort(Column.ColumnName)" style="cursor: pointer;"></span><br />
+                        </th>
+                    </tr>
+                    <tr class="success">
+                        <th ng-show="isShowtd"></th>
+                        <th ng-repeat="Column in Columns | orderBy:'OrderNo'">
+                            <span class="titleTotal" ng-bind="lstTotal[Column.ShowTotal]"></span>
+                        </th>
+                    </tr>
+                </thead>
+            }
+            <tbody>
+                <tr ng-repeat="employee in employees | orderBy:'OrderNo'">
+                    <td ng-show="isShowtd">
+                        <button class="btn btn-primary" type="button" ng-click="Edit_Recommended(employee)">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                    </td>
+                    <td ng-if="employee.DayOfWeeks != 'T.7' && employee.DayOfWeeks != 'C.N' && employee.DayOfWeeks != 'Saturday' && employee.DayOfWeeks != 'Sunday'" ng-repeat="Column in Columns | orderBy:'OrderNo' | date:'shortTime'">
+                        <span ng-if="Column.CustomHTML != null" compile="Column.CustomHTML"></span>
+                        <span class="{{Column.Class}}" ng-if="Column.CustomHTML == null" title="{{formatData(Column.Type,employee[Column.ColumnName],Column.DataFomat)}}" ng-bind='formatData(Column.Type,employee[Column.ColumnName],Column.DataFomat)'></span>
+                    </td>
+                    <td ng-if="employee.DayOfWeeks == 'T.7' || employee.DayOfWeeks == 'C.N' || employee.DayOfWeeks == 'Saturday' || employee.DayOfWeeks == 'Sunday'" ng-repeat="Column in Columns | orderBy:'OrderNo' | date:'shortTime'" style="background-color: rgb(250, 226, 237);">
+                        <span ng-if="Column.CustomHTML != null" compile="Column.CustomHTML"></span>
+                        <span class="{{Column.Class}}" ng-if="Column.CustomHTML == null" title="{{formatData(Column.Type,employee[Column.ColumnName],Column.DataFomat)}}" ng-bind='formatData(Column.Type,employee[Column.ColumnName],Column.DataFomat)'></span>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot ng-show="showtab13">
+                <tr>
+                    <td align="center" colspan="{{dodai}}">
+                        <div ng-if="(pageSizeSelected * pageIndex)<(totalCount)" class="col-md-2 pull-right total">
+                            View {{((pageSizeSelected * pageIndex)-pageSizeSelected)+1}} to {{pageSizeSelected * pageIndex}} of {{totalCount}} total records
+                        </div>
+                        <div ng-if="(pageSizeSelected * pageIndex)>=(totalCount)" class="col-md-2 pull-right total">
+                            View {{((pageSizeSelected * pageIndex)-pageSizeSelected)+1}} to {{totalCount}} of {{totalCount}} total records
+                        </div>
+                        <span class="form-group pull-right page-size form-inline" style="margin-top: 17px; margin-right: 25px;">
+                            <select class="form-control control-color"
+                                    ng-model="pageSizeSelected"
+                                    ng-change="changePageSize()" convert-to-number>
+                                <option ng-repeat="pageSizeItem in lstPageSize " value="{{pageSizeItem}}">{{pageSizeItem}}</option>
+                            </select>
+                        </span>
+                        <div class="pull-right" style="margin-right: 12px">
+                            <ul uib-pagination total-items="totalCount" ng-change="pageChanged()" items-per-page="pageSizeSelected" direction-links="true" ng-model="pageIndex" max-size="maxSize" class="pagination" boundary-links="true" rotate="false" num-pages="numPages"></ul>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<script>
+    var endYear = new Date(new Date().getFullYear(), 11, 31);
+    $(".datePicker123").datepicker({
+        autoclose: true,
+        format: "mm/yyyy",
+        startDate: "1/2013",
+        endDate: endYear,
+        startView: "months",
+        minViewMode: "months",
+        maxViewMode: "years"
+    }).datepicker("setDate", new Date());
+</script>

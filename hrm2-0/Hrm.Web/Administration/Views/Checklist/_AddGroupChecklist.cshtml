@@ -1,0 +1,179 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@using Newtonsoft.Json
+@model Hrm.Admin.ViewModels.StaffViewModel
+@{
+    ViewBag.Title = "GroupChecklist";
+}
+<style>
+    .add-group-checklist .form-group {
+        height: 35px;
+    }
+
+    .add-group-checklist .checkbox-groupchecklist .cb-control {
+        float: left;
+    }
+
+    .add-group-checklist .checkbox-groupchecklist span {
+        float: left;
+        line-height: 45px;
+        margin-left: 10px;
+    }
+
+    .add-group-checklist .receiver {
+        width: 90%;
+        float: left;
+        clear: both;
+        height: 100%;
+    }
+
+    .add-group-checklist .cc-bcc {
+        height: 100%;
+        float: left;
+        line-height: 59px;
+        margin-left: 10px;
+    }
+
+    .add-group-checklist .check-email {
+        display: none;
+        margin-top:40px;
+    }
+</style>
+<div class="hrm-v2-modal-header ">@T("Checklist.AddGroupMission")</div>
+<div class="hrm-v2-modal-body " style="margin-top:0px">
+    <form class="add-group-checklist" id="frm-add-group-checklist">
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "Name", LabelName = T("Checklist.Name").ToString(), Style = "width:100%;", IsAnimationLabel = true, IsRequired = true,Value=Model.ChecklistDetailEdit.Name })
+        </div>
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "Note", LabelName = T("Checklist.Description").ToString(), Style = "width:100%; ", IsAnimationLabel = true, IsRequired = true, Value = Model.ChecklistDetailEdit.Note })
+        </div>
+        <div class="form-group" style="margin-top:30px">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "AssigneeId", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.Staff, LabelName = T("Checklist.MissionAssignmentArrived").ToString(), IsAnimationLabel = true, SearchField=true, Value =Model.ChecklistDetailEdit.AssigneeId.ToString() })
+        </div>
+        <div class="form-group" style="margin-top:30px">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "AssigneeViewId", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.Staff, LabelName = T("Checklist.ShareView").ToString(), IsAnimationLabel = true, SearchField = true, Value = Model.ChecklistDetailEdit.AssigneeViewId.ToString() })
+        </div>
+        @*<div class="form-group checkbox-groupchecklist">
+            @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-IsDefault", Id = "IsDefault" })
+            <span>@T("Checklist.IsDefault")</span>
+        </div>*@
+        <div class="form-group checkbox-groupchecklist">
+            @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-send-mail", Id = "IsSendMail", OnClick = "checkEmail()",Attribute=Model.ChecklistDetailEdit.IsSendMail==true ? "checked" :"" })
+            <span>@T("Checklist.SendNotification")</span>
+        </div>
+        @{ 
+            var display = "display:none";
+            if (Model.ChecklistDetailEdit.IsSendMail)
+            {
+                display= "display:block";
+            }
+        }
+        <div class="form-group check-email" style="@display">
+            <div class="receiver">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "receiverMailId", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.Staff, LabelName = T("Email.MailTo").ToString(), IsAnimationLabel = true, SearchField = true,Value= Model.ChecklistDetailEdit.IsSendMail == true ? Model.ChecklistDetailEdit.ReceiverMailId.ToString() : "" })
+            </div>
+            <div class="cc-bcc">
+                <span>@T("Checklist.CC")</span>
+                <span>@T("Checklist.BCC")</span>
+            </div>
+        </div>
+
+        <div class="form-group check-email"  style="@display;">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "MailTemplateId", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = new List<dynamic>(), LabelName = T("Checklist.SelectEmailTemplate").ToString(), IsAnimationLabel = true, SearchField = true, Value = Model.ChecklistDetailEdit.IsSendMail == true ? Model.ChecklistDetailEdit.MailTemplateId.ToString() : "" })
+        </div>
+
+        <div class="add-groupchecklist-button">
+            <div style="float:right">
+                @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue",ClassName= "hrm-v2-btn-save", OnClick = "SaveGroupChecklistDetail(2)", Value = "Checklist.SaveAndContinue", Style = "width:120px;height:38px;", Type = "button" })
+            </div>
+            <div style="float:right;margin-right: 10px;">
+                @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-master-data-continue", ClassName = "hrm-v2-btn-save", OnClick = "SaveGroupChecklistDetail(1)", Value = "Checklist.Save", Style = "width:100px;height:38px;", Type = "button" })
+            </div>
+            <div style="float:right;margin-right: 10px;">
+                @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Checklist.Close", ClassName = "hrm-v2-btn-close", Style = "width:100px;height:38px;" })
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    var checklistEdit=@Html.Raw(JsonConvert.SerializeObject(Model.ChecklistDetailEdit));
+    function checkEmail() {
+        if ($("#cb-checklist-send-mail").is(":checked")) {
+            $(".check-email").css("display", "block");
+        }
+        else {
+            $(".check-email").css("display", "none");
+        }
+    }
+
+    function SaveGroupChecklistDetail(typeSave) {
+        $("#frm-add-group-checklist span[name*='-error']").text("");
+        var checklist={};
+        checklist.Name= $("#name").val();
+        checklist.Note= $("#note").val();
+        checklist.AssigneeId= $("#AssigneeId").val();
+        checklist.AssigneeName = $("#AssigneeId option:selected").text();
+        checklist.AssigneeViewId= $("#AssigneeViewId").val();
+        checklist.IsDefault = $("#cb-checklist-IsDefault").is(":checked");
+        checklist.ChecklistDetailTypeName= '@ChecklistDetailType.Group';
+        checklist.TypeControlId = 0;
+
+        if ($("#cb-checklist-send-mail").is(":checked")) {
+            checklist.IsSendMail=  $("#cb-checklist-send-mail").is(":checked");
+            checklist.MailTemplateId= $("#MailTemplateId").val();
+            checklist.ReceiverMailId=$("#receiverMailId").val();
+        }
+        if(checklistEdit.Index!=0){
+            for (var i = 0; i < listchecklistDetail.length; i++) {
+                if(listchecklistDetail[i].Index==checklistEdit.Index && listchecklistDetail[i].ParentId==checklistEdit.ParentId)
+                {
+                    checklist.Index=@Html.Raw(Model.ChecklistDetailEdit.Index);
+                    checklist.ParentId=@Html.Raw(Model.ChecklistDetailEdit.ParentId);
+                    checklist.Id=@Html.Raw(Model.ChecklistDetailEdit.Id);
+                    listchecklistDetail[i]=checklist;
+                    break;
+                }
+
+            }
+        }
+        else if (listchecklistDetail.length>0) {
+            var listObj = listchecklistDetail.filter(function (item) {
+                return item.TypeControlId == 0;
+            });
+            checklist.Index= (listObj.length)+1;
+        }
+        else{
+            checklist.Index= 1;
+        }
+        $.ajax(
+       {
+           type: "POST",
+           url: "/Admin/Checklist/AddChecklist",
+           data: { checklist: checklist },
+           success: function (response) {
+               if (response.Invalid) {
+                   var validations = response.Result;
+                   for (var i = 0; i < validations.length; i++) {
+                       var list = validations[i].ColumnName.split('.');
+                       validations[i].ColumnName = list[1];
+                   }
+                   RenderError(validations, "frm-add-group-checklist");
+               }
+               else {
+                   if (response.IsSucces) {
+                       if(checklistEdit.Index==0){
+                           listchecklistDetail.push(checklist);
+                       }
+                       $("#group-mission").load('/Admin/Checklist/ReloadChecklist', { data: listchecklistDetail });
+                       if (typeSave==1) {
+                           $("#myModal").modal("hide");
+                       }
+                   }
+               }
+
+           }
+       });
+    }
+</script>

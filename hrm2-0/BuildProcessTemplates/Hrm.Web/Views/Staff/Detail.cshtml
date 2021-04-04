@@ -1,0 +1,373 @@
+﻿
+@model Hrm.Web.ViewModels.StaffDetailsViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@using Hrm.Framework.Context
+@{
+    ViewBag.Title = T("Staff.StaffDetail");
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+}
+<script>
+    referenceId = @Html.Raw(Model.Staff.Id);
+</script>
+<!--Add Css View-->
+<link href="@Url.Content("~/Content/hrm-v2/_staffdetails.css?v="+timeVersion)" rel="stylesheet" type="text/css" />
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="bread-crumb-item"> @T("Staff.StaffDetail")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span>
+</div>
+<div class="col-md-12 hrm-v2-inline-block pd-l-0">
+    <div id="staff-detail-view">
+        @Html.Partial(UrlHelpers.View("~/Views/Staff/_DetailByTab.cshtml"), Model)
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/hrm-v2/Staff/_detail.js?v=" + timeVersion)"></script>
+<script type="text/javascript">
+    //$(document).on('select2:selecting', '#WorkingProcess-WorkingprocessTypeId', function (e) {
+    //    $('#WorkingProcess-WorkingprocessTypeId').val(e.params.args.data.id)
+    //    $('#working-process-decision').load('/WorkingProcess/ChangeWorkingprocessType',{ model: $('form#save-workingprocess-form').serializeObject() });
+    //});
+    if("@Model.ViewType"=="1"){
+        $("#tab-content").css("width", "100%");
+    }
+    $(document).on('click', '.hrmv2-tab .nav-item', function () {
+        $('#loading-tab').show();
+        var staffId = @CurrentUser.UserId;
+        if (window.location.href.toLowerCase().indexOf("staffid") != -1) {
+            var staffId = getUrlParameter('Staffid');
+        }
+        var activeTab = $(this).attr("index");
+        window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) +"staff-detail?staffid=" + staffId + "&activetab=" + activeTab; // + "&viewtype="+viewType;
+    });
+    function openEditForm(){
+        var staffId = @CurrentUser.UserId;
+        var viewType = 0;
+        var actionTab = 0;
+        if (window.location.href.toLowerCase().indexOf("staffid") != -1) {
+
+            staffId = getUrlParameter('Staffid');
+        }
+        if (window.location.href.toLowerCase().indexOf("activetab") != -1) {
+
+            var activeTab = getUrlParameter('activetab');
+        }
+        if (window.location.href.toLowerCase().indexOf("viewtype") != -1) {
+
+            var viewType = getUrlParameter('viewtype');
+        }
+        if (window.location.href.toLowerCase().indexOf("actiontab") != -1) {
+
+            var actionTab = getUrlParameter('actionTab');
+        }
+        if(viewType == "1"){
+            window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) +"staff-detail?staffid=" + staffId + "&activetab=" + activeTab+"&actionTab="+actionTab+"&viewType=0";
+        }
+        else{
+            window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) +"staff-detail?staffid=" + staffId + "&activetab=" + activeTab+"&actionTab="+actionTab+"&viewType=1";
+        }
+
+    }
+    function changeView()
+    {
+        var staffId = @CurrentUser.UserId;
+        var activeTab = 0;
+        var viewType = 0;
+        if (window.location.href.toLowerCase().indexOf("staffid") != -1) {
+
+            var staffId = getUrlParameter('Staffid');
+        }
+        if (window.location.href.toLowerCase().indexOf("activetab") != -1) {
+
+            var activeTab = getUrlParameter('activetab');
+        }
+        if (window.location.href.toLowerCase().indexOf("actiontab") != -1) {
+
+            var actionTab = getUrlParameter('actionTab');
+        }
+        if (window.location.href.toLowerCase().indexOf("viewtype") != -1) {
+
+            var viewType = getUrlParameter('viewtype');
+        }
+        if (@Html.Raw(Json.Encode(Model.ActiveTab)) == 2){
+            if(actionTab == "1" || actionTab == 1){
+                window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) +"staff-detail?staffid=" + staffId + "&activetab=" + activeTab +"&actionTab=0&viewType="+viewType;
+            }
+            else{
+                window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) +"staff-detail?staffid=" + staffId + "&activetab=" + activeTab +"&actionTab=1&viewType="+viewType;
+            }
+
+        }
+    }
+    function changeViewReward(){
+        var urlReward = "/Staff/GetRewardDisciplineGrid";
+        if($("#reward-actionTab").val()==1 || $("#reward-actionTab").val()=="1"){
+            urlReward = "/Staff/GetRewardDisciplineGrid";
+        }
+        else{
+            urlReward = "/Staff/GetRewardDisciplineCard";
+        }
+
+        $.ajax(
+        {
+            url:  urlReward,
+            type: "POST",
+            data: {
+                staffId:@Model.Staff.Id,
+                type : @MasterDataId.Reward },
+            success: function (response) {
+                if($("#reward-actionTab").val()==1 || $("#reward-actionTab").val()=="1"){
+                    $("#reward-actionTab").val("0");
+                }
+                else{
+                    $("#reward-actionTab").val("1");
+                }
+                $("#staff-reward").html(response);
+            }
+        });
+    }
+    function changeViewDiscipline(){
+        var urlReward = "/Staff/GetRewardDisciplineGrid";
+        if($("#discipline-actionTab").val()==1 || $("#discipline-actionTab").val()=="1"){
+            urlReward = "/Staff/GetRewardDisciplineGrid";
+        }
+        else{
+            urlReward = "/Staff/GetRewardDisciplineCard";
+        }
+
+        $.ajax(
+        {
+            url:  urlReward,
+            type: "POST",
+            data: {
+                staffId:@Model.Staff.Id,
+                type : @MasterDataId.Discipline },
+            success: function (response) {
+                if($("#discipline-actionTab").val()==1 || $("#discipline-actionTab").val()=="1"){
+                    $("#discipline-actionTab").val("0");
+                }
+                else{
+                    $("#discipline-actionTab").val("1");
+                }
+                $("#staff-discipline").html(response);
+            }
+        });
+    }
+
+    function CreateWorkingProcess(){
+        $("#section-contract").val($("#section-contract").prop("checked"));
+        $("#section-office-position").val($("#section-office-position").prop("checked"));
+        $("#section-salary").val($("#section-salary").prop("checked"));
+        $("#wp-staffId").val(referenceId);
+        $("#ct-staffId").val(referenceId);
+        $("#working-process-save-Form span[name*='-error']").text("");
+        debugger;
+        $.ajax(
+        {
+            url:  "/WorkingProcess/Save",
+            type: "POST",
+            data:  $('form#working-process-save-Form').serializeObject(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "working-process-save-Form");
+                }
+                else {
+                    ShowMessage(true, msgSuccessful, response.Message, 0, 4000, 0);
+                    window.location.reload();
+                }
+            }
+        });
+    }
+
+    $("#frm-staff-checklist span[name*='-error']").text("");
+    function saveStaffChecklist(){
+        var list=$('#frm-staff-checklist').serializeArray();
+        for (var i = 0; i < list.length; i++) {
+            if(list[i].name.indexOf('IsFinished')>0){
+                if (list[i].value!='0' && list[i].value!=null) {
+                    list[i].value=true;
+                }
+                else{
+                    list[i].value=false;
+                }
+            }
+        }
+        $.ajax(
+         {
+             type: "POST",
+             url: "/Staff/SaveStaffCheckList",
+             data: list,
+             success: function (response) {
+                 alert(response.responeseResources)
+                 if (response.result.Success==true) {
+                     $('#frm-staff-checklist').load('/Staff/ReloadStaffChecklist', { staffId: @Model.Staff.Id })
+                 }
+
+             }
+         });
+    }
+    function saveWorkingProcess() {
+        $("#wp-staffId").val(referenceId);
+        $("#ct-staffId").val(referenceId);
+        $("#save-workingprocess-form span[name*='-error']").text("");
+        $.ajax({
+            type: "POST",
+            url: "/WorkingProcess/Save",
+            data: $('form#save-workingprocess-form').serializeObject(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "save-workingprocess-form");
+                }
+                else {
+                    ShowMessage(true, msgSuccessful, response.Message, 0, 4000, 0);
+                    $('.modal').modal('hide');
+                    window.location.reload();
+                }
+            }
+        });
+    }
+    function saveBonusDiscipline(formId){
+        $("#"+formId+" span[name*='-error']").text("");
+        $("#bd-staffId").val(referenceId);
+
+
+        var $file = document.getElementById('file-upload'),
+                $formData = new FormData();
+        if ($file.files.length > 0) {
+            for (var i = 0; i < $file.files.length; i++) {
+                $formData.append('file-' + i, $file.files[i]);
+            }
+        }
+        var data = $('form').serializeObject();
+        data.ApplyDate = stringToDateUtc(data.ApplyDate,"dd/MM/yyyy","/");;
+        data.SignDate = stringToDateUtc(data.SignDate,"dd/MM/yyyy","/");;
+        $formData.append('Data', JSON.stringify(data));
+ 
+        $.ajax({
+            type: "POST",
+            url: "/Staff/SaveStaffBonusDiscipline",
+            data: $formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, formId);
+                }
+                else {
+                    ShowMessage(true, msgSuccessful, response.Message, 0, 4000, 0);
+                    window.location.reload();
+                }
+            }
+
+        });
+    }
+    function saveExperience() {
+        $("#ex-staffId").val(referenceId);
+        $("#save-experience-form span[name*='-error']").text("");
+        $.ajax({
+            type: "POST",
+            url: "/Staff/SaveExperience",
+            data: $('form#save-experience-form').serializeObject(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "save-experience-form");
+                }
+                else {
+                    ShowMessage(true, msgSuccessful, response.Message, 0, 4000, 0);
+                    $('.modal').modal('hide');
+                    window.location.reload();
+                }
+            }
+        });
+    }
+    function saveCertification() {
+        $("#cf-staffId").val(referenceId);
+        $("#save-certification-form span[name*='-error']").text("");
+        $.ajax({
+            type: "POST",
+            url: "/Staff/SaveCertificate",
+            data: $('form#save-certification-form').serializeObject(),
+            success: function (response) {
+
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "save-certification-form");
+                }
+                else {
+                    ShowMessage(true, msgSuccessful, response.Message, 0, 4000, 0);
+                    $('.modal').modal('hide');
+                    window.location.reload();
+                }
+            }
+        });
+    }
+    function saveHealthInsurance() {
+        $("#hi-staffId").val(referenceId);
+        $("#save-health-insurance-form span[name*='-error']").text("");
+        $.ajax({
+            type: "POST",
+            url: "/Staff/SaveHealthInsurance",
+            data: $('form#save-health-insurance-form').serializeObject(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "save-health-insurance-form");
+                }
+                else {
+                    ShowMessage(true, msgSuccessful, response.Message, 0, 4000, 0);
+                    $('.modal').modal('hide');
+                    window.location.reload();
+                }
+            }
+        });
+    }
+    function saveSocialInsurance() {
+        $("#si-staffId").val(referenceId);
+        $("#save-social-insurance-form span[name*='-error']").text("");
+        $.ajax({
+            type: "POST",
+            url: "/Staff/SaveSocialInsurance",
+            data: $('form#save-social-insurance-form').serializeObject(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "save-social-insurance-form");
+                }
+                else {
+                    ShowMessage(true, msgSuccessful, response.Message, 0, 4000, 0);
+                    $('.modal').modal('hide');
+                    window.location.reload();
+                }
+            }
+        });
+    }
+    function saveInsurance() {
+        $("#si-staffId").val(referenceId);
+        $("#save-insurance-form span[name*='-error']").text("");
+        $.ajax({
+            type: "POST",
+            url: "/Staff/SaveInsurance",
+            data: $('form#save-insurance-form').serializeObject(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "save-insurance-form");
+                }
+                else {
+                    ShowMessage(true, msgSuccessful, response.Message, 0, 4000, 0);
+                    $('.modal').modal('hide');
+                    window.location.reload();
+                }
+            }
+        });
+    }
+    var viewType = getUrlParameter('viewtype');
+    var activetab = getUrlParameter('activetab');
+    if(viewType == 1 && activetab == 5){
+        StaffCareShowMore(true);
+    }
+</script>

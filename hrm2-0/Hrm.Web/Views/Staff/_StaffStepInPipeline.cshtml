@@ -1,0 +1,38 @@
+﻿@model Hrm.Framework.Models.PipelineGridModel
+@using Hrm.Framework.Models
+@using Hrm.Common
+@{
+    var pipelineSteps = new List<PipelineStepModel>();
+    if (Model.PipelineSteps != null && Model.PipelineSteps.Count > 0)
+    {
+        pipelineSteps = Model.PipelineSteps;
+    }
+    var continueRender = string.Empty;
+}
+@{
+    var index = 0;
+}
+@foreach (var pipelineStep in pipelineSteps)
+{    
+    index++;
+    if (index > 1)
+    {
+        <div class="pipeline-line-break @continueRender">—</div>
+    }
+    <div class="circle-pipeline-step @continueRender" style="background-color:@C(pipelineStep.PositionId.ToString()).ToString()">
+        <div class="pipeline-name">
+            @if (pipelineStep.PipelineStepSymbol.Contains("fa"))
+                {
+                <i class="@pipelineStep.PipelineStepSymbol"></i>
+            }
+            else
+            {
+                <span>@pipelineStep.PipelineStepSymbol</span>
+            }
+        </div>
+    </div>
+    if (pipelineStep.Id == Model.CurrentStep)
+    {
+        continueRender = "element-disabled";
+    }
+}

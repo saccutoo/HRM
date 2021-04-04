@@ -1,0 +1,14 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@model Hrm.Admin.ViewModels.WorkingdaySupplementConfigurationViewModel
+@{
+    Layout = null;
+}
+
+<div class="col-md-12 pd-0 display-inline-block">
+    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("SupplementConfiguration.LabelName.PreviousStatus").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.SupplementConfigurationStatusApprove, ValueField = "Id", Name = "model.PrevStatus", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.SupplementConfiguration.PrevStatus.ToString() })
+</div>
+<div class="col-md-12 pd-0 display-inline-block">
+    @Html.Partial(UrlHelpers.Template("_MultiSelect.cshtml"), new DropdownListModel() { LabelName = T("SupplementConfiguration.LabelName.ApprovedBy").ToString(), IsAnimationLabel = true, ValueField = "Id", DisplayField = "Name", Name = "ApprovedBy", Data = Model.ListApprovedByStaffs, ValueMultiSelect = Model.SupplementConfigurationException.ListApprovedBy })
+</div>

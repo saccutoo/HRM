@@ -1,0 +1,147 @@
+﻿@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@model Hrm.Admin.ViewModels.PipelineViewModel
+@using Hrm.Admin.ViewModels
+
+@{
+    ViewBag.Title = "pipeline";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+}
+
+<link href="@Url.Content("~/Administration/Content/gereral.css?v=" + timeVersion)" rel="stylesheet">
+
+<style>
+    .gereral {
+        overflow: auto;
+    }
+
+    .hrmv2-modal {
+        height: 100%;
+        overflow-y: auto;
+    }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Setting.Pipeline")</span>
+    <div class="pull-right">
+    </div>
+</div>
+<div class="gereral" @*ng-controller="pipelineController"*@>
+    <div class="pipeline-top">
+    </div>
+    <div class="pipeline-bottom">
+        <div class="list-pipeline" id="list-pipeline">
+            @Html.Partial("~/Administration/Views/Pipeline/_Pipeline.cshtml", new PipelineViewModel() { PipelineView = Model.PipelineView })
+        </div>
+    </div>
+
+</div>
+
+@*<script src="@Url.Content("~/Administration/Scripts/app/controllers/pipelineController.js?v=" + timeVersion)" type="text/javascript"></script>
+    <script src="@Url.Content("~/Administration/Scripts/app/services/pipelineService.js?v=" + timeVersion)" type="text/javascript"></script>*@
+
+<script>
+    function ShowFormAddPipeline() {
+        var options = {
+            id: 'add-pipeline',
+            url: '/Admin/pipeline/ShowFormAddPipeline',
+            align: 'center',
+            width: 750,
+            data: '{pipelineId: 0}',
+            idform: 'frm-add-pipeline',
+            //urlback: '/Contract/GetContractCoaInfoList',
+            //databack: '{contractId:' + contractId + '}',
+            //divload: 'GridContractCoaInfo',
+            //fnNameReload: 'ResetSelectCoaInfo'
+        };
+        CreatePopup(options);
+    }
+    function SavePipeline() {
+        $("#frm-pipeline span[name*='-error']").text("");
+        var listPipeline = $('#frm-pipeline').serializeArray();
+        var index = 0;
+        for (var i = 0; i < listPipeline.length; i++) {
+            if (listPipeline[i].name.indexOf('OrderNo') > 0) {
+                listPipeline[i].value = index;
+                index++;
+            }
+        }
+        $.ajax(
+         {
+             type: "POST",
+             url: "/Admin/Pipeline/SavePipeline",
+             data: listPipeline,
+             success: function (response) {
+                 if (response.Invalid) {
+                     var validations = response.Result;
+                     RenderError(validations, "frm-pipeline");
+                 }
+                 else {
+                     if (response.isSuccess == false) {
+                         ShowMessage(response.isSuccess, msgFalse, response.responeseResources, 500, 3000);
+                     }
+                     else {
+                         $('#list-pipeline').html(response);
+                         $("#myModal").modal("hide");
+                     }
+                 }
+
+             }
+         });
+    }
+    function AddStage() {
+        var listPipeline = $('#frm-pipeline').serializeArray();
+        var index = 0;
+        for (var i = 0; i < listPipeline.length; i++) {
+            if (listPipeline[i].name.indexOf('OrderNo') > 0) {
+                listPipeline[i].value = index;
+                index++;
+            }
+        }
+        $.ajax(
+         {
+             type: "POST",
+             url: "/Admin/Pipeline/AddStage",
+             data: listPipeline,
+             success: function (response) {
+                 $('#sortable').html(response);
+
+             }
+         });
+    }
+    function removePipelineStep(item) {
+        $('#index-remove').val(item);
+        var listPipeline = $('#frm-pipeline').serializeArray();
+        var index = 0;
+        for (var i = 0; i < listPipeline.length; i++) {
+            if (listPipeline[i].name.indexOf('OrderNo') > 0) {
+                listPipeline[i].value = index;
+                index++;
+            }
+        }
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/Pipeline/removePipelineStep",
+            data: listPipeline,
+            success: function (response) {
+                $('#sortable').html(response);
+            }
+        });
+    }
+    function EditPipeline(listPipeline) {
+        var options = {
+            id: 'add-pipeline',
+            url: '/Admin/pipeline/ShowFormAddPipeline',
+            width: 750,
+            align: 'center',
+            data: '{pipelineId: ' + listPipeline.ListPipelineModel[0].Id + '}',
+            idform: 'frm-add-pipeline',
+            //urlback: '/Contract/GetContractCoaInfoList',
+            //databack: '{contractId:' + contractId + '}',
+            //divload: 'GridContractCoaInfo',
+            //fnNameReload: 'ResetSelectCoaInfo'
+        };
+        CreatePopup(options);
+    }
+</script>

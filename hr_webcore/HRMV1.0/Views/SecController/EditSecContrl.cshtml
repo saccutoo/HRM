@@ -1,0 +1,28 @@
+﻿
+<div class="container-fluid">
+
+    <div id="EditContent" class="row" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Cập nhật thông tin</div>
+                <div class="panel-body">
+                    <form name="EditForm" ng-submit="updateAction(tableInfo.EditUrl)">
+                        <div class="form-group {{(EditForm.controllerName.$invalid) ? 'has-error' : ''}}">
+                            <label>Controller Name <span style="color: red">*</span></label>
+                            <input required type="text" data-modal="modal" name="controllerName" placeholder="Enter controller name" class="form-control" ng-pattern="/^[a-zA-Z]{1,25}$/" ng-model="editData.ControllerName" />
+                        </div>
+                    
+                        <button type="submit" class="btn btn-labeled btn-success">
+                            <span class="btn-label">
+                                <i class="fa fa-save"></i>
+                            </span>Cập nhật
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>

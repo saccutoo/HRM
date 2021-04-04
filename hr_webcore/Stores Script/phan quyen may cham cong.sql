@@ -1,0 +1,7 @@
+INSERT INTO dbo.Sys_Table_Column_Role( RoleId ,TableColumnId ,CreateDate ,CreateBy ,isActive ,[Order]) VALUES  ( 5 ,  296 ,GETDATE() ,1 , 1 ,1 )
+INSERT INTO dbo.Sys_Table_Column_Role( RoleId ,TableColumnId ,CreateDate ,CreateBy ,isActive ,[Order]) VALUES  ( 5 ,  297 ,GETDATE() ,1 , 1 ,1 )
+INSERT INTO dbo.Sys_Table_Column_Role( RoleId ,TableColumnId ,CreateDate ,CreateBy ,isActive ,[Order]) VALUES  ( 5 ,  298 ,GETDATE() ,1 , 1 ,1 )
+INSERT INTO dbo.Sys_Table_Column_Role( RoleId ,TableColumnId ,CreateDate ,CreateBy ,isActive ,[Order]) VALUES  ( 5 ,  299 ,GETDATE() ,1 , 1 ,1 )
+INSERT INTO dbo.Sys_Table_Column_Role( RoleId ,TableColumnId ,CreateDate ,CreateBy ,isActive ,[Order]) VALUES  ( 5 ,  300 ,GETDATE() ,1 , 1 ,1 )
+INSERT INTO dbo.Sys_Table_Column_Role( RoleId ,TableColumnId ,CreateDate ,CreateBy ,isActive ,[Order]) VALUES  ( 5 ,  301 ,GETDATE() ,1 , 1 ,1 )
+INSERT INTO dbo.Sys_Table_Column_Role( RoleId ,TableColumnId ,CreateDate ,CreateBy ,isActive ,[Order]) VALUES  ( 5 ,  302 ,GETDATE() ,1 , 1 ,1 )

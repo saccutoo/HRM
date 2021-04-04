@@ -1,0 +1,104 @@
+﻿@using HRM.App_LocalResources;
+<div class="container-fluid">
+    <div class="row" id="HR_WorkingDayMachine" style="margin: 0;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;">@AppRes.WorkingDayMachine</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.WorkingDayMachine <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.Name" class="form-control" ng-change="Name()" />
+                                        <span style="color:red;line-height:30px;">{{ErrorName}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label style="line-height:30px;">@AppRes.NameEn <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" ng-model="Data.NameEN" ng-change="ChangeNameEN()" />
+                                        <span style="color:red;line-height:30px;">{{ErrorNameEN}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label style="line-height:30px;">@AppRes.Database <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" ng-model="Data.DatabaseName" ng-change="ChangeDatabaseName()" />
+                                        <span style="color:red;line-height:30px;">{{ErrorDatabaseName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.DayOfWeekFomat <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <select ng-model="Data.DayOfWeekFomat" chosen class="form-control" ng-change="ChangeDayOfWeekFomat()">
+                                            <option value="" selected>---@AppRes.Select-</option>
+                                            <option value="true">True</option>
+                                            <option value="false">False</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorDayOfWeekFomat}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label style="line-height:30px;">@AppRes.AllDay </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="checkbox" class="form-control" ng-model="Data.StatusSate" id="Check" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+                <center>
+                    <button type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>@AppRes.btnUpdate
+                    </button>
+                    <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                        <span class="btn-label">
+                            <i class="fa fa-close"></i>
+                        </span>@AppRes.btnCancel
+                    </button>
+                </center>
+            </div>
+        </form>
+    </div>
+</div>
+

@@ -1,0 +1,5 @@
+﻿-StaffWhereRoleBD: lấy thông tin dropdown BD theo role=3 và 29
+-PaymentProduct_Save: lưu dữ liệu 
+-PaymentProduct_GetInfo: lấy thông tin bản ghi
+-CustomerGetByUserIDAndKey: lấy dữ liệu khách hàng
+-Và các funtion khai báo cột, dữ liệu trong systalbe

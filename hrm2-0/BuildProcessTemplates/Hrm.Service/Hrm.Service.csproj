@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6100C0D4-7822-41E2-8093-F0E7458DAC8E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Hrm.Service</RootNamespace>
+    <AssemblyName>Hrm.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IServices\IAnnualLeaveService.cs" />
+    <Compile Include="IServices\IColumnValidationService.cs" />
+    <Compile Include="IServices\IConfigInsuranceService.cs" />
+    <Compile Include="IServices\ICustomerService.cs" />
+    <Compile Include="IServices\IDashboardService.cs" />
+    <Compile Include="IServices\IAttachmentService.cs" />
+    <Compile Include="IServices\IRoleService.cs" />
+    <Compile Include="IServices\IChecklistDetailService.cs" />
+    <Compile Include="IServices\IChecklistService.cs" />
+    <Compile Include="IServices\IPermissionService.cs" />
+    <Compile Include="IServices\IEmailService.cs" />
+    <Compile Include="IServices\IOrganizationService.cs" />
+    <Compile Include="IServices\IMenuService.cs" />
+    <Compile Include="IServices\IPipelineService.cs" />
+    <Compile Include="IServices\ISalaryService.cs" />
+    <Compile Include="IServices\ISalaryTypeService.cs" />
+    <Compile Include="IServices\IStaffBonusDisciplineService.cs" />
+    <Compile Include="IServices\IStaffRoleService.cs" />
+    <Compile Include="IServices\IStaffService.cs" />
+    <Compile Include="IServices\ITableConfigService.cs" />
+    <Compile Include="IServices\ITableColumnService.cs" />
+    <Compile Include="IServices\ISalaryElementService.cs" />
+    <Compile Include="IServices\ITableService.cs" />
+    <Compile Include="IServices\ILocalizationService.cs" />
+    <Compile Include="IServices\IAuthenticationService.cs" />
+    <Compile Include="IServices\IBaseService.cs" />
+    <Compile Include="IServices\IMasterDataService.cs" />
+    <Compile Include="IServices\ITestDataService.cs" />
+    <Compile Include="IServices\IStaffRelationShipsService.cs" />
+    <Compile Include="IServices\IWorkingdayService.cs" />
+    <Compile Include="IServices\IWorkingDaySupplementConfigurationExceptionService.cs" />
+    <Compile Include="IServices\IWorkingDaySupplementConfigurationService.cs" />
+    <Compile Include="IServices\IWorkingProcessService.cs" />
+    <Compile Include="Services\AnnualLeaveService.cs" />
+    <Compile Include="Services\ColumnValidationService.cs" />
+    <Compile Include="Services\ConfigInsuranceService.cs" />
+    <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\DashboardService.cs" />
+    <Compile Include="Services\AttachmentService.cs" />
+    <Compile Include="Services\RoleService.cs" />
+    <Compile Include="Services\ChecklistDetailService.cs" />
+    <Compile Include="Services\ChecklistService.cs" />
+    <Compile Include="Services\PermissionService.cs" />
+    <Compile Include="Services\EmailService.cs" />
+    <Compile Include="Services\MenuService.cs" />
+    <Compile Include="Services\OrganizationService.cs" />
+    <Compile Include="Services\PipelineService.cs" />
+    <Compile Include="Services\SalaryService.cs" />
+    <Compile Include="Services\SalaryTypeService.cs" />
+    <Compile Include="Services\StaffBonusDisciplineService.cs" />
+    <Compile Include="Services\StaffRoleService.cs" />
+    <Compile Include="Services\StaffService.cs" />
+    <Compile Include="Services\TableConfigService.cs" />
+    <Compile Include="Services\TableColumnService.cs" />
+    <Compile Include="Services\SalaryElementService.cs" />
+    <Compile Include="Services\TableService.cs" />
+    <Compile Include="Services\LocalizationService.cs" />
+    <Compile Include="Services\AuthenticationService.cs" />
+    <Compile Include="Services\BaseService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\MasterDataService.cs" />
+    <Compile Include="Services\StaffRelationShipsService.cs" />
+    <Compile Include="Services\WorkingdayService.cs" />
+    <Compile Include="Services\WorkingDaySupplementConfigurationExceptionService.cs" />
+    <Compile Include="Services\WorkingDaySupplementConfigurationService.cs" />
+    <Compile Include="Services\WorkingProcessService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hrm.Common\Hrm.Common.csproj">
+      <Project>{a8f75d9b-acfc-40f2-97c4-2941914ada7e}</Project>
+      <Name>Hrm.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hrm.Repository\Hrm.Repository.csproj">
+      <Project>{43a1c2f6-5562-479e-902b-53e19ce042e4}</Project>
+      <Name>Hrm.Repository</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

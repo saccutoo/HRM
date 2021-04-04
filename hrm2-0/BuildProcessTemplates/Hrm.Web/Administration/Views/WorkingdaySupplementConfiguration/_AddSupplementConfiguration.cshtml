@@ -1,0 +1,139 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@model Hrm.Admin.ViewModels.WorkingdaySupplementConfigurationViewModel
+<style>
+    .add-working-supplement-container {
+        width: 100%;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 42px;
+        height: 15px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 15px;
+            width: 15px;
+            bottom: 0px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #2ca01c;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+</style>
+
+<div class="add-working-supplement-container display-inline-block">
+    <form id="frm-add-supplement-configuration">
+        @if (@Model.SupplementConfiguration.Id == 0)
+        {
+            <div class="hrm-v2-modal-header">@T("SupplementConfiguration.Title.AddAction").ToString()</div>
+        }
+        else
+        {
+            <div class="hrm-v2-modal-header">@T("SupplementConfiguration.Title.EditAction").ToString()</div>
+        }
+        <div class="hrm-v2-modal-body">
+            <input type="text" name="model.Id" value="@Model.SupplementConfiguration.Id" hidden />
+            <input type="text" name="model.RequesterId" value="@Model.SupplementConfiguration.RequesterId" hidden />
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("SupplementConfiguration.LabelName.Action").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.SupplementConfigurationActions, ValueField = "Id", Name = "model.Action", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.SupplementConfiguration.Action.ToString() })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("SupplementConfiguration.LabelName.PreviousStatus").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.SupplementConfigurationStatusApprove, ValueField = "Id", Name = "model.PrevStatus", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.SupplementConfiguration.PrevStatus.ToString() })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("SupplementConfiguration.LabelName.NextStatus").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.SupplementConfigurationStatusApprove, ValueField = "Id", Name = "model.NextStatus", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.SupplementConfiguration.NextStatus.ToString() })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="checkbox" style="float:left;padding:0px">
+                    @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "ck-isLastStep", Value = "true", Attribute = Model.SupplementConfiguration.IsLastStep != 0 ? "checked" : string.Empty, Id = "model.IsLastStepChecked" })
+                </div>
+                <span style="float: left;line-height:65px;">@T("SupplementConfiguration.LabelName.LastStep")</span>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-login">
+                <div class="pull-right">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Workingday.Close", ClassName = "hrm-v2-btn-close", Style = "float:left;margin-right:10px;" })
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", OnClick = "saveSupplementConfiguration()", Value = "Workingday.Save", Type = "button", ClassName = "hrm-v2-btn-save" })
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function saveSupplementConfiguration() {
+        $("#frm-add-supplement-configuration span[name*='-error']").text("");
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/WorkingdaySupplementConfiguration/SaveSupplementConfiguration",
+            data: $('#frm-add-supplement-configuration').serializeArray(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-add-supplement-configuration");
+                }
+                if (response.result.Success == true) {
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    $('#myModal').modal('hide');
+
+                    var par = {};
+                    par.FilterField = @Model.SupplementConfiguration.RequesterId;
+                    par.PageNumber = $("#" + tableName + "-paging-current-page").val();
+                    par.PageSize = $("#" + tableName + "-paging-items-per-page").val();
+                    $('#tableDefault').load('/Admin/WorkingdaySupplementConfiguration/GetSupplementConfigurationById', { param: par }, function () { });
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                }
+            }
+        });
+    }
+
+</script>

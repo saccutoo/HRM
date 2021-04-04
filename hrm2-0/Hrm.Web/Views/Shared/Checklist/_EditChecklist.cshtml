@@ -1,0 +1,40 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Framework.Models.ChecklistDetailModel
+@{
+    Layout = null;
+}
+<div id="edit-checklist-form">
+    <div class="edit-checklist-container display-inline-block" style="width: 100%">
+        <div class="hrm-v2-modal-header">@T("Checklist.Label.EditChecklist")</div>
+        <div class="hrm-v2-modal-body" style="margin-top:0px">
+            <section class="hrmv2-section">
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.ChecklistDetail.Name").ToString(), IsRequired = true, IsAnimationLabel = true, Value = Model.ChecklistName, Name = "Name" })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.ChecklistDetail.ColumnLink").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.ListTabelColumnId, IsMultipleLanguage = true, ValueField = "Id", DataType = "TableColumn", PropertyName = "ColumnName", Name = "ColumnLink", Value ="" })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.ChecklistDetail.AssigneeTo").ToString(), IsAnimationLabel = false, Data = new List<dynamic>(), ValueField = "Id", DisplayField = "Name", Name = "AssigneeId", Value = "" })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "DurationDate", LabelName = T("Staff.Detail.DurationDate").ToString(),DateFormat="dd/MM/yyyy", Vertical= "top" })
+                </div>
+            </section>
+            <div class="footer">
+                <div class="footer-login">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                            @T("Staff.Detail.Cancel")
+                        </button>
+                        <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="saveBonusDiscipline('create-discipline-form')" style="margin-left:10px">
+                            @T("Staff.Detail.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

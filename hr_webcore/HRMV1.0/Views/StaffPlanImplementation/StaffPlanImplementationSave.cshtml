@@ -1,0 +1,338 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<div class="container-fluid">
+    <div class="row" id="StaffPlanImplementationSave" style="margin: 0;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;">@AppRes.StaffPlanImplementation</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Staff <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen options="ListEmployees" on-no-result="doStuff" ng-model="Data.UserID" ng-options="list.UserID as list.FullName for list in ListEmployees" ng-change="ChangeAddEmployees()" convert-dropdown>
+                                                <option value="" selected>-- @AppRes.Employee --</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen options="ListEmployees" on-no-result="doStuff" ng-model="Data.UserID" ng-options="list.UserID as list.FullNameEN for list in ListEmployees" ng-change="ChangeAddEmployees()" convert-dropdown>
+                                                <option value="" selected>-- @AppRes.Employee --</option>
+                                            </select>
+                                        }
+                                        <span ng-bind="ErrorStaff" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Department <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen options="getListAllOrganizationUnit" on-no-result="doStuff" ng-model="Data.DS_OrganizationUnitID" ng-options="list.OrganizationUnitID as list.Name for list in getListAllOrganizationUnit" ng-change="ChangeAddOrganizationUnit()" convert-dropdown>
+                                                <option value="" selected>-- @AppRes.Department --</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen options="getListAllOrganizationUnit" on-no-result="doStuff" ng-model="Data.DS_OrganizationUnitID" ng-options="list.OrganizationUnitID as list.NameEN for list in getListAllOrganizationUnit" ng-change="ChangeAddOrganizationUnit()" convert-dropdown>
+                                                <option value="" selected>-- @AppRes.Department --</option>
+                                            </select>
+                                        }
+                                        <span ng-bind="ErrorOrganizationUnit" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.C_CurrencyID <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen options="ListCurrencyName" on-no-result="doStuff" ng-model="Data.CurrencyTypeID" ng-options="list.GlobalListID as list.Name for list in ListCurrencyName" convert-dropdown>
+                                                <option value="" selected>-- @AppRes.C_CurrencyID --</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen options="ListCurrencyName" on-no-result="doStuff" ng-model="Data.CurrencyTypeID" ng-options="list.GlobalListID as list.NameEN for list in ListCurrencyName" convert-dropdown>
+                                                <option value="" selected>-- @AppRes.C_CurrencyID --</option>
+                                            </select>
+                                        }
+                                        <span style="color:red;line-height:30px;">{{ErrorCurrencyType}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>Hợp đồng </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen options="ListContractTypeName" on-no-result="doStuff" ng-model="Data.ContractType" ng-options="list.GlobalListID as list.Name for list in ListContractTypeName" convert-dropdown>
+                                                <option value="" selected>-- @AppRes.Contract --</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen options="ListContractTypeName" on-no-result="doStuff" ng-model="Data.ContractType" ng-options="list.GlobalListID as list.NameEN for list in ListContractTypeName" convert-dropdown>
+                                                <option value="" selected>-- @AppRes.Contract --</option>
+                                            </select>
+                                        }
+                                        <span ng-bind="ErrorContractType" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Year <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.Year" class="datePicker123 form-control" ng-change="ChangeAddYear()" />
+                                        <span ng-bind="ErrorYear" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Status <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen options="getListStatus" on-no-result="doStuff" ng-model="Data.Status" ng-options="list.Value as list.Name for list in getListStatus" convert-dropdown ng-change="ChangeAddStatus()">
+                                                <option value="" selected>-- @AppRes.Select --</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen options="getListStatus" on-no-result="doStuff" ng-model="Data.Status" ng-options="list.Value as list.NameEN for list in getListStatus" convert-dropdown ng-change="ChangeAddStatus()">
+                                                <option value="" selected>-- @AppRes.Select --</option>
+                                            </select>
+                                        }
+                                        <span ng-bind="ErrorStatus" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L1 </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M1" class="form-control" ng-change="ChangeAddM1()" />
+                                        <span ng-bind="ErrorM1" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L2 </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M2" class="form-control" ng-change="ChangeAddM2()" />
+                                        <span ng-bind="ErrorM2" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L3 </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M3" class="form-control" ng-change="ChangeAddM3()" />
+                                        <span ng-bind="ErrorM3" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L4 </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M4" class="form-control" ng-change="ChangeAddM4()" />
+                                        <span ng-bind="ErrorM4" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L5 </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M5" class="form-control" ng-change="ChangeAddM5()" />
+                                        <span ng-bind="ErrorM5" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L6 </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M6" class="form-control" ng-change="ChangeAddM6()" />
+                                        <span ng-bind="ErrorM6" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L7 </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M7" class="form-control" ng-change="ChangeAddM7()" />
+                                        <span ng-bind="ErrorM7" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L8  </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M8" class="form-control" ng-change="ChangeAddM8()" />
+                                        <span ng-bind="ErrorM8" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L9 </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M9" class="form-control" ng-change="ChangeAddM9()" />
+                                        <span ng-bind="ErrorM9" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L10 </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M10" class="form-control" ng-change="ChangeAddM10()" />
+                                        <span ng-bind="ErrorM10" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L11 </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M11" class="form-control" ng-change="ChangeAddM11()" />
+                                        <span ng-bind="ErrorM11" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.L12 </label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.M12" class="form-control" ng-change="ChangeAddM12()" />
+                                        <span ng-bind="ErrorM12" style="color:red;line-height:30px;"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <!-- END panel-->
+            </div>
+            <br />
+            <center>
+                <button type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                    <span class="btn-label">
+                        <i class="fa fa-save"></i>
+                    </span>@AppRes.btnUpdate
+                </button>
+                <button type="reset" class="btn btn-labeled" ng-click="CloseForm    ()">
+                    <span class="btn-label">
+                        <i class="fa fa-close"></i>
+                    </span>@AppRes.btnCancel
+                </button>
+            </center>
+        </form>
+    </div>
+</div>
+

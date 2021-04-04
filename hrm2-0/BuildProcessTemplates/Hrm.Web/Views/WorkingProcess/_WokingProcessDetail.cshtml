@@ -1,0 +1,313 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@model Hrm.Web.ViewModels.WorkingProcessViewModel
+@using Hrm.Common
+@{
+    Layout = null;
+}
+
+<div class="detail-working-process-container display-inline-block">
+    <div class="hrm-v2-modal-header" style="border:none;">@M(Model.WorkingProcess.WorkingprocessTypeId.ToString() + ";" + DataType.MasterData + ";Name")</div>
+    <div class="hrm-v2-modal-body" style="margin-top:0px;">
+        @if (Model.StaffOnboardInfo.IsOnboarding)
+        {
+            <section class="hrmv2-section">
+                @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "icon-append fa fa-user", SectionName = T("Staff.Detail.Decision").ToString(), Style = "width:120px;", Width = "120px" })
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-7 pd-l-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.DecisionNo").ToString(), Text = Model.WorkingProcess.DecisionNo })
+                    </div>
+                    <div class="col-md-5 pd-l-0">
+                        @{
+                            if (Model.WorkingProcess.DecisionDate != null)
+                            {
+                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.DecisionDate").ToString(), Text = Model.WorkingProcess.DecisionDate.Value.ToString("dd/MM/yyyy") })
+                            }
+                            else
+                            {
+                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.DecisionDate").ToString(), Text = "" })
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-7 pd-l-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Pipeline").ToString(), Text = M(Model.StaffOnboardInfo.PipelineId.ToString() + ";" + DataType.Pipeline + ";Name").ToString() })
+                    </div>
+                    <div class="col-md-5 pd-l-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.OnboardingStatus").ToString(), Text = M(Model.StaffOnboardInfo.PipelineStepId.ToString() + ";" + DataType.PipelineStep + ";PipelineName").ToString() })
+                        
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-7 pd-l-0">
+                        @{
+                            if (Model.StaffOnboardInfo.OnboardingDate != null)
+                            {
+                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.OnboardingDate").ToString(), Text = Model.StaffOnboardInfo.OnboardingDate.Value.ToString("dd/MM/yyyy") })
+                            }
+                            else
+                            {
+                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.OnboardingDate").ToString(), Text = "" })
+                            }
+                        }
+                        
+                    </div>
+                    <div class="col-md-5 pd-l-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Table.Title.ApproveStatus").ToString(), Text = M(Model.WorkingProcess.Status.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-7 pd-l-0">
+                        @{
+                            var fromDateString = string.Empty;
+                            var minus = string.Empty;
+                            if (Model.WorkingProcess.StartDate != DateTime.MinValue && Model.WorkingProcess.StartDate != null)
+                            {
+                                fromDateString = Model.WorkingProcess.StartDate.Value.ToString("dd/MM/yyyy");
+                            }
+                            var toDateString = string.Empty;
+                            if (Model.WorkingProcess.EndDate != DateTime.MinValue && Model.WorkingProcess.EndDate != null)
+                            {
+                                toDateString = Model.WorkingProcess.EndDate.Value.ToString("dd/MM/yyyy");
+                            }
+                            else if (Model.WorkingProcess.StartDate != DateTime.MinValue && Model.WorkingProcess.StartDate != null)
+                            {
+                                toDateString = T("Staff.Detail.Now").ToString();
+                                Model.WorkingProcess.EndDate = DateTime.Now;
+                            }
+                            if (fromDateString != string.Empty && toDateString != string.Empty)
+                            {
+                                minus = " - ";
+                            }
+                            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Apply").ToString(), Text = fromDateString + minus + toDateString })
+                        }
+                        
+                    </div>
+                    <div class="col-md-5 pd-l-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Content").ToString(), Text = Model.WorkingProcess.Description })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-7 pd-l-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Note").ToString(), Text = Model.WorkingProcess.Note })
+                    </div>
+                </div>
+            </section>
+                            }
+                            else
+                            {
+            <section class="hrmv2-section">
+                @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "icon-append fa fa-user", SectionName = T("Staff.Detail.Decision").ToString(), Style = "width:120px;", Width = "120px" })
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-7 pd-l-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.DecisionNo").ToString(), Text = Model.WorkingProcess.DecisionNo })
+                    </div>
+                    <div class="col-md-5 pd-l-0">
+                        @{
+                            if (Model.WorkingProcess.DecisionDate != null)
+                            {
+                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.DecisionDate").ToString(), Text = Model.WorkingProcess.DecisionDate.Value.ToString("dd/MM/yyyy") })
+                            }
+                            else
+                            {
+                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.DecisionDate").ToString(), Text = "" })
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-7 pd-l-0">
+
+                        @{
+                            var fromDateString = string.Empty;
+                            var minus = string.Empty;
+                            if (Model.WorkingProcess.StartDate != DateTime.MinValue && Model.WorkingProcess.StartDate != null)
+                            {
+                                fromDateString = Model.WorkingProcess.StartDate.Value.ToString("dd/MM/yyyy");
+                            }
+                            var toDateString = string.Empty;
+                            if (Model.WorkingProcess.EndDate != DateTime.MinValue && Model.WorkingProcess.EndDate != null)
+                            {
+                                toDateString = Model.WorkingProcess.EndDate.Value.ToString("dd/MM/yyyy");
+                            }
+                            else if (Model.WorkingProcess.StartDate != DateTime.MinValue && Model.WorkingProcess.StartDate != null)
+                            {
+                                toDateString = T("Staff.Detail.Now").ToString();
+                                Model.WorkingProcess.EndDate = DateTime.Now;
+                            }
+                            if (fromDateString != string.Empty && toDateString != string.Empty)
+                            {
+                                minus = " - ";
+                            }
+                            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Apply").ToString(), Text = fromDateString + minus + toDateString })
+                        }
+                    </div>
+                    <div class="col-md-5 pd-l-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Table.Title.ApproveStatus").ToString(), Text = M(Model.WorkingProcess.Status.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-7 pd-l-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Content").ToString(), Text = Model.WorkingProcess.Description })
+                    </div>
+                    <div class="col-md-5 pd-l-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Note").ToString(), Text = Model.WorkingProcess.Note })
+                    </div>
+                </div>
+            </section>
+                            }
+        
+        <section class="hrmv2-section">
+            @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-file-contract", SectionName = T("Staff.Detail.WorkingPossition").ToString(), Style = "width:150px;", Width = "150px" })
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Shift").ToString(), Text = M(Model.WorkingProcess.ShiftId.ToString() + ";" + DataType.Shift + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.WorkingClassification").ToString(), Text = M(Model.WorkingProcess.ClassificationId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Position").ToString(), Text = M(Model.WorkingProcess.PositionId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.StaffLevel").ToString(), Text = M(Model.WorkingProcess.StaffLevelId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+            
+            @{
+                var temp = 0;
+                if (Model != null && Model.ListOrganization != null && Model.ListOrganization.Count > 0)
+                {
+                    for (int i = 0; i < Model.ListOrganization.Count / 2 + 1; i++)
+                    {
+                        <div class="col-md-12 pd-0 display-inline-block">
+                            @{
+                                if (i * 2 < Model.ListOrganization.Count)
+                                {
+                                    <div class="col-md-7 pd-l-0">
+                                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = M(Model.ListOrganization[i * 2].OrganizationType.ToString() + ";" + DataType.MasterData + ";Name").ToString(), Text = M(Model.ListOrganization[i * 2].Id.ToString() + ";" + DataType.Organization + ";OrganizationName").ToString() })
+                                    </div>
+                                }
+                                if (i * 2 + 1 < Model.ListOrganization.Count)
+                                {
+                                    <div class="col-md-5 pd-l-0">
+                                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = M(Model.ListOrganization[i * 2 + 1].OrganizationType.ToString() + ";" + DataType.MasterData + ";Name").ToString(), Text = M(Model.ListOrganization[i * 2 + 1].Id.ToString() + ";" + DataType.Organization + ";OrganizationName").ToString() })
+                                    </div>
+                                }
+                            }
+                        </div>
+                                    }
+                                }
+            }
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.WorkingProcess.Manager").ToString(), Text = Model.WorkingProcess.ManagerName })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.HRManager").ToString(), Text = Model.WorkingProcess.HRManagerName })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.WorkingStatus").ToString(), Text = M(Model.WorkingProcess.WorkingStatus.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+        </section>
+        <section class="hrmv2-section">
+            @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-file-contract", SectionName = T("Staff.Detail.Contract").ToString(), Style = "width:180px;", Width = "180px" })
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.ContractType").ToString(), Text = M(Model.Contract.ContractTypeId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.ContractNumber").ToString(), Text = Model.Contract.ContractCode })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.ContractStatus").ToString(), Text = M(Model.Contract.ContractStatus.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.ContractTime").ToString(), Text = M(Model.Contract.ContractTime.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @{
+                        var fromDateStringContract = string.Empty;
+                        var minusContract = string.Empty;
+                        if (Model.Contract.ContractStartDate != null && Model.Contract.ContractStartDate != DateTime.MinValue)
+                        {
+                            fromDateStringContract = Model.Contract.ContractStartDate.Value.ToString("dd/MM/yyyy");
+                        }
+                        var toDateStringContract = string.Empty;
+                        if (Model.Contract.ContractEndDate != null && Model.Contract.ContractEndDate != DateTime.MinValue)
+                        {
+                            toDateStringContract = Model.Contract.ContractEndDate.Value.ToString("dd/MM/yyyy");
+                        }
+                        else if (Model.Contract.ContractStartDate != null && Model.Contract.ContractStartDate != DateTime.MinValue)
+                        {
+                            toDateStringContract = T("Staff.Detail.Now").ToString();
+                            Model.Contract.ContractEndDate = DateTime.Now;
+                        }
+                        if (fromDateStringContract != string.Empty && toDateStringContract != string.Empty && toDateStringContract != "")
+                        {
+                            minusContract = " - ";
+                        }
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Time").ToString(), Text = fromDateStringContract + minusContract + toDateStringContract })
+                    }
+                </div>
+                <div class="col-md-5 pd-l-0">
+                </div>
+            </div>
+        </section>
+
+        <section class="hrmv2-section">
+            @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "icon-append fa fa-user", SectionName = T("Staff.Detail.Salary").ToString(), Style = "width:100px;", Width = "100px" })
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.SalaryPolicy").ToString(), Text = M(Model.WorkingProcess.PolicyId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.BasicPay").ToString(), Text = String.Format("{0:#,##0.##}", Model.WorkingProcess.BasicPay) + " " + M(Model.WorkingProcess.CurrencyId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.EfficiencyBonus").ToString(), Text = String.Format("{0:#,##0.##}", Model.WorkingProcess.EfficiencyBonus) + " " + M(Model.WorkingProcess.CurrencyId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.PaymentForm").ToString(), Text = M(Model.WorkingProcess.PaymentForm.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.PaymentMethod").ToString(), Text = M(Model.WorkingProcess.PaymentMethod.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Note").ToString(), Text = Model.WorkingProcess.SalaryNote })
+                </div>
+            </div>
+        </section>
+        <section class="hrmv2-section">
+            @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.Allowance").ToString(), WidthSecitonName = "100px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() })
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListAllowance)
+        </section>
+        <section class="hrmv2-section">
+            @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.Benefit").ToString(), WidthSecitonName = "100px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() })
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListBenefit)
+        </section>
+    </div>
+    <div class="footer">
+        <div class="footer-login">
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary hrm-v2-btn-close close-popup" data-dismiss="modal">
+                    @T("Staff.Close")
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

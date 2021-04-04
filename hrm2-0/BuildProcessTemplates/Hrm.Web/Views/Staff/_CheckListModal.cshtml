@@ -1,0 +1,38 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@using Newtonsoft.Json
+@model StaffModel
+@{
+    Layout = null;
+}
+<style>
+    .check-list-container{
+        width: 100%;
+    }
+    .hide-label-dropdown .select2-container ~label{
+        display: none!important;
+    }
+</style>
+    <div class="check-list-container display-inline-block">
+        <div class="hrm-v2-modal-header">@T("MasterData.Select") @T("Onboarding.Label.ProcedureCheckList") - @Model.Name.ToUpper() <span style="font-size:10px">@M(Model.OfficePositionId.ToString() + ";" + DataType.MasterData + ";Name")</span></div>
+        <div class="hrm-v2-modal-body">
+            <section class="hrmv2-section">
+                <div class="col-md-12 pd-0 display-inline-block hide-label-dropdown">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = "", IsAnimationLabel = true, Data = Model.ListChecklist,SearchField = false, ValueField = "Id", DisplayField = "Name", Name = "send-checklistId", Value = "2" })
+                </div>
+            </section>
+        </div>
+        <div class="footer">
+            <div class="footer-login">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                        @T("Staff.Detail.Cancel")
+                    </button>
+                    <button type="button" class="btn btn-primary hrm-v2-btn-save" style="margin-left:10px" onclick="ChecklistSummary(@Model.Id)">
+                        @T("Onboarding.Button.Send")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>

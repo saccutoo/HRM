@@ -1,0 +1,67 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@{
+    ViewBag.Title = "Hrm";
+    Layout = "~/Views/Shared/_MenuHome.cshtml";
+}
+<div class="col-md-12 bread-crumb hrm-f" style="padding-left: 60px">
+    <a href="#" class="bread-crumb-sc hrm-v2-font-16">Tất cả tính năng</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><a href="#" class="bread-crumb-item hrm-v2-font-16">Nhân sự</a>
+</div>
+<div class="wapper-container">
+    <section class="h-sec-item-view">
+        <h1 class="text-center ">Quản trị nhân sự tập trung</h1>
+        <div class="col-md-12 pd-0 h-single-section text-right hrm-v2-inline-block">
+            <div class="section-img pull-right">
+                <img src="@Url.Content("~/Content/Images/banner/stafflist.png")" alt="staff-list-hrm" />
+            </div>
+            <div class="section-infor pull-right h-single-section left">
+                <div class="icon">
+                    <i class="fas fa-users icon"></i>
+                </div>
+                <div class="title hrm-v2-bold">
+                    Kho dữ liệu  nhân sự tập trung
+                </div>
+                <div class="dsc-title">
+                    Lưu trữ dữ liệu tập trung
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="h-sec-item-view">
+        <div class="col-md-12 pd-0 h-single-section text-left hrm-v2-inline-block">
+            <div class="section-infor pull-right h-single-section right">
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="title hrm-v2-bold">
+                    Hồ sơ trực quan
+                </div>
+                <div class="dsc-title">
+                    Hồ sơ thông tin nhân sự quản lý tập <br/>trung, dễ dàng tra cứu và cập nhật khi <br/> cần thiết
+                </div>
+            </div>
+            <div class="section-img pull-right">
+                <img src="@Url.Content("~/Content/Images/banner/staffInfor.png")" alt="staff-infor-hrm" />
+            </div>
+        </div>
+    </section>
+    <section class="h-sec-item-view">
+        <h1 class="text-center ">Sơ đồ tổ chức</h1>
+        <div class="col-md-12 pd-0 h-single-section text-right hrm-v2-inline-block">
+            <div class="section-img pull-right">
+                <img src="@Url.Content("~/Content/Images/banner/orgChart.png")" alt="org-chart-hrm" />
+            </div>
+            <div class="section-infor pull-right h-single-section left">
+                <div class="icon">
+                    <i class="fas fa-sitemap"></i>
+                </div>
+                <div class="title hrm-v2-bold">
+                   Sơ đồ tổ chức
+                </div>
+                <div class="dsc-title">
+                   Bạn bỡ ngỡ khi bắt đầu làm quen với <br/>công ty mới? Sơ đồ tổ chức giúp bạn <br/> nhanh chóng nắm và hiểu được tổ chức <br/> mới
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

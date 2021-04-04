@@ -1,0 +1,73 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Common
+@model Hrm.Admin.ViewModels.EditAnnualLeaveViewModel
+
+
+<div class="add-working-supplement-container display-inline-block">
+    <form id="frm-edit-annual-leave">
+
+        <div class="hrm-v2-modal-header">@T("Workingday.AnnualLeave.EstablishAnnualLeave").ToString()</div>
+
+        <div class="hrm-v2-modal-body" style="margin-top:0px;">
+            <div class="col-md-12 pd-0 display-inline-block">      
+                <input type="text" name="model.Id" value="@Model.AnnualLeave.Id" hidden/>       
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.NumberOfLeaveGranted", LabelName = T("Workingday.AnnualLeave.MaximumNumberOfpells").ToString(), IsAnimationLabel = true,IsRequired=true,Type="Number",Value=Model.AnnualLeave.NumberOfLeaveGranted.ToString() })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.AnnualLeave.HandlingAnnualLeave").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.HandlingAnnualLeaves, ValueField = "Id", Name = "model.HandlingAnnualLeaveBacklog", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.AnnualLeave.HandlingAnnualLeaveBacklog.ToString() })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel()
+               {
+                   Name = "model.DateRemoveSurplusAnnualLeave",
+                   Value = Model.AnnualLeave.DateRemoveSurplusAnnualLeave,
+                   DateFormat = "dd/MM",
+                   Vertical = "top",
+                   IsAnimationLabel=true,
+                   LabelName=T("Workingday.AnnualLeave.DateSurplusAnnualLeave").ToString(),
+               })
+            </div>           
+         </div>
+        <div class="footer">
+            <div class="footer-login">
+                <div class="pull-right">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Workingday.Close", ClassName = "hrm-v2-btn-close", Style = "float:left;margin-right:10px" })
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", OnClick = "editAnnualLeave()", Value = "Workingday.Save", Type = "button", ClassName = "hrm-v2-btn-save", Style = "float:left" })
+                    
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function editAnnualLeave() {
+        $("#frm-edit-annual-leave span[name*='-error']").text("");
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Workingday/EditAnnualLeave",
+            data: $('#frm-edit-annual-leave').serializeArray(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-edit-annual-leave");
+                }
+                else {
+                   
+                    if (response.result.Success == true) {
+                        ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                        $("#myModal").modal("hide");
+                    }
+                    else {
+                        ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    }
+                    
+                }
+            }
+        });
+    }
+</script>
+
+
+

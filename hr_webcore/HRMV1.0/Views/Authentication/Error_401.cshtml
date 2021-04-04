@@ -1,0 +1,29 @@
+﻿@using HRM.Common
+@{
+    ViewBag.TitlePage = "Not Authorized - ";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<div class="abs-center wd-xl" style="padding-top:35px">
+    <!-- START panel-->
+    <div class="text-center mb-xl">
+        <div class="mb-lg">
+            <em class="fa fa-ban fa-5x text-muted" style="color:red"></em>
+        </div>
+        <div class="text-lg mb-lg" style="font-size:45px">401</div>
+        <p class="lead m0">Oh! NOT AUTHORIZED </p>
+        <p>Sorry, but <b>@Global.CurrentUser.DisplayName</b> (Novaon account) is not authorized to access this page</p> 
+        <p>
+            <a class="action" href="/Authentication/DoLogout">
+                 <i class="fa fa-arrow-circle-o-right custom"></i>
+                <span class="action-text">Sign out and connect with another login</span>
+            </a>
+        </p>
+         
+    </div>
+    <ul class="list-inline text-center text-sm mb-xl">
+        <li>
+            <a href="@Url.Action("Dashboard_v1", "Dashboard")" class="text-muted">
+            <i class="fa fa-home" style="margin-right: 5px;"></i>Go to App</a>
+        </li>
+    </ul>
+</div>

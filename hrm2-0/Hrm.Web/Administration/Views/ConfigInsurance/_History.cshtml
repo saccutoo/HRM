@@ -1,0 +1,88 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model List<Hrm.Admin.ViewModels.ConfigInsuranceViewModel>
+@{
+    Layout = null;
+   
+}
+
+<div class="detail-allowance-container display-inline-block">
+    <div class="hrm-v2-modal-header" style="border:none;">@T("Setting.PersonalIncomeTax.History")</div>
+    <div class="hrm-v2-modal-body" style="margin-top:0px">
+        <section class="hrmv2-section">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Stt</td>
+                        <td>Ngày áp dụng</td>
+                        <td>Ghi chú</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        for (int i = 0; i < Model.Count; i++)
+                        {
+                             Model[i].Table.ShowFooter = false;                         
+                            <tr>                           
+                                <td style="font-size:13px" >@(i+1)</td>
+                                <td colspan="2">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td style="font-size:13px">
+                                                    @{
+                                                        var fromDateString = string.Empty;
+                                                        var minus = string.Empty;
+                                                        if (Model[i].ConfigInsurance.FromDate != null && Model[i].ConfigInsurance.FromDate != DateTime.MinValue)
+                                                        {
+                                                            fromDateString = Model[i].ConfigInsurance.FromDate.ToString("dd/MM/yyyy");
+                                                        }
+                                                        var toDateString = string.Empty;
+                                                        if (Model[i].ConfigInsurance.ToDate != null && Model[i].ConfigInsurance.ToDate != DateTime.MinValue)
+                                                        {
+                                                            toDateString = Model[i].ConfigInsurance.ToDate.ToString("dd/MM/yyyy");
+                                                        }
+                                                        else if (Model[i].ConfigInsurance.FromDate != DateTime.MinValue && Model[i].ConfigInsurance.FromDate != null)
+                                                        {
+                                                            toDateString = T("Staff.Detail.Now").ToString();
+                                                        }
+                                                        if (fromDateString != string.Empty && toDateString != string.Empty)
+                                                        {
+                                                            minus = " - ";
+                                                        }
+                                                    }
+                                                    @fromDateString @minus @toDateString
+                                                </td>
+                                                <td style="font-size:13px">
+                                                    @Model[i].ConfigInsurance.Note
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model[i].Table)
+                                                </td>
+                                                
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <div class="footer">
+        <div class="footer-login">
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary hrm-v2-btn-close close-popup" data-dismiss="modal">
+                    @T("Staff.Close")
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

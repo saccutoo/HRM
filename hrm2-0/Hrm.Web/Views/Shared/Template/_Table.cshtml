@@ -1,0 +1,12 @@
+﻿@model Hrm.Framework.Models.TableViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Context;
+@{
+    Layout = null;
+}
+
+<div class='table-area' id="@Model.TableName">
+    @Html.Partial(UrlHelpers.Template("_TableContent.cshtml"), Model)
+</div>
+<div class="export-table-area" id="export-@Model.TableName" hidden></div>

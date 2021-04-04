@@ -1,0 +1,151 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Framework.ViewModels.ChecklistViewModel
+@{
+    ViewBag.Title = "Reception procedure";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+}
+<style>
+    .reception-procedure-top{
+        width: 100%;
+        height: 50px;
+    }
+    .reception-procedure-top input{
+        width: 100%;
+        border: none;
+        height: 35px;
+        border-bottom: 1px solid #ccc;
+        margin-top: 10px;
+    }
+    .reception-procedure-top input:focus{
+       outline:none;
+    }
+    .reception-procedure-button{
+        height: calc(100% - 50px);
+        width: 100%;
+    }
+    .reception-procedure-button-content{
+        margin-top: 10px;
+        width: 100%;
+        height: 70px;      
+        cursor:pointer;
+    }
+    .reception-procedure-button-content.active{
+        background-color: #efefef;
+    }
+    .reception-procedure-button-content:hover{
+        background-color: #efefef;
+    }
+    .reception-procedure-button-content .title-top{
+        width: 100%;
+        height: 55%;
+        font-family: Roboto-bold;
+        font-size: 14px;
+        line-height: 50px;
+    }
+     .reception-procedure-button-content .title-top span{
+        margin-left: 30px;
+    }
+
+     .reception-procedure-button-content .descript-bottom{
+       width: 100%;
+       height: calc(100% - 55%);
+       font-size: 13px;
+    }
+     .reception-procedure-button-content .descript-bottom span{
+       margin-left:30px;
+    }
+     .gereral-right #setting-checklist .checklist-detail{
+         clear:both;
+     }
+      #setting-checklist .hrm-v2-inline-block{
+        width:100%;
+    }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/Admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Checklist.ProbationaryReception")</span><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("CheckList.ReceptionProcedure")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left",OnClick= "AddReceptionProcedure()" })
+    </div>
+</div>
+<div class="gereral">
+    <div class="gereral-left" style="border-right:1px solid #ccc;text-align:left">
+        <div class="reception-procedure-top">
+            <input type="text" placeholder="@T("Checklist.SearchMissionSet")" onkeypress="searchCategoryChecklist($(this).val())"/>
+        </div> 
+        <div class="reception-procedure-button" id="reception-procedure-categorychecklist">
+            @{
+                @Html.Partial(UrlHelpers.TemplateAdmin("Checklist","_CategoryChecklist.cshtml"), Model)
+            }          
+        </div>       
+   </div>
+    <div class="gereral-right">
+        <div id="setting-checklist" @*@class="setting-checklist"*@>
+            @Html.Partial(UrlHelpers.View("~/Views/Shared/Checklist/_ChecklistSummary.cshtml"), Model)          
+        </div>
+    </div>
+</div>
+<script>
+    function AddReceptionProcedure() {
+        window.location.href = "/Admin/Checklist/AddReceptionProcedure/?Id=" + 0 + "&ActionName=@ActionName.Add";
+    }
+    $(document).on('click', '.reception-procedure-button-content', function () {
+        $('.reception-procedure-button-content').removeClass('active');
+        $(this).addClass('active');
+    });
+    function ClickChecklist(Id) {
+        $.ajax(
+       {
+           type: "POST",
+           url: "/Admin/Checklist/ReloadListChecklist",
+           data: { Id: Id },
+           success: function (response) {
+               $('.gereral-right #setting-checklist').html(response);
+           }
+       });
+    }
+    function DeleteChecklist(Id) {
+        debugger
+        bootbox.confirm({
+            message: msgQustionDelete,
+            buttons: {
+                confirm: {
+                    label: '@T("Message.Delete.Yes")',
+                    className: 'hrm-v2-btn-save'
+                },
+                cancel: {
+                    label: '@T("Message.Delete.No")',
+                    className: 'hrm-v2-btn-close'
+                }
+            },
+            callback: function (result) {
+                debugger
+                if (result == true) {
+                    $.ajax(
+                       {
+                           type: "POST",
+                           url: "/Admin/Checklist/DeleteChecklist",
+                           data: { Id: Id },
+                           success: function (response) {
+                               if (response.result.Success == true) {
+                                   ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                                   window.location.reload();
+                               }
+                               else {
+                                   ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                               }
+                           }
+                       });
+                }
+            }
+        });
+
+    }
+    function searchCategoryChecklist(searchKey) {
+        if (event.which == 13) {
+            Search("/Admin/Checklist/SearchChecklist", searchKey, "reception-procedure-categorychecklist");
+        }
+    }
+</script>

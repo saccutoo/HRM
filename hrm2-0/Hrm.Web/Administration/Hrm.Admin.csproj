@@ -1,0 +1,348 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{152C761A-DD2E-4C1F-AF89-DFB2547A3BCA}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Hrm.Admin</RootNamespace>
+    <AssemblyName>Hrm.Admin</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <ExcludeGeneratedDebugSymbol>false</ExcludeGeneratedDebugSymbol>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.3.5.0\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminAreaRegistration.cs" />
+    <Compile Include="Controllers\SalaryTypeController.cs" />
+    <Compile Include="Controllers\SalaryElementController.cs" />
+    <Compile Include="Controllers\WorkingdaySupplementConfigurationController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\PermissionController.cs" />
+    <Compile Include="Controllers\EmailController.cs" />
+    <Compile Include="Controllers\PipelineController.cs" />
+    <Compile Include="Controllers\MasterDataController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
+    <Compile Include="Controllers\OrganizationController.cs" />
+    <Compile Include="Controllers\SettingController.cs" />
+    <Compile Include="Controllers\ChecklistController.cs" />
+    <Compile Include="Controllers\StaffController.cs" />
+    <Compile Include="Controllers\WorkingdayController.cs" />
+    <Compile Include="Infrastructure\DependencyRegistrar.cs" />
+    <Compile Include="Models\OrganizationOldModel.cs" />
+    <Compile Include="Models\OrganizationNewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\AddSalaryElementViewModel.cs" />
+    <Compile Include="ViewModels\AddSalaryTypeTableSalaryElementViewModel.cs" />
+    <Compile Include="ViewModels\AddSalaryTypeViewModel.cs" />
+    <Compile Include="ViewModels\CheckSalaryElementFormula.cs" />
+    <Compile Include="ViewModels\EditAnnualLeaveViewModel.cs" />
+    <Compile Include="ViewModels\AddWorkingdayAnnualLeaveViewModel.cs" />
+    <Compile Include="ViewModels\AddWorkingDayCalculationPeriodViewModel.cs" />
+    <Compile Include="ViewModels\AddWorkingdayShiftViewModel.cs" />
+    <Compile Include="ViewModels\AddWorkingdayHolidayViewModel.cs" />
+    <Compile Include="ViewModels\AttachmentViewModel.cs" />
+    <Compile Include="ViewModels\ChecklistDetailViewModel.cs" />
+    <Compile Include="ViewModels\EmailDetailViewModel.cs" />
+    <Compile Include="ViewModels\MasterDataViewModel.cs" />
+    <Compile Include="ViewModels\MenuPermissionViewModel.cs" />
+    <Compile Include="ViewModels\MenuViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationChartViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModel.cs" />
+    <Compile Include="ViewModels\EmailViewModel .cs" />
+    <Compile Include="ViewModels\PermissionViewModel.cs" />
+    <Compile Include="ViewModels\SalaryElementViewModel.cs" />
+    <Compile Include="ViewModels\SalaryTypeViewModel.cs" />
+    <Compile Include="ViewModels\WorkingdayAnnualLeaveViewModel.cs" />
+    <Compile Include="ViewModels\WorkingDayCalculationPeriodViewModel.cs" />
+    <Compile Include="ViewModels\WorkingdayHolidayViewModel.cs" />
+    <Compile Include="ViewModels\PipelineViewModel.cs" />
+    <Compile Include="ViewModels\StaffViewModel.cs" />
+    <Compile Include="ViewModels\WelcomeKitViewModel.cs" />
+    <Compile Include="ViewModels\WorkingdayShiftViewModel.cs" />
+    <Compile Include="ViewModels\WorkingdaySupplementConfigurationViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\gereral.css" />
+    <Content Include="Content\styles.rtl.css" />
+    <Content Include="Content\styles.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\app\controllers\organizationController.js" />
+    <Content Include="Scripts\app\controllers\saveOrganizationController.js" />
+    <Content Include="Scripts\app\controllers\saveMergerOrganizationController.js" />
+    <Content Include="Scripts\app\controllers\pipelineController.js" />
+    <Content Include="Scripts\app\controllers\savePersonnelTransferController.js" />
+    <Content Include="Scripts\app\controllers\saveMasterDataController.js" />
+    <Content Include="Scripts\app\controllers\masterDataController.js" />
+    <Content Include="Scripts\app\services\pipelineService.js" />
+    <Content Include="Scripts\app\services\organizationService.js" />
+    <Content Include="Scripts\app\services\masterDataService.js" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\images\" />
+    <Folder Include="Views\ApprovalFlow\" />
+    <Folder Include="Views\Shared\EditorTemplates\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Hrm.Common\Hrm.Common.csproj">
+      <Project>{a8f75d9b-acfc-40f2-97c4-2941914ada7e}</Project>
+      <Name>Hrm.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hrm.Core\Hrm.Core.csproj">
+      <Project>{75fd4163-333c-4dd5-854d-2ef294e45d94}</Project>
+      <Name>Hrm.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hrm.Framework\Hrm.Framework.csproj">
+      <Project>{F63119ED-AAAA-41B2-A2D8-6116ADDFA0AC}</Project>
+      <Name>Hrm.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hrm.Repository\Hrm.Repository.csproj">
+      <Project>{43a1c2f6-5562-479e-902b-53e19ce042e4}</Project>
+      <Name>Hrm.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hrm.Service\Hrm.Service.csproj">
+      <Project>{6100c0d4-7822-41e2-8093-f0e7458dac8e}</Project>
+      <Name>Hrm.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setting\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MasterData\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\admin.pubxml" />
+    <None Include="Properties\PublishProfiles\code.pubxml" />
+    <None Include="Properties\PublishProfiles\XOai.pubxml" />
+    <Content Include="Views\MasterData\_AddMasterData.cshtml" />
+    <Content Include="Views\Organization\_AddOrganization.cshtml" />
+    <Content Include="Views\Staff\Index.cshtml" />
+    <Content Include="Views\Organization\_MergerOrganization.cshtml" />
+    <Content Include="Views\Organization\_personnelTransfer.cshtml" />
+    <Content Include="Views\Organization\List.cshtml" />
+    <Content Include="Views\Organization\ListOrganization.cshtml" />
+    <Content Include="Views\Pipeline\List.cshtml" />
+    <Content Include="Views\Pipeline\_Pipeline.cshtml" />
+    <Content Include="Views\Pipeline\_AddPipeline.cshtml" />
+    <Content Include="Views\Pipeline\_AddPipelineContent.cshtml" />
+    <Content Include="Views\Checklist\Index.cshtml" />
+    <Content Include="Views\Email\Index.cshtml" />
+    <Content Include="Views\Permission\PermissionRole.cshtml" />
+    <Content Include="Views\Permission\_ListPermission.cshtml" />
+    <Content Include="Views\Permission\AddPermissionRole.cshtml" />
+    <Content Include="Views\Permission\PermissionUser.cshtml" />
+    <Content Include="Views\Permission\AddPermissionUser.cshtml" />
+    <Content Include="Views\Email\_ListEmail.cshtml" />
+    <Content Include="Views\Checklist\List.cshtml" />
+    <Content Include="Views\Checklist\AddReceptionProcedure.cshtml" />
+    <Content Include="Views\Checklist\_AddChecklist.cshtml" />
+    <Content Include="Views\Checklist\_AddGroupChecklist.cshtml" />
+    <Content Include="Views\Checklist\_CategoryChecklist.cshtml" />
+    <Content Include="Views\Checklist\WelcomeKit.cshtml" />
+    <Content Include="Views\Checklist\_ListAttackment.cshtml" />
+    <Content Include="Views\Checklist\AddWelcomeKit.cshtml" />
+    <Content Include="Views\Checklist\_DocumentDetail.cshtml" />
+    <Content Include="Views\Checklist\_ListDocument.cshtml" />
+    <None Include="Views\Checklist\_ListCheckList.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="Views\Permission\_ListUser.cshtml" />
+    <Content Include="Views\Permission\_ListRole.cshtml" />
+    <Content Include="Views\MasterData\_CategoryMasterData.cshtml" />
+    <Content Include="Views\MasterData\_ListMasterDataByLanguage.cshtml" />
+    <Content Include="Views\Organization\_MergerOrganizationOld.cshtml" />
+    <Content Include="Views\Organization\_MergerOrganizationNew.cshtml" />
+    <Content Include="Views\Email\_EmailDetail.cshtml" />
+    <Content Include="Views\Email\_ListAttackment.cshtml" />
+    <Content Include="Views\Checklist\_Document.cshtml" />
+    <Content Include="Views\Workingday\Holiday.cshtml" />
+    <Content Include="Views\Workingday\_AddWorkingdayHoliday.cshtml" />
+    <Content Include="Views\Workingday\_AddWorkingdayHolidayBody.cshtml" />
+    <Content Include="Views\Workingday\Shift.cshtml" />
+    <Content Include="Views\Workingday\AddShift.cshtml" />
+    <Content Include="Views\Workingday\_tableContentListShiftDetail.cshtml" />
+    <Content Include="Views\Workingday\AddWorkingDayCalculationPeriod.cshtml" />
+    <Content Include="Views\Workingday\WorkingDayCalculationPeriod.cshtml" />
+    <Content Include="Views\WorkingdaySupplementConfiguration\Index.cshtml" />
+    <Content Include="Views\WorkingdaySupplementConfiguration\_AddSupplementConfiguration.cshtml" />
+    <Content Include="Views\Workingday\AnnualLeave.cshtml" />
+    <Content Include="Views\Workingday\_AddAnnualLeave.cshtml" />
+    <Content Include="Views\Workingday\_ListStaffSelectCheckbox.cshtml" />
+    <Content Include="Views\Organization\OrganizationChart.cshtml" />
+    <Content Include="Views\Organization\_OrganizationChartView.cshtml" />
+    <Content Include="Views\Organization\_OrganizationCard.cshtml" />
+    <Content Include="Views\Organization\_OrganizationMainCard.cshtml" />
+    <Content Include="Views\Workingday\_EditAnnualLeave.cshtml" />
+    <Content Include="Views\WorkingdaySupplementConfiguration\_AddSupplementConfigurationException.cshtml" />
+    <Content Include="Views\WorkingdaySupplementConfiguration\_AddSupplementConfigurationExceptionBody.cshtml" />
+    <Content Include="Views\Organization\_MergerOrganizationOldBody.cshtml" />
+    <Content Include="Views\WorkingdaySupplementConfiguration\Exception.cshtml" />
+    <Content Include="Views\SalaryElement\SalaryElement.cshtml" />
+    <Content Include="Views\SalaryElement\_FormAddSalaryElement.cshtml" />
+    <Content Include="Views\SalaryElement\_BodyFromAddSalaryElement.cshtml" />
+    <Content Include="Views\SalaryElement\_CheckSalaryElementFormula.cshtml" />
+    <Content Include="Views\SalaryType\SalaryType.cshtml" />
+    <Content Include="Views\SalaryType\AddSalaryType.cshtml" />
+    <Content Include="Views\SalaryType\_TableAddSalaryElemnt.cshtml" />
+    <Content Include="Views\SalaryType\_ReloadRowTable.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>2454</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>http://www.novaon.asia/</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

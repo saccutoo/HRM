@@ -1,0 +1,281 @@
+﻿@model Hrm.Admin.ViewModels.AddSalaryTypeViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Common
+@{
+    ViewBag.Title = "AddSalaryType";
+}
+<style>
+    .all {
+        height: 100%;
+    }
+
+    .add-salary-type {
+        height: calc(100% - 60px);
+    }
+
+        .add-salary-type .header {
+            height: 284px;
+        }
+
+        .add-salary-type .footer {
+            height: 80px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+
+        .add-salary-type .body {
+            height: calc(100% - 284px - 80px);
+        }
+
+        .add-salary-type .body-content {
+            height: 100%;
+            border: 1px solid;
+            width: 97%;
+            margin: auto !important;
+            border-radius: 5px;
+        }
+
+        .add-salary-type .body-content-title-and-plus {
+            position: absolute;
+        }
+
+            .add-salary-type .body-content-title-and-plus .body-header-left span {
+                background: #fff;
+                position: absolute;
+                top: -8px;
+                z-index: 999;
+                left: 50px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .add-salary-type .body-content-title-and-plus .body-header-right i {
+                background: #fff;
+                position: absolute;
+                top: -8px;
+                z-index: 999;
+                right: 49px;
+                padding-left: 10px;
+                padding-right: 10px;
+                cursor: pointer;
+                color: #2CA01C;
+            }
+
+        .add-salary-type .body .table {
+            margin: auto;
+            margin-top: 15px;
+            width: 98%;
+        }
+
+            .add-salary-type .body .table tbody tr:hover {
+                background-color: #fff;
+            }
+
+    .table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
+        background-color: #fff;
+    }
+
+    .table .th-payroll-display {
+        width: 150px;
+        text-align: center;
+    }
+
+    .table .th-permission-edit {
+        width: 150px;
+        text-align: center;
+    }
+
+    .table .td-permission-show-table-paycheck .cb-control {
+        margin-left: 60px;
+    }
+
+        .table .td-permission-show-table-paycheck .cb-control .checkbox {
+            margin: 0px;
+        }
+
+    .table .td-permission-isedit .cb-control {
+        margin-left: 60px;
+    }
+
+        .table .td-permission-isedit .cb-control .checkbox {
+            margin: 0px;
+        }
+
+    .table .td-permission-show-table-paycheck.td-delete .cb-control {
+        float: left;
+    }
+
+    .table .td-permission-show-table-paycheck.td-delete a {
+        float: right;
+        position: relative;
+        line-height: 22px;
+        color: red;
+    }
+
+    .add-salary-type  table tr td .hrm-v2-floating-form {
+        height: 40px !important;
+    }
+</style>
+<div class="col-md-12 pd-0 all">
+    <div class="col-md-12 bread-crumb">
+        <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("SalaryType.TableSalary")</span>
+    </div>
+    <form id="form-add-salary-type" class="add-salary-type">
+        <div class="col-md-12 pd-0">
+            <div class="col-md-12 header">
+                <div class="col-md-12 mr-10">
+                    <div class="col-md-12 pd-0 display-inline-block">
+                        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                            <input type="text" value="@Model.SalaryType.Id" name="model.Id" hidden />
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.Name", IsRequired = true, LabelName = T("SalaryType.Name").ToString(), IsAnimationLabel = true, Value = Model.SalaryType.Name })
+                        </div>
+                        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.Description", LabelName = T("SalaryType.Description").ToString(), IsAnimationLabel = true, Value = Model.SalaryType.Description })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mr-10">
+                    <div class="col-md-12 pd-0 display-inline-block">
+                        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.MaximumDay", IsRequired = true, LabelName = T("SalaryType.MaximumDay").ToString(), IsAnimationLabel = true, Value = Model.SalaryType.MaximumDay.ToString(), Type = "Number" })
+                        </div>
+                        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                            @Html.Partial(UrlHelpers.Template("_SwitchCheckbox.cshtml"), new CheckboxModel() { Name = "model.IsAutoLock", LabelName = T("SalaryType.IsAutoLock").ToString(), Value = "true", Id = "model-isAutoLock", Attribute = Model.SalaryType.IsAutoLock == true ? "checked" : "" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mr-10">
+                    <div class="col-md-12 pd-0 display-inline-block">
+                        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("SalaryType.Status").ToString(), IsAnimationLabel = true, Data = Model.Status, ValueField = "Id", Name = "model.StatusId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.SalaryType.StatusId.ToString() })
+                        </div>
+                        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.DayLock", LabelName = T("SalaryType.DayLock").ToString(), IsAnimationLabel = true, Value = Model.SalaryType.DayLock.ToString(), Type = "Number", IsRequired = true })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12  mr-10">
+                    <div class="col-md-12 pd-0 display-inline-block">
+                        @Html.Partial(UrlHelpers.Template("_MultiSelect.cshtml"), new DropdownListModel() { LabelName = T("SalaryType.UntilApply").ToString(), IsAnimationLabel = true, Data = Model.Organizations, ValueField = "Id", DisplayField = "OrganizationName", Name = "model.ListOrganization", ValueMultiSelect = Model.ListOrganization })
+                    </div>
+                </div>
+            </div>
+            <div class="body">
+                <div class="col-md-12 body-content-title-and-plus">
+                    <div class="body-header-left">
+                        <span>@T("SalaryType.SalaryElement").ToString().ToUpper()</span>
+                    </div>
+                    <div class="body-header-right">
+                        <i class="fas fa-plus" onclick="ClickAddRow()"></i>
+                    </div>
+                </div>
+                <div class="col-md-12 body-content">
+                    <div class="col-md-12 pd-0 hrm-v2-scroll"  id="table-salary-element-type">
+                        @Html.Partial(UrlHelpers.TemplateAdmin("SalaryType", "_TableAddSalaryElemnt.cshtml"), Model.AddSalaryTypeTableSalaryElement)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 footer" style="z-index:0;background-color:#fff">
+                <div class="pull-left">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", OnClick = "showFormPaySlip()", Value = "Xem phiếu lương", ClassName = "hrm-v2-btn-close", Style = "float:left;margin-right:10px;margin-top:15px" })
+
+                </div>
+                <div class="pull-right">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", OnClick = "cancelAddSalaryType()", Value = "Workingday.Close", ClassName = "hrm-v2-btn-close", Style = "float:left;margin-right:10px;margin-top:15px" })
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", OnClick = "saveSalaryType()", Value = "Workingday.Save", Type = "button", ClassName = "hrm-v2-btn-save", Style = "float:left;margin-right:10px;margin-top:15px" })
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+
+    function ClickAddRow() {
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/SalaryType/AddNewRowTable",
+            data: $('#form-add-salary-type').serializeArray(),
+            success: function (response) {
+                $("#table-salary-element-type").html(response);
+
+            }
+        });
+    }
+    function editRow(id) {
+        var data = $('#form-add-salary-type').serializeArray();
+        data.push({ name: "id", value: id })
+        $.ajax(
+       {
+           type: "POST",
+           url: "/Admin/SalaryType/EditRowTable",
+           data: data,
+           success: function (response) {
+               $("#table-salary-element-type").html(response);
+
+           }
+       });
+    }
+    function deleteRow(index) {
+        var data = $('#form-add-salary-type').serializeArray();
+        data.push({ name: "index", value: index })
+        $.ajax(
+       {
+           type: "POST",
+           url: "/Admin/SalaryType/DeleteRowTable",
+           data: data,
+           success: function (response) {
+               $("#table-salary-element-type").html(response);
+
+           }
+       });
+    }
+
+    function saveRow(index) {
+
+    }
+    function saveSalaryType() {
+        $("#form-add-salary-type span[name*='-error']").text("");
+        $('#cover-spin').show();
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/SalaryType/SaveSalaryType",
+            data: $('#form-add-salary-type').serializeArray(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "form-add-salary-type");
+                    $('#cover-spin').hide();
+                }
+                if (response.result.Success) {
+                    $("#myModal").modal("hide");
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    $('#cover-spin').hide();
+                    window.location.href = "/salary-type"
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    $('#cover-spin').hide();
+
+                }
+            }
+        });
+    }
+
+    function showFormPaySlip() {
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/SalaryType/ShowFormPaySlip',
+            width: 1000,
+            isDataTypeJson: true,
+            data: $('#form-add-salary-type').serializeArray(),
+            isNotificationPoup: false,
+            align: "right",
+        };
+        CreatePopup(options);
+    }
+</script>
+

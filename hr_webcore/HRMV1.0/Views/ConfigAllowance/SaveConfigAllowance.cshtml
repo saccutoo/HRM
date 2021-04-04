@@ -1,0 +1,126 @@
+﻿@using HRM.App_LocalResources;
+<div class="container-fluid">
+    <div class="row" id="SaveConfigAllowance" style="margin: 0;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;">@AppRes.Allowance</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Allowance <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <textarea ng-model="Data.Name" class="form-control" ng-change="ChangeName()"></textarea>
+                                        <span style="color:red;line-height:30px;">{{ErrorName}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">                                   
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.AllowanceEN <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <textarea ng-model="Data.NameEN" class="form-control" ng-change="ChangeNameEN()"></textarea>
+                                        <span style="color:red;line-height:30px;">{{ErrorNameEN}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.FromAmount <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.FromAmount" class="form-control" ng-change="ChangeFromAmount()"/>
+                                        <span style="color:red;line-height:30px;">{{ErrorFromAmount}}</span>
+                                    </div>
+                                </div>
+                            </div>                            
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.ToAmount <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="Data.ToAmount" class="form-control" ng-change="ChangeToAmount()"/>
+                                        <span style="color:red;line-height:30px;">{{ErrorToAmount}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6 ">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Formular <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <textarea ng-model="Data.sFormular" class="form-control" ng-change="ChangesFormular()"></textarea>
+                                        <span style="color:red;line-height:30px;">{{ErrorsFormular}}</span>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Note</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <textarea ng-model="Data.Note" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<br />
+                        <br />*@
+                        @*<div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-2" style="line-height:30px;width:12.5%;">
+                                        <label>@AppRes.Note</label>
+                                    </div>
+                                    <div class="col-md-10" style="width:87.5%;">
+                                        <textarea ng-model="Data.Note" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                        @*<br />
+                        <div class="col-sm-12">
+                            <span style="color:red" ng-bind="Mesenger"></span>
+                        </div>*@
+                    </div>
+                </div>
+                <!-- END panel-->
+                <center>
+                    <button type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>@AppRes.btnUpdate
+                    </button>
+                    <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                        <span class="btn-label">
+                            <i class="fa fa-close"></i>
+                        </span>@AppRes.btnCancel
+                    </button>
+                </center>
+            </div>
+        </form>
+    </div>
+</div>
+

@@ -1,0 +1,48 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@model Hrm.Admin.ViewModels.AddWorkingdayHolidayViewModel
+<style>
+    .add-workingday-holiday-body .table{
+        margin-bottom:0px;
+    }
+    .add-workingday-holiday-body .table tr td{
+        border:none;
+    }
+    .add-workingday-holiday-body{
+        max-height:250px;
+        overflow:auto;
+        display:block;
+    }
+</style>
+
+@if (Model.WorkingHolidayMappers.Count() > 0)
+{
+    var index = 0;
+    <div class="add-workingday-holiday-body hrm-v2-scroll">
+        <table class="table">
+            <tr class="hrm-v2-font-13" style="font-family:Roboto-Bold">
+                <td style="width:40%;">@T("WorkingdayHoliday.Date")</td>
+                <td>@T("WorkingdayHoliday.HolidayDesistRegime")</td>
+            </tr>                  
+            @foreach (var item in Model.WorkingHolidayMappers)
+            {
+                <tr>
+                    <td>
+                        <span class="hrm-v2-font-13" style="line-height:50px;">
+                            <input type="text" name="model.WorkingdayHolidayMappers[@index].Id" value="@item.Id" hidden />
+                            @item.Date.Value.ToString("dd-MM")
+                        </span>
+                    </td>
+                    <td >
+                        <div class="hrm-v2-floating-form">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("WorkingdayHoliday.HolidayDesistRegime").ToString(), IsAnimationLabel = true, Data = Model.DesistRegimes, ValueField = "Id", Name = "model.WorkingdayHolidayMappers[" + index + "].DesistRegimeId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = item.DesistRegimeId.ToString() })
+                        </div>                  
+                    </td>
+                </tr>
+                index++;
+            }
+        </table>
+    </div>
+}
+

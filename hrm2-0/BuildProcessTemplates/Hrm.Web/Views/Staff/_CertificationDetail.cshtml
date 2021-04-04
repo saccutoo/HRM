@@ -1,0 +1,53 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Framework.Models.StaffCertificateModel
+@{
+    Layout = null;
+}
+<div class="detail-allowance-container">
+    <div class="hrm-v2-modal-header">@T("Staff.Detail.Certificate").ToString()</div>
+    <div class="hrm-v2-modal-body" style="margin-top:0px">
+        <h4>@Model.Name</h4>
+        <section class="hrmv2-section">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @{
+                        var issuedDateDateString = string.Empty;
+                        if (Model.IssuedDate != null && Model.IssuedDate != DateTime.MinValue)
+                        {
+                            issuedDateDateString = Model.IssuedDate.Value.ToString("dd/MM/yyyy");
+                        }
+
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Time").ToString(), Text = issuedDateDateString })
+                    }
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.IssuedBy").ToString(), Text = Model.IssuedBy })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Rank").ToString(), Text = M(Model.RankId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Point").ToString(), Text = Model.Point.ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Note").ToString(), Text = Model.Note })
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="footer">
+        <div class="footer-login">
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary hrm-v2-btn-close close-popup" data-dismiss="modal">
+                    @T("Staff.Close")
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

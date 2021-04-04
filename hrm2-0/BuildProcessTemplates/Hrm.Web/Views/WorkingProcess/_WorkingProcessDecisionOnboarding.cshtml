@@ -1,0 +1,64 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@model Hrm.Web.ViewModels.WorkingProcessViewModel
+@using Hrm.Common
+@{
+    Layout = null;
+}
+
+
+<input type="hidden" name="StaffOnboardInfo.IsOnboarding" id="IsOnboarding" value="true" />
+@Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "icon-append fa fa-user", SectionName = T("Staff.Detail.Decision").ToString(), Style = "width:120px;", Width = "120px" })
+<div class="col-md-12 pd-0 display-inline-block">
+    <div class="col-md-6 pd-l-0">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Classify").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownWorkingProcessType, ValueField = "Id", DisplayField = "Name", Value = Model.WorkingProcess.WorkingprocessTypeId.ToString(), Name = "WorkingProcess.WorkingprocessTypeId", IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name"})
+    </div>
+    <div class="col-md-6 pd-l-0">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "StaffOnboardInfo.OnboardingDate", Value = Model.StaffOnboardInfo.OnboardingDate, LabelName = T("Staff.OnboardingDate").ToString(), DateFormat = "dd/MM/yyyy", PlaceHolder = " " })
+    </div>
+</div>
+<div class="col-md-12 pd-0 display-inline-block" id="onboarding-area">
+    <div class="col-md-6 pd-l-0">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Pipeline").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownPipeline, ValueField = "Id", DisplayField = "Name", Value = Model.StaffOnboardInfo.PipelineId.ToString(), Name = "StaffOnboardInfo.PipelineId", IsMultipleLanguage = true, DataType = DataType.Pipeline, PropertyName = "Name"})
+    </div>
+    <div class="col-md-6 pd-l-0" id="OnboardingStatus-dropdown">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.OnboardingStatus").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownPipelineStep, ValueField = "Id", DisplayField = "PipelineStepName", Value = Model.StaffOnboardInfo.PipelineStepId.ToString(), Name = "StaffOnboardInfo.PipelineStepId", IsMultipleLanguage = true, DataType = DataType.PipelineStep, PropertyName = "PipelineName" })
+    </div>
+</div>
+<div class="col-md-12 pd-0 display-inline-block">
+    <div class="col-md-6 pd-l-0">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.DecisionNo").ToString(), Name = "WorkingProcess.DecisionNo", Value = Model.WorkingProcess.DecisionNo, IsAnimationLabel = true })
+    </div>
+    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "WorkingProcess.DecisionDate", Value = Model.WorkingProcess.DecisionDate, LabelName = T("Staff.Detail.DecisionDate").ToString(), DateFormat = "dd/MM/yyyy", PlaceHolder = " " })
+    </div>
+</div>
+<div class="col-md-12 pd-0 display-inline-block">
+    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "WorkingProcess.StartDate", Value = Model.WorkingProcess.StartDate, LabelName = T("Staff.Detail.StarDateApply").ToString(), DateFormat = "dd/MM/yyyy", IsRequired = true, PlaceHolder = " " })
+    </div>
+    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "WorkingProcess.EndDate", Value = Model.WorkingProcess.EndDate, LabelName = T("Staff.Detail.EndDateApply").ToString(), DateFormat = "dd/MM/yyyy", PlaceHolder = " " })
+    </div>
+</div>
+<div class="col-md-12 pd-0 display-inline-block">
+    <div class="col-md-6 pd-l-0">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.StatusApprove").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownStatusAprove, ValueField = "Id", DisplayField = "Name", Value = MasterDataId.ApprovedStatus.ToString(), Name = "WorkingProcess.Status", Disabled = true, IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+    </div>
+    <div class="col-md-6 pd-l-0">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Note").ToString(), Name = "WorkingProcess.Content", Value = Model.WorkingProcess.Description, IsAnimationLabel = true })
+    </div>
+</div>
+<div class="col-md-12 pd-0 display-inline-block">
+    <div class="col-md-6 pd-l-0">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Note").ToString(), Name = "WorkingProcess.Note", Value = Model.WorkingProcess.Note, IsAnimationLabel = true })
+    </div>
+</div>
+<script>
+    if(@Html.Raw(Json.Encode(MasterDataId.Onboarding)) == $("#wp-workingprocessTypeIdText").val()){
+        $("#WorkingProcess-WorkingprocessTypeId").prop("disabled","true")
+    }
+    if(@Html.Raw(Json.Encode(Model.StaffOnboardInfo.PipelineId)) != "0" && @Html.Raw(Json.Encode(Model.StaffOnboardInfo.PipelineId)) != ""){
+        $("#StaffOnboardInfo-PipelineId").prop("disabled","true")
+    }
+</script>

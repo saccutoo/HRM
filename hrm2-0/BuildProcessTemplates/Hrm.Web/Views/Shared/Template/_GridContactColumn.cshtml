@@ -1,0 +1,26 @@
+﻿@model List<string>
+<div class="presentation-contact">
+    @if (Model.Count > 0)
+    {
+        var index = 0;
+        foreach (var item in Model)
+        {
+            if (index == 0)
+            {
+                <div class="first-row">
+                    <i class="far fa-envelope"></i>
+                    @item
+                </div>
+            }
+            else
+            {
+                <div class="second-row">
+                    <i class="fas fa-phone-alt"></i>
+                    @item
+                </div>
+            }
+            index++;
+        }
+    }
+</div>
+

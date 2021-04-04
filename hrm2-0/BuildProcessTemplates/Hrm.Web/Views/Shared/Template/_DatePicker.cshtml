@@ -1,0 +1,23 @@
+﻿@model Hrm.Framework.Models.DatePickerModel
+@{
+    Layout = null;
+}
+<div class="floating-label date-picker-container">
+    <input class="date-picker floating-input" type="text" id="@Model.Name" placeholder="@string.Format("{0}", " ")" value="@Model.Value"/>
+    <label>Date</label>
+</div>
+<!--them class cha hrm-v2-floating-form-->
+<script type="text/javascript">
+    $(function () {
+        $('#'+ @Html.Raw(Json.Encode(Model.Name)) ).datepicker({
+            showOn: "button",
+            buttonImage: "/Content/Images/calendar.png",
+            buttonImageOnly: true,
+            buttonText: "icono",
+            showOn: "both",
+            dateFormat: 'dd/mm/yy',
+            changeMonth : @Html.Raw(Json.Encode(Model.ChangeMonth)),
+            changeYear : @Html.Raw(Json.Encode(Model.ChangeYear))
+            });
+    });
+</script>

@@ -1,0 +1,63 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@model Hrm.Admin.ViewModels.CheckSalaryElementFormula
+<style>
+     #frm-add-salary-element .check-formula-input{
+           background-color: #f3f3f3;
+           height: 110px;
+        }
+         #frm-add-salary-element .result{
+            height:30px;
+        }
+         #frm-add-salary-element .title-result{
+            line-height:30px;
+        }
+         #frm-add-salary-element .number-result{
+            line-height:30px;
+            font-family:Roboto-bold;
+            height:100%;
+        }
+          #frm-add-salary-element .result-button .icon-close{
+            cursor:pointer;
+            float:right;
+            color:red;
+            font-size: 18px;
+            line-height: 30px;
+            margin-right:10px;
+        }
+            #frm-add-salary-element .result-button .icon-check{
+            cursor:pointer;
+            float:right;
+            color:#2CA01C;
+            font-size: 18px;
+            line-height: 30px;
+            margin-right:30px;
+        }
+</style>
+<div class="col-md-12" style="padding-top:10px;padding-bottom:10px;">
+    <textarea rows="2" class="form-control" name="check.Formula" >@Model.Formula</textarea>
+</div>
+<div class="col-md-12 pd-0 result">
+    <div class="col-md-2 title-result">
+        <span>@T("SalaryElement.Result")</span>
+    </div>
+    <div class="col-md-4 number-result ">
+        @{ 
+            if (Model.Success==true)
+            {
+                <span>@string.Format("{0:#,0}", Model.Value)</span>
+            }
+            else
+            {
+                <span style="color:red">@Model.Error</span>
+            }
+        }
+    </div>
+    <div class="col-md-4 result-button pull-right pd-0">        
+        <span class="icon-check fas fa-check-circle" onclick="checkFormulaOutResult()"></span>    
+        <span class="icon-close fas fa-times-circle" onclick="closeCheckFormula()"></span>               
+    </div>
+</div>
+
+    

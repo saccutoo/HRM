@@ -1,0 +1,17 @@
+﻿@model Hrm.Framework.Models.TextEditorModel
+@{
+    Layout = null;
+    var data = System.Web.HttpUtility.HtmlDecode(Model.Value);
+}
+<textarea name="@Model.Name" id="@Model.Name" class="materialize-textarea" ></textarea>
+<script>
+    CKEDITOR.replace('@Model.Name', {htmlEncodeOutput:true});
+    CKEDITOR.on('instanceReady', function (evt) {
+        evt.editor.on('focus', function (e) {
+            if (isfocusTitle!=null) {
+                isfocusTitle = false;
+            }
+        })
+    })
+    CKEDITOR.instances["@Model.Name"].setData(`@Html.Raw(data)`);
+</script>

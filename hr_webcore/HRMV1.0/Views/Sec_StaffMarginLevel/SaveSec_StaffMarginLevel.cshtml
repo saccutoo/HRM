@@ -1,0 +1,151 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<div class="container-fluid">
+    <div class="row" id="SaveWorkingDayMachineSatList" style="margin: 0;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;">@AppRes.StaffMarginLevel</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4" style="line-height:30px;">
+                                        <label>@AppRes.StaffLevelID <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" name="StaffLevelID" ng-model="editData.StaffLevelID" ng-change="ChangeStaffLevelID()" ng-pattern="/^[0-9]*$/" />
+                                        <span style="color:red" ng-show="EditForm.StaffLevelID.$dirty&&EditForm.StaffLevelID.$error.pattern">
+                                            @AppRes.ErrorNaturalNumber
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label style="line-height:30px;">@AppRes.Status<span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-8">                                       
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select class="form-control" chosen options="getListStatus" on-no-result="doStuff" required data-modal="modal" ng-model="editData.Status" ng-options="list.Value as list.Name for list in getListStatus" ng-change="ChangeStatus()">
+                                                <option value="" selected>--@AppRes.Select--</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select class="form-control" chosen options="getListStatus" on-no-result="doStuff" required data-modal="modal" ng-model="editData.Status" ng-options="list.Value as list.NameEN for list in getListStatus" ng-change="ChangeStatus()">
+                                                <option value="" selected>--@AppRes.Select--</option>
+                                            </select>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:35px;">@AppRes.MinMargin<span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="MinMargin" ng-model="editData.MinMarginMoney" ng-change="ChangeMinMargin()" ng-pattern="/^[,0-9]*$/" />
+                                        <span style="color:red" ng-show="EditForm.MinMargin.$dirty&&EditForm.MinMargin.$error.pattern">
+                                            @AppRes.ErrorNaturalNumber
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:30px;">@AppRes.MaxMargin </label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="MaxMargin" ng-model="editData.MaxMarginMoney" ng-change="changeMaxMargin()" ng-pattern="/^[,0-9]*$/" />
+                                        <span style="color:red" ng-show="EditForm.MaxMargin.$dirty&&EditForm.MaxMargin.$error.pattern">
+                                            @AppRes.ErrorNaturalNumber
+                                        </span>
+                                    </div>
+                                </div>
+                                <div ng-show="ErrorMaxMargin">
+                                    <label><span style="color:red">{{ErrorMaxMarginText}}</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4" style="line-height:30px;">
+                                        <label>@AppRes.CreatedOn <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input disabled="disabled" type="text" class="form-control CreatedOn1" ng-model="editData.CreatedOn1" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label style="line-height:30px;">@AppRes.CreatedBy<span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input disabled="disabled" type="text" class="form-control" ng-model="editData.Fullname" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:35px;">@AppRes.StartDate<span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control StartDate1" ng-model="editData.StartDate1" ng-change="ChangeDate()" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:30px;">@AppRes.EndDate </label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control EndDate1" name="EndDate" ng-model="editData.EndDate1" ng-change="ChangeDate()" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-sm-12">
+                            <span style="color:red" ng-bind="Mesenger"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+                <center>
+                    <button ng-show="tablePermission.isEdit" type="button" class="btn btn-success btn-labeled" ng-click="Save(EditForm)">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>@AppRes.btnUpdate
+                    </button>
+                    <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                        <span class="btn-label">
+                            <i class="fa fa-close"></i>
+                        </span>@AppRes.btnCancel
+                    </button>
+                </center>
+            </div>
+        </form>
+    </div>
+</div>

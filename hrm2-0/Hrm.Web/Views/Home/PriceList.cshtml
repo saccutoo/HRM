@@ -1,0 +1,210 @@
+﻿
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@{
+    ViewBag.Title = "Onboarding";
+    Layout = "~/Views/Shared/_MenuHome.cshtml";
+}
+<div class="col-md-12 bread-crumb hrm-f" style="padding-left: 60px">
+    <a href="#" class="bread-crumb-sc hrm-v2-font-16">Tất cả tính năng</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><a href="#" class="bread-crumb-item hrm-v2-font-16">Bảng giá</a>
+</div>
+<div class="wapper-container">
+    <section class="h-sec-item-view" style="min-height:334px">
+        <h1 class="text-center">Onpeople HRM - Công cụ quản trị nhân sự hàng đầu</h1>
+        <p class="text-center text-desc" style="opacity: 0.6">Bắt đầu với gói dùng thử, nâng cấp khi có nhu cầu</p>
+        <div class="col-md-12 month-radio-number" style="margin-right: 70px">
+            <div class="col-md-2 pd-l-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Radio.cshtml"), new TextEditorModel() { Name = "numbermonth", NameId = "1", Value = "1", LabelName = T("1 tháng").ToString() })
+            </div>
+            <div class="col-md-2 pd-l-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Radio.cshtml"), new TextEditorModel() { Name = "numbermonth", NameId = "6", Value = "6", LabelName = T("6 tháng").ToString() })
+            </div>
+            <div class="col-md-2 pd-l-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Radio.cshtml"), new TextEditorModel() { Name = "numbermonth", NameId = "12", Value = "12", LabelName = T("12 tháng").ToString() })
+            </div>
+            <div class="col-md-2 pd-l-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Radio.cshtml"), new TextEditorModel() { Name = "numbermonth", NameId = "24", Value = "24", LabelName = T("24 tháng").ToString() })
+            </div>
+        </div>
+        <div class="col-md-12">
+            <table style="width:100%;" class="h-price-table" id="price-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th><span class="hrm-v2-bold">Cơ bản</span><br /> <span>Khởi đầu dễ dàng</span></th>
+                        <th><span class="hrm-v2-bold">Tối ưu</span><br /> <span>Tăng tốc nhanh chóng</span></th>
+                        <th><span class="hrm-v2-bold">Nâng cao</span><br /> <span>Tăng trưởng quy mô</span></th>
+                        <th><span class="hrm-v2-bold">Enterprise</span><br /> <span>Phát triển bền vững</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="2" class="hrm-v2-bold" ">Giá</td>
+                        <td><span class="hrm-v2-color-green hrm-v2-bold"> 599.000 đ</span> <br /> /tháng</td>
+                        <td><span class="hrm-v2-color-green hrm-v2-bold"> 1.499.000 đ</span> <br /> /tháng</td>
+                        <td><span class="hrm-v2-color-green hrm-v2-bold"> 2.999.000 đ</span> <br /> /tháng</td>
+                        <td><span class="hrm-v2-color-green  hrm-v2-bold"> 4.999.000 đ</span> <br /> /tháng</td>
+                    </tr>
+                    <tr>
+                        <td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>
+                        <td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>
+                        <td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>
+                        <td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>
+                    </tr>
+                    <tr>
+                        <td>Số lượng tài <br />khoản nhân viên</td>
+                        <td>30</td>
+                        <td>60</td>
+                        <td>120</td>
+                        <td>250</td>
+                    </tr>
+                    <tr>
+                        <td>Tài khoản tăng <br />thêm</td>
+                        <td><span class="hrm-v2-bold">20.000 đ</span> / user /<br />tháng</td>
+                        <td><span class="hrm-v2-bold">25.000 đ</span> / user /<br />tháng</td>
+                        <td><span class="hrm-v2-bold">25.000 đ</span> / user /<br />tháng</td>
+                        <td><span class="hrm-v2-bold">25.000 đ</span> / user /<br />tháng</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+</div>
+<script>
+    $("input[name = 'numbermonth']").click(function () {
+        var month = $("input[name = 'numbermonth']:checked").val();
+         if (month == "1") {
+            $("#price-table tbody").remove();
+            var tbodyAppend = '<tbody>';
+            tbodyAppend += '<td rowspan="2" class="hrm-v2-bold" ">Giá</td>';
+            tbodyAppend += '<td><span class="hrm-v2-color-green hrm-v2-bold"> 599.000 đ</span> <br /> /tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-color-green hrm-v2-bold"> 1.499.000 đ</span> <br /> /tháng</td>   <td><span class="hrm-v2-color-green hrm-v2-bold"> 2.499.000 đ</span> <br /> /tháng</td> <td><span class="hrm-v2-color-green  hrm-v2-bold"> 4.999.000 đ</span> <br /> /tháng</td>';
+
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '</tr>';
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td>Số lượng tài <br />khoản nhân viên</td>';
+            tbodyAppend += '<td>30</td>';
+            tbodyAppend += '<td>60</td>';
+            tbodyAppend += '<td>120</td>';
+            tbodyAppend += '<td>250</td>';
+            tbodyAppend += '</tr>';
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td>Tài khoản tăng <br />thêm</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">20.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">25.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">25.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">25.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '</tr>';
+
+            tbodyAppend += '</tbody>';
+
+
+            $("#price-table").append(tbodyAppend)
+        }
+        if (month == "12") {
+            $("#price-table tbody").remove();
+            var tbodyAppend = '<tbody>';
+            tbodyAppend += '<td rowspan="2" class="hrm-v2-bold" ">Giá</td>';
+            tbodyAppend += '<td><span class="hrm-v2-color-green hrm-v2-bold"> 7.199.000 đ</span> <br /> /12 tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-color-green hrm-v2-bold"> 17.999.000 đ</span> <br /> /12 tháng</td>   <td><span class="hrm-v2-color-green hrm-v2-bold"> 29.999.000 đ</span> <br /> /12 tháng</td> <td><span class="hrm-v2-color-green  hrm-v2-bold"> 59.999.000 đ</span> <br /> /12 tháng</td>';
+
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '</tr>';
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td>Số lượng tài <br />khoản nhân viên</td>';
+            tbodyAppend += '<td>30</td>';
+            tbodyAppend += '<td>60</td>';
+            tbodyAppend += '<td>120</td>';
+            tbodyAppend += '<td>250</td>';
+            tbodyAppend += '</tr>';
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td>Tài khoản tăng <br />thêm</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">20.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">25.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">30.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">35.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '</tr>';
+
+            tbodyAppend += '</tbody>';
+
+
+            $("#price-table").append(tbodyAppend)
+        }
+        if (month == "24") {
+            $("#price-table tbody").remove();
+            var tbodyAppend = '<tbody>';
+            tbodyAppend += '<td rowspan="2" class="hrm-v2-bold" ">Giá</td>';
+            tbodyAppend += '<td><span class="hrm-v2-color-green hrm-v2-bold"> 14.199.000 đ</span> <br /> /tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-color-green hrm-v2-bold"> 35.999.000 đ</span> <br /> /24 tháng</td>   <td><span class="hrm-v2-color-green hrm-v2-bold"> 59.999.000 đ</span> <br /> /24 tháng</td> <td><span class="hrm-v2-color-green  hrm-v2-bold"> 119.999.000 đ</span> <br /> /24 tháng</td>';
+
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '</tr>';
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td>Số lượng tài <br />khoản nhân viên</td>';
+            tbodyAppend += '<td>30</td>';
+            tbodyAppend += '<td>60</td>';
+            tbodyAppend += '<td>120</td>';
+            tbodyAppend += '<td>250</td>';
+            tbodyAppend += '</tr>';
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td>Tài khoản tăng <br />thêm</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">20.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">25.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">30.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">35.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '</tr>';
+
+            tbodyAppend += '</tbody>';
+
+
+            $("#price-table").append(tbodyAppend)
+        }
+        if (month == "6")     {
+            $("#price-table tbody").remove();
+            var tbodyAppend = '<tbody>';
+            tbodyAppend += '<td rowspan="2" class="hrm-v2-bold" ">Giá</td>';
+            tbodyAppend += '<td><span class="hrm-v2-color-green hrm-v2-bold">3.599.000 đ</span> <br /> /6 tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-color-green hrm-v2-bold">8.999.000 đ</span> <br /> /6 tháng</td>   <td><span class="hrm-v2-color-green hrm-v2-bold"> 14.999.000 đ</span> <br /> /6 tháng</td> <td><span class="hrm-v2-color-green  hrm-v2-bold"> 29.999.000 đ</span> <br /> /6 tháng</td>';
+
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '<td><span><button type="button" class="hrm-v2-btn-save hrm-v2-bold"> Dùng thử miễn phí</button></td>';
+            tbodyAppend += '</tr>';
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td>Số lượng tài <br />khoản nhân viên</td>';
+            tbodyAppend += '<td>30</td>';
+            tbodyAppend += '<td>60</td>';
+            tbodyAppend += '<td>120</td>';
+            tbodyAppend += '<td>250</td>';
+            tbodyAppend += '</tr>';
+            tbodyAppend += '<tr>';
+            tbodyAppend += '<td>Tài khoản tăng <br />thêm</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">20.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">25.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">30.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '<td><span class="hrm-v2-bold">35.000 đ</span> / user /<br />tháng</td>';
+            tbodyAppend += '</tr>';
+
+            tbodyAppend += '</tbody>';
+
+
+            $("#price-table").append(tbodyAppend)
+        }
+    })
+</script>

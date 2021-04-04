@@ -1,0 +1,42 @@
+﻿
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@model Hrm.Web.ViewModels.WorkingProcessViewModel
+@using Hrm.Common
+@{
+    Layout = null;
+}
+
+    @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "icon-append fa fa-user", SectionName = T("Staff.Detail.Decision").ToString(), Style = "width:140px;", Width = "140px" })
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-l-0">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Classify").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownWorkingProcessType, ValueField = "Id", DisplayField = "Name", Name = "WorkingProcess.WorkingprocessTypeId", Value = Model.WorkingProcess.WorkingprocessTypeId.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+        </div>
+        <div class="col-md-6 pd-l-0">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.StatusApprove").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownStatusAprove, ValueField = "Id", DisplayField = "Name", Value = MasterDataId.ApprovedStatus.ToString(), Name = "WorkingProcess.Status", Disabled = true, IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+        </div>
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-l-0">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.DecisionNo").ToString(), Name = "WorkingProcess.DecisionNo", Value = Model.WorkingProcess.DecisionNo, IsAnimationLabel = true })
+        </div>
+        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "WorkingProcess.DecisionDate", Value = Model.WorkingProcess.DecisionDate, LabelName = T("Staff.Detail.DecisionDate").ToString(), DateFormat = "dd/MM/yyyy", PlaceHolder = " " })
+        </div>
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "WorkingProcess.StartDate", Value = Model.WorkingProcess.StartDate, LabelName = T("Staff.Detail.StarDateApply").ToString(), DateFormat = "dd/MM/yyyy", IsRequired = true, PlaceHolder = " " })
+        </div>
+        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "WorkingProcess.EndDate", Value = Model.WorkingProcess.EndDate, LabelName = T("Staff.Detail.EndDateApply").ToString(), DateFormat = "dd/MM/yyyy", PlaceHolder = " " })
+        </div>
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-l-0">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Description").ToString(), Name = "WorkingProcess.Description", Value = Model.WorkingProcess.Description, IsAnimationLabel = true })
+        </div>
+        <div class="col-md-6 pd-l-0">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Note").ToString(), Name = "WorkingProcess.Note", Value = Model.WorkingProcess.Note, IsAnimationLabel = true })
+        </div>
+    </div>

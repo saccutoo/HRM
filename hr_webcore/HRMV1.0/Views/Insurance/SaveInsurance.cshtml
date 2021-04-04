@@ -1,0 +1,89 @@
+﻿@using HRM.App_LocalResources
+@using HRM.Common
+<div class="container-fluid">
+
+    <div id="EditContent" class="row" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+
+            <div class="panel">
+                <div class="panel-heading">@AppRes.InsuranceInformation</div>
+                <div class="panel-body">
+                    <form name="EditForm" ng-submit="updateAction1(tableInfo.EditUrl,EditForm)">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group {{(EditForm.decisionCode.$invalid) ? 'has-error' : ''}}">
+                                    <label>@AppRes.DecisionNo <span style="color: red">*</span></label>
+                                    <input required type="text" data-modal="modal" name="decisionCode" placeholder="Enter Decision Code" class="form-control" ng-model="editData.DecisionCode" />
+                                </div>
+                                <div class="form-group {{(EditForm.insuranceTypeID.$invalid) ? 'has-error' : ''}}">
+                                    <label>@AppRes.InsurranceType <span style="color: red">*</span></label>
+                                    @if (Global.CurrentLanguage == 4)
+                                    {
+                                        <select id="ddlListInsuranceType" class="form-control" data-modal="modal" ng-model="editData.InsuranceTypeID" ng-options="insuranceType.GlobalListID as insuranceType.NameEN for insuranceType in getListInsuranceType">
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select id="ddlListInsuranceType" class="form-control" data-modal="modal" ng-model="editData.InsuranceTypeID" ng-options="insuranceType.GlobalListID as insuranceType.Name for insuranceType in getListInsuranceType">
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    
+
+                                </div>
+                                <div class="form-group {{(EditForm.rateCompany.$invalid) ? 'has-error' : ''}}">
+                                    <label>@AppRes.CompanyRate <span style="color: red">*</span></label>
+                                    <input required type="text" data-modal="modal" name="rateCompany" placeholder="Enter Rate Company" class="currency form-control" ng-model="editData.RateCompany" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group {{(EditForm.status.$invalid) ? 'has-error' : ''}}">
+                                    <label>@AppRes.Promotion_Status <span style="color: red">*</span></label>
+                                    @if (Global.CurrentLanguage == 4)
+                                    {
+                                        <select id="ddlListStatus" class="form-control" data-modal="modal" ng-model="editData.Status" ng-options="insuranceStatus.GlobalListID as insuranceStatus.NameEN for insuranceStatus in getListInsuranceStatus">
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select id="ddlListStatus" class="form-control" data-modal="modal" ng-model="editData.Status" ng-options="insuranceStatus.GlobalListID as insuranceStatus.Name for insuranceStatus in getListInsuranceStatus">
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    
+                                </div>
+                                <div class="form-group {{(EditForm.applyDate.$invalid) ? 'has-error' : ''}}">
+                                    <label>@AppRes.StartMonth <span style="color: red">*</span></label>
+                                    <input required type="date" data-modal="modal" name="applyDate" placeholder="Enter Apply Date" class="form-control" ng-model="editData.ApplyDate" />
+                                </div>
+                                <div class="form-group {{(EditForm.ratePerson.$invalid) ? 'has-error' : ''}}">
+                                    <label>@AppRes.CloseRate <span style="color: red">*</span></label>
+                                    <input required type="text" data-modal="modal" name="ratePerson" placeholder="Enter Rate Person" class="currency form-control" ng-model="editData.RatePerson" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row aligncenter" style="text-align:center">
+                            <br />
+                            <br />
+                            <button type="submit" class="btn btn-labeled btn-success">
+                                <span class="btn-label">
+                                    <i class="fa fa-save"></i>
+                                </span>@AppRes.btnUpdate
+                            </button>
+                            <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                <span class="btn-label">
+                                    <i class="fa fa-close"></i>
+                                </span>@AppRes.btnCancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/MyScript/currencyConvert.js"></script>

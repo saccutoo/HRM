@@ -1,0 +1,31 @@
+﻿@model Hrm.Admin.ViewModels.MenuPermissionViewModel
+@using System.Linq
+@using Hrm.Common
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+
+@{
+    Layout = null;
+}
+
+@{
+    var data = Model.Staffs;
+    if (data != null && data.Count > 0)
+    {
+        foreach (var item in data)
+        {
+            <div class="permission-role-list-content permission-user-list-content" onclick="ClickUser(@item.Id)">
+                <div class="permission-role-list-content-name">
+                    <span>@item.Name</span>
+                </div>
+                <div class="permission-role-list-content-description">
+                    @{ 
+                        var classificationName = M(item.ClassificationId.ToString() + ";" + DataType.MasterData + ";Name");
+                    }
+                    <span class="description">@classificationName</span>
+                </div>
+            </div>
+        }
+    }
+}

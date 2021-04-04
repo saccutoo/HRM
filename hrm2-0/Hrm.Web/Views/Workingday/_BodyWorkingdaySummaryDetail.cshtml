@@ -1,0 +1,96 @@
+﻿@model Hrm.Web.ViewModels.FormWorkingdaySupplenmentAndSummaryDetailViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@using Hrm.Framework.Context
+@using Hrm.Common
+@{
+
+}
+@if (Model.WorkingdaySummary != null && Model.WorkingdaySummary.Id != 0)
+{
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <td style="width:40%">
+                    <span>@T("Workingday.Unit.Workingday")</span>
+                </td>
+                <td>
+                    <span>@Model.WorkingdaySummary.TotalWorkingday</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>@T("Workingday.Title.Overtime")</span>
+                </td>
+                <td>
+                    <span>@Model.WorkingdaySummary.WorkingdayOvertime</span> <i class="far fa-clock" style="pointer-events:none"> </i>
+                    @*<span style="margin-left:10px" class="horver-clock d-inline-block" tabindex="0" data-toggle="tooltip" data-content="<ul>@{for (int i = 1; i < 3; i++) { <li>hihi</li>} }</ul>">
+                            <span class="far fa-clock" style="pointer-events:none" > </span>
+                        </span>*@
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>@T("WorkingDay.TimeKeeping")</span>
+                </td>
+                <td>
+                    @{
+                        var startime = "__-__";
+                        var endtime = "__-__";
+                        if (Model.WorkingdaySummary.StartTime != null && Model.WorkingdaySummary.StartTime.ToString("HH:mm", CultureInfo.InvariantCulture) != "00:00")
+                        {
+                            startime = Model.WorkingdaySummary.StartTime.ToString("HH:mm", CultureInfo.InvariantCulture);
+                        }
+                        if (Model.WorkingdaySummary.EndTime != null && Model.WorkingdaySummary.EndTime.ToString("HH:mm", CultureInfo.InvariantCulture) != "00:00")
+                        {
+                            endtime = Model.WorkingdaySummary.EndTime.ToString("HH:mm", CultureInfo.InvariantCulture);
+                        }
+                    }
+                    <span>@startime - @endtime </span>
+                    @*<i class="fas fa-history"></i>*@
+                    <span style="margin-left:10px" class="horver-history d-inline-block" tabindex="0" data-toggle="tooltip" data-content="<ul><li>@T("WorkingdaySummary.HistoryCheckinOut")</li>
+                                        @{
+                                            foreach (var item in Model.WorkingdayCheckInOuts){
+                                               <li>@item.CheckTime.ToString("HH:mm", CultureInfo.InvariantCulture)</li>
+                                            }
+                                        }</ul>">
+                                        <span class="fas fa-history" style="pointer-events:none" > </span>
+                                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>
+                        @T("Workingday.LateDuration")
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        @Model.WorkingdaySummary.LateDuration.TimeOfDay.Minutes
+                        <span class="title-minute">@T("Workingday.Unit.Minute")</span>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>
+                        @T("Workingday.EarlyDuration")
+                    </span>
+                </td>
+                <td>
+                    <span>@Model.WorkingdaySummary.EarlyDuration.TimeOfDay.Minutes <span class="title-minute">@T("Workingday.Unit.Minute")</span></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    }
+
+
+<script>
+    $('[data-toggle="tooltip"]').popover({
+        placement: 'right'
+        ,trigger: 'hover'
+        ,html: true
+    })
+</script>

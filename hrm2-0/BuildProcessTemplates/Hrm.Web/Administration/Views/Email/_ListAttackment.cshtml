@@ -1,0 +1,40 @@
+﻿@model List<Hrm.Framework.Models.AttachmentModel>
+@using Hrm.Common
+@{
+    Layout = null;
+}
+
+@{
+    var datas = Model;
+    if (datas != null && datas.Count() > 0)
+    {
+        foreach (var item in datas)
+        {
+            <div class="attackment-bottom-content">
+                <div class="attackment-left-icon">
+                    @if (item.FileExtension == FileExtension.Docx)
+                    {
+                        <span class="fas fa-file-alt" style="color:blue;"></span>
+                    }
+                    else if (item.FileExtension == FileExtension.Xlsx)
+                    {
+                        <span class="fas fa-file-excel" style="color:blue;"></span>
+                    }
+                    else if (FileExtension.Img.IndexOf(item.FileExtension)>-1)
+                    {
+                        <span class="fas fa-image" style="color:blue;"></span>
+                    }
+                </div>
+                <div class="attackment-right-content">
+                    <div class="attackment-right-name">
+                        <span>@item.DisplayFileName</span>
+                    </div>
+                    <div class="attackment-right-kb">
+                        <span>@item.FileSize KB</span>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    <input name="attachment" id="attachment" type="file" onchange="changeInputFile()"/>
+}  

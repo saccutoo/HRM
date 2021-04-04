@@ -1,0 +1,408 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<style>
+    .table-responsive {
+        overflow-x: unset !important;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row SaveWPContent" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-heading"><b>@AppRes.DetailedWorkProcess</b></div>
+                <hr />
+                <div class="panel-body">
+                    <form role="form" name="EditForm" ng-submit="SaveWPAction(tableInfo.AddUrl,EditForm)" novalidate>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                @*---------------------------------------------------------------Đầu tiên-------------------------------------------------------------------------------------------------------*@
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.TittleNumber </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" ng-readonly=is_readonly ng-disabled="true" class="form-control" ng-model="editData.WPID" />
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.Status <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            @if (Global.CurrentLanguage == 5)
+                                            {
+                                                <select class="form-control" chosen options="getListWPTypeID" on-no-result="doStuff" data-modal="modal" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.WPTypeID" ng-required="true" name="WPTypeID" ng-options="list.GlobalListID as list.Name for list in getListWPTypeID" convert-dropdown>
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select class="form-control" chosen options="getListWPTypeID" on-no-result="doStuff" data-modal="modal" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.WPTypeID" ng-required="true" name="WPTypeID" ng-options="list.GlobalListID as list.NameEN for list in getListWPTypeID" convert-dropdown>
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>
+                                            }
+                                            <span ng-show="EditForm.$submitted && EditForm.WPTypeID.$error.required" style="color: red">@AppRes.ValidationStatus</span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.DecisionNumber </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" data-modal="modal" ng-readonly=is_readonly  name="orderNo" class="form-control" ng-disabled="!editData.IsLatchWorkingDay" ng-model="editData.DecisionNo">
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.StartDate <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="date" class="form-control" ng-readonly=is_readonly ng-required="true" name="WPStartDate" ng-model="editData.WPStartDate" format-date ng-disabled="!editData.IsLatchWorkingDay"/>
+                                            <span ng-show="EditForm.$submitted && EditForm.WPStartDate.$error.required" style="color: red">@AppRes.ValidationWPStartDate</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.Timekeeping_Status </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            @if (Global.CurrentLanguage == 5)
+                                            {
+                                                <select class="form-control" chosen options="getListStatus" on-no-result="doStuff" data-modal="modal" ng-disabled="true" ng-model="editData.Status" ng-options="list.GlobalListID as list.Name for list in getListStatus" convert-dropdown>
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select class="form-control" chosen options="getListStatus" on-no-result="doStuff" data-modal="modal" ng-disabled="true" ng-model="editData.Status" ng-options="list.GlobalListID as list.NameEN for list in getListStatus" convert-dropdown>
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>}
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.EndDate </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="date" data-modal="modal" ng-model="editData.WPEndDate" ng-readonly=is_readonly name="value" class="form-control" format-date>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.WorkingStatus </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            @if (Global.CurrentLanguage == 5)
+                                            {
+                                                <select class="form-control" chosen options="getListWorkingStatus" on-no-result="doStuff" data-modal="modal" ng-model="editData.WorkingStatus" ng-disabled="is_readonly || !editData.IsLatchWorkingDay" ng-options="list.GlobalListID as list.Name for list in getListWorkingStatus"  convert-dropdown >
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select class="form-control" chosen options="getListWorkingStatus" on-no-result="doStuff" data-modal="modal" ng-model="editData.WorkingStatus" ng-disabled="is_readonly || !editData.IsLatchWorkingDay" ng-options="list.GlobalListID as list.NameEN for list in getListWorkingStatus" convert-dropdown>
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>}
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.Note </label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <textarea ng-model="editData.WPNote" data-modal="modal" ng-readonly=is_readonly ng-disabled="!editData.IsLatchWorkingDay" name="note" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Manager <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" chosen options="getListStaff" on-no-result="doStuff" data-modal="modal" ng-required="true" name="ManagerID" ng-model="editData.ManagerID" ng-disabled="is_readonly || !editData.IsLatchWorkingDay" ng-options="list.UserID as list.FullName for list in getListStaff" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        <span ng-show="EditForm.$submitted && EditForm.ManagerID.$error.required" style="color:red">@AppRes.ValidationManager</span>
+                                    </div>
+
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.HRManagement <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="chosen-select form-control col-sm-3" ng-disabled="is_readonly || !editData.IsLatchWorkingDay" ng-model="editData.HRIDs" ng-required="true" name="HRManagement" chosen multiple>
+                                            <option ng-repeat="list in getListHRIds" value="{{list.UserID}}">{{list.FullName}}</option>
+                                        </select>
+
+                                        <span ng-show="EditForm.$submitted && EditForm.HRManagement.$error.required" style="color:red">@AppRes.ValidationHRManager</span>
+                                    </div>
+
+                                </div>
+
+                                @*---------------------------------------------------------------Thông tin vị trí-------------------------------------------------------------------------------------------------------*@
+
+                                <div class="row">
+                                    <div class="panel-heading"><b>@AppRes.LocationInformation</b></div>
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Company <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" chosen options="getCompany" on-no-result="doStuff" data-modal="modal" ng-required="true" name="CompanyID" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.CompanyID" ng-options="list.OrganizationUnitID as list.Name for list in getCompany" ng-change="onCompanyChange()" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        <span ng-show="EditForm.$submitted && EditForm.CompanyID.$error.required" style="color: red">@AppRes.ValidationCompany</span>
+                                    </div>
+
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Position <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" chosen options="getListOfficePosition" on-no-result="doStuff" data-modal="modal" ng-required="true" name="OfficePositionID" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.OfficePositionID" ng-options="list.GlobalListID as list.Name for list in getListOfficePosition" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        <span ng-show="EditForm.$submitted && EditForm.OfficePositionID.$error.required" style="color: red">@AppRes.ValidationOfficePosition</span>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.DirectManagementUnit<span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" chosen options="getListOrganizationUnit" on-no-result="doStuff" data-modal="modal" ng-required="true" name="OrganizationUnitID" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.OrganizationUnitID" ng-options="list.OrganizationUnitID as list.Name for list in getListOrganizationUnit" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        <span ng-show="EditForm.$submitted && EditForm.OrganizationUnitID.$error.required" style="color: red">@AppRes.ValidationOrganizationUnit</span>
+                                    </div>
+
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.OfficeRole <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" chosen options="getListOfficeRole" on-no-result="doStuff" data-modal="modal" ng-required="true" name="OfficeRoleID" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.OfficeRoleID" ng-options="list.GlobalListID as list.Name for list in getListOfficeRole" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        <span ng-show="EditForm.$submitted && EditForm.OfficeRoleID.$error.required" style="color: red">@AppRes.ValidationOfficeRole</span>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Office <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                        <select class="form-control" chosen options="getOffice" on-no-result="doStuff" data-modal="modal" ng-required="true" name="OfficeID" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.OfficeID" ng-options="list.GlobalListID as list.Name for list in getOffice" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        }
+                                        else
+                                        {
+                                        <select class="form-control" chosen options="getOffice" on-no-result="doStuff" data-modal="modal" ng-required="true" name="OfficeID" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.OfficeID" ng-options="list.GlobalListID as list.NameEN for list in getOffice" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        }
+                                        <span ng-show="EditForm.$submitted && EditForm.OfficeID.$error.required" style="color: red">@AppRes.ValidationOffice</span>
+                                    </div>
+
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.Rank <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                        <select class="form-control" chosen options="getListStaffLevel" on-no-result="doStuff" data-modal="modal" ng-required="true" name="StaffLevelID" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.StaffLevelID" ng-options="list.GlobalListID as list.Name for list in getListStaffLevel" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        }
+                                        else
+                                        {
+                                        <select class="form-control" chosen options="getListStaffLevel" on-no-result="doStuff" data-modal="modal" ng-required="true" name="StaffLevelID" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.StaffLevelID" ng-options="list.GlobalListID as list.NameEN for list in getListStaffLevel" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        }
+                                        <span ng-show="EditForm.$submitted && EditForm.StaffLevelID.$error.required" style="color: red">@AppRes.ValidationStaffLevel</span>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="panel-heading" style="margin-left:25px;"><b>@AppRes.ContractInformation</b></div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>@AppRes.TeamLeader @*<span style="color: red">(*)</span>*@</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select class="form-control" chosen options="getListStaffLevel" on-no-result="doStuff" ng-disabled="!editData.IsLatchWorkingDay" data-modal="modal"  name="TeamLeadLevelID" ng-model="editData.TeamLeadLevelID" ng-options="list.GlobalListID as list.Name for list in getListStaffLevel" convert-dropdown>
+                                                <option value="" disabled selected>--@AppRes.Select--</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select class="form-control" chosen options="getListStaffLevel" on-no-result="doStuff" ng-disabled="!editData.IsLatchWorkingDay" data-modal="modal"  name="TeamLeadLevelID" ng-model="editData.TeamLeadLevelID" ng-options="list.GlobalListID as list.NameEN for list in getListStaffLevel" convert-dropdown>
+                                                <option value="" disabled selected>--@AppRes.Select--</option>
+                                            </select>
+                                        }
+                                        @*<span ng-show="EditForm.$submitted && EditForm.TeamLeadLevelID.$error.required" style="color: red">@AppRes.ValidationTeamLeadLevel</span>*@
+                                    </div>
+
+                                </div>
+                                @*---------------------------------------------------------------Thông tin hợp đồng-------------------------------------------------------------------------------------------------------*@
+
+                                <div class="row">
+                                    @*<div class="panel-heading"><b>@AppRes.ContractInformation</b></div>*@
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.ContractType <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @if (Global.CurrentLanguage==5)
+                                            {
+                                            <select class="form-control" chosen options="getListContractType" on-no-result="doStuff" data-modal="modal" ng-required="true" name="ContractTypeID" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.ContractTypeID" ng-options="list.GlobalListID as list.Name for list in getListContractType" convert-dropdown>
+                                                <option value="" disabled selected>--@AppRes.Select--</option>
+                                            </select>
+                                            }
+                                            else
+                                            {
+                                            <select class="form-control" chosen options="getListContractType" on-no-result="doStuff" data-modal="modal" ng-required="true" name="ContractTypeID" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.ContractTypeID" ng-options="list.GlobalListID as list.NameEN for list in getListContractType" convert-dropdown>
+                                                <option value="" disabled selected>--@AppRes.Select--</option>
+                                            </select>}
+                                        <span ng-show="EditForm.$submitted && EditForm.ContractTypeID.$error.required" style="color: red">@AppRes.ValidationContractType</span>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.FromDate <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="date" data-modal="modal" ng-required="true" name="StartDateContract" ng-readonly=is_readonly ng-disabled="!editData.IsLatchWorkingDay" class="form-control" ng-model="editData.StartDateContract" format-date />
+                                        <span ng-show="EditForm.$submitted && EditForm.StartDateContract.$error.required" style="color: red">@AppRes.ValidationStartDateContract</span>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.ContractCode </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" data-modal="modal" name="createBy" class="form-control" ng-disabled="!editData.IsLatchWorkingDay" ng-readonly=is_readonly ng-model="editData.ContractNo" />
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.ToDate </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="date" data-modal="modal" name="descriptions" class="form-control" ng-disabled="!editData.IsLatchWorkingDay" ng-readonly=is_readonly ng-model="editData.EndDateContract" format-date />
+                                    </div>
+
+                                </div>
+
+
+                                @*---------------------------------------------------------------Lương và lợi ích-------------------------------------------------------------------------------------------------------*@
+
+                                <div class="row">
+                                    <div class="panel-heading"><b>@AppRes.WagesAndBenefits</b></div>
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.PolicyApplies <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" chosen options="getPolicy" on-no-result="doStuff" ng-required="true" name="PolicyID" data-modal="modal" ng-model="editData.PolicyID" ng-disabled="editData.Lock" ng-options="list.PolicyID as list.Name for list in getPolicy">
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        <span ng-show="EditForm.$submitted && EditForm.PolicyID.$error.required" style="color: red">@AppRes.ValidationPolicy</span>
+                                    </div>
+
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.CurrencyType <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="form-control" chosen options="getListCurrency" on-no-result="doStuff" ng-required="true" name="CurrencyID" data-modal="modal" ng-model="editData.CurrencyID" ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-options="list.GlobalListID as list.Name for list in getListCurrency" convert-dropdown>
+                                            <option value="" disabled selected>--@AppRes.Select--</option>
+                                        </select>
+                                        <span ng-show="EditForm.$submitted && EditForm.CurrencyID.$error.required" style="color: red">@AppRes.ValidationCurrency</span>
+                                    </div>
+
+                                </div>
+                                <div class="row" ng-if="editData.isShowSalary">
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.StandardSalary <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" data-modal="modal" class="form-control" ng-required="true" name="BasicPay" ng-readonly=is_readonly ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.BasicPay" currency-mask />
+                                        <span ng-show="EditForm.$submitted && EditForm.BasicPay.$error.required" style="color: red">@AppRes.ValidationBasicPay</span>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label>@AppRes.EffectiveReward <span style="color: red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" data-modal="modal" ng-required="true" name="EfficiencyBonus" class="form-control" ng-readonly=is_readonly ng-disabled="editData.Lock || !editData.IsLatchWorkingDay" ng-model="editData.EfficiencyBonus" currency-mask />
+                                        <span ng-show="EditForm.$submitted && EditForm.EfficiencyBonus.$error.required" style="color: red">@AppRes.ValidationEfficiencyBonus</span>
+                                    </div>
+
+                                </div>
+
+
+                                @*---------------------------------------------------------------Phụ cấp-------------------------------------------------------------------------------------------------------*@
+
+                                @Html.Action("Index", "EmployeeAllowance")
+
+                            </div>
+                        </div>
+                        @*---------------------------------------------------------------Thêm mới và bỏ qua-------------------------------------------------------------------------------------------------------*@
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-4 col-md-push-5">
+                                <button type="submit" class="btn btn-labeled btn-success" ng-show="tablePermission.isEdit">
+                                    <span class="btn-label">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </span>@AppRes.btnSubmitAReview
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CloseFormWP()">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>

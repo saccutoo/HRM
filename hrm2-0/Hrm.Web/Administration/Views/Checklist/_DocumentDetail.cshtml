@@ -1,0 +1,123 @@
+﻿@model Hrm.Framework.Models.AttachmentModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Common;
+<style>
+    .hrm-v2-multiple .select2-container {
+        width: 100% !important;
+    }
+
+    .hrm-v2-email-to {
+        position: relative;
+    }
+
+    .cc-bcc {
+        position: absolute;
+        right: 10px;
+        top: 22px;
+        font-size: 13px;
+        font-family: Roboto-Regular;
+    }
+
+        .cc-bcc span {
+            width: 30px;
+            text-align: center;
+            float: left;
+            display: block;
+            cursor: pointer;
+        }
+
+    .hrmv2-section .hrm-v2-multiple.hrm-v2-email-to ul {
+        margin-top: 4px;
+    }
+
+    .hrmv2-section .hrm-v2-multiple.cc ul {
+        margin-top: 4px;
+    }
+
+    .hrmv2-section .hrm-v2-multiple.bcc ul {
+        margin-top: 4px;
+    }
+
+    .hrmv2-section .display-inline-block #Column {
+        margin-top: 8px;
+    }
+
+    .col-md-12.pd-0.display-inline-block.upload {
+        height: 300px;
+        border-style: dashed;
+        border-color: #ccc;
+        text-align: center;
+    }
+
+        .col-md-12.pd-0.display-inline-block.upload .icon {
+          font-size: 100px;
+            line-height: 270px;
+            width: 50%;
+            height: 100%;
+            text-align: right;
+            float: left;
+        }
+         .col-md-12.pd-0.display-inline-block.upload .icon span{
+           color: #2CA01C;
+            width: 100%;
+        }
+         .col-md-12.pd-0.display-inline-block.upload .span {
+          width: 50%;
+            float: right;
+            height: 100%;
+        }
+          .col-md-12.pd-0.display-inline-block.upload .span span {
+          font-size: 20px;
+           margin-left: 10px;
+           float: left;
+           line-height: 300px;
+           margin-left: 40px;
+        }
+        .col-md-12.pd-0.display-inline-block.upload #document-detail .fas.fa-times{
+            font-size: 25px;
+            margin-top: 10px;
+            float: right;
+            margin-right: 10px;
+     }
+</style>
+
+@if (Model.DisplayFileName == null)
+{
+    <div class="icon">
+        <span class="fas fa-upload icon" onclick="clickNewAttach()"></span>
+    </div>
+    <div class="span">
+        <span  onclick="clickNewAttach()">@T("Checklist.UploadDocument")</span>
+    </div>
+   
+}
+else
+{
+    <div>
+        <span class="fas fa-times" onclick="removeFile('@Model.FileName','@Model.Id')"></span>
+    </div>
+    if (Model.FileExtension == FileExtension.Docx)
+    {
+        <div class="icon">
+            <span class="fas fa-file-alt icon" style="color:blue;"></span>
+        </div>
+
+    }
+    else if (Model.FileExtension == FileExtension.Xlsx)
+    {
+        <div class="icon">
+            <span class="fas fa-file-excel icon" style="color:blue;"></span>
+        </div>
+    }
+    else if (FileExtension.Img.IndexOf(Model.FileExtension) > -1)
+    {
+        <div class="icon">
+            <span class="fas fa-image icon" style="color:blue;"></span>
+        </div>
+    }
+    <div class="span" style="height:88%">
+        <span style="line-height: 210px;">@Model.DisplayFileName</span>
+    </div>
+}

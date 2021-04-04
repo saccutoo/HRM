@@ -1,0 +1,125 @@
+﻿
+@model Hrm.Web.ViewModels.StaffDetailsViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common
+
+<div class="hrm-v2-col-79 working-process-content-left">
+    <div class="col-md-12 pd-l-0 display-inline-block staff-detail-actionbar">
+        <div class="hrm-v2-action-bar">
+            @*<span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-download", OnClick = "test()" })</span>*@
+            <span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", OnClick = "test()" })</span>
+            <span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", OnClick = "changeView()" })</span>
+            @*@if (Model.ViewType == 1)
+            {*@
+                <span>@Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fa fa-plus", OnClick = "addWorkingProcess()" })</span>
+            @*}*@
+        </div>
+    </div>
+    @*@Html.Partial("~/Views/Staff/_WorkingProcess.cshtml", Model.ListWorkingProcess)*@
+    <div class="box-arrow-template hrm-v2-scroll pull-left">
+
+        @if (Model.ListWorkingProcess.Count > 0)
+        {
+            var checkYear = 0;
+            foreach (var item in Model.ListWorkingProcess)
+            {
+                if (item.Status != 50)
+                {
+                    <div class="arrow-view orange">
+                        @if (checkYear != item.Year)
+                        {
+                            <div class="arrow-year">@item.Year</div>
+                            checkYear = item.Year;
+                        }
+                        <div class="section-arrown-line">
+                            <div class="connect-line">
+                                @if (item.StartDate != null && item.StartDate != DateTime.MinValue)
+                                {
+                                    <span class="time">@item.StartDate.Value.ToString("dd/MM/yyyy")</span>
+                                }
+                                <span class="point"></span>
+                            </div>
+                        </div>
+                        <div class="arrow-template-container ">
+                            <span>@M(item.WorkingprocessTypeId.ToString() + ";" + DataType.MasterData + ";Name")</span>
+                            <div class="arrow-right"></div>
+                        </div>
+                        <div class="arrow-info">
+                            <span>@item.Description</span>
+                            <a class="arrow-view-detail" onclick="editWorkingProcess(@item.Id)">@T("Staff.Detail.ViewDetail")</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="arrow-view green">
+                        @if (checkYear != item.Year)
+                        {
+                            <div class="arrow-year">@item.Year</div>
+                            checkYear = item.Year;
+                        }
+                        <div class="section-arrown-line">
+                            <div class="connect-line">
+                                @if (item.StartDate != null && item.StartDate != DateTime.MinValue)
+                                {
+                                    <span class="time">@item.StartDate.Value.ToString("dd/MM/yyyy")</span>
+                                }
+                                <span class="point"></span>
+                            </div>
+                        </div>
+                        <div class="arrow-template-container ">
+                            <span>@M(item.WorkingprocessTypeId.ToString() + ";" + DataType.MasterData + ";Name")</span>
+                            <div class="arrow-right"></div>
+                        </div>
+                        <div class="arrow-info">
+                            <span>@item.Description</span>
+                            <a class="arrow-view-detail" onclick="editWorkingProcess(@item.Id)">@T("Staff.Detail.ViewDetail")</a>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>
+<div class="hrm-v2-col-21 working-process-content-right">
+    <div class="working-process-right-title">@T("Staff.Detail.CurrentPossition")</div>
+    <div class="working-process-right-content">
+        <div class="col-md-12 pd-0 display-inline-block">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Contract").ToString(), Text = M(Model.WorkingProcess.ContractTypeId.ToString() + ";" + DataType.MasterData + ";Name").ToString() + " - " + M(Model.WorkingProcess.ContractTime.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Shift").ToString(), Text = M(Model.WorkingProcess.ShiftId.ToString() + ";" + DataType.Shift + ";Name").ToString() })
+            </div>
+        </div>
+        @*<div class="col-md-12 pd-0 display-inline-block">
+
+            @foreach (var item in Model.ListRole)
+            {
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Location").ToString(), Text = M(item.RoleId.ToString() + ";" + DataType.Role + ";Name").ToString() })
+            }
+        </div>*@
+        <div class="col-md-12 pd-0 display-inline-block">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Location").ToString(), Text = M(Model.WorkingProcess.ClassificationId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Position").ToString(), Text = M(Model.WorkingProcess.PositionId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.StaffLevel").ToString(), Text = M(Model.WorkingProcess.StaffLevelId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+        </div>
+        @if (Model.ListOrganization != null && Model.ListOrganization.Count > 0)
+            {
+                foreach (var item in Model.ListOrganization)
+                {
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = M(item.OrganizationType.ToString() + ";" + DataType.MasterData + ";Name").ToString(), Text = M(item.Id.ToString() + ";" + DataType.Organization + ";OrganizationName").ToString() })
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+

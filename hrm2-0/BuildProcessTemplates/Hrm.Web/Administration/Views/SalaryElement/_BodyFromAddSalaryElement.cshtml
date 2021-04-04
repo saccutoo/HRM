@@ -1,0 +1,53 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@model Hrm.Admin.ViewModels.AddSalaryElementViewModel
+@{ 
+    var index = 0;
+}
+
+@if (Model.SalaryElements.Count() > 0)
+{
+    foreach (var item in Model.SalaryElements)
+    {
+        <input type="text" value="@item.Id" name="listModel[@index].Id" hidden/>
+        <div class="list-language">
+           
+            <div class="col-md-12 header-language" >
+                <div class="col-md-2 pd-0 header-language-title">
+                    <span>
+                        @T("SalaryElement.Language") <span style="color:red">*</span>
+                    </span>
+                </div>
+                <div class="col-md-4 pd-0 header-language-select">
+                    <select class="hrm-v2-font-13" name="listModel[@index].LanguageId">
+                        <option value="0" selected>@T("MasterData.Select")</option>
+                        @foreach (var language in Model.Languages)
+                        {
+                            var select = string.Empty;
+                            if (language.Id == item.LanguageId)
+                            {
+                                select = "selected";
+                            }
+                            <option value="@language.Id" @select>@language.Name</option>
+                        }
+                    </select>
+                    <span name="listModel[@index].LanguageId-error" class="hrm-v2-error" label-name="@T("MasterData.Language")"></span>
+                </div>
+                <div class="col-md-1 pd-0 pull-right header-language-icon-times">
+                    <span class="fas fa-times pull-right" onclick="removeLanguage(@index)"></span>
+                </div>
+            </div>
+            <div class="col-md-12 body-language display-inline-block">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form name-show">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "listModel[" + index + "].Name", IsRequired = true, LabelName = T("SalaryElement.NameShowByLanguage").ToString(), IsAnimationLabel = true, Value = item.Name })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form name-show">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "listModel[" + index + "].Description", LabelName = T("SalaryElement.Description").ToString(), IsAnimationLabel = true, Value = item.Description })
+                </div>
+            </div>
+        </div>
+        index++;
+    }
+} 
+    

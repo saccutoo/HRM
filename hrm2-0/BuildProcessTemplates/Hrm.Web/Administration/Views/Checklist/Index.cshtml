@@ -1,0 +1,116 @@
+﻿@model Hrm.Framework.ViewModels.ChecklistViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@{
+    ViewBag.Title = "Setting Checklist";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+<div id="setting-checklist" class="setting-checklist">
+    @Html.Partial(UrlHelpers.View("~/Views/Shared/Checklist/_ChecklistSummary.cshtml"), Model)
+    <div>
+        <div class="control-header">
+            <div class="box-control-type">
+                <div class="box-icon">
+                    <span class="box-icon-main">
+                        <i class="far fa-check-square"></i>
+                    </span>
+                </div>
+                <div class="box-title">
+                    <span class="box-title-main">Hộp CC</span>
+                </div>
+            </div>
+            <div class="box-control-type">
+                <div class="box-icon">
+                    <span class="box-icon-main">
+                        <i class="fas fa-sync-alt"></i>
+                    </span>
+                </div>
+                <div class="box-title">
+                    <span class="box-title-main">Cập nhật <br /> trường thông tin</span>
+                </div>
+            </div>
+            <div class="box-control-type">
+                <div class="box-icon">
+                    <div class="box-icon-main">
+                        <div class="custom-text-box">I</div>
+                    </div>
+                </div>
+                <div class="box-title">
+                    <span class="box-title-main">Nhập văn bản</span>
+                </div>
+            </div>
+            <div class="box-control-type">
+                <div class="box-icon">
+                    <span class="box-icon-main">
+                        <i class="far fa-calendar-alt"></i>
+                    </span>
+                </div>
+                <div class="box-title">
+                    <span class="box-title-main">Nhập ngày</span>
+                </div>
+            </div>
+            <div class="box-control-type">
+                <div class="box-icon">
+                    <span class="box-icon-main">
+                        <i class="fas fa-paperclip"></i>
+                    </span>
+                </div>
+                <div class="box-title">
+                    <span class="box-title-main">Đính kèm tệp</span>
+                </div>
+            </div>
+        </div>
+        <div class="checklist-detail">
+            @{
+            var title = "Set mã chấm công và lấy vân tay nhân sự mới";
+            }
+            <div class="checklist-detail-title">
+                @Html.Partial(UrlHelpers.Template("_TextEditor.cshtml"), new TextEditorModel() { Name = "setting-checklist-title", PlaceHolder = T("TextEditor.Placeholder.Tile").ToString(), Value = title })
+            </div>
+            <div class="checklist-detail-assignto">
+                @Html.Partial(UrlHelpers.Template("_DropdownList.cshtml"), new DropdownListModel() { Name = "setting-checklist-assignto" })
+            </div>
+            <span>Checkbox</span>
+            <div class="checklist-detail-preview">
+                <span class="checklist-detail-preview-title">@T("Section.Title.Preview")</span>
+                <div class="checklist-item checklist-detail-preview-value">
+                    @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-preview-title", Value = "false" })
+                    <span class="checklist-item-title"> @title</span>
+                </div>
+            </div>
+
+            <span>Field updating</span>
+            @{
+            title = "Setup email và tài khoản ERP";
+            }
+            <div class="checklist-detail-assignto">
+                @Html.Partial(UrlHelpers.Template("_DropdownList.cshtml"), new DropdownListModel() { Name = "setting-checklist-field-select" })
+            </div>
+            <div class="checklist-detail-preview">
+                <span class="checklist-detail-preview-title">@T("Section.Title.Preview")</span>
+                <div class="checklist-item checklist-detail-preview-value">
+                    @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-preview-title-1", Value = "false" })
+                    <span class="checklist-item-title"> @title</span>
+                    <div class="checklist-detail-field" style="width:50%;margin-left:20px">
+                        @Html.Partial(UrlHelpers.Template("_TextEditor.cshtml"), new TextEditorModel() { Name = "setting-checklist-field", PlaceHolder = T("TextEditor.Placeholder.WorkingEmail").ToString() })
+                    </div>
+                </div>
+            </div>
+
+            <span>Date updating</span>
+            @{
+            title = "Kích hoạt tài khoản";
+            }
+            <div class="checklist-detail-preview">
+                <span class="checklist-detail-preview-title">@T("Section.Title.Preview")</span>
+                <div class="checklist-item checklist-detail-preview-value">
+                    @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-preview-title-2", Value = "false" })
+                    <span class="checklist-item-title"> @title</span>
+                    <div class="checklist-detail-field" style="width:50%;margin-left:20px">
+                        @Html.Partial(UrlHelpers.Template("_DatePicker.cshtml"), new DatePickerModel() { Name = "setting-checklist-datepicker", ChangeMonth = true, ChangeYear = false })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

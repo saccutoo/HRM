@@ -1,0 +1,64 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+
+<div class="container-fluid">
+    <div class="row" id="CopyPolicyDetail" style="margin: 0;">
+        <form role="form" name="CopyForm" novalidate>
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading" style="line-height: 40px;"><div style="text-transform: none;font-size:20px;height:25px">@AppRes.CopyPolicyDetail</div></div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.Policy <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <select class="form-control" chosen options="ListPolicy" on-no-result="doStuff" name="PolicyID" data-modal="modal" ng-model="PolicyDetailModel.PolicyID" ng-options="list.PolicyID as list.Name for list in ListPolicy" required>
+                                            <option value="" selected>--@AppRes.Select--</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;" ng-show="CopyForm.PolicyID.$invalid && IsClickBtnCopy">@AppRes.ErrorSelectPolicy.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="padding:14px">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.StaffLevel<span style="color:red"> (*)</span></label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <select class="form-control" chosen options="ListStaffLevel" on-no-result="doStuff" data-modal="modal" name="staffLevelId" ng-model="PolicyDetailModel.StaffLevelId" ng-options="list.GlobalListID as list.Name for list in ListStaffLevel" required>
+                                            <option value="" selected>--@AppRes.Select--</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;" ng-show="CopyForm.staffLevelId.$invalid && IsClickBtnCopy">@AppRes.ErrorEmployeeLevel</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <button type="button" class="btn btn-success btn-labeled" ng-click="SaveCopyPolicyDetail(CopyForm)">
+                                            <span class="btn-label">
+                                                <i class="fa fa-save"></i>
+                                            </span>@AppRes.btnCopy
+                                        </button>
+                                        <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                                            <span class="btn-label">
+                                                <i class="fa fa-close"></i>
+                                            </span>@AppRes.btnCancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+            </div>
+        </form>
+    </div>
+</div>

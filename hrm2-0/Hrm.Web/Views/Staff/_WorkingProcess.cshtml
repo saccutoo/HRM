@@ -1,0 +1,66 @@
+﻿@model List<Hrm.Framework.Models.WorkingProcessModel>
+@using Hrm.Common
+<div class="box-arrow-template hrm-v2-scroll pull-left">
+
+    @if (Model.Count > 0)
+    {
+        var checkYear = 0;
+        foreach (var item in Model)
+        {
+            if (item.Status != 50)
+            {
+                <div class="arrow-view orange">
+                    @if (checkYear != item.Year)
+                    {
+                        <div class="arrow-year">@item.Year</div>
+                        checkYear = item.Year;
+                    }
+                    <div class="section-arrown-line">
+                        <div class="connect-line">
+                            @if (item.StartDate != null && item.StartDate != DateTime.MinValue)
+                            {
+                                <span class="time">@item.StartDate.Value.ToString("dd/MM/yyyy")</span>
+                            }
+                            <span class="point"></span>
+                        </div>
+                    </div>
+                    <div class="arrow-template-container ">
+                        <span>@M(item.WorkingprocessTypeId.ToString() + ";" + DataType.MasterData + ";Name")</span>
+                        <div class="arrow-right"></div>
+                    </div>
+                    <div class="arrow-info">
+                        <span>@item.Description</span>
+                        <a class="arrow-view-detail" onclick="viewDetailWorkingProcess(@item.Id,0)">@T("Staff.Detail.ViewDetail")</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="arrow-view green">
+                    @if (checkYear != item.Year)
+                    {
+                        <div class="arrow-year">@item.Year</div>
+                        checkYear = item.Year;
+                    }
+                    <div class="section-arrown-line">
+                        <div class="connect-line">
+                            @if (item.StartDate != null && item.StartDate != DateTime.MinValue)
+                            {
+                                <span class="time">@item.StartDate.Value.ToString("dd/MM/yyyy")</span>
+                            }
+                            <span class="point"></span>
+                        </div>
+                    </div>
+                    <div class="arrow-template-container ">
+                        <span>@M(item.WorkingprocessTypeId.ToString() + ";" + DataType.MasterData + ";Name")</span>
+                        <div class="arrow-right"></div>
+                    </div>
+                    <div class="arrow-info">
+                        <span>@item.Description</span>
+                        <a class="arrow-view-detail"  onclick="viewDetailWorkingProcess(@item.Id,0)">@T("Staff.Detail.ViewDetail",0)</a>
+                    </div>
+                </div>
+            }
+        }
+    }
+</div>

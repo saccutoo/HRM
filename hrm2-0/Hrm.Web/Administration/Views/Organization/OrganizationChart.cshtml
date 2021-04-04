@@ -1,0 +1,135 @@
+﻿@model Hrm.Admin.ViewModels.OrganizationChartViewModel
+@using Hrm.Framework.Helper
+@{
+    ViewBag.Title = T("Setting.OrganizationalStructure");
+    Layout = UrlHelpers.View("~/Views/Shared/_MenuSidebarTop.cshtml");
+}
+<style>
+    .org-chart {
+        background-color: #eef1f6;
+        height: 100%;
+        padding-top: 30px;
+    }
+
+    .grand-father {
+        opacity: .5;
+    }
+
+    .organization-card {
+        transition: all .2s ease;
+        cursor: pointer;
+        position: relative;
+        background-color: #f8f9fa;
+        padding: 10px 15px;
+        margin: 0 auto 30px;
+        width: 225px;
+        min-height: 80px;
+        display: flex;
+        align-items:center;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+        .organization-card .middle-bound {
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+            .organization-card .middle-bound .avatar-circle {
+                height: 42px;
+                width: 42px;
+                display: inline-block;
+                border-radius: 50%;
+                text-align: center;
+            }
+
+                .organization-card .middle-bound .avatar-circle .avatar-inside {
+                    color: #fff;
+                    font-size: 18px;
+                    font-weight: 600;
+                    line-height: 42px;
+                    text-align: center;
+                    background-color: #95D1F3;
+                    opacity: .9;
+                    height: 100%;
+                    border-radius: 50%;
+                }
+
+        .organization-card .profile-details {
+            width: 100%;
+        }
+
+            .organization-card .profile-details .name {
+                font-family: "Roboto-Bold";
+                color: #0070d0;
+                font-size: 13px;
+            }
+
+        .organization-card .name {
+            font-size: 13px;
+        }
+
+        .organization-card .rep-count {
+            position: absolute;
+            left: calc(50% - 12px);
+            bottom: -12px;
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            line-height: 24px;
+            text-align: center;
+            background-color: #3ec5d1;
+            color: #fff;
+            font-size: 10px;
+        }
+
+        .organization-card:hover {
+            -webkit-box-shadow: 0 4px 4px 0 rgba(0,0,0,.11);
+            box-shadow: 0 4px 4px 0 rgba(0,0,0,.11);
+        }
+
+    .org-chart .organization-card .gray-bg {
+        background-color: #f8f9fa;
+        margin: 10px -5px 0;
+        padding: 15px 20px;
+        border-radius: 5px;
+    }
+
+
+    .sec-text-color {
+        color: #607787;
+    }
+
+    .icon-with-text {
+        padding-bottom: 5px;
+    }
+
+    .childs .organization-card {
+        float: left;
+        margin-left: 30px;
+    }
+
+    .child-panel .childs {
+        width: 1000px;
+        height: 100%;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .child-panel {
+        width: 100%;
+        height: 100%;
+    }
+
+    .center-group {
+        display: inline-block;
+        max-width: 990px;
+    }
+
+        .center-group .organization-card:nth-child(4n + 1) {
+            margin-left: 0 !important;
+        }
+</style>
+<div id="organization-chart-panel">
+    @Html.Partial(UrlHelpers.View("~/Administration/Views/Organization/_OrganizationChartView.cshtml"), Model)
+</div>

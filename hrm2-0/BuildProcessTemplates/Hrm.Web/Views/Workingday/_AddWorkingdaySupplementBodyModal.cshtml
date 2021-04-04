@@ -1,0 +1,96 @@
+﻿@model Hrm.Web.ViewModels.AddWorkingdaySupplementViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@{
+    Layout = null;
+    string group1 = "370,459";// đi sớm về muộn
+    string group2 = "371,372,373,374";// nghỉ phép + không lương + bổ sung công 
+}
+
+@if (group1.IndexOf(Model.SupplementTypeIdSelected.ToString()) != -1)
+{
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "model.Date", IsRequired = true, LabelName = T("Workingday.TableHeader.Date").ToString(),Value=Model.WorkingdaySupplement.Date==null ? null : Model.WorkingdaySupplement.Date, DateFormat = "dd/MM/yyyy" })
+        </div>
+        <div class="col-md-6 pd-0 hrm-v2-floating-form">
+                @*@Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Workingday.Unit.NumberMinute").ToString(), Name = "MissingTime", IsAnimationLabel = true, IsRequired = true, })
+                <span  class="hrm-v2-font-13" style="position:absolute;top:20px;right:10px;"> @T("Workingday.Unit.Minute").ToString()</span>*@
+            @Html.Partial(UrlHelpers.FloatingTemplate("_InputMask.cshtml"), new TextEditorModel() { LabelName = T("Workingday.Unit.NumberMinute").ToString(), Name = "model.MissingTime", IsAnimationLabel = true, IsRequired = true,Value= Model.WorkingdaySupplement.MissingTimeDuration==null? null : Model.WorkingdaySupplement.MissingTimeDuration.Value.ToString("HH:mm") })
+            <span class="hrm-v2-font-13" style="position:absolute;top:20px;right:10px;"> @T("Workingday.Unit.Minute").ToString()</span>
+        </div>
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block" style="margin-top:10px;">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.Label.Reason").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownReasonType, ValueField = "Id", Name = "model.ReasonTypeId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", SearchField = true ,Value= Model.WorkingdaySupplement.ReasonTypeId.ToString()})
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block hrm-v2-floating-form" >
+        @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("Workingday.Label.Description").ToString(), IsAnimationLabel = true,Name= "model.Note",Value=Model.WorkingdaySupplement.Note })
+    </div>
+}
+@if (group2.IndexOf(Model.SupplementTypeIdSelected.ToString()) != -1)
+{
+    if (Model.SupplementTypeIdSelected == 373)
+    {
+        @*<div class="infor-fur-lough hrm-v2-font-13"><i class="fas fa-info-circle"></i> <span style="background-color:#FFFFFF;">còn lại 3 phép chưa sử dụng</span></div>*@
+    }
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+            <div class="pull-left pd-0" style="width:calc(100% - 80px)">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "model.StartTime", IsRequired = true, LabelName = T("Workingday.Label.StartDate").ToString(),Value=Model.WorkingdaySupplement.StartTime ==null ? null : Model.WorkingdaySupplement.StartTime, DateFormat = "dd/MM/yyyy" })
+            </div>
+            <div class="pd-0 pull-right">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Time.cshtml"), new TextEditorModel() { Name = "model.FromTime", Value = Model.WorkingdaySupplement.StartTime==null?"08:00": Model.WorkingdaySupplement.StartTime.Value.ToString("HH:mm") })
+            </div>
+        </div>
+        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+            <div class="pull-left pd-0" style="width:calc(100% - 80px)">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "model.EndTime", IsRequired = true, LabelName = T("Workingday.Label.EndDate").ToString(),Value= Model.WorkingdaySupplement.EndTime==null ? null : Model.WorkingdaySupplement.EndTime, DateFormat="dd/MM/yyyy" })
+            </div>
+            <div class="pd-0 pull-right">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Time.cshtml"), new TextEditorModel() { Name = "model.ToTime", Value = Model.WorkingdaySupplement.EndTime == null ? "08:00" : Model.WorkingdaySupplement.EndTime.Value.ToString("HH:mm") })
+            </div>
+        </div>
+    </div>
+    @*<div class="col-md-12 pd-0 display-inline-block" style="pointer-events:none;">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Workingday.Label.WorkingdayExchange").ToString(), Name = "WorkingdayExchange", IsAnimationLabel = true, IsRequired = true, })
+    </div>*@
+    if (Model.SupplementTypeIdSelected == 374)
+    {
+        <div class="col-md-12 pd-0  display-inline-block" >
+            @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.Label.OverTimeRate").ToString(),IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownOverTimeRate, ValueField = "Value", Name = "model.OvertimeRate", SearchField = true, Value = Model.WorkingdaySupplement.OvertimeRate.ToString(), DisplayField="Name" })
+        </div>
+    }
+    <div class="col-md-12 pd-0 display-inline-block" style="margin-top:10px;">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.Label.Reason").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownReasonType, ValueField = "Id", Name = "model.ReasonTypeId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", SearchField = true,Value= Model.WorkingdaySupplement.ReasonTypeId.ToString() })
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block hrm-v2-floating-form" >
+        @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("Workingday.Label.Description").ToString(), IsAnimationLabel = true,Name= "model.Note",Value= Model.WorkingdaySupplement.Note })
+    </div>
+}
+<script>
+    $('#model-date-datetimepicker').on('dp.change', function (e) {
+        if (supplementTypeId==370 || supplementTypeId == 459) {
+            $.ajax(
+            {
+                type: "POST",
+                url: "/Workingday/ChangeDate",
+                data: {
+                    date: $("#model-date-datetimepicker input").val(),
+                    supplementTypeId: supplementTypeId,
+                    workingdays:@Html.Raw(JsonConvert.SerializeObject(Model.Workingdays)),
+                },
+                success: function (response) {
+                    if (response.result!='00:00') {
+                        $("#frm-add-working-supplement input[name='model.MissingTime']").val(response.result);
+                    }
+                    else{
+                        $("#frm-add-working-supplement input[name='model.MissingTime']").val("");
+
+                    }
+                }
+            });
+        }
+    })
+</script>
+

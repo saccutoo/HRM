@@ -1,0 +1,118 @@
+﻿@model Hrm.Admin.ViewModels.AddSalaryTypeTableSalaryElementViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Admin.ViewModels
+@using Hrm.Common
+@{
+    int index = 0;
+}
+<style>
+    .mr-top{
+        margin-top:10px;
+    }
+    .checkbox-add-salary-element-type .cb-control {
+        margin-top:15px;
+    }
+     .checkbox-add-salary-element-type .fa-trash-alt {
+        margin-top:15px;
+    }
+     .disabled-checkbox, .disabled-label{
+          opacity:0.5;
+          pointer-events: none;
+     }
+     .table-request-other{
+         font-size:14px;
+     }
+</style>
+@if (Model.SalaryElements.Count() > 0)
+{
+    <table class="table table-striped table-request-other">
+        <thead>
+            <tr style="background-color:#f3f3f3">
+                <th style="text-align:center">@T("Workingday.Order")</th>
+                <th>@T("SalaryType.SalaryElement")</th>
+                <th>@T("SalaryType.Code")</th>
+                <th>@T("SalaryType.Group")</th>
+                <th style="width:30%">@T("SalaryType.Formular")</th>          
+                <th class="th-permission-edit">@T("SalaryType.PermissionEdit")</th>     
+                <th class="th-payroll-display">@T("SalaryType.PayrollDisplay")</th>
+                <th class="th-payroll-display">@T("SalaryType.ShowPayslip")</th>
+            </tr>
+        </thead>
+        <tbody>          
+            @foreach (var item in Model.SalaryElements)
+            {
+                item.Index=index;
+                if (item.IsEditRow == false && item.Id!=0)
+                {
+                    <tr>
+                        <td style="text-align:center">
+                            @index
+                            <input type="text" value="@item.Id" name="listModel[@index].Id" hidden/>
+                            <input type="text" value="@item.OrderNo" name="listModel[@index].OrderNo" hidden />
+                            <input type="text" value="@item.MergeCells.ToString()" name="listModel[@index].MergeCells" hidden />
+                            <input type="text" value="@item.Css" name="listModel[@index].Css" hidden />
+                        </td>
+                        <td>
+                            @M(item.Id.ToString() + ";" + DataType.SalaryElement + ";Name").ToString()
+                        </td>
+                        <td>
+                            @item.Code
+                            <input type="text" value="@item.Code" name="listModel[@index].Code" hidden />
+                        </td>
+                        <td>
+                            @M(item.TypeId.ToString() + ";" + DataType.MasterData + ";Name").ToString()
+                            <input type="text" value="@item.TypeId" name="listModel[@index].TypeId" hidden />
+                        </td>                       
+                        <td>
+                            @item.Formula
+                            <input type="text" value="@item.Formula" name="listModel[@index].Formula" hidden />
+                        </td>
+                        <td class="td-permission-isedit">
+                            <label class="disabled-label">
+                                @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel()
+                               {
+                                   Name = "ck-checked-permission-isedit-" +
+                                                     index,
+                                   AttributeCheck = "readonly",
+                                   Attribute = item.IsEdit == true ? "checked" : "",
+                                   Id = "listModel[" + index + "].IsEdit",
+                                   Value = "true",
+                                   Class = "disabled-checkbox"
+                               })
+                            </label>
+                          
+                        </td>
+
+                        <td class="td-permission-show-table-paycheck">    
+                            <label class="disabled-label">
+                                @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "ck-checked-permission-show-table-paycheck-" + index, Attribute = item.IsShowSalary == true ? "checked" : "", Id = "listModel[" + index + "].IsShowSalary", AttributeCheck = "readonly", Value = "true",Class= "disabled-checkbox" })
+                            </label>        
+                           
+                        </td>
+                        <td class="td-permission-show-table-paycheck td-delete">    
+                            <label class="disabled-label">
+                                @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "ck-checked-permission-show-table-paycheck-td-delete" + index, Attribute = item.IsShowPayslip == true ? "checked" : "", Id = "listModel[" + index + "].IsShowPayslip", AttributeCheck = "readonly", Value = "true" , Class = "disabled-checkbox" })
+                            </label>  
+                            <input type="text" name="listModel[@index].Index" value="@index" hidden/>                         
+                            <a class="fas fa-trash-alt" onclick="deleteRow(@item.Index)" title=@T("table.button.delete")></a>
+                            <a class="fas fa-pencil-alt" onclick="editRow(@item.Id)" title=@T("Button.Edit") style="margin-right:5px;color:#2CA01C"></a>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr class="checkbox-add-salary-element-type" id="checkbox-add-salary-element-type-@index">                                   
+                        @Html.Partial(UrlHelpers.TemplateAdmin("SalaryType", "_ReloadRowTable.cshtml"), new AddSalaryTypeTableSalaryElementViewModel{ DynamicSalaryElements = Model.DynamicSalaryElements, SalaryElement = item })
+                    </tr>
+                }
+                index++;
+            }
+        </tbody>
+    </table>
+}
+
+
+
+

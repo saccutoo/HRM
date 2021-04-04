@@ -1,0 +1,91 @@
+﻿@using HRM.App_LocalResources;
+<div class="container-fluid">
+
+    <div id="SaveContent" class="row" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-heading">Thêm mới</div>
+                <div class="panel-body">
+                    <form role="form" name="SaveForm" ng-submit="SaveAction(tableInfo.AddUrl,SaveForm)">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tên TV <span style="color: red">*</span></label>
+                                    <input required type="text" data-modal="modal" name="name" class="form-control width"  ng-model="editData.Name" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Tên TA <span style="color: red">*</span></label>
+                                    <input required type="text" data-modal="modal" name="nameEN" class="form-control width"  ng-model="editData.NameEN" />
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label>Thứ tự <span style="color: red">*</span></label>
+                                    <input required type="text" data-modal="modal" name="orderNo" class="form-control width" ng-model="editData.OrderNo" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Param <span style="color: red">*</span></label>
+                                    <input required type="text" data-modal="modal" name="param"  class="form-control width" ng-model="editData.Param" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Show Menu </label><br />
+                                    <input type="checkbox" data-modal="modal" name="includeMenu"  ng-model="editData.IncludeMenu" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Trạng thái <span style="color: red">*</span></label>
+
+                                    <select id="ddlListStatus" class="form-control width" data-modal="modal" ng-model="editData.IsActive" ng-options="status.Value as status.Name for status in getListStatus" convert-dropdown>
+                                        <option value="" disabled selected>--Select Status--</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Url <span style="color: red">*</span></label>
+                                    <input required type="text" data-modal="modal" name="url" class="form-control width" ng-model="editData.Url" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Menu Cha <span style="color: red">*</span></label>
+                                    <select id="ddlParentMenu" class="form-control width" data-modal="modal" ng-model="editData.ParentID" ng-options="list.MenuID as list.Name for list in getListParent" ng-required="true" convert-dropdown>
+                                        <option value="" disabled selected>--Select Menu Parent--</option>
+                                    </select>
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label>Vị trí Menu <span style="color: red">*</span></label>
+                                    <select id="ddlParentMenu" class="form-control width" data-modal="modal" ng-model="editData.MenuPositionID" ng-options="list.GlobalListID as list.Name for list in getListMenuPosition" ng-required="true" convert-dropdown>
+                                        <option value="" disabled selected>--Select Menu Position--</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Action Name <span style="color: red">*</span></label>
+                                    <input required type="text" data-modal="modal" name="actionName" class="form-control width" ng-model="editData.ActionName" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-9 col-md-push-3">
+                                <button type="submit" class="btn btn-labeled btn-success" style="float:left">
+                                    <span class="btn-label">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </span>@AppRes.SaveData
+                                </button>
+                                &nbsp;
+                                <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>

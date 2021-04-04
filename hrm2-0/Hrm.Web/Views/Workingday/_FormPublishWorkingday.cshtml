@@ -1,0 +1,76 @@
+﻿@using Hrm.Common
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@model Hrm.Web.ViewModels.PublishWorkingdayViewModel
+
+
+<div>
+    <div class="hrm-v2-modal-header">@T("Workingday.Puslish.SelectTheShiftYouWantToFinalize")</div>
+    <div class="hrm-v2-modal-body">
+        <form id="frm-log-publish-workingday">
+            <div class="add-master-data-body  hrm-v2-scroll">
+                <div class="col-md-12 pd-0">
+                    <div class="col-md-12 pd-r-0" style="padding-left:10px;">
+                        <div class="form-group">
+                            <div class="col-md-12 pd-0 display-inline-block">
+                                @Html.Partial(UrlHelpers.Template("_MultiSelect.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Shift").ToString(), IsAnimationLabel = true, Data = Model.Shifts, ValueField = "Id", DisplayField = "Name", Name = "listData",IsRequired=true })
+                            </div>
+                        </div>
+                        
+                    </div>                                     
+                </div>              
+            </div>
+            <div class="col-md-12">
+                <div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-model", OnClick = "publishWorkingdayByShift()", Value = "Salary.Fasteners", ClassName= "hrm-v2-btn-save", Type = "button" })
+                </div>
+                <div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "MasterData.Close",  ClassName = "hrm-v2-btn-close" })
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+
+    function publishWorkingdayByShift() {
+        $("#frm-log-publish-workingday span[name*='-error']").text("");
+        var data = $('#frm-log-publish-workingday').serializeArray();
+        var date = $('#month-working-day-all-staff').val();
+        if (date == null || date=="") {
+            ShowMessage(false, msgFalse,@T("Workingday.Puslish.YouHaveNotSelectedAPayMonth"), 500, 3000);
+        }
+        else {
+            var dateSplit = date.split("/");
+            if (dateSplit.length>1) {
+                data.push({ name: "month", value: dateSplit[0] });
+                data.push({ name: "year", value: dateSplit[1] });
+                $.ajax({
+                    type: "POST",
+                    url: "/Workingday/PublishWorkingdayByListShift",
+                    data: data,
+                    success: function (response) {
+                        if (response.Invalid) {
+                            var validations = response.Result;
+                            RenderError(validations, "frm-log-publish-workingday");
+                        }
+                        if (response.result.Success == true) {
+                            $("#myModal").modal("hide");
+                            ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                        }
+                        else {
+                            ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                        }
+
+                    }
+                });
+            }
+            else {
+                ShowMessage(false, msgFalse, @T("Workingday.Puslish.TheMonthFormatIsNotInComplianceWithTheRegulations"), 500, 3000);
+            }
+           
+        }
+       
+    }
+
+</script>

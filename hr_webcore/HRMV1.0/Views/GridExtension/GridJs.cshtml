@@ -1,0 +1,1698 @@
+﻿@using HRM.App_LocalResources
+
+<!-------------------------------------XỬ LÝ FILTER--------------------------------------------------------->
+<style type="text/css">
+    #frmFilter {
+        padding-top: 5px;
+        width: 100%;
+    }
+
+    .header-filter {
+        background-color: #E3E3E3;
+        border-bottom: 1px solid #e5e5e5;
+        padding: 5px;
+        width: 100%;
+        margin-bottom: 5px;
+        height: 28px;
+    }
+</style>
+<script>
+    var nameController;
+    var nameGird;
+    var nameAction;
+    var click = 0;
+    var listClick = new Array();
+    var array = new Array();
+    var showFilter = 1;
+    var textFilerAndOr;
+    function CreateFilter(controllerName, actionName, gridName) {
+        $.ajax(
+        {
+            url: "/Filter/Index",
+            type: "POST",
+            dataType: "html",
+            data: {
+                controller: controllerName,
+                gridName: gridName
+            },
+            async: false,
+            success: function (response) {
+                $("#divFilter" + gridName).show();
+                $("#divFilter" + gridName).html(response);
+
+                nameController = controllerName;
+                nameGird = gridName;
+                nameAction = actionName;
+                addFilter();
+
+                var w = $('table.scroll').width();
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+
+    function ShowFilter(controllerName, actionName, gridName) {
+        $.ajax(
+        {
+            url: "/Filter/Index",
+            type: "POST",
+            dataType: "html",
+            data: {
+                controller: controllerName,
+                gridName: gridName
+            },
+            async: false,
+            success: function (response) {
+                $("#divFilter" + gridName).show();
+                $("#divFilter" + gridName).html(response);
+                nameController = controllerName;
+                nameGird = gridName;
+                nameAction = actionName;
+
+                click = 0;
+                listClick = new Array();
+                var w = $('table.scroll').width();
+                $("#upHideFilter").removeClass("glyphicon glyphicon-chevron-up").addClass("glyphicon glyphicon-chevron-down");
+                showFilter = 0;
+                $("#divFormFilter").hide();
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+    }
+
+
+
+    function upHideFilter() {
+        //$("#upHideFilter").hide();
+        //$("#downShowFilter").show();
+        if (showFilter == 1) {
+            $("#upHideFilter").removeClass("glyphicon glyphicon-chevron-up").addClass("glyphicon glyphicon-chevron-down");
+            showFilter = 0;
+            $("#divFormFilter").hide();
+            //  $("#delFilter").show();
+        } else {
+            $("#upHideFilter").removeClass("glyphicon glyphicon-chevron-down").addClass("glyphicon glyphicon-chevron-up");
+            showFilter = 1;
+            $("#divFormFilter").show();
+            //  $("#delFilter").hide();
+        }
+        //call hàm bên erp-table.js
+        scrollTable();
+    }
+
+    function downShowFilter() {
+        $("#upHideFilter").show();
+        $("#downShowFilter").hide();
+        $("#divFormFilter").show();
+
+    }
+    function Addlinkfilter(button) {
+        $(button).removeClass('fa fa-unlink');
+        $(button).addClass('fa fa-link');
+        $(button).css('color', 'blue');
+        $(button).removeAttr("onclick");
+        $(button).attr('onclick', "AddUnlinkfilter(this)");
+    }
+    function AddUnlinkfilter(button) {
+        $(button).removeClass('fa fa-link');
+        $(button).addClass('fa fa-unlink');
+        $(button).css('color', '#CCCCCC');
+        $(button).removeAttr("onclick");
+        $(button).attr('onclick', "Addlinkfilter(this)");
+    }
+    function addFilter1(button) {
+        $(button).removeClass('fa fa-link');
+        $(button).addClass('fa fa-unlink');
+        $(button).removeAttr("onclick");
+        $(button).attr("onclick", "Addlinkfilter(this)");
+        click++;
+
+        listClick.push(click);
+
+        @*var array =@Html.Raw(Json.Encode(
+            ((IEnumerable<System.Web.Mvc.SelectListItem>)ViewBag.ListControllerColumn).Select(col => new
+                {
+                    Id = col.Value,
+                    Name = col.Text
+                })
+        )
+      );*@
+        var drop = '<select style="" class="form-control" id="Column' + click + '" name="Column' + click + '" onchange="GetDataType(' + click + ')">';
+        $.each(array, function (index, value) {
+            if (value.Id = "AmountVip") value.Name="Số lượng khách Vip"
+            drop += '<option value="' + value.Id + '">' + value.Name + '</option>';
+        });
+        drop += '</select>';
+        var htmlFilter = '<div class="row"> <div class="col-md-12" id="rowFilter' + click + '" style="padding-bottom: 5px;padding-left:17px">' +
+            '<div class="col-md-3"><input type="hidden" id="hiddenType' + click + '"/> ' +
+            drop +
+            ' </div>' +
+            '<div class="col-md-2" id="divDataType' + click + '" style="width:150px;">' +
+            '<select style="" class="form-control" id="DataType' + click + '" name="DataType' + click + '"></select>' +
+            ' </div>' +
+            '<div class="col-md-2" id="divCombo' + click + '" style="width:150px;">' +
+            '<select style="" class="form-control" id="Combo' + click + '" name="Combo' + click + '"></select>' +
+            ' </div>' +
+            '<div class="col-md-2" id="divComboLike' + click + '" style="width:150px;">' +
+            '<select style="" class="form-control" id="ComboLike' + click + '" name="ComboLike' + click + '"></select>' +
+            ' </div>' +
+            '<div class="col-md-3" id="divTextFilter' + click + '">' +
+            '  <input onkeyup="CheckActionForm()" style="" type="text" class="form-control" id="TextFilter' + click + '"/>' +
+            ' </div>' +
+            ' <div class="col-md-2" id="divAnd' + click + '">' +
+            '<select style=" width:90px" class="form-control" id="TypeAdd' + click + '" name="TypeAdd' + click + '">' +
+            '<option value="AND">@AppRes.AND</option><option value="OR">@AppRes.Or</option>' +
+            '</select>' +
+            ' </div>' +
+            ' <div class="col-md-1" style="padding-top:5px;font-size:16px;">' +
+            ' <a style="color:#CCCCCC;" id="link' + click + '" class="fa fa-unlink"  onclick="Addlinkfilter(this)"></a>' +
+            ' </div>' +
+            ' <div class="col-md-1" style="padding-top:5px;font-size:16px;">' +
+            ' <a style="color:#CCCCCC;" class="glyphicon glyphicon-remove" onclick="onDeleteRowFilter(' + click + ')"></a>' +
+            ' </div>' +
+            '</div></div>';
+
+        $("#divAddFilter").append(htmlFilter);
+        ShowHideAnd();
+        GetDataType(click);
+        $("#txtSaveFilter").val("");
+        $("#divSavedFilter").hide();
+        $("#txtSaveFilter").show();
+        $("#lblSaveFilter").show();
+        $("#chkSaveFilter").removeAttr("disabled");
+        $("#chkSaveFilter").prop('checked', false);
+        $("#iTitleFilter").html("");
+        $("#iTitleFilter").hide();
+        //call hàm bên erp-table.js
+        scrollTable();
+        $("#content").css({ 'height': ($("#content").height() + 30) + 'px' });
+
+        if (typeof SetDataControl != 'undefined' && $.isFunction(SetDataControl())) {
+            SetDataControl();
+        }
+
+
+
+    }
+    function sortDESC(orderby) {
+        $.ajax({
+            url: "@Url.Action("Index", "P")",
+            //type: "POST",
+            data: { partnerID: sMccAccList },
+            success: function (result) {
+                ;
+                if (result.Status == 1) {
+                    $.smallBox({
+                        title: '@AppRes.MS_Title',
+                        content: ' @AppRes.MS_Delete_success',//'',
+                        color: "#C46A69",
+                        iconSmall: "fa fa-times fa-2x fadeInRight",
+                        timeout: 4000
+                    });
+                    location.reload();
+                    return;
+                }
+                if (result.Status == 0) {
+                    $.smallBox({
+                        title: '@AppRes.MS_Title',
+                        content: '@AppRes.MS_DeleteError',//,
+                        color: "#C46A69",
+                        iconSmall: "fa fa-times fa-2x fadeInRight",
+                        timeout: 4000
+                    });
+                    return;
+                }
+            }
+        })
+    }
+    //Thêm dòng lọc dữ liệu
+    function addFilter() {
+        click++;
+
+        listClick.push(click);
+
+        @*var array =@Html.Raw(Json.Encode(
+            ((IEnumerable<System.Web.Mvc.SelectListItem>)ViewBag.ListControllerColumn).Select(col => new
+            {
+                Id = col.Value,
+                Name = col.Text
+            })
+        )
+      );*@
+        var drop = '<select style="" class="form-control" id="Column' + click + '" name="Column' + click + '" onchange="GetDataType(' + click + ')">';
+        $.each(array, function (index, value) {
+            if (value.Id == "AmountVip") {
+                value.Name = "@AppRes.AmountVip"
+            }
+            if (value.Id == "PercentAmountVip") {
+                value.Name = "@AppRes.PercentAmountVip"
+            }
+            if (value.Id == "MarginVip") {
+                value.Name = "@AppRes.MarginVip"
+            }
+            if (value.Id == "PercentMarginVip") {
+                value.Name = "@AppRes.PercentMarginVip"
+            }
+            if (value.Id == "AmountAdvance") {
+                value.Name = "@AppRes.AmountAdvance"
+            }
+            if (value.Id == "PercentAmountAdvance") {
+                value.Name = "@AppRes.PercentAmountAdvance"
+            }
+            if (value.Id == "MarginAdvance") {
+                value.Name = "@AppRes.MarginAdvance"
+            }
+            if (value.Id == "PercentMarginAdvance") {
+                value.Name = "@AppRes.PercentMarginAdvance"
+            }
+            if (value.Id == "AmountBasic") {
+                value.Name = "@AppRes.AmountBasic"
+            }
+            if (value.Id == "PercentAmountBasic") {
+                value.Name = "@AppRes.PercentAmountBasic"
+            }
+            if (value.Id == "MarginBasic") {
+                value.Name = "@AppRes.MarginBasic"
+            }
+            if (value.Id == "PercentMarginBasic") {
+                value.Name = "@AppRes.PercentMarginBasic"
+            }
+            if (value.Id == "AmountStandard") {
+                value.Name = "@AppRes.AmountStandard"
+            }
+            if (value.Id == "PercentAmountStandard") {
+                value.Name = "@AppRes.PercentAmountStandard"
+            }
+            if (value.Id == "MarginStandard") {
+                value.Name = "@AppRes.MarginStandard"
+            }
+            if (value.Id == "PercentMarginStandard") {
+                value.Name = "@AppRes.PercentMarginStandard"
+            }
+            drop += '<option value="' + value.Id + '">' + value.Name + '</option>';
+        });
+        drop += '</select>';
+        var htmlFilter = '<div class="row"> <div class="col-md-12" id="rowFilter' + click + '" style="padding-bottom: 5px;padding-left:17px">' +
+            '<div class="col-md-3"><input type="hidden" id="hiddenType' + click + '"/> ' +
+            drop +
+            ' </div>' +
+            '<div class="col-md-2" id="divDataType' + click + '" style="width:150px;">' +
+            '<select style="" class="form-control" id="DataType' + click + '" name="DataType' + click + '"></select>' +
+            ' </div>' +
+            '<div class="col-md-2" id="divCombo' + click + '" style="width:150px;">' +
+            '<select style="" class="form-control" id="Combo' + click + '" name="Combo' + click + '"></select>' +
+            ' </div>' +
+            '<div class="col-md-2" id="divComboLike' + click + '" style="width:150px;">' +
+            '<select style="" class="form-control" id="ComboLike' + click + '" name="ComboLike' + click + '"></select>' +
+            ' </div>' +
+            '<div class="col-md-3" id="divTextFilter' + click + '">' +
+            '  <input onkeyup="CheckActionForm()" style="" type="text" class="form-control" id="TextFilter' + click + '"/>' +
+            ' </div>' +
+            ' <div class="col-md-2" id="divAnd' + click + '">' +
+            '<select style=" width:90px" class="form-control" id="TypeAdd' + click + '" name="TypeAdd' + click + '">' +
+            '<option value="AND">@AppRes.AND</option><option value="OR">@AppRes.Or</option>' +
+            '</select>' +
+            ' </div>' +
+            ' <div class="col-md-1" style="padding-top:5px;font-size:16px;">' +
+            ' <a style="color:#CCCCCC;" id="link' + click + '" class="fa fa-unlink" onclick="Addlinkfilter(this)"></a>' +
+            ' <a style="color:#CCCCCC;" class="glyphicon glyphicon-remove" onclick="onDeleteRowFilter(' + click + ')"></a>' +
+            ' </div>' +
+            '</div></div>';
+        $("#divAddFilter").append(htmlFilter);
+        ShowHideAnd();
+        GetDataType(click);
+        $("#txtSaveFilter").val("");
+        $("#divSavedFilter").hide();
+        $("#txtSaveFilter").show();
+        $("#lblSaveFilter").show();
+        $("#chkSaveFilter").removeAttr("disabled");
+        $("#chkSaveFilter").prop('checked', false);
+        $("#iTitleFilter").html("");
+        $("#iTitleFilter").hide();
+        //call hàm bên erp-table.js
+        scrollTable();
+        $("#content").css({ 'height': ($("#content").height() + 30) + 'px' });
+
+        if (typeof SetDataControl != 'undefined' && $.isFunction(SetDataControl())) {
+            SetDataControl();
+        }
+
+
+
+    }
+
+    //Xóa dòng dữ liệu
+    function onDeleteRowFilter(index) {
+
+        $("#rowFilter" + index).remove();
+
+        listClick = jQuery.grep(listClick, function (value) {
+            return value != index;
+        });
+        ShowHideAnd();
+    }
+
+    //Hiển thị hoặc ẩn kết nối và hoặc
+    function ShowHideAnd() {
+        var max = Math.max.apply(Math, listClick); // 1
+
+        $.each(listClick, function (index, value) {
+            if (value != max) {
+                $("#divAnd" + value).show();
+            }
+            else {
+                $("#divAnd" + max).hide();
+            }
+        });
+    }
+
+    //Lấy dữ liệu kiểu filter
+    function GetDataType(index) {
+
+        var nameCode = $("#Column" + index).val();
+        // var controllerName = nameController;
+        var select = "";
+        $.ajax(
+        {
+            url: "/Filter/GetDataType",
+            type: "POST",
+            dataType: "json",
+            data: {
+                nameCode: nameCode,
+                controllerName: nameController,
+                gridName: nameGird
+            },
+            async: false,
+            success: function (response) {
+                ;
+                $("#hiddenType" + index).val(response.dataType);
+                if (response.dataType == 4 || response.dataType == 6) {
+                    $("#divDataType" + index).hide();
+                    $("#divTextFilter" + index).hide();
+                    $("#divComboLike" + index).hide();
+                    $("#divCombo" + index).show();
+                    select = $("#Combo" + index);
+                }
+                else if (response.dataType == 5) {
+                    $("#divDataType" + index).hide();
+                    $("#divTextFilter" + index).hide();
+                    $("#divCombo" + index).hide();
+                    $("#divComboLike" + index).show();
+                    select = $("#ComboLike" + index);
+                }
+                else if (response.dataType == 3) {
+                    $("#divDataType" + index).show();
+                    $("#divTextFilter" + index).show();
+                    $("#divCombo" + index).hide();
+                    $("#divComboLike" + index).hide();
+                    //<input type=”text” name=”mydate” placeholder=”Select a date” class=”form-control datepicker” >
+                    // $("#TextFilter" + index).kendoDatePicker()
+                    //  $("#divTextFilter" + index).html('<input  onkeyup="CheckActionForm()" style="" data-dateformat="dd/MM/yyyy" type="text" class="form-control datepicker" id="TextFilter' + click + '"/>');
+                    $("#TextFilter" + index).val("");
+                    $("#TextFilter" + index).datepicker({
+                        dateFormat: 'dd/mm/yy',
+                        prevText: '<i class="fa fa-chevron-left"></i>',
+                        nextText: '<i class="fa fa-chevron-right"></i>',
+                    });
+                    select = $("#DataType" + index);
+                }
+                else if (response.dataType == 2) {
+                    $("#divDataType" + index).show();
+                    $("#divTextFilter" + index).show();
+                    $("#divCombo" + index).hide();
+                    $("#divComboLike" + index).hide();
+                    $("#divTextFilter" + index).html('<input  onkeyup="CheckActionForm1(this)" style="" type="text" class="form-control" id="TextFilter' + index + '"/>');
+                    select = $("#DataType" + index);
+
+                }
+                else {
+                    $("#divDataType" + index).show();
+                    $("#divTextFilter" + index).show();
+                    $("#divCombo" + index).hide();
+                    $("#divComboLike" + index).hide();
+                    $("#divTextFilter" + index).html('<input  onkeyup="CheckActionForm()" style="" type="text" class="form-control" id="TextFilter' + index + '"/>');
+                    select = $("#DataType" + index);
+
+                }
+                select.children().remove();
+                if (response.data) {
+                    $(response.data).each(function (index, item) {
+                        select.append($("<option>").val(item.Value).text(item.Text));
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+    }
+
+    //Hàm dáp dụng Filter
+    function ApplyFilter() {
+        debugger;
+        var strFilter = GetStringFilter();
+
+        if (strFilter != "") {
+            if ($("#chkSaveFilter").is(':checked')) {
+                var txtSaveFilter = $("#txtSaveFilter").val();
+                if (txtSaveFilter == "") {
+                    $.smallBox({
+                        title: '@AppRes.MS_Title',
+                        content: '@AppRes.MS_FilterSave',
+                        color: "#C46A69",
+                        iconSmall: "fa fa-times fa-2x fadeInRight",
+                        timeout: 4000
+                    });
+                }
+                else {
+                    SaveFilter();
+                }
+
+            }
+
+            @*var link = "@Html.EncodedActionParameter("filter", "Customer", "Index", new { @filterString = "1", @abc="2" })";
+            window.location.replace(link);*@
+            // alert(link)
+
+            var scroll_pos = (0);
+            $('html, body').animate({ scrollTop: (scroll_pos) }, '2000');
+
+            //Call funtion load dữ liệu của View
+            @*var functionName = "LoadData" + '@ViewBag.FilterGirdName';
+            window[functionName]();*@
+            $("#" + nameGird + "Page").val(1);
+            $("#" + nameGird + "PageIndex").val(1);
+            LoadDataForGrid(nameController, nameAction, nameGird, strFilter, "");
+        }
+        else {
+            // ResetFilter();
+            $.smallBox({
+                title: '@AppRes.MS_Title',
+                content: '@AppRes.MS_FilterEmpty',
+                color: "#C46A69",
+                iconSmall: "fa fa-times fa-2x fadeInRight",
+                timeout: 4000
+            });
+        }
+    }
+
+    //Reset Filter
+    function ResetFilter() {
+        var scroll_pos = (0);
+        $('html, body').animate({ scrollTop: (scroll_pos) }, '2000');
+        $("#divFilter" + nameGird).html("");
+        $("#divFilter" + nameGird).hide();
+
+        LoadDataForGrid(nameController, nameAction, nameGird, "", "");
+        click = 0;
+        listClick = new Array();
+        array = new Array();
+        if (typeof window['ResetFilterControl'] != 'undefined' && $.isFunction(window['ResetFilterControl'])) {
+            window['ResetFilterControl']();
+        }
+    }
+
+    //Hàm trả về chuỗi filter truyền xuống
+
+    //Hàm trả về chuỗi filter truyền xuống
+    function GetStringFilter() {
+        debugger
+        var strFilter = "";
+        var columnCode = "";
+        var dataType = "";
+        var textFilter = "";
+        var comboFilter = "";
+        var comboLikeFilter = "";
+        var typeAdd = "";
+        var typeSearch = "";
+        var i = 0, j = 0;
+        var currTypeAdd = "";
+        var max = Math.max.apply(Math, listClick);
+        $.each(listClick, function (index, value) {
+            debugger
+            columnCode = $("#Column" + value).val();
+            dataType = $("#DataType" + value).val();
+
+            textFilter = $("#TextFilter" + value).val();
+            comboFilter = $("#Combo" + value).val();
+            comboLikeFilter = $("#ComboLike" + value).val();
+            typeSearch = $("#hiddenType" + value).val();
+
+
+            if (typeSearch == 6) { // kiểu combo lọc in
+                var c1 = '#divCombo' + value;
+                if ($(c1).has('option').length > 0) {
+                    if (comboFilter != null && comboFilter != "") {
+                        if (i > 0 && j == 0) {//trường hợp 1 liên kết có nhiều điều kiện lọc
+                            strFilter += " " + columnCode + " in (" + comboFilter + ")";
+                        }
+                        else if (j > 0) {//kết thúc liên kết có thể tạo liên kết mới
+                            strFilter += "" + columnCode + " in (" + comboFilter + "))";
+                        }
+                        else {//trường hợp tạ liên kết mới
+                            strFilter += "(" + columnCode + " in (" + comboFilter + ")";
+                        }
+                        if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                            i++;//trường hợp có liên kết
+                        } else {
+                            //trường hợp không liên kết
+                            i = -1;
+                            j++;
+                        }
+                        //strFilter += " customerid in (select customerid from Customer_MCCAccount where Status=  " + comboFilter + ")";
+                        textFilter = "";
+                        //strFilter += " " + columnCode + " in (" + comboFilter + ")";
+                        //textFilter = "";
+                        if (strFilter != "") {
+                            if (value != max) {
+                                typeAdd = $("#TypeAdd" + value).val();
+                                if (typeAdd != undefined) {
+                                    if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                                        strFilter += " " + typeAdd;
+                                    } else {
+                                        // đóng liên kết khi không có liên kết
+                                        strFilter += ") " + typeAdd;
+                                        i = 0; j = 0;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            else if (typeSearch == 4 || typeSearch == 5) { // 4 combo lọc 1, 5 cobo lọc nhiều
+                if (typeSearch == 4) {
+                    var c1 = '#divCombo' + value;
+                    if ($(c1).has('option').length > 0) {
+                        if (comboFilter != null && comboFilter != "") {
+                            if (columnCode == "StatusMccAccount") {
+                                if (i > 0 && j == 0) {//trường hợp 1 liên kết có nhiều điều kiện lọc
+                                    strFilter += " customerid in (select customerid from Customer_MCCAccount where Status=  " + comboFilter + ")";
+                                }
+                                else if (j > 0) {//kết thúc liên kết có thể tạo liên kết mới
+                                    strFilter += " customerid in (select customerid from Customer_MCCAccount where Status = " + comboFilter + "))";
+                                }
+                                else {//trường hợp tạ liên kết mới
+                                    strFilter += "(customerid in (select customerid from Customer_MCCAccount where Status = " + comboFilter + ")";
+                                }
+                                if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                                    i++;//trường hợp có liên kết
+                                } else {
+                                    //trường hợp không liên kết
+                                    i = -1;
+                                    j++;
+                                }
+                                //strFilter += " customerid in (select customerid from Customer_MCCAccount where Status=  " + comboFilter + ")";
+                                textFilter = "";
+                            }
+
+                            else {
+                                if (i > 0 && j == 0) {//trường hợp 1 liên kết có nhiều điều kiện lọc
+                                    strFilter += " " + columnCode + "=" + comboFilter;
+                                }
+                                else if (j > 0) {//kết thúc liên kết có thể tạo liên kết mới
+                                    strFilter += " " + columnCode + "=" + comboFilter + ")";
+                                }
+                                else {//trường hợp tạ liên kết mới
+                                    strFilter += " (" + columnCode + "=" + comboFilter;
+                                }
+                                if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                                    i++;//trường hợp có liên kết
+                                } else {
+                                    //trường hợp không liên kết
+                                    i = -1;
+                                    j++;
+                                }
+                                //strFilter += " customerid in (select customerid from Customer_MCCAccount where Status=  " + comboFilter + ")";
+                                textFilter = "";
+                                //strFilter += " " + columnCode + "=" + comboFilter;
+
+                            }
+
+                            if (strFilter != "") {
+                                if (value != max) {
+                                    typeAdd = $("#TypeAdd" + value).val();
+                                    if (typeAdd != undefined) {
+                                        if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                                            strFilter += " " + typeAdd;
+                                        } else {
+                                            // đóng liên kết khi không có liên kết
+                                            strFilter += ") " + typeAdd;
+                                            i = 0; j = 0;
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+                else if (typeSearch == 5) {
+                    var c2 = '#divComboLike' + value;
+                    if ($(c2).has('option').length > 0) {
+                        if (comboLikeFilter != null && comboLikeFilter != "") {
+
+                            if (i > 0 && j == 0) {//trường hợp 1 liên kết có nhiều điều kiện lọc
+                                strFilter += " " + columnCode + " Like N'%," + comboLikeFilter + ",%'";
+                            }
+                            else if (j > 0) {//kết thúc liên kết có thể tạo liên kết mới
+                                strFilter += " " + columnCode + " Like N'%," + comboLikeFilter + ",%')";
+                            }
+                            else {//trường hợp tạ liên kết mới
+                                strFilter += "( " + columnCode + " Like N'%," + comboLikeFilter + ",%'";
+                            }
+                            if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                                i++;//trường hợp có liên kết
+                            } else {
+                                //trường hợp không liên kết
+                                i = -1;
+                                j++;
+                            }
+                            //strFilter += " customerid in (select customerid from Customer_MCCAccount where Status=  " + comboFilter + ")";
+                            textFilter = "";
+
+                            //strFilter += " " + columnCode + " Like N'%," + comboLikeFilter + ",%')";
+                            //alert('c');
+                            //if ($("#link" + value).hasClass("fa-unlink")) {
+
+                            //    strFilter += " " + columnCode + " Like N'%," + comboLikeFilter + ",%')";
+                            //}
+                            if (strFilter != "") {
+                                if (value != max) {
+                                    typeAdd = $("#TypeAdd" + value).val();
+                                    if (typeAdd != undefined) {
+                                        if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                                            strFilter += " " + typeAdd;
+                                        } else {
+                                            // đóng liên kết khi không có liên kết
+                                            strFilter += ") " + typeAdd;
+                                            i = 0; j = 0;
+                                        }
+                                    }
+                                }
+                            }
+                            //if (value != max) {
+                            //    typeAdd = $("#TypeAdd" + value).val();
+
+                            //    strFilter += " " + typeAdd;
+                            //}
+                        }
+                    }
+                }
+            }
+
+            else if (textFilter != "") {
+
+                //textFilter  = "(" + textFilter;
+                if (typeSearch == 3) {
+                    if (dataType != null) {
+                        if (dataType.length > 0) {
+                            //if (i > 0 && j == 0) {//trường hợp 1 liên kết có nhiều điều kiện lọc
+                            //    res = dataType.replace("#value", " (CONVERT(datetime,'" + textFilter + "' ,103))");
+                            //}
+                            //else if (j > 0) {//kết thúc liên kết có thể tạo liên kết mới
+                            //    res = dataType.replace("#value", " (CONVERT(datetime,'" + textFilter + "' ,103)))");
+                            //}
+                            //else {//trường hợp tạ liên kết mới
+                            //    res = dataType.replace("#value", " ((CONVERT(datetime,'" + textFilter + "' ,103))");
+                            //}
+                            //if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                            //    i++;//trường hợp có liên kết
+                            //} else {
+                            //    //trường hợp không liên kết
+                            //    i = -1;
+                            //    j++;
+                            //}
+                            //textFilter = "";
+                            res = dataType.replace("#value", " CONVERT(datetime,'" + textFilter + "' ,103)");
+                            //if (listClick.length > 1 && i > 0 && j == 0) {
+                            //    res = dataType.replace("#value", " CONVERT(datetime,'" + textFilter + "' ,103)");
+                            //} else if (j > 0) {
+                            //    res = dataType.replace("#value", " CONVERT(datetime,'" + textFilter + "' ,103))");
+                            //} else {
+                            //    res = dataType.replace("#value", " CONVERT(datetime,'" + textFilter + "' ,103)");
+                            //}
+                            //if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                            //    i++;//trường hợp có liên kết
+                            //}else {
+                            //    //trường hợp không liên kết
+                            //    i = -1;
+                            //    j++;
+                            //}
+                        } else {
+                            res = textFilter;
+                        }
+                    }
+
+                    if (columnCode == "CustomerManagerDate") {
+                        if (i > 0 && j == 0) {//trường hợp 1 liên kết có nhiều điều kiện lọc
+                            strFilter += " customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                                " where sc.Status=1 and CONVERT(datetime, CONVERT(varchar(10),sc.CreatedDate,103),103)  " + res + "))"
+                        }
+                        else if (j > 0) {//kết thúc liên kết có thể tạo liên kết mới
+                            strFilter += " customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                                " where sc.Status=1 and CONVERT(datetime, CONVERT(varchar(10),sc.CreatedDate,103),103)  " + res + ")))"
+                        }
+                        else {//trường hợp tạ liên kết mới
+                            strFilter += "( customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                                " where sc.Status=1 and CONVERT(datetime, CONVERT(varchar(10),sc.CreatedDate,103),103)  " + res + "))"
+                        }
+                        if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                            i++;//trường hợp có liên kết
+                        } else {
+                            //trường hợp không liên kết
+                            i = -1;
+                            j++;
+                        }
+                        //<!-- if (strfilter != "") { -->
+                        //    <!-- if (value != max) { -->
+                        //        <!-- typeadd = $("#typeadd" + value).val(); -->
+                        //        <!-- if (typeadd != undefined) { -->
+                        //            <!-- if (listclick.length > 1 && $("#link" + value).hasclass("fa-link")) { -->
+                        //                <!-- strfilter += " " + typeadd; -->
+                        //            <!-- } else { -->
+                        //                <!-- // đóng liên kết khi không có liên kết -->
+                        //                <!-- strfilter += ") " + typeadd; -->
+                        //                <!-- i = 0; j = 0; -->
+                        //            <!-- } -->
+                        //        <!-- } -->
+                        //    <!-- } -->
+                        //<!-- } -->
+                        //strFilter += " customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                        //    " where sc.Status=1 and CONVERT(datetime, CONVERT(varchar(10),sc.CreatedDate,103),103)  " + res + "))"
+                    }
+                    else {
+                        if (i > 0 && j == 0) {//trường hợp 1 liên kết có nhiều điều kiện lọc
+                            strFilter += " CONVERT(datetime, CONVERT(varchar(10)," + columnCode + ",103),103) " + res;
+                        }
+                        else if (j > 0) {//kết thúc liên kết có thể tạo liên kết mới
+                            strFilter += " CONVERT(datetime, CONVERT(varchar(10)," + columnCode + ",103),103) " + res + ")";
+                        }
+                        else {//trường hợp tạ liên kết mới
+                            strFilter += "(CONVERT(datetime, CONVERT(varchar(10)," + columnCode + ",103),103) " + res;
+                        }
+                        if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                            i++;//trường hợp có liên kết
+                        } else {
+                            //trường hợp không liên kết
+                            i = -1;
+                            j++;
+                        }
+                        //if (strFilter != "") {
+                        //    if (value != max) {
+                        //        typeAdd = $("#TypeAdd" + value).val();
+                        //        if (typeAdd != undefined) {
+                        //            if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                        //                strFilter += " " + typeAdd;
+                        //            } else {
+                        //                // đóng liên kết khi không có liên kết
+                        //                strFilter += ") " + typeAdd;
+                        //                i = 0; j = 0;
+                        //            }
+                        //        }
+                        //    }
+                        //}
+
+                    }
+                    //if (strFilter != "") {
+                    //    if (value != max) {
+                    //        typeAdd = $("#TypeAdd" + value).val();
+                    //        if (typeAdd != undefined) {
+                    //            if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                    //                strFilter += " " + typeAdd;
+                    //            } else {
+                    //                // đóng liên kết khi không có liên kết
+                    //                strFilter += ") " + typeAdd;
+                    //                i = 0; j = 0;
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                } else {
+                    if (typeSearch == 2) {
+                        textFilter = parseFloat(textFilter.replace(/[^0-9-.]/g, ''));
+                    }
+                    var res = "";
+                    if (dataType != null) {
+                        if (dataType.length > 0) {
+                            res = dataType.replace("#value", textFilter);
+                        } else {
+                            res = textFilter;
+                        }
+                    }
+
+                    if (columnCode != undefined) {
+                        if (columnCode == "CustomerManager") {
+
+                            if (i > 0 && j == 0) {//trường hợp 1 liên kết có nhiều điều kiện lọc
+
+                                strFilter += " customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                                    " where sc.Status=1 and ss.Fullname " + res + "))";
+                            }
+                            else if (j > 0) {//kết thúc liên kết có thể tạo liên kết mới
+
+                                strFilter += " customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                                    " where sc.Status=1 and ss.Fullname " + res + ")))";
+                            }
+                            else {//trường hợp tạ liên kết mới
+
+                                strFilter += "( customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                                    " where sc.Status=1 and ss.Fullname " + res + "))";
+                            }
+                            if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                                i++;//trường hợp có liên kết
+                            } else {
+                                //trường hợp không liên kết
+                                i = -1;
+                                j++;
+                            }
+
+                            //strFilter += " customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                            //    " where sc.Status=1 and ss.Fullname " + res + "))";
+                        }
+                        else if (columnCode == "CustomerManagerLast") {
+
+
+                            if (i > 0 && j == 0) {//trường hợp 1 liên kết có nhiều điều kiện lọc
+                                strFilter += " customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                                    " where sc.Status=1  and  sc.autoid=(select max(autoid) from Staff_Customer_CustomerManagementRole aad where aad.CustomerID=sc.CustomerID and aad.Status=1 )and ss.Fullname " + res + "))";
+
+                            }
+                            else if (j > 0) {//kết thúc liên kết có thể tạo liên kết mới
+                                strFilter += " customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                                    " where sc.Status=1  and  sc.autoid=(select max(autoid) from Staff_Customer_CustomerManagementRole aad where aad.CustomerID=sc.CustomerID and aad.Status=1 )and ss.Fullname " + res + ")))";
+
+                            }
+                            else {//trường hợp tạ liên kết mới
+                                strFilter += "( customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                                    " where sc.Status=1  and  sc.autoid=(select max(autoid) from Staff_Customer_CustomerManagementRole aad where aad.CustomerID=sc.CustomerID and aad.Status=1 )and ss.Fullname " + res + "))";
+
+                            }
+                            if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                                i++;//trường hợp có liên kết
+                            } else {
+                                //trường hợp không liên kết
+                                i = -1;
+                                j++;
+                            }
+
+                            //    strFilter += " customerid in ((select sc.CustomerID from Staff_Customer_CustomerManagementRole sc inner join Staff ss on sc.StaffID=ss.StaffID " +
+                            //        " where sc.Status=1  and  sc.autoid=(select max(autoid) from Staff_Customer_CustomerManagementRole aad where aad.CustomerID=sc.CustomerID and aad.Status=1 )and ss.Fullname " + res + "))"
+                        }
+                        else {
+                            if (i > 0 && j == 0) {//trường hợp 1 liên kết có nhiều điều kiện lọc
+                                strFilter += " " + columnCode + " " + res;
+                            }
+                            else if (j > 0) {//kết thúc liên kết có thể tạo liên kết mới
+                                strFilter += " " + columnCode + " " + res + ")";
+                            }
+                            else {//trường hợp tạ liên kết mới
+                                strFilter += "(" + columnCode + " " + res;
+                            }
+                            if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                                i++;//trường hợp có liên kết
+                            } else {
+                                //trường hợp không liên kết
+                                i = -1;
+                                j++;
+                            }
+                        }
+                    }
+                }
+
+                if (strFilter != "") {
+                    if (value != max) {
+                        typeAdd = $("#TypeAdd" + value).val();
+                        if (typeAdd != undefined) {
+                            if (listClick.length > 1 && $("#link" + value).hasClass("fa-link")) {
+                                strFilter += " " + typeAdd;
+                            } else {
+                                // đóng liên kết khi không có liên kết
+                                strFilter += ") " + typeAdd;
+                                i = 0; j = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            //if ($('#divCombo' + value).is(":visible")) {
+            //    if (comboFilter != null || comboFilter != "") {
+            //        strFilter += " " + columnCode + "=" + comboFilter;
+            //        if (value != max) {
+            //            typeAdd = $("#TypeAdd" + value).val();
+            //            strFilter += " " + typeAdd;
+            //        }
+            //    }
+            //}
+            //if ($('#divComboLike' + value).is(":visible")) {
+            //    if (comboFilter != null || comboFilter != "") {
+            //        strFilter += " " + columnCode + " Like N'%," + comboLikeFilter + ",%'";
+            //        if (value != max) {
+            //            typeAdd = $("#TypeAdd" + value).val();
+            //            strFilter += " " + typeAdd;
+            //        }
+            //    }
+            //}
+
+            //Thêm điều kiện chuỗi AND hoặc OR
+
+        });
+
+        var check = strFilter.endsWith("AND");
+        if (check) {
+            strFilter = strFilter.replace("AND", "");
+        }
+        check = strFilter.endsWith("OR");
+        if (check) {
+            strFilter = strFilter.replace("OR", "");
+        }
+        //if (textFilter == "" || textFilter == null) {
+        //    strFilter = " " + strFilter + "";
+        //} else if (typeSearch == 4 || typeSearch == 5 || typeSearch == 6) {
+        //    strFilter = " " + strFilter + ")";
+        //}
+        if ((textFilter == "" && textFilter != 0) && (typeSearch != 4 && typeSearch != 5 && typeSearch != 6) || (textFilter == null && textFilter != 0) && (typeSearch != 4 && typeSearch != 5 && typeSearch != 6)) {
+            strFilter = " " + strFilter + "";
+        } else
+            if (typeSearch == 4 || typeSearch == 5 || typeSearch == 6) {
+                strFilter = " " + strFilter + ")";
+            }
+            else if (strFilter != "") {
+                strFilter = " " + strFilter + ")";
+            }
+        console.log(strFilter);
+        return strFilter;
+    }
+
+    var listLocalStorage = new Array();
+    function SaveFilter() {
+
+        var txtSaveFilter = $("#txtSaveFilter").val();
+
+        var gridName = nameGird;
+        var controllerName = nameController;
+        var keyName = gridName + "#" + controllerName;
+        listLocalStorage = JSON.parse(localStorage.getItem(keyName));
+        var check = CheckNameFilterSave();
+        debugger;
+        if (check == 1) {
+            $.SmartMessageBox({
+                title: '@AppRes.MS_Title',
+                content: '@AppRes.MS_FilterExist',
+                buttons: '[No][Yes]'
+            }, function (action) {
+                if (action === "Yes") {
+                    var storedNames = JSON.parse(localStorage.getItem(keyName));
+                    if (storedNames != null) {
+
+                        listLocalStorage = jQuery.grep(storedNames, function (value) {
+                            var res = value.keyName.split("♦");
+                            return res[0] != txtSaveFilter;
+
+                        });
+
+                    }
+                    var strFilter = "";
+                    var hiddenType = ""
+                    var index = 0;
+                    var max = Math.max.apply(Math, listClick);
+
+                    var columnCode = "";
+                    var dataType = "";
+                    var textFilter = "";
+                    var comboFilter = "";
+                    var comboLikeFilter = "";
+                    var typeAdd = "";
+                    strFilter = txtSaveFilter + "♦";
+                    $.each(listClick, function (index, value) {
+                        index = (index + 1);
+                        hiddenType = $("#hiddenType" + value).val();
+
+                        if (index == 1) {
+
+                            strFilter += hiddenType;
+                        } else {
+
+                            strFilter += "^" + hiddenType;
+                        }
+
+                        ;
+                        columnCode = $("#Column" + value).val();
+                        strFilter += "~Column" + index + "$" + columnCode;
+
+                        dataType = $("#DataType" + value).val();
+                        strFilter += "~DataType" + index + "$" + dataType;
+
+                        textFilter = $("#TextFilter" + value).val();
+                        strFilter += "~TextFilter" + index + "$" + textFilter;
+
+                        typeAdd = $("#TypeAdd" + value).val();
+                        strFilter += "~TypeAdd" + index + "$" + typeAdd;
+
+                        comboFilter = $("#Combo" + value).val();
+                        strFilter += "~Combo" + index + "$" + comboFilter;
+
+                        comboLikeFilter = $("#ComboLike" + value).val();
+                        strFilter += "~ComboLike" + index + "$" + comboLikeFilter;
+
+                    });
+
+                    if (listLocalStorage == null) {
+                        listLocalStorage = new Array();
+                    }
+                    listLocalStorage.push({ keyName: strFilter });
+                    localStorage.setItem(keyName, JSON.stringify(listLocalStorage));
+                    SetMenuFilter(nameController, nameAction, nameGird);
+                    $("#txtSaveFilter").val("")
+                    $("#divSavedFilter").show();
+                    $("#txtSaveFilter").hide();
+                    $("#lblSaveFilter").hide();
+                    $("#chkSaveFilter").attr("disabled", true);
+
+
+                }
+                if (action === "No") {
+                    return;
+                }
+
+            });
+        }
+        else {//Không trùng dữ liệu thì tạo mới
+
+            var strFilter = "";
+            var hiddenType = ""
+            var index = 0;
+            var max = Math.max.apply(Math, listClick);
+
+            var columnCode = "";
+            var dataType = "";
+            var textFilter = "";
+            var comboFilter = "";
+            var comboLikeFilter = "";
+            var typeAdd = "";
+            strFilter = txtSaveFilter + "♦";
+            $.each(listClick, function (index, value) {
+                index = (index + 1);
+                hiddenType = $("#hiddenType" + value).val();
+
+                if (index == 1) {
+
+                    strFilter += hiddenType;
+                }
+                else {
+
+                    strFilter += "^" + hiddenType;
+                }
+
+
+                columnCode = $("#Column" + value).val();
+                strFilter += "~Column" + index + "$" + columnCode;
+
+                dataType = $("#DataType" + value).val();
+                strFilter += "~DataType" + index + "$" + dataType;
+
+                textFilter = $("#TextFilter" + value).val();
+                strFilter += "~TextFilter" + index + "$" + textFilter;
+
+                typeAdd = $("#TypeAdd" + value).val();
+                strFilter += "~TypeAdd" + index + "$" + typeAdd;
+
+                comboFilter = $("#Combo" + value).val();
+                strFilter += "~Combo" + index + "$" + comboFilter;
+
+                comboLikeFilter = $("#ComboLike" + value).val();
+                strFilter += "~ComboLike" + index + "$" + comboLikeFilter;
+            });
+
+
+            //   listLocalStorage= GetSaveFilter();
+            if (listLocalStorage == null) {
+                listLocalStorage = new Array();
+            }
+            listLocalStorage.push({ keyName: strFilter });
+            localStorage.setItem(keyName, JSON.stringify(listLocalStorage));
+            SetMenuFilter(nameController, nameAction, nameGird);
+            $("#txtSaveFilter").val("");
+            $("#divSavedFilter").show();
+            $("#txtSaveFilter").hide();
+            $("#lblSaveFilter").hide();
+            $("#chkSaveFilter").attr("disabled", true);
+
+
+            $.smallBox({
+                title: "@AppRes.MS_Title",
+                content: "@AppRes.MS_Update_success",
+                color: "#659265",
+                iconSmall: "fa fa-check fa-2x fadeInRight",
+                timeout: 4000
+            });
+        }
+    }
+
+    function GetFilter(girdName, controllerName, keyFilter) {
+
+        var keyName = girdName + "#" + controllerName;
+        var storedNames = JSON.parse(localStorage.getItem(keyName));
+        var strFilter = "";
+        if (storedNames != null) {
+            $.each(storedNames, function (key, value) {
+                var res = value.keyName.split("♦");
+                if (res[0] == keyFilter) {
+                    $("#txtSaveFilter").val(keyFilter);
+                    strFilter = res[1];
+                    var listStrFilter = strFilter.split("^");
+                    $.each(listStrFilter, function (index, search) {
+                        index = (index + 1);
+                        var listString = search.split("~");
+                        var type = listString[0];
+                        addFilter();
+
+                        var code = listString[1].split("$")[1];
+                        $("#Column" + index).val(code);
+                        GetDataType(index);
+                        if (type == 4) {
+
+                            var combo = listString[5].split("$")[1];
+                            $("#Combo" + index).val(combo);
+
+                            $("#divDataType" + index).hide();
+                            $("#divTextFilter" + index).hide();
+                            $("#divCombo" + index).show();
+                        }
+                        else if (type == 5) {
+                            var combo = listString[6].split("$")[1];
+                            $("#ComboLike" + index).val(combo);
+                            $("#divComboLike" + index).show();
+
+                            $("#divDataType" + index).hide();
+                            $("#divTextFilter" + index).hide();
+                            $("#divCombo" + index).hide();
+                        }
+                        else {
+                            var dataType;
+                            var textFilter;
+                            if (type == 3) {
+                                dataType = listString[2].split("$")[1];
+                                $("#DataType" + index).val(dataType);
+                                textFilter = listString[3].split("$")[1];
+                                $("#TextFilter" + index).val(textFilter);
+                                $("#TextFilter" + index).datepicker({
+                                    dateFormat: 'dd/mm/yy',
+                                    prevText: '<i class="fa fa-chevron-left"></i>',
+                                    nextText: '<i class="fa fa-chevron-right"></i>',
+                                });
+
+                                $("#divDataType" + index).show();
+                                $("#divTextFilter" + index).show();
+                                $("#divCombo" + index).hide();
+
+                            } else {
+                                dataType = listString[2].split("$")[1];
+                                $("#DataType" + index).val(dataType);
+                                textFilter = listString[3].split("$")[1];
+                                $("#TextFilter" + index).val(textFilter);
+
+                                $("#divDataType" + index).show();
+                                $("#divTextFilter" + index).show();
+                                $("#divCombo" + index).hide();
+
+                            }
+                        }
+                        var typeAdd = listString[4].split("$")[1];
+                        $("#TypeAdd" + index).val(typeAdd);
+                    });
+
+                }
+            });
+
+
+        }
+
+        ApplyFilter();
+        upHideFilter();
+        $("#iTitleFilter").html(keyFilter);
+        $("#iTitleFilter").show();
+    }
+
+    function CheckNameFilterSave() {
+
+        var nameSaveFilter = $("#txtSaveFilter").val();
+        var gridName = nameGird;
+        var controllerName = nameController;
+        var keyName = gridName + "#" + controllerName;
+        var storedNames = JSON.parse(localStorage.getItem(keyName));
+        var check = 0;
+        if (storedNames != null) {
+
+            $.each(storedNames, function (index, value) {
+                var res = value.keyName.split("♦");
+                if (res[0] == nameSaveFilter) {
+                    check = 1;
+                }
+
+            });
+
+        }
+        return check;
+    }
+    //&& tmp != "ReportMarginMediaDetail#" && tmp != "ReportMarginAccountDetail#" && tmp != "ImplementationAccountReport#"
+    //   && tmp != "ImplementationMediaReport#" && tmp != "ReportMarginBDDetail#" && tmp != "ReportMarginDesignDetail#"
+    function CheckActionForm() {
+        $("#txtSaveFilter").val("");
+        $("#divSavedFilter").hide();
+        $("#txtSaveFilter").show();
+        $("#lblSaveFilter").show();
+        $("#chkSaveFilter").removeAttr("disabled");
+        $("#chkSaveFilter").prop('checked', false);
+        $("#iTitleFilter").html("");
+        $("#iTitleFilter").hide();
+    }
+    function CheckActionForm1(input) {
+        $("#txtSaveFilter").val("");
+        $("#divSavedFilter").hide();
+        $("#txtSaveFilter").show();
+        $("#lblSaveFilter").show();
+        $("#chkSaveFilter").removeAttr("disabled");
+        $("#chkSaveFilter").prop('checked', false);
+        $("#iTitleFilter").html("");
+        $("#iTitleFilter").hide();
+        var currentUrl = window.location.href;
+        var actionStr = '';
+        if (currentUrl) {
+            var urlSplits = currentUrl.split("/");
+            if (urlSplits.length > 0) {
+                debugger;
+                var tmp = urlSplits[urlSplits.length - 1];
+                if (tmp.includes('#') == true) {
+                    tmp = tmp.replace('#', '');
+                }
+                if (tmp != "ReportMarginMediaDetail" && tmp != "ReportMarginAccountDetail" && tmp != "ImplementationAccountReport"
+                    && tmp != "ImplementationMediaReport" && tmp != "ReportMarginBDDetail" && tmp != "ReportMarginDesignDetail"
+                    && tmp != "ReportMarginDesignDetail" && tmp != "ImplementationSocialReport"
+                    && tmp != "ImplementationDesignReport" && tmp != "ImplementationBDReport"
+                    ) {
+                    $(input).on("keyup", function (event) {
+                        // When user select text in the document, also abort.
+                        var selection = window.getSelection().toString();
+                        if (selection !== '') {
+                            return;
+                        }
+                        // When the arrow keys are pressed, abort.
+                        if ($.inArray(event.keyCode, [38, 40, 37, 39]) !== -1) {
+                            return;
+                        }
+                        var $this = $(this);
+                        // Get the value.
+                        var input = $this.val();
+                        var input = input.replace(/[\D\s\._\-]+/g, "");
+                        input = input ? parseInt(input, 10) : 0;
+                        $this.val(function () {
+                            return input.toLocaleString("en-US");
+                            // return input.toLocaleString("en-US");
+
+                        });
+                    });
+                }
+            }
+        }
+
+    }
+
+
+
+    //Set Menu filter cho button
+    function SetMenuFilter(controllerName, actionName, gridName) {
+        var storeFilter = new Array();
+        storeFilter = GetSaveFilter(controllerName, gridName);
+        if (storeFilter != null) {
+            $("#ulFilter" + gridName).html("");
+            var i;
+            for (i = 0; i < storeFilter.length; ++i) {
+                var res = storeFilter[i].keyName.split("♦");
+                $("#ulFilter" + gridName).append('<li id="cg_' + res[0] + '"><a>' +
+                    '<table class="showFilter"><tr>' +
+                    '<td style="cursor: pointer;width:70%" onclick="ApplyFilterStore(\'' + res[0] + '\',\'' + controllerName + '\',\'' + gridName + '\',\'' + actionName + '\')"><a style="color: #555; font-size:12px;">' + res[0] + '</a></td>' +
+                    '<td style="padding-left:10px;text-align: right;"> <a  style="cursor: pointer; font-size:12px;" onclick="removeFilter(\'' + res[0] + '\',\'' + controllerName + '\',\'' + gridName + '\',\'' + actionName + '\')" style="display:inline;height: 100%;padding:0px;"><span class="fa fa-trash-o"></span></a> </td>' +
+                    '</tr></table></a></li>'
+                );
+            }
+
+            if ($("#ulFilter" + gridName).is(':empty')) {
+                $('.divider').hide();
+            } else {
+                $('.divider').show();
+            }
+
+        }
+    }
+
+    //Lấy Filter đã được lưu
+    function GetSaveFilter(controllerName, gridName) {
+        var keyName = gridName + "#" + controllerName;
+        var storedNames = JSON.parse(localStorage.getItem(keyName));
+        return storedNames;
+    }
+
+
+    function ApplyFilterStore(nameFilter, controllerName, gridName, actionName) {
+        ;
+        //CreateFilter(controllerName, actionName, gridName);
+        click = 0;
+        listClick = new Array();
+        array = new Array();
+        showFilter = 0;
+        $.ajax(
+        {
+            url: "/Filter/Index",
+            type: "POST",
+            dataType: "html",
+            data: {
+                controller: controllerName,
+                gridName: gridName
+            },
+            async: false,
+            success: function (response) {
+                $("#divFilter" + gridName).show();
+                $("#divFilter" + gridName).html(response);
+                nameController = controllerName;
+                nameGird = gridName;
+                nameAction = actionName;
+                GetFilter(gridName, controllerName, nameFilter);
+            },
+            error: function (xhr, status, error) {
+            }
+        });
+
+
+
+    }
+
+    function removeFilter(nameFilter, controllerName, gridName, actionName) {
+
+        $.SmartMessageBox({
+            title: '@AppRes.MS_Title',
+            content: '@AppRes.MS_FilterDelete',
+            buttons: '[No][Yes]'
+        }, function (action) {
+            if (action === "Yes") {
+
+                var storeFilter = GetSaveFilter(controllerName, gridName);
+                if (storeFilter != null) {
+
+                    storeFilter = jQuery.grep(storeFilter, function (value) {
+                        debugger;
+                        var res = value.keyName.split("♦");
+                        if (res[0] == nameFilter) {
+                            $("#cg_" + nameFilter).remove();
+
+                        }
+                        return res[0] != nameFilter;
+                    });
+
+                    var keyName = gridName + "#" + controllerName;
+                    localStorage.setItem(keyName, JSON.stringify(storeFilter));
+                    SetMenuFilter(controllerName, actionName, gridName);
+                    // LoadDataCustomerGrid();
+                    var strFilter = GetStringFilter();
+                    LoadDataForGrid(controllerName, actionName, gridName, strFilter, "");
+                }
+                if ($("#divFilter").is(":visible")) {
+                    $("#txtSaveFilter").val("");
+                    $("#divSavedFilter").hide();
+                    $("#txtSaveFilter").show();
+                    $("#lblSaveFilter").show();
+                    $("#chkSaveFilter").removeAttr("disabled");
+                    $("#chkSaveFilter").prop('checked', false);
+                    $("#iTitleFilter").html("");
+                    $("#iTitleFilter").hide();
+                }
+
+
+                $.smallBox({
+                    title: "@AppRes.MS_Title",
+                    content: "@AppRes.MS_Delete_success",
+                    color: "#659265",
+                    iconSmall: "fa fa-check fa-2x fadeInRight",
+                    timeout: 4000
+                });
+            }
+            if (action === "No") {
+                //Nothing
+            }
+
+        });
+    }
+</script>
+
+<!-----------------------------------------------LOAD DATA FOR CONTROLLER----------------------------------->
+<script>
+    function LoadDataForGrid(controllerName, actionName, gridName, filterString, orderBy) {
+
+        var pageSize = $("#" + gridName + "PageSize").val();
+        var pageIndex = $("#" + gridName + "PageIndex").val();
+        //var strFilter = "";
+        if ($("#divFilter" + gridName).is(":visible")) {
+            filterString = GetStringFilter();
+        }
+        var name = 'Load' + gridName + 'CustomizeFilter';
+        if (typeof window[name] != 'undefined' && $.isFunction(window[name])) {
+            var strFilter = window[name]();
+            if (strFilter != undefined && strFilter != "") {
+                if (filterString != "" && filterString != undefined) {
+                    filterString += " AND " + strFilter;
+                } else {
+                    filterString = strFilter;
+                }
+
+            }
+
+        }
+        //  GetCustomerListPaging(1, pageSize, strFilter, "");
+        GetDataForPaging(controllerName, actionName, gridName, pageIndex, pageSize, filterString, orderBy);
+    }
+
+    //gridCustomerList
+    function GetDataForPaging(controllerName, actionName, gridName, pageIndex, pageSize, filterString, orderBy) {
+        showProcessing();
+        $.ajax(
+            {
+                type: "Post",
+                url: "/" + controllerName + "/" + actionName,
+                dataType: "Json",
+                data: { pageIndex: pageIndex, pageSize: pageSize, filterString: filterString, orderBy: orderBy },
+                success: function (result) {
+                    $("#" + gridName).html(result);
+
+
+                    if (typeof ResetData != 'undefined' && $.isFunction(ResetData())) {
+                        ResetData();
+                    }
+
+
+                    //scrolify($('table.scroll'));
+                    var td = $("table.scroll").find('tbody tr:eq(0) td');
+                    var th = $("table.scroll").find('thead tr th');
+                    //for (var i = 0; i < th.length; i++) {
+                    //    $(th[i]).resizable({
+                    //        handles: "e",
+                    //        resize: function (event) {
+                    //            for (var i = 0; i < td.length; i++) {
+                    //                $(td[i]).width($(th[i]).width() + 1);
+                    //                //  $(th[i]).width($(td[i]).width() + 1);
+                    //            }
+                    //        }
+                    //    });
+                    //}
+
+                    if (td.length) {
+                        for (var i = 0; i < th.length; i++) {
+                            for (var i = 0; i < td.length; i++) {
+                                $(td[i]).width($(th[i]).width() + 1);
+                                // $(th[i]).width($(td[i]).width() + 1);
+                            }
+                        }
+                    }
+
+                    if (typeof CallAllTableJs != 'undefined' && $.isFunction(CallAllTableJs)) {
+                        CallAllTableJs();//Hàm bên file erp-table.js
+                    }
+                },
+                error: function () {
+                    alert("Error!");
+                }
+            });
+    }
+</script>
+<!-----------------------------------------------END LOAD DATA FOR CONTROLLER----------------------------------->
+<!----------------------------PHÂN TRANG---------------------------->
+<script>
+    //Function cho ô text nhảy trang
+    function GridListPaging(pageIndex, controllerName, actionName, gridName) {
+        var pageSize = $("#" + gridName + "PageSize").val();
+        var pageCount = $("#" + gridName + "ListPageCount").val();
+        if (parseInt(pageIndex) > parseInt(pageCount)) {
+            $("#" + gridName + "ListPage").val(pageCount);
+            pageIndex = pageCount;
+        }
+        var strFilter = "";
+        if ($("#divFilter").is(":visible")) {
+            strFilter = GetStringFilter();
+        }
+            //Không filter
+        else {
+            strFilter = GetStringFilter();
+            strFilter += checkNoFilterString(controllerName, actionName, gridName);
+        }
+
+
+        var name = 'Load' + gridName + 'CustomizeFilter';
+        if (typeof window[name] != 'undefined' && $.isFunction(window[name])) {
+            var strFilter1 = window[name]();
+            if (strFilter1 != undefined && strFilter1 != "") {
+                if (strFilter != "" && strFilter != undefined && strFilter != " ") {
+                    strFilter += " AND " + strFilter1;
+                } else {
+                    strFilter = strFilter1;
+                }
+
+            }
+        }
+        // alert(pageSize);
+        GetListDataPaging(pageIndex, pageSize, strFilter, "", controllerName, actionName, gridName);
+    }
+
+    function checkNoFilterString(controllerName, actionName, gridName) {
+        var filterString = "";
+        var contractId = $("#hidenContractId").val();
+        var coaInfoId = $("#hidenContractCoaInfoId").val();
+        var codeFanpage = $("#CodeFanpage").val();
+        var codewebsite = $("#CodeWebsite").val();
+        if (controllerName == "PaymentSchedule" && actionName == "GetPaymentScheduleList" && gridName == "GridPaymentScheduleList") {
+            filterString = " DS_ContractID=" + contractId + " AND COAInfoID=" + coaInfoId;
+        }
+        else if (controllerName == "Contract_COATerm" && actionName == "GetContractCOATermList" && gridName == "GridContractCOATermList") {
+            filterString = " DS_ContractID=" + contractId + " AND COAInfoID=" + coaInfoId;
+        }
+        else if (controllerName == "Contract_Payment" && actionName == "GetContractPaymentListAccountan" && gridName == "GridContractPaymentListAcccountan") {
+            filterString = " ContractID=" + contractId;
+        }
+        else if (controllerName == "ContractDiscount" && actionName == "GetContractDiscountList" && gridName == "GridContractDiscountList") {
+            filterString = " ContractID=" + contractId;
+        }
+        //else if (controllerName == "CustomerLead" && actionName == "GetCustomerLeadList" && gridName == "GridCustomerLeadList") {
+        //    var string = "";
+        //    string += "Website like N'%" + codewebsite + "%'";
+        //    string += "and Fanpage like N'%" + codeFanpage + "%'";
+        //    filterString = string;
+        //}
+        return filterString;
+    }
+
+    //Function cho combo chọn số lượng hiển thị
+    function GridListPageTotal(pageSize, controllerName, actionName, gridName) {
+        //var pageIndex = $("#CustommerListPage").val();
+        var strFilter = "";
+        if ($("#divFilter").is(":visible")) {
+            strFilter = GetStringFilter();
+        }
+        else {
+            strFilter = GetStringFilter();
+            strFilter += checkNoFilterString(controllerName, actionName, gridName);
+        }
+        var name = 'Load' + gridName + 'CustomizeFilter';
+        if (typeof window[name] != 'undefined' && $.isFunction(window[name])) {
+            var strFilter1 = window[name]();
+            if (strFilter1 != undefined && strFilter1 != "") {
+                if (strFilter != "" && strFilter != undefined) {
+                    strFilter += " AND " + strFilter1;
+                } else {
+                    strFilter = strFilter1;
+                }
+
+            }
+        }
+
+        GetListDataPaging(1, pageSize, strFilter, "", controllerName, actionName, gridName);
+    }
+
+    function GetListDataPaging(pageIndex, pageSize, filterString, orderBy, controllerName, actionName, gridName) {
+        debugger;
+        showProcessing();
+        ;
+        $.ajax(
+            {
+                type: "GET",
+                url: '/' + controllerName + '/' + actionName,
+                data: { pageIndex: pageIndex, pageSize: pageSize, filterString: filterString, orderBy: orderBy },
+                success: function (result) {
+                    ;
+                    $("#" + gridName).html(result);
+                    if (controllerName == "Contract_COATerm") {
+                        Load();
+                    }
+                    $("#" + gridName + "PageSize").val(pageSize);
+                    var name = 'Load' + gridName + 'Click';
+                    if (typeof window[name] != 'undefined' && $.isFunction(window[name])) {
+                        window[name]();
+                    }
+                    if (typeof ResetData != 'undefined' && $.isFunction(ResetData())) {
+                        ResetData();
+                    }
+
+
+
+                    //// scrolify($('table.scroll'));
+                    //var td = $("table.scroll").find('tbody tr:eq(0) td');
+                    //var th = $("table.scroll").find('thead tr th');
+                    ////for (var i = 0; i < th.length; i++) {
+                    ////    $(th[i]).resizable({
+                    ////        handles: "e",
+                    ////        resize: function (event) {
+                    ////            for (var i = 0; i < td.length; i++) {
+                    ////                $(td[i]).width($(th[i]).width() + 1);
+                    ////                 $(th[i]).width($(td[i]).width() + 1);
+                    ////            }
+                    ////        }
+                    ////    });
+                    ////}
+                    //if (td.length) {
+                    //    for (var i = 0; i < th.length; i++) {
+                    //        for (var i = 0; i < td.length; i++) {
+                    //            $(td[i]).width($(th[i]).width() + 1);
+                    //            // $(th[i]).width($(td[i]).width() + 1);
+                    //        }
+                    //    }
+                    //}
+
+                    if (typeof CallAllTableJs != 'undefined' && $.isFunction(CallAllTableJs)) {
+                        CallAllTableJs();//Hàm bên file erp-table.js
+                    }
+                },
+                error: function () {
+                    alert("Error!");
+                }
+            });
+    }
+
+    function Load() {
+        if (typeof $('#tbodyGridContractCOATermList') != 'undefined') {
+            $('#tbodyGridContractCOATermList tr td:nth-child(1)').each(function () {
+                if ($(this).text() == 0) {
+                    $(this).parent().find('td:nth-child(5),td:nth-child(6)').css('background-color', 'yellow').css('text-decoration', 'line-through');
+                }
+                if ($(this).text() == 2) {
+                    $(this).parent().find('td:nth-child(5),td:nth-child(6)').css('background-color', 'yellow');
+                }
+            });
+        }
+    }
+
+
+</script>
+<!----------------------------KẾT THÚC PHÂN TRANG -------------------->

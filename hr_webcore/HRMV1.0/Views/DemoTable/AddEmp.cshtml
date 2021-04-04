@@ -1,0 +1,45 @@
+﻿<div class="container-fluid">
+
+    <div id="AddContent" class="row" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel panel-default">
+                <div class="panel-heading">Thêm mới</div>
+                <div class="panel-body">
+                    <form role="form" name="SaveForm" ng-submit="AddAction(tableInfo.AddUrl)">
+                        <div class="form-group {{(SaveForm.fullname.$dirty && SaveForm.fullname.$invalid) ? 'has-error' : ''}}">
+                            <label>Fullname <span style="color: red">*</span></label>
+                            <input required type="text" data-modal="modal" name="fullname" placeholder="Enter fullname" class="form-control" ng-pattern="/^[a-zA-Z]{1,25}$/" ng-model="editData.name"/>   
+                        </div>
+                        <div class="form-group">
+                            <label>Birth <span style="color: red">*</span></label>
+                            <input required type="date" placeholder="Enter Birth" class="form-control" ng-model="editData.DOB" format-date/>
+                        </div>
+                        <div class="form-group {{(SaveForm.gender.$dirty && SaveForm.gender.$invalid) ? 'has-error' : ''}}">
+                            <label>Gender <span style="color: red">*</span></label>
+                            <input name="gender" ng-pattern="/^[a-zA-Z]{1,25}$/" required type="text" placeholder="Enter Gender" class="form-control" ng-model="editData.Gender"/>
+                        </div>
+                        <div class="form-group {{(SaveForm.email.$dirty && SaveForm.email.$invalid) ? 'has-error' : ''}}">
+                            <label>Email <span style="color: red">*</span></label>
+                            <input name="email" type="email" required="" placeholder="Enter Email" class="form-control" ng-pattern="emailValid" ng-model="editData.Email" />
+                        </div>
+                        <div class="form-group {{(SaveForm.mobile.$dirty && SaveForm.mobile.$invalid) ? 'has-error' : ''}}">
+                            <label>Mobile <span style="color: red">*</span></label>
+                            <input name="mobile" required ng-pattern="/^[0-9]{9,15}$/" type="text" placeholder="Enter Mobile" class="form-control" ng-model="editData.Mobile"/>
+                        </div>
+                        <div class="form-group {{(SaveForm.address.$dirty && SaveForm.address.$invalid) ? 'has-error' : ''}}">
+                            <label>Address <span style="color: red">*</span></label>
+                            <input type="text" name="address" required ng-pattern="/^[\w]{1,25}$/" placeholder="Enter address" class="form-control" ng-model="editData.Address" />
+                        </div>
+                        <button type="submit" class="btn btn-labeled btn-success">
+                            <span class="btn-label">
+                                <i class="fa fa-save"></i>
+                            </span>Thêm mới
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>

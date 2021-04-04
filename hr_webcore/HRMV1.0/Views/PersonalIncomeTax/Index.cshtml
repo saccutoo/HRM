@@ -1,0 +1,72 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.PersonalIncomeTax;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        overflow-x: hidden;
+    }
+
+    .menu-department {
+        height: 95vh;
+        border-right: 1px solid #f3f3f3;
+    }
+
+    .demo-section1 {
+        display: block;
+        margin-top: 32px;
+        height: 500px;
+        margin-right: -50px;
+        overflow: scroll;
+        margin-left: -28px;
+    }
+
+        .demo-section1 li {
+            display: inline-block;
+            width: 100%;
+        }
+</style>
+<script>
+    var errorMoneyIsNumber= @Html.Raw(Json.Encode(AppRes.ErrorMoneyIsNumber));
+    var errorIncome= @Html.Raw(Json.Encode(AppRes.ErrorIncome));
+    var errorProgressiveTax= @Html.Raw(Json.Encode(AppRes.ErrorProgressiveTax));
+    var errorProgressiveTaxIsNumber= @Html.Raw(Json.Encode(AppRes.ErrorProgressiveTaxIsNumber));
+    var errorVat= @Html.Raw(Json.Encode(AppRes.ErrorVat));
+    var errorVatIsNumber= @Html.Raw(Json.Encode(AppRes.ErrorVatIsNumber));
+    var errorDateOfApplication= @Html.Raw(Json.Encode(AppRes.ErrorDateOfApplication));
+    var compareIncome= @Html.Raw(Json.Encode(AppRes.CompareIncome));
+    var errorDate= @Html.Raw(Json.Encode(AppRes.ErrorDate));
+    var errorSelectCurrencyUnit= @Html.Raw(Json.Encode(AppRes.ErrorSelectCurrencyUnit));
+    var errorStatus= @Html.Raw(Json.Encode(AppRes.ErrorStatus));
+    var errorSelectCountry= @Html.Raw(Json.Encode(AppRes.ErrorSelectCountry));
+    var errorIncomeFrom= @Html.Raw(Json.Encode(AppRes.ErrorIncomeFrom));
+    var errorIncomeToIsNumber= @Html.Raw(Json.Encode(AppRes.ErrorIncomeToIsNumber));
+    var errorDateStart= @Html.Raw(Json.Encode(AppRes.ErrorDateStart));
+</script>
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row">
+        <div ng-controller="mytable" ng-init="init()">
+            <div style="display: none;">
+                @Html.Action("SavePersonalIncomeTax", "PersonalIncomeTax")
+            </div>
+            <build-fixed-table table-url="'@(ViewBag.url)'"
+                               table-edit="editClick"
+                               table-delete="deleteClick"
+                               table-excel-click="ExcelClick"
+                               table-add="addClick"
+                               table-param-filter="employeeFilter"
+                               table-model="PersonalIncomeTaxData">
+            </build-fixed-table>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/PersonalIncomeTax/PersonalIncomeTaxUntil.js"></script>
+
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+</script>

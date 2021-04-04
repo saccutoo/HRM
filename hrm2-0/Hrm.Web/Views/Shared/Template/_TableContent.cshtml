@@ -1,0 +1,268 @@
+﻿@model Hrm.Framework.Models.TableViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.ViewModels
+@using Hrm.Web.ViewModels
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Context;
+@using Newtonsoft.Json;
+@using Hrm.Common;
+@{
+    Layout = null;
+    var listColumns = Model.ListTableColumns;
+    var editingTableClass = "table-editing-inline";
+    if (Model.ViewType != 1)
+    {
+        editingTableClass = string.Empty;
+    }
+    var index = 0;
+}
+<script>
+</script>
+<div class="col-md-12 pd-0 pull-left @editingTableClass">
+    <div class="table-content hrm-v2-table hrm-v2-table-responsive hrm-v2-scroll">
+            <table class="system-table-table">
+                @{
+                var fields = Model.Fields.OrderBy(x => x.Position).ToList();
+                if (fields != null && fields.Count() > 0)
+                {
+                        <thead class="system-table-thead">
+                            <tr class="hrm-v2-header-collum system-table-tr">
+                                @foreach (var field in fields)
+                                {
+                                var fieldWidth = field.Width.ToString() + "px";
+                                var fieldVisible = field.Visible ? "inline-block" : "none";
+                                if (field.Presentation == "Checkbox")
+                                {
+                                        <th style="width:@fieldWidth;display:@fieldVisible;text-align:@field.Alignment">
+                                            <div class="cntr">
+                                                <label for="@Model.TableName-check-all" class="label-cbx">
+                                                    <input id="@Model.TableName-check-all" type="checkbox" name="chkall_column" class="invisible">
+                                                    <div class="checkbox">
+                                                        <svg width="20px" height="20px" viewBox="0 0 20 20">
+                                                            <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                                                            <polyline points="4 11 8 15 16 6"></polyline>
+                                                        </svg>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </th>
+                                }
+                                else
+                                {
+                                        @*<th style="width:@fieldWidth;display:@fieldVisible; text-align:@field.Alignment">@T(field.FieldTitle)</th>*@
+
+                                        if (listColumns != null && listColumns.FirstOrDefault(i => i.ColumnName == field.FieldName) != null)
+                                        {
+                                            <th style="width:@fieldWidth;display:@fieldVisible; text-align:@field.Alignment">
+                                               
+                                                @if (field.IsShowTotal)
+                                                {
+                                                   <div class="title-name">
+                                                       @M(listColumns.FirstOrDefault(i => i.ColumnName == field.FieldName).Id.ToString() + ";TableColumn;ColumnName")
+                                                   </div>
+                                                    <div class="title-total">
+                                                        @if (Model.Total != null && Model.Total.ToString() != "")
+                                                        {
+                                                            @Model.Total[field.TotalField]
+                                                        }      
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    @M(listColumns.FirstOrDefault(i => i.ColumnName == field.FieldName).Id.ToString() + ";TableColumn;ColumnName")
+                                                }
+                                            </th>
+                                            @*<th style="width:@fieldWidth;display:@fieldVisible; text-align:@field.Alignment">@T(field.FieldTitle)</th>*@
+
+                                        @*@field.TotalField = "TotalWorkingday";
+                                        output*@
+                                }
+                                else
+                                {
+                                          <th style="width:@fieldWidth;display:@fieldVisible; text-align:@field.Alignment">
+                                             
+                                          </th>
+                                        }
+                                    }
+                                }
+                            </tr>
+                            @{
+                            var lstButtonHeaders = Model.ButtonHeader;
+                            if (lstButtonHeaders.Count > 0)
+                            {
+                                    <tr class="hrm-v2-header-button system-table-tr" style="display:none;">
+                                        @foreach (var field in fields)
+                                    {
+                                        var fieldWidth = field.Width.ToString() + "px";
+                                        var fieldVisible = field.Visible ? "inline-block" : "none";
+                                        if (field.Presentation == "Checkbox")
+                                        {
+                                                <th style="width:@fieldWidth;display:@fieldVisible;text-align:@field.Alignment">
+                                                    <div class="cntr">
+                                                        <label for="@Model.TableName-check-all" class="label-cbx">
+                                                            <input id="@Model.TableName-check-all" type="checkbox" name="chkall_column" class="invisible">
+                                                            <div class="checkbox">
+                                                                <svg width="20px" height="20px" viewBox="0 0 20 20">
+                                                                    <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                                                                    <polyline points="4 11 8 15 16 6"></polyline>
+                                                                </svg>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                </th>
+                                        }
+                                    }
+
+                                        @foreach (var buttonHeader in lstButtonHeaders)
+                                    {
+                                        <th>
+                                            <button type="button" class="@buttonHeader.ButtonClass" onclick="@buttonHeader.EventButton " style="margin-left:10px;margin-top:5px;">@T(buttonHeader.ButtonName) </button>
+                                        </th>
+                                    }
+                                    </tr>
+                            }
+
+                            }
+
+                        </thead>
+                        <tbody class="system-table-tbody-@Model.TableConfigName">
+                            @{
+                                var datas = Model.TableData;
+                                if (datas != null && datas.Count > 0)
+                                {
+
+                                    foreach (var data in datas)
+                                    {
+                                        if (data.ToString() != "")
+                                        {
+                                            var rowId = Model.TableName + "-row-" + data.Id;
+                                            if (Model.ViewType != 1)
+                                            {
+                                                <tr id="@rowId" class="system-table-tr">
+                                                    @Html.Partial(UrlHelpers.View("~/Views/Shared/Template/_TableRowContent.cshtml"), new TableRowViewModel
+                                           {
+                                               Data = data,
+                                               TableViewModel = Model
+                                           })
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr id="@rowId" class="system-table-tr">
+                                                    @Html.Partial(UrlHelpers.View("~/Views/Shared/Template/_InlineEditingRow.cshtml"), new InlineEditingViewModel
+                                               {
+                                                   Columns = listColumns,
+                                                   Fields = fields,
+                                                   Data = data,
+                                                   TableName = Model.TableConfigName,
+                                                   Index = index
+                                               })
+                                                </tr>
+                                            }
+                                            index++;
+
+                                        }
+                                    }
+                                }
+                            }
+                        </tbody>
+                            }
+                }
+            </table>
+    </div>
+
+</div>
+@if (Model.ShowFooter)
+{
+    <div class="table-footer hrm-v2-table-footer">
+        @if (Model.ViewType == 1)
+        {
+            <div class="pull-left" id="table-quick-add-@Model.TableConfigName">
+                <span class="add-row">@T("Table.AddRecord."+ Model.TableConfigName)</span>
+            </div>
+        }
+        <div class="pull-right">
+            <span class="select-pagesize">
+                <span class="pull-left hrm-v2-font-13 hrm-v2-normal" style="margin-right:10px">@T("Table.Pagination.Display")</span>
+                <span>
+
+                    <select class="@Model.TableName-paging-items-per-page" id="@Model.TableName-paging-items-per-page" onchange="changeItemsPerpage('@Model.TableName')">
+                        @foreach (var item in Model.lstItemsPerPage)
+                        {
+                            if (item.IsSelected.Value)
+                            {
+                                <option value=@item["Name"] selected>@item["Name"]</option>
+                            }
+                            else
+                            {
+                                <option value=@item["Name"]>@item["Name"]</option>
+                            }
+                        }
+                    </select>
+                </span>
+                @*<span class="pull-left"> @Html.Partial(UrlHelpers.Template("_DropdownList.cshtml"), new DropdownListModel() { Name = Model.TableName + "-paging-items-per-page", IsUseImage = false, ValueField = "Name", Style = "width:80px;height:32px", DisplayField = "Name", Event = "changeItemsPerpage(\"" + Model.TableName + "\")", Data = Model.lstItemsPerPage })</span>*@
+            </span>
+            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { Name = Model.TableName + "-paging-first", BtnClass = "paging", IconName = "fas fa-step-backward", OnClick = "changePage(\"" + Model.TableName + "\",\"first\")" })
+            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { Name = Model.TableName + "-paging-previous", BtnClass = "paging", IconName = "fas fa-caret-left", OnClick = "changePage(\"" + Model.TableName + "\",\"previous\")" })
+            <span class="page-display"><span class="pull-left hrm-v2-font-13">@T("Table.Pagination.Page") @Html.Partial(UrlHelpers.Template("_TextEditor.cshtml"), new TextEditorModel() { Name = Model.TableName + "-paging-current-page", Value = Model.CurrentPage.ToString(), Style = "width:23px;height:20px;text-align:center;pointer-events:none;margin:0px 6px;line-height:23px;padding-top:4px;" }) </span><span class="@Model.TableName-max-item-perpage pull-left hrm-v2-font-13"> / @Html.Raw((int)Math.Ceiling((Model.TotalRecord == 0 ? 1 : (float)Model.TotalRecord) / (float)Model.ItemsPerPage))</span></span>
+            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { Name = Model.TableName + "-paging-next", BtnClass = "paging", IconName = "fas fa-caret-right", OnClick = "changePage(\"" + Model.TableName + "\",\"next\")" })
+            @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { Name = Model.TableName + "-paging-last", BtnClass = "paging", IconName = "fas fa-step-forward", OnClick = "changePage(\"" + Model.TableName + "\",\"last\")" })
+        </div>
+        @{
+            var endRecord = (Model.CurrentPage - 1) * Model.ItemsPerPage + Model.ItemsPerPage;
+            if (Model.TotalRecord < Model.CurrentPage * Model.ItemsPerPage) { endRecord = Model.TotalRecord; }
+        }
+        @if (Model.TotalRecord != 0)
+        {<span class="pull-right" style="margin-right:30px;"><span class="@Model.TableName-start-record">@Html.Raw((Model.CurrentPage - 1) * Model.ItemsPerPage + 1)</span> - <span class="@Model.TableName-end-record">@Html.Raw(endRecord) </span> / <span class="@Model.TableName-total-record">@Html.Raw(Model.TotalRecord)  <span class="hrm-v2-italic hrm-v2-font-13">@T("Table.Pagination.Record")</span></span></span>}
+        else
+        {  <span class="pull-right" style="margin-right:30px;"><span class="hrm-v2-italic hrm-v2-font-13"> 0 @T("Table.Pagination.Record")</span></span> }
+    </div>
+            }
+else if(Model.ViewType == 1)
+{
+    <div class="table-footer hrm-v2-table-footer">
+         <div class="pull-left" id="table-quick-add-@Model.TableConfigName">
+             <span class="add-row">@T("Table.AddRecord." + Model.TableConfigName)</span>
+         </div>
+    </div>
+}
+<script type="text/javascript">
+    $(document).off('click', '#table-quick-add-@Model.TableConfigName');
+
+    ControlModel[@Html.Raw(Json.Encode(Model.TableName))] = @Html.Raw(Json.Encode(Model));
+    var webBaseUrl =  @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl));
+    pagingStyle(ControlModel[@Html.Raw(Json.Encode(Model.TableName))]);
+
+    $('#@Model.TableName' + '-check-all').change(function () {
+        $('#@Model.TableName' +' .chk_column').prop('checked', this.checked);
+        if(@Model.ButtonHeader.Count > 0){
+            showButtonHeader('@Model.TableName');
+        }
+    });
+    $('#@Model.TableName' + ' .chk_column').change(function () {
+        if ($('#@Model.TableName' + ' .chk_column:checked').length == $('#@Model.TableName' + ' .chk_column').length) {
+            $('#@Model.TableName' + '-check-all').prop('checked', true);
+        }
+        else {
+            $('#@Model.TableName' + '-check-all').prop('checked', false);
+        }
+        if(@Model.ButtonHeader.Count > 0){
+            showButtonHeader('@Model.TableName');
+        }
+    });
+    $(document).on('click', '#table-quick-add-@Model.TableConfigName', function(){
+        var rowIndex = $(".system-table-tbody-@Model.TableConfigName tr").length;
+        $('.system-table-tbody-@Model.TableConfigName').append('<tr id="@Model.TableConfigName-new-row-'+rowIndex+'" class="system-table-tr"></tr>');
+        $('#@Model.TableConfigName-new-row-' + rowIndex).load('/Filter/InlineEditor', {
+            columns: ControlModel[@Html.Raw(Json.Encode(Model.TableName))].ListTableColumns.map(x => {
+                var temp = Object.assign({}, x);
+                x.ColumnValue = '';
+                return x;
+            }),
+            fields: ControlModel[@Html.Raw(Json.Encode(Model.TableName))].Fields,
+            index:rowIndex,
+            tableName: @Html.Raw(Json.Encode(Model.TableConfigName)),
+            isEdit : true});
+    });
+   
+</script>

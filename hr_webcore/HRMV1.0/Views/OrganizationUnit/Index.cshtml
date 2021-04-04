@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = AppRes.OrganizationUnit;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using HRM.App_LocalResources;
+<style>
+    .demo-section1 {
+        display: block;
+        border: 1px solid none;
+        margin-top: 34px;
+        height: 500px;
+        width : 250px;
+        overflow-y: scroll;
+        margin-left: -28px;
+        padding-right:0px;
+    }
+
+        .demo-section1 li {
+            display: inline-block;
+            width: 100%;
+        }
+
+    .gutter.gutter-horizontal {
+        cursor: ew-resize;
+        height: 100%;
+        float: left;
+    }
+
+    .gutter {
+        background: #2d333b;
+        position: relative;
+    }
+    .menu-department {
+        width: 250px;
+        padding-right: 0px;
+    }
+    .box-content-right-build-table {
+        padding: 0px;
+        width: calc(100% - 263px);
+    }
+</style>
+<script>
+    var currentRoleId = @Html.Raw(Json.Encode(ViewBag.CurrentRoleId));
+</script>
+<link href="~/Scripts/directive/angular-treeview/treeview.css" rel="stylesheet" />
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<script src="~/Scripts/angular.min.js"></script>
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row" ng-controller="mytable" ng-init="init()">
+        <div class="col-xs-3 col-sm-2 menu-department">
+            <h5 style="text-transform: none; margin-top:25px;">@AppRes.OrganizationUnit</h5>
+            <div class="demo-section1">
+                <div data-angular-treeview="true"
+                     data-tree-id="department"
+                     data-tree-model="sourceDepartment"
+                     data-ng-click="ChangeEmployeeData();">
+                </div>
+            </div>
+        </div>
+        <div class="gutter gutter-horizontal" style="width: 1px;"></div>
+        <div class="col-xs-9 col-sm-10 box-content-right-build-table" style="margin-top:0px;">
+            <div style="display: none;">
+                @Html.Action("ViewSaveOrganizationUnit", "OrganizationUnit")
+            </div>
+            <div style="display: none;">
+                @Html.Action("DinhDangCot", "OrganizationUnit")
+            </div>
+            <build-table table-url="'@(ViewBag.url)'"
+                         table-edit="editClick"
+                         table-delete="deleteClick"
+                         table-excel-click="ExcelClick"
+                         table-add="addClick"
+                         table-view="viewClick"
+                         table-dinhdang="DinhDangCot"
+                         table-param-filter="employeeFilter"
+                         table-model="orTableData">
+            </build-table>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/mycustom/OrganizationUnitUntil.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/js/Jquery-ui/jquery-ui.js"></script>
+<script src="~/Scripts/Colorbox/jquery.colorbox-min.js"></script>
+<link href="~/Content/css/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+
+<script src="~/Scripts/directive/nestable/jquery.nestable.js"></script>
+
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+</script>

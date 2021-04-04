@@ -1,0 +1,252 @@
+﻿@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Framework.Context
+@using Hrm.Framework.Helper
+@model Hrm.Admin.ViewModels.TableContentAddShiftViewModel
+@{
+    var index = 0;
+    var check = string.Empty;
+    var stripe = string.Empty;
+    decimal total = 0;
+    if (Model.WorkingdayShiftDetails.Count > 0)
+    {
+        foreach (var item in Model.WorkingdayShiftDetails)
+        {
+            total += item.TotalTime;
+        }
+    }
+}
+<style>
+    .table thead > tr > th {
+        font-weight: normal;
+        font-size: 13px;
+        font-family: Roboto-bold;
+        line-height: 40px;
+    }
+
+    .table tbody tr .td-span a {
+        color: red;
+        line-height: 60px;
+        display: none;
+    }
+
+    .table tbody tr:hover a {
+        display: block;
+    }
+
+    .wk-convertion-th {
+        position: relative;
+    }
+
+        .wk-convertion-th .total {
+            position: absolute;
+            bottom: -30px;
+            right: 4px;
+            font-size: 12px;
+            color: #4DAF3C;
+        }
+</style>
+<table class="table table-striped table-request-other">
+    <thead>
+        <tr>
+            <th>@T("Workingday.Shift.Start")</th>
+            <th>@T("Workingday.Shift.End")</th>
+            <th><span class="wk-convertion-th">@T("Workingday.Shift.WorkConvertion") <span class="total">@total</span></span></th>
+            <th>@T("Workingday.Shift.CoefficientsSalary")</th>
+            <th>@T("Workingday.Shift.MinuteCountingForWork") (@T("Workingday.Shift.Time"))</th>
+            <th>@T("Workingday.Shift.RestBetweenShifts")</th>
+            <th>@T("Workingday.Shift.Overtime")</th>
+            <th>@T("Workingday.Shift.Apply")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.WorkingdayShiftDetails.Count > 0)
+        {
+            foreach (var item in Model.WorkingdayShiftDetails )
+            {
+                <tr>
+                    <td class="td-span" style="width:100px;">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_InputMask.cshtml"), new TextEditorModel() { Name = "listModel[" + index + "].StartTime", isTimeFormat = false, NameId = "StartTime", Value = item.StartTime!=null ? item.StartTime.Value.ToString(@"hh\:mm") : null })
+                    </td>
+                    <td class="td-span" style="width:100px;">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_InputMask.cshtml"), new TextEditorModel() { Name = "listModel[" + index + "].EndTime", isTimeFormat = false, NameId = "StartTime", Value = item.EndTime!=null ? item.EndTime.Value.ToString(@"hh\:mm") : null  })
+                    </td>
+                    <td class="td-span">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "listModel[" + index + "].TotalTime", Value = item.TotalTime.ToString(), Type = "Number" })
+                    </td>
+                    <td class="td-span">
+                        @*@Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "listModel[" + index + "].SalaryRatio", Value = item.SalaryRatio==0?"1.00": item.SalaryRatio.ToString(), Type = "Number" })*@
+
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.Label.OverTimeRate").ToString(), Data =Model.ListOvertimeRate, ValueField = "Value", Name = "listModel[" + index + "].SalaryRatio", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", SearchField = true, Value = item.SalaryRatio.ToString() })
+                    </td>
+                    <td class="td-span">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "listModel[" + index + "].OvertimeMinRequire", Value = item.OvertimeMinRequire.ToString(), Type = "Number" })
+                    </td>
+                    <td>
+                        @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "ck-checked-lunch-break" + index, Value = "true", Attribute = item.IsLunchBreak == true ? "checked" : "", Id = "listModel[" + index + "].IsLunchBreak" })
+                    </td>
+                    <td>
+                        @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "ck-checked-overtime" + index, Value = "true", Attribute = item.IsOverTime == true ? "checked" : "", Id = "listModel[" + index + "].IsOverTime" })
+                    </td>
+                    <td>
+                        @{
+                            if (item.T2 == true)
+                            {
+                                check = "checked";
+                                stripe = "stripe";
+                            }
+                            else
+                            {
+                                check = string.Empty;
+                                stripe = string.Empty;
+                            }
+                        }
+                        <div class="frames-th @stripe" onclick="clickCheck(this)">
+                            <div class="frames-th-icon">
+                                <span class="fas fa-check"></span>
+                            </div>
+                            <div class="frames-th-th">
+                                <span>@T("Workingday.Shift.T2")</span>
+                            </div>
+                            <input type="checkbox" name="listModel[@index].T2" value="true" hidden @check />
+                        </div>
+                        @{
+                            if (item.T3 == true)
+                            {
+                                check = "checked";
+                                stripe = "stripe";
+                            }
+                            else
+                            {
+                                check = string.Empty;
+                                stripe = string.Empty;
+                            }
+                        }
+                        <div class="frames-th @stripe" onclick="clickCheck(this)">
+                            <div class="frames-th-icon">
+                                <span class="fas fa-check"></span>
+                            </div>
+                            <div class="frames-th-th">
+                                <span>@T("Workingday.Shift.T3")</span>
+                            </div>
+                            <input type="checkbox" name="listModel[@index].T3" value="true" hidden @check />
+                        </div>
+                        @{
+                            if (item.T4 == true)
+                            {
+                                check = "checked";
+                                stripe = "stripe";
+                            }
+                            else
+                            {
+                                check = string.Empty;
+                                stripe = string.Empty;
+                            }
+                        }
+                        <div class="frames-th @stripe" onclick="clickCheck(this)">
+                            <div class="frames-th-icon">
+                                <span class="fas fa-check"></span>
+                            </div>
+                            <div class="frames-th-th">
+                                <span>@T("Workingday.Shift.T4")</span>
+                            </div>
+                            <input type="checkbox" name="listModel[@index].T4" value="true" hidden @check />
+                        </div>
+                        @{
+                            if (item.T5 == true)
+                            {
+                                check = "checked";
+                                stripe = "stripe";
+                            }
+                            else
+                            {
+                                check = string.Empty;
+                                stripe = string.Empty;
+                            }
+                        }
+                        <div class="frames-th @stripe" onclick="clickCheck(this)">
+                            <div class="frames-th-icon">
+                                <span class="fas fa-check"></span>
+                            </div>
+                            <div class="frames-th-th">
+                                <span>@T("Workingday.Shift.T5")</span>
+                            </div>
+                            <input type="checkbox" name="listModel[@index].T5" value="true" hidden @check />
+                        </div>
+                        @{
+                            if (item.T6 == true)
+                            {
+                                check = "checked";
+                                stripe = "stripe";
+                            }
+                            else
+                            {
+                                check = string.Empty;
+                                stripe = string.Empty;
+                            }
+                        }
+                        <div class="frames-th @stripe" onclick="clickCheck(this)">
+                            <div class="frames-th-icon">
+                                <span class="fas fa-check"></span>
+                            </div>
+                            <div class="frames-th-th">
+                                <span>@T("Workingday.Shift.T6")</span>
+                            </div>
+                            <input type="checkbox" name="listModel[@index].T6" value="true" hidden @check />
+                        </div>
+                        @{
+                            if (item.T7 == true)
+                            {
+                                check = "checked";
+                                stripe = "stripe";
+                            }
+                            else
+                            {
+                                check = string.Empty;
+                                stripe = string.Empty;
+                            }
+                        }
+                        <div class="frames-th @stripe" onclick="clickCheck(this)">
+                            <div class="frames-th-icon">
+                                <span class="fas fa-check"></span>
+                            </div>
+                            <div class="frames-th-th">
+                                <span>@T("Workingday.Shift.T7")</span>
+                            </div>
+                            <input type="checkbox" name="listModel[@index].T7" value="true" hidden @check />
+                        </div>
+                        @{
+                            if (item.CN == true)
+                            {
+                                check = "checked";
+                                stripe = "stripe";
+                            }
+                            else
+                            {
+                                check = string.Empty;
+                                stripe = string.Empty;
+                            }
+                        }
+                        <div class="frames-th @stripe" onclick="clickCheck(this)">
+                            <div class="frames-th-icon">
+                                <span class="fas fa-check"></span>
+                            </div>
+                            <div class="frames-th-th">
+                                <span>@T("Workingday.Shift.CN")</span>
+                            </div>
+                            <input type="checkbox" name="listModel[@index].CN" value="true" hidden @check />
+                        </div>
+
+                    </td>
+                    <td class="td-span">
+                        <input type="text" name="listModel[@index].Index" value="@item.Index" hidden />
+                        <input type="text" name="listModel[@index].Id" value="@item.Id" hidden />
+                        <a onclick="deleteRowsShiftDetail('@item.Index')" class="fas fa-trash-alt" title=@T("table.button.delete")></a>
+                    </td>
+                </tr>
+              index++;
+         }
+       }
+    </tbody>
+
+</table>

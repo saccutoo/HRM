@@ -1,0 +1,63 @@
+﻿.connected, .sortable, .exclude, .handles {
+			margin: auto;
+			padding: 0;
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+		.sortable.grid {
+			overflow: hidden;
+		}
+		.connected li, .sortable li, .exclude li, .handles li {
+			list-style: none;
+			border: 1px solid #CCC;
+			background: #F6F6F6;
+			font-family: "Tahoma";
+			margin: 5px;
+			padding: 5px;
+			height: 40px;
+            font-size:16px;
+		}
+		.handles span {
+			cursor: move;
+		}
+		li.disabled {
+			opacity: 0.5;
+		}
+		.sortable.grid li {
+			line-height: 80px;
+			float: left;
+			width: 80px;
+			height: 80px;
+			
+		}
+        #span{
+            text-align: center;
+            line-height:28px;
+        }
+		li.highlight {
+			background: #FEE25F;
+		}
+		#connected {
+			width: 440px;
+			overflow: hidden;
+			margin: auto;
+		}
+		.connected {
+			float: left;
+			width: 200px;
+		}
+		.connected.no2 {
+			float: right;
+		}
+		li.sortable-placeholder {
+			border: 1px dashed #CCC;
+			background:#ecfaf9;
+		}
+        .list li:hover{
+            background-color:#f7c895;
+            border:1px solid #ff6a00;
+        }

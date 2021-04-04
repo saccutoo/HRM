@@ -1,0 +1,35 @@
+﻿@using HRM.App_LocalResources;
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="container-fluid" ng-controller="EmployeeBonusDiscipline">
+
+    <div class="row">
+        <div style="display: none;">
+            @Html.Action("Save_EmployeeBonusDiscipline", "EmployeeBonus_Discipline")
+        </div>
+        <br />
+        <div class="EmployeeBonusDiscipline"><b>@AppRes.RewardInformation</b></div>
+        <build-table table-url="urlEmployeeBonusDiscipline"
+                     table-edit="editClick"
+                     table-delete="deleteClick"
+                     table-excel-click="ExcelBonusClick"
+                     table-add="addClick"
+                     table-param-filter="Filter"
+                     table-model="EBTableData">
+        </build-table>
+
+        <div class="EmployeeBonusDiscipline"><b>@AppRes.DisciplinaryInformation</b></div>
+        <build-table table-url="urlEmployeeBonusDiscipline2"
+                     table-edit="editClick2"
+                     table-delete="deleteClick"
+                     table-excel-click="ExcelDisciplineClick"
+                     table-add="addClick2"
+                     table-param-filter="Filter2"
+                     table-model="EDTableData">
+        </build-table>
+    </div>
+</div>
+
+

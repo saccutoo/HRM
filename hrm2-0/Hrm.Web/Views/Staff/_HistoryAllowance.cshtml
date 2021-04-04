@@ -1,0 +1,24 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Framework.Models.TableViewModel
+@{
+    Layout = null;
+    Model.ShowFooter = false;
+}
+
+<div class="detail-allowance-container display-inline-block">
+    <div class="hrm-v2-modal-header" style="border:none;">@T("Staff.Detail.AllowencyHistory")</div>
+    <div class="hrm-v2-modal-body" style="margin-top:0px">
+        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model)
+    </div>
+    <div class="footer">
+        <div class="footer-login">
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary hrm-v2-btn-close close-popup" data-dismiss="modal">
+                    @T("Staff.Close")
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

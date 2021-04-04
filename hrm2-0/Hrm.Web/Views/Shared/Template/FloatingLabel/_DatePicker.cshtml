@@ -1,0 +1,51 @@
+﻿@model Hrm.Framework.Models.DatePickerModel
+@{
+    Layout = null;
+    var dateFormat = Model.DateFormat;
+    if (string.IsNullOrEmpty(dateFormat))
+    {
+        dateFormat = System.Configuration.ConfigurationManager.AppSettings["ClientDateFormat"];
+    }
+    string valDefault = string.Empty;
+    if (Model.Value.HasValue && Model.Value != DateTime.MinValue)
+    {
+        valDefault = Model.Value.Value.ToString(dateFormat);
+    }
+    var cssName = Model.Name.Replace(".", "-").Replace("[", "-").Replace("]", "");
+}
+<style>
+    .hrmv2-tab .tab-content {
+        min-height: 400px;
+    }
+</style>
+<div class="hrm-v2-floating-form">
+    <div class="floating-label date-picker-container">
+        <div class='input-group date' id='@cssName-datetimepicker'>
+            <input type='text' class="date-picker floating-input" id="@Model.Name" name="@Model.Name" placeholder="@Model.PlaceHolder" value="@valDefault" @Model.Attribute/>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+            <label>
+                @Model.LabelName @if (Model.IsRequired)
+            {<span class="star"> *</span> }
+            </label>
+        </div>
+        <span name="@Model.Name-error" class="hrm-v2-error" label-name="@Model.LabelName"></span>
+        <script type="text/javascript">
+            $(function () {
+                $('#@cssName-datetimepicker').datetimepicker({
+                    format: '@Html.Raw(dateFormat.ToUpper())',
+                    widgetPositioning: {
+                        vertical: '@Html.Raw(Model.Vertical)'
+                    }
+                }).on('dp.change', function (e) {
+
+                });
+
+                @*$('#@Model.Name.ToLower().Replace(".","-").Replace("[", "").Replace("]", "-")-datetimepicker').on('change', function (envent) {
+                        alter(envent)
+                    });*@
+            });
+        </script>
+    </div>
+</div>

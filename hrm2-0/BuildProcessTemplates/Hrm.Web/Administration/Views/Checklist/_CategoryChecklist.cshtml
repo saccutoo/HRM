@@ -1,0 +1,36 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@using Newtonsoft.Json
+@model Hrm.Framework.ViewModels.ChecklistViewModel
+@{
+    ViewBag.Title = "GroupChecklist";
+}
+@{
+    var data = Model.Checklist;
+    if (data.Count > 0)
+    {
+        var index=0;
+        string active=string.Empty;
+        if (index == 0)
+        {
+            active = "active";
+        }
+        foreach (var item in data)
+        {
+            <div class="reception-procedure-button-content @active" onclick="ClickChecklist(@item.Id)">
+                <div class="title-top">
+                    <span>@item.Name</span>
+                </div>
+                <div class="descript-bottom">
+                    <span>@item.Note</span>
+                </div>
+            </div>
+            index++;
+            if (index>0)
+            {
+                active = string.Empty;
+            }
+        }
+    }
+}   

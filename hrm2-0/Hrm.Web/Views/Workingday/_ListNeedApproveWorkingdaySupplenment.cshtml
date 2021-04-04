@@ -1,0 +1,211 @@
+﻿@model Hrm.Web.ViewModels.WorkingdaySupplementViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@using Hrm.Framework.Context
+@using Hrm.Common
+@{
+    Layout = null;
+    var index = 0;
+}
+<style>
+    .request-type .item{
+        height:105px !important;
+    }
+    .request-type .presentation{
+        margin-top:23px !important;
+    }
+    .request-type h4{
+        height:35px;
+    }
+</style>
+<div >
+
+    @{
+        if (Model.WorkingdaySupplements.Count() > 0)
+        {
+            var requestDetail = new WorkingdaySupplementModel();
+            var activeTabMyRequest = new Dictionary<long, string>();
+            foreach (var item in Model.longTypes)
+            {
+                if (Model.WorkingdaySupplements.Where(s => s.RequestStatus == item.Value).Count() > 0)
+                {
+                    requestDetail = Model.WorkingdaySupplements.Where(s => s.RequestStatus == item.Value).FirstOrDefault();
+                    break;
+                }
+            }
+            for (var i = 0; i < Model.WorkingdaySupplements.Count; i++)
+            {
+                if (Model.WorkingdaySupplements[i].Id == requestDetail.Id)
+                {
+                    activeTabMyRequest.Add(Model.WorkingdaySupplements[i].Id, "active");
+                }
+                else
+                {
+                    activeTabMyRequest.Add(Model.WorkingdaySupplements[i].Id, string.Empty);
+                }
+            }
+
+            foreach (var item in Model.longTypes)
+            {
+                var listRequest = Model.WorkingdaySupplements.Where(x => x.RequestStatus == item.Value).ToList();
+                <div class="request-type request-type-approval" style="clear:both" id="parent">
+                   <div class="request-type-header">
+                       @if (item.Value == MasterDataId.RequestPending)
+                        {
+                           <div class="request-type-header-checkbox">
+                               @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checkall-request" })
+                           </div>
+                       }
+                       <div class="request-type-head-supplement-type">
+                           <span id="supplement-type">@M(item.Value.ToString() + ";" + DataType.MasterData + ";Name").ToString().ToUpper() (@listRequest.Count)</span>
+                       </div>
+                      
+                       @{
+                           var collapsed = string.Empty;
+                           var collaps = "collapse in";
+                           if (index > 0)
+                           {
+                               collapsed = "collapsed";
+                               collaps = "collapse";
+                           }
+                       }
+                       @if (item.Value == MasterDataId.RequestPending)
+                        {
+                           <div class="pull-left" >
+                               <button class="btn btn-primary hrm-v2-btn-close" id="no-approved-supplement" onclick="showFromNoteApproval(false)" style="display:none">
+                                   @T("Workingday.Button.NotApproved")
+                               </button>
+                           </div>
+
+                           <div class="pull-left">
+                               <button type="button" id="approved-supplement" class="btn btn-primary hrm-v2-add-workingday" onclick="showFromNoteApproval(true)" style="display:none">
+                                   @T("Workingday.Button.Approved")
+                               </button>
+                           </div>
+
+                       }
+                       <div class="request-type-header-collapse">
+                           <span data-toggle="collapse" class="@collapsed" data-target="#collapse-@item.Value" aria-expanded="false" aira-controls="collapse-@item.Value" style="float:right">
+                               <i class="fa" style="line-height:25px;margin-right:15px;"></i>
+                           </span>
+                       </div>                    
+                   </div>
+                    
+                    <div class="@collaps"  id="collapse-@item.Value" aria-labelledby="collapse-@item.Value" data-parent="#parent">
+                        @foreach (var request in listRequest)
+                        {
+                            string timeDuration = string.Empty;
+                            if (request.SupplementTypeId == MasterDataId.EarlyDuration || request.SupplementTypeId == MasterDataId.LateDuration)
+                            {
+                                if (request.MissingTimeDuration != null)
+                                {
+                                    timeDuration = request.MissingTimeDuration.Value.ToString("HH:mm");
+                                }
+                            }
+                            else
+                            {
+                                timeDuration = "1";
+                            }
+
+                            var style = string.Empty;
+                            if (item.Value == MasterDataId.RequestPending && request.IsApproval == false)
+                            {
+                                style = "margin-left:40px;";
+                            }
+                            <div class="item @activeTabMyRequest[request.Id] item-@request.Id" data-id="@request.Id" request-status-id="@request.RequestStatusId">
+                                @if (item.Value == MasterDataId.RequestPending && request.IsApproval == true)
+                                {
+                                    <span>
+                                        @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-" + request.Id.ToString(), Value = request.Id.ToString(), Id = "chk-working-supplement" })
+                                    </span>
+                                }
+
+                                <div class="presentation" style="@style">@request.StaffName.Substring(0, 1)</div>
+                                <div class="description">
+                                    <div class="description-left">
+                                        <span class="text hrm-v2-bold">@request.StaffName</span>
+                                        <span class="text">
+                                           @M(request.SupplementTypeId.ToString() + ";" + DataType.MasterData + ";Name").ToString()
+                                        </span>
+                                        
+                                        <span class="text">
+                                            @M(request.ReasonTypeId.ToString() + ";" + DataType.MasterData + ";Name").ToString()
+                                        </span>
+                                        <span class="text">
+                                           @request.Note
+                                        </span>
+                                    </div>
+                                    <div class="description-right">
+                                        <div class="organization-name" style="font-family:Roboto-bold">
+                                            @M(request.OrganizationId.ToString()+";"+DataType.Organization+ ";OrganizationName")
+                                        </div>
+                                        <div class="date-and-th">
+                                            @T(request.Date.Value.ToString("dddd")) @request.Date.Value.ToString("dd/MM/yyyy")
+                                        </div>
+                                        @if (request.SupplementTypeId != MasterDataId.EarlyDuration && request.SupplementTypeId != MasterDataId.LateDuration)
+                                        {
+                                            <div class="from-to-date-or-description-right">
+                                                @{
+                                                    var startTime = string.Empty;
+                                                    var endTime = string.Empty;
+                                                    if (request.StartTime != null)
+                                                    {
+                                                        startTime = request.StartTime.Value.ToString("HH:mm");
+                                                    }
+                                                    if (request.EndTime != null)
+                                                    {
+                                                        endTime = request.EndTime.Value.ToString("HH:mm");
+                                                    }
+                                                }
+                                                <span>@startTime - @endTime</span>
+                                            </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="from-to-date-or-description-right">
+                                                            @{
+                                                                var missingTimeDuration = string.Empty;
+                                                                if (request.MissingTimeDuration != null)
+                                                                {
+                                                                    missingTimeDuration = request.MissingTimeDuration.Value.TimeOfDay.Minutes.ToString();
+                                                                }
+                                                            }
+                                                            <span>-@missingTimeDuration @T("Workingday.Unit.Minute")</span>
+                                                        </div>
+                                                                }
+                                        <div class="time-from-to">
+                                            @{
+                                                var checkin = "__:__";
+                                                var checkout = "__:__";
+                                                if (request.CheckIn != null)
+                                                {
+                                                    checkin = request.CheckIn.Value.ToString("HH:mm");
+                                                }
+                                                if (request.CheckOut != null)
+                                                {
+                                                    checkout = request.CheckOut.Value.ToString("HH:mm");
+                                                }
+                                            }
+                                            <span>
+                                                @checkin - @checkout
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+
+                    </div>
+                   
+               index++;
+            }
+         }
+
+    }
+
+</div>
+

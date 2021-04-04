@@ -1,0 +1,57 @@
+﻿/*---------------------------------------------PayBill-CSS--------------------------------------------------------*/
+
+#PayBill {
+    position: relative;
+    width: 1280px;
+    background-color: white;
+    overflow: hidden;
+    border-collapse: collapse;
+}
+/*thead*/
+
+    #PayBill thead {
+        position: relative;
+        display: block; /*seperates the header from the body allowing it to be positioned*/
+        width: 1280px;
+        overflow: visible;
+    }
+
+thead th {
+    background-color: white;
+    min-width: 150px;
+    height: 32px;
+    border: 1px solid #222;
+}
+
+#PayBill thead th:nth-child(1), #PayBill thead th:nth-child(2), #PayBill thead th:nth-child(3), #PayBill thead th:nth-child(4) { /*first cell in the header*/
+    position: relative;
+}
+
+      
+
+#PayBill tbody {
+    position: relative;
+    display: block; /*seperates the tbody from */
+    width: 1280px;
+    height: 400px;
+    overflow: scroll;
+}
+
+#PayBill tbody td {
+    background-color: white;
+    min-width: 150px;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+    #PayBill tbody tr td:nth-child(1), #PayBill tbody tr td:nth-child(2), #PayBill tbody tr td:nth-child(3), #PayBill tbody tr td:nth-child(4) { /*the first cell in eh tr*/
+        position: relative;
+        height: 40px;
+        background-color: #f0f0f5;
+    }
+
+ 
+/*----------------------------------------------------------------------------------------------------------------*/
+

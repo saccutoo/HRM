@@ -1,0 +1,332 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<link href="~/Scripts/directive/clockPicker/bootstrap-clockpicker.min.css" rel="stylesheet" />
+<script src="~/Scripts/directive/clockPicker/bootstrap-clockpicker.min.js"></script>
+<div class="container-fluid">
+    <div id="Edit_Recommended">
+        <div class="row col-lg-12" style="margin: 0;">
+            <div ng-if="popupduyet">
+                <h3 style="text-transform: none;">@AppRes.Public_Edit_Recommended</h3>
+            </div>
+        </div>
+        <div class="row col-lg-12">
+            <hr />
+        </div>
+        <br />
+        
+        <form role="form" name="EditRecommended" ng-submit="SaveAction(EditRecommended)" novalidate>
+            <div class="row">
+                <div class="col-md-12">
+
+                    @*---------------------------------------------------------------Đầu tiên-------------------------------------------------------------------------------------------------------*@
+
+                    <div class="row">
+                        <div class="">
+                            <div class="col-md-2">
+                                &nbsp;&nbsp;&nbsp; <label>@AppRes.Timekeeping_Type <span style="color: red">(*)</span></label>
+                            </div>
+                            @if (Global.CurrentLanguage == 5)
+                            {
+                                <div class="col-md-4">
+                                    <select class="form-control" id="aSelect" name="Type" chosen options="getListKindOfProposal" on-no-result="doStuff" required data-modal="modal" ng-model="editData.Type" ng-options="list.Value as list.Name for list in getListKindOfProposal" ng-change="ChangegetListKindOfProposal(EditRecommended)">
+                                        <option value="" disabled selected>--@AppRes.Select--</option>
+                                    </select>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-4">
+                                    <select class="form-control" id="aSelect" name="Type" chosen options="getListKindOfProposal" on-no-result="doStuff" required data-modal="modal" ng-model="editData.Type" ng-options="list.Value as list.NameEN for list in getListKindOfProposal" ng-change="ChangegetListKindOfProposal(EditRecommended)">
+                                        <option value="" disabled selected>--@AppRes.Select--</option>
+                                    </select>
+                                </div>
+                            }
+                           @*<span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.Type.$error.required">Vui lòng chọn loại bổ sung</span>*@
+                        </div>
+                        @if (Global.CurrentLanguage == 5)
+                        {
+                            <div class="">
+                                <div class="col-md-2">
+                                    <label>@AppRes.Timekeeping_Status <span style="color: red">(*)</span></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" ng-disabled="ReadonlyStatus" required data-modal="modal" ng-model="editData.Status" ng-options="list.Value as list.Name for list in getListStatus" ng-style="CursorStatus" convert-dropdown>
+                                        <option value="" selected>--@AppRes.Select--</option>
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="">
+                                <div class="col-md-2">
+                                    <label>@AppRes.Timekeeping_Status <span style="color: red">(*)</span></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" ng-disabled="ReadonlyStatus" required data-modal="modal" ng-model="editData.Status" ng-options="list.Value as list.NameEN for list in getListStatus" ng-style="CursorStatus" convert-dropdown>
+                                        <option value="" selected>--@AppRes.Select--</option>
+                                    </select>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                    <br />
+                    <div class="row" ng-if="(editData.Type==1)?true:false">
+                        <div class="">
+                            <div class="col-md-2">
+                                &nbsp;&nbsp;&nbsp;<label>@AppRes.Timekeeping_TimeOffSelect <span style="color: red">(*)</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" chosen options="TimeOffSelect" name="timeOffSelect" on-no-result="doStuff" ng-readonly=is_readonly required data-modal="modal"  ng-model="editData.TimeOffSelect"  ng-options="list.CheckTime as list.CheckTime for list in TimeOffSelect"  ng-change="ChangeTimeOffSelect()" convert-dropdown>
+                                    <option value="" selected>--@AppRes.Select--</option>
+                                </select>
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.timeOffSelect.$error.required">@AppRes.ErrorComeLateAndLeaveEarly</span>
+                            </div>
+                        </div>
+
+                        <div class="" >
+                            <div class="col-md-2">
+                                <label>@AppRes.Timekeeping_TimeOff <span style="color: red">(*)</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                @*<input type="date" ng-readonly=is_readonly data-modal="modal" name="orderNo" class="form-control" ng-model="editData.TimeOff" format-date>*@
+                                <input type="text" class="form-control" ng-model="editData.TimeOff" id="TimeOff" convert-time name="TimeOff" data-modal="modal" ng-change="ChangeTimeOff()" required>
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.TimeOff.$error.required">@AppRes.ErrorMinutesToGoHomeLate</span>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <br />
+                    <div class="row" ng-if="(editData.Type==2 || editData.Type==3 || editData.Type==4 || editData.Type==5)?true:false">
+                        <div class="" >
+                            <div class="col-md-2">
+                                &nbsp;&nbsp;&nbsp;<label>@AppRes.StartDay <span style="color: red">(*)</span></label>
+                            </div>
+                            <div class="col-md-2" >
+                                <select class="form-control" chosen options="listDate" on-no-result="doStuff" name="StartDay" required data-modal="modal" ng-model="editData.StartDay" ng-options="list.CheckTime as list.CheckTime for list in listDate"  ng-change="changeStartDay()" convert-dropdown>
+                                    <option value="" selected>--@AppRes.Select--</option>
+                                </select>
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.StartDay.$error.required">@AppRes.ErrorDateStart</span>
+                            </div>
+                           
+                            <div class="col-md-2"  ng-if="(editData.Type==2 || editData.Type==3 || editData.Type==4)?true:false">
+                                @*<select class="form-control" chosen options="ListFromHour" on-no-result="doStuff" name="FromHour"  required data-modal="modal" ng-model="editData.FromHour" convert-dropdown ng-disabled="readonlyFromHour" ng-options="list.StartTime as list.StartTime for list in ListFromHour" ng-change="changeToTimeOut()">
+                                    <option value="" selected></option>
+                                </select>*@
+                                <input list="testList" ng-model="editData.FromHour" ng-change="changeToTimeOut1()" ng-disabled="readonlyFromTime" required name="FromHour" autocomplete="off" class="form-control" />
+                                <datalist id="testList">
+                                    <option ng-repeat="list in ListFromHour" value="{{list.StartTime}}">
+                                </datalist>
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.FromHour.$error.required">@AppRes.TimekeeperGoTo</span>
+                            </div>
+                            <div class="col-md-2" ng-if="(editData.Type==5)?true:false">
+                                <input type="text" ng-model="editData.StartTime" class="form-control clockpicker" convert-clockpicker name="StartTime" required id="StartTime" convert-time ng-change="changeToTimeOut1()" />
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.StartTime.$error.required">@AppRes.ErrorStartingOvertime</span>
+                            </div>
+                        </div>
+
+                        <div class="">
+                            <div class="col-md-2">
+                                <label>@AppRes.EndDate <span style="color: red">(*)</span></label>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-control" chosen options="listDate1" on-no-result="doStuff" name="EndDate" required data-modal="modal" ng-model="editData.EndDate" ng-disabled="readonlyEndDate" ng-options="list.CheckTime1 as list.CheckTime1 for list in listDate1" convert-dropdown ng-change="changeEndDate()">
+                                    <option value=""  selected>--@AppRes.Select--</option>
+                                </select>
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.EndDate.$error.required">@AppRes.ErrorSelectEndDate</span>
+                            </div>
+                            <div class="col-md-2"  ng-if="(editData.Type==2 || editData.Type==3 || editData.Type==4)?true:false">
+                                @*<select class="form-control" chosen options="ListToHour" on-no-result="doStuff" name="ToHour"  required data-modal="modal" ng-model="editData.ToHour" ng-options="list.EndTime as list.EndTime for list in ListToHour"  convert-dropdown ng-disabled="readonlyToHour" ng-change="changeToTimeOut()">
+                                    <option value="" selected></option>
+                                </select>*@
+                                <input list="testList1" ng-model="editData.ToHour" ng-change="changeToTimeOut1()" ng-disabled="readonlyFromTime" required name="ToHour" autocomplete="off" class="form-control" />
+                                <datalist id="testList1">
+                                    <option ng-repeat="list in ListToHour" value="{{list.EndTime}}">
+                                </datalist>
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.ToHour.$error.required">@AppRes.ErrorTimekeeperGoBackOn</span>
+                            </div>
+                            <div class="col-md-2" ng-if="(editData.Type==5)?true:false">
+                                <input type="text" ng-model="editData.EndTime" class="form-control clockpicker" convert-clockpicker required name="EndTime" id="EndTime" convert-time ng-change="changeToTimeOut1()" convert-time />
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.EndTime.$error.required">@AppRes.ErrorEndingOvertime</span>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row" ng-if="(editData.Type==2 || editData.Type==3 || editData.Type==4 || editData.Type==5)?true:false">
+                        <div class="" >
+                            <div class="col-md-2">
+                                &nbsp;&nbsp;&nbsp;<label>@AppRes.HR_WorkDay <span style="color: red">(*)</span></label>
+                            </div>
+                            <div class="col-md-4">
+                               <input type="text" ng-model="editData.DayOff"  class="form-control"  ng-disabled="true" required/>
+                            </div>
+                        </div>
+                        <div class="" ng-if="(editData.Type==5 || editData.Type==4)?true:false">
+                            <div class="col-md-2">
+                                <label>@AppRes.MultiplierRate<span style="color: red">(*)</span></label>
+                            </div>
+                            <div class="col-md-4" >
+
+                                @if (Global.CurrentLanguage == 5)
+                                {
+                                    <select class="form-control" chosen options="getPercent" on-no-result="doStuff" required data-modal="modal" ng-model="editData.PercentPayrollID" ng-options="list.Value as list.Name for list in getPercent" ng-change="changePercentPayroll()">
+                                        <option value="" disabled selected="selected"></option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="form-control" chosen options="getPercent" on-no-result="doStuff" required data-modal="modal" ng-model="editData.PercentPayrollID" ng-options="list.Value as list.NameEN for list in getPercent" ng-change="changePercentPayroll()">
+                                        <option value="" disabled selected="selected"></option>
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="">
+                            <div class="col-md-2">
+                                &nbsp;&nbsp;&nbsp;<label>@AppRes.Timekeeping_Reason <span style="color: red">(*)</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                @if (Global.CurrentLanguage == 5)
+                                {
+                                    <select class="form-control" chosen options="getListReason" on-no-result="doStuff" name="Reason" required data-modal="modal" ng-model="editData.ReasonType" ng-options="list.GlobalListID as list.Name for list in getListReason" convert-dropdown ng-change="ClickReason()">
+                                        <option value="" selected>--@AppRes.Select--</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="form-control" chosen options="getListReason" on-no-result="doStuff" name="Reason" required data-modal="modal" ng-model="editData.ReasonType" ng-options="list.GlobalListID as list.NameEN for list in getListReason" convert-dropdown ng-change="ClickReason()">
+                                        <option value="" selected>--@AppRes.Select--</option>
+                                    </select>
+                                }
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.Reason.$error.required">@AppRes.ErrorSelectReason</span>
+                            </div>
+                        </div>
+
+                        <div class="" ng-if="editData.ReasonType==1213?true:false">
+                            <div class="col-md-2">
+                                <label>@AppRes.CustId <span style="color: red">(*)</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                @if (Global.CurrentLanguage == 5)
+                                {
+                                    <select class="form-control" chosen options="ListCustId" on-no-result="doStuff"  name="Customer" required data-modal="modal" ng-model="editData.CustomerID" ng-options="list.CustomerID as list.FullName for list in ListCustId" convert-dropdown ng-change="ChangeCustId()">
+                                        <option value="" selected>--@AppRes.Select--</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="form-control" chosen options="ListCustId" on-no-result="doStuff" name="Customer" required data-modal="modal" ng-model="editData.CustomerID" ng-options="list.CustomerID as list.FullNameEN for list in ListCustId" convert-dropdown ng-change="ChangeCustId()">
+                                        <option value="" selected>--@AppRes.Select--</option>
+                                    </select>
+                                }              
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.Customer.$error.required">@AppRes.Timekeeping_MS_SelectCustomer</span>                 
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row" ng-if="editData.ReasonType==1213?true:false">
+                        <div class="">
+                            <div class="col-md-2">
+                                &nbsp;&nbsp;&nbsp;<label>@AppRes.ContactName <span style="color: red">(*)</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                @if (Global.CurrentLanguage == 5)
+                                {
+                                    <select class="form-control" chosen options="ContactName" on-no-result="doStuff" name="CustomerContact" required data-modal="modal" ng-model="editData.CustomerContactID" ng-options="list.AutoID as list.FullName for list in ContactName" convert-dropdown>
+                                        <option value="" selected>--@AppRes.Select--</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="form-control" chosen options="ContactName" on-no-result="doStuff" name="CustomerContact" required data-modal="modal" ng-model="editData.CustomerContactID" ng-options="list.AutoID as list.FullNameEN for list in ContactName" convert-dropdown>
+                                        <option value="" selected>--@AppRes.Select--</option>
+                                    </select>
+                                }
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.CustomerContact.$error.required">@AppRes.ErrorSelectContact</span>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="col-md-2">
+                                <label>@AppRes.Purpose <span style="color: red">(*)</span></label>
+                            </div>
+                            <div class="col-md-4">
+                                @if (Global.CurrentLanguage == 5)
+                                {
+                                    <select class="form-control" chosen options="getListPurpose" on-no-result="doStuff" name="CustomerReasonType" required data-modal="modal" ng-model="editData.CustomerReasonType" ng-options="list.GlobalListID as list.Name for list in getListPurpose" convert-dropdown>
+                                        <option value="" selected>--@AppRes.Select--</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="form-control" chosen options="getListPurpose" on-no-result="doStuff" name="CustomerReasonType" required data-modal="modal" ng-model="editData.CustomerReasonType" ng-options="list.GlobalListID as list.NameEN for list in getListPurpose" convert-dropdown>
+                                        <option value="" selected>--@AppRes.Select--</option>
+                                    </select>
+                                }
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.CustomerReasonType.$error.required">@AppRes.Timekeeping_MS_SelectPurpose</span>
+                            </div>
+                        </div>
+              
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="">
+                            <div class="col-md-2">
+                                &nbsp;&nbsp;&nbsp;<label>@AppRes.Note <span style="color: red">(*)</span></label>
+                            </div>
+                            <div class="col-md-10">
+                                <textarea class="form-control"  ng-model="editData.Note" name="Note" required></textarea>
+                                <span style="color:red;line-height:30px;" ng-if="EditRecommended.$submitted && EditRecommended.Note.$error.required">@AppRes.ErrorNote</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row col-lg-12">
+                <hr />
+            </div>
+            <div class="row col-lg-12">
+                @*---------------------------------------------------------------Gửi duyệt lại và bỏ qua-------------------------------------------------------------------------------------------------------*@
+                <center>
+                    @*<button title="@AppRes.Edit_Recommended" type="button" class="btn btn-primary btn-labeled" ng-click="SendReview()" ng-if="popupGuiDuyet">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>@AppRes.Edit_Recommended
+                    </button>*@
+                    <button title="@AppRes.Edit_Recommended" type="submit" class="btn btn-primary btn-labeled"  ng-if="popupGuiDuyet">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>@AppRes.Edit_Recommended
+                    </button>
+                    <button type="reset" class="btn btn-labeled" ng-click="CloseForm(EditRecommended)">
+                        <span class="btn-label">
+                            <i class="fa fa-close"></i>
+                        </span>@AppRes.btnCancel
+                    </button>
+                    
+                </center>
+                
+            </div>
+            <br />
+            <div class="row col-lg-12">
+                <div class="row" style="margin-top:20px;">
+                    <p style="color:red;margin-left:300px;">{{Messenger}}</p>
+                </div>
+               
+            </div>
+        </form>
+       
+    </div>
+</div>
+<script type="text/javascript">
+    $('.clockpicker').clockpicker({
+        align: 'right',
+        autoclose: true
+    });
+    //$('#TimeOff').inputmask({ mask: "99:99" });
+    //$('#StartTime').inputmask({ mask: "99:99" });
+    //$('#EndTime').inputmask({ mask: "99:99" });
+</script>

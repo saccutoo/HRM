@@ -1,0 +1,140 @@
+﻿@model Hrm.Admin.ViewModels.ConfigInsuranceViewModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+
+@{
+    ViewBag.Title = "config-insurance";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+<style>
+  body{
+        font-size:13px;
+    }
+    .personal-income-tax {
+        padding: 0px 37px 0px 30px;
+    }
+
+    .col-md-12.display-inline-block {
+        padding: 10px 0px;
+    }
+
+    .note-area {
+        background: #efefef;
+        border-radius: 3px;
+        padding: 10px;
+    }
+
+    .col-md-12.display-inline-block.text-uppercase {
+        text-transform: uppercase;
+    }
+
+    #personal-income-tax-panel i.fa.fa-plus {
+        padding: 5px;
+        border: 1px solid #b9b7b7;
+        border-radius: 5px;
+    }
+    #personal-income-tax-panel i.fa.fa-history {
+        cursor: pointer;
+    }
+    span.auto-break-line {
+        text-align:left;
+        word-wrap: break-word;
+        white-space: -moz-pre-wrap;
+        white-space: pre-wrap!important;
+        line-height: initial;
+    }
+</style>
+<div id="personal-income-tax-panel">
+    <div class="col-md-12 bread-crumb">
+        <a href="/admin" class="bread-crumb-item prev-bread-crumb"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Config_Insurance")</span>
+        <div class="pull-right" style="padding:23px 0px;">
+            <a type ="button" class="" style="display:block;text-align:center; color: #2ca01c;" onclick="ShowFormAddInsurance()"><i class="fa fa-plus" aria-hidden="true"></i></a>
+        </div>
+    </div>
+    <div class="personal-income-tax">
+        <section class="hrmv2-section">
+            <div class="note-area">
+                <i class="fas fa-info-circle"></i>
+                <span>@T("Setting.Insurance.NoteLalel")</span>
+            </div>
+        </section>
+        <section class="hrmv2-section">
+            <div class="col-md-12 display-inline-block">
+                <div class="col-md-2 pd-l-0">
+                    @T("Setting.Insurance.Apply") &nbsp; <i class="fa fa-history" aria-hidden="true" onclick="HistoryConfigInsurance()"></i>
+                </div>
+                <div class="col-md-10 pd-l-0">
+                    @{
+                        var fromDateString = string.Empty;
+                        var minus = string.Empty;
+                        if (Model.ConfigInsurance.FromDate != null && Model.ConfigInsurance.FromDate != DateTime.MinValue)
+                        {
+                            fromDateString = Model.ConfigInsurance.FromDate.ToString("dd/MM/yyyy");
+                        }
+                        var toDateString = string.Empty;
+                        if (Model.ConfigInsurance.ToDate != null && Model.ConfigInsurance.ToDate != DateTime.MinValue)
+                        {
+                            toDateString = Model.ConfigInsurance.ToDate.ToString("dd/MM/yyyy");
+                        }
+                        else if (Model.ConfigInsurance.FromDate != DateTime.MinValue && Model.ConfigInsurance.FromDate != null)
+                        {
+                            toDateString = T("Staff.Detail.Now").ToString();
+                        }
+                        if (fromDateString != string.Empty && toDateString != string.Empty)
+                        {
+                            minus = " - ";
+                        }
+                    }
+                    @fromDateString @minus @toDateString
+                </div>
+            </div>                   
+            <div class="col-md-12 display-inline-block">
+                <div class="col-md-2 pd-l-0">
+                    @T("Setting.Insurance.Note")
+                </div>
+                <div class="col-md-10 pd-l-0">
+                    @Model.ConfigInsurance.Note
+                </div>
+            </div>
+        </section>
+        <section class="hrmv2-section">
+            <div class="col-md-12 display-inline-block text-uppercase">
+                @T("Config_Insurance")
+            </div>
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+        </section>
+    </div>
+</div>
+<script>
+        var tableName = '@Model.Table.TableName';
+    function ShowFormAddInsurance() {
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/ConfigInsurance/_ShowFromAddInsurance',
+            width: 1020,                     
+            isNotificationPoup: true,
+            align: "center",
+            //data: '{groupId: ' + masterDataId + '}',
+            idform: 'frmAddOrEditContract',
+        };
+        CreatePopup(options);
+    }
+        function HistoryConfigInsurance() {
+        var options = {
+            id: 'PersonalIncomeTax',
+            isNotificationPoup: true,
+            align: "center",
+            url: '/Admin/ConfigInsurance/_History',
+            width: 1020,
+            idform: 'frm-personal-income-tax',
+            //urlback: '/Contract/GetContractCoaInfoList',
+            //databack: '{contractId:' + contractId + '}',
+            //divload: 'GridContractCoaInfo',
+            //fnNameReload: 'ResetSelectCoaInfo'
+        };
+        CreatePopup(options);
+    }
+</script>

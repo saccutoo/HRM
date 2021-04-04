@@ -1,0 +1,89 @@
+﻿@model Hrm.Framework.Models.WorkingdayModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@using Hrm.Common
+@{
+    Layout = null;
+}
+<style>
+    .workingday-card .working-day{
+        font-family:Roboto-Bold;
+        font-size:16px;
+    }
+    .workingday-card .total-supplement{
+        display:block;float:right;margin-right:20px;
+    }
+     .workingday-card .icon-supplement span{
+        display:block;
+    }
+</style>
+
+@if (Model != null)
+{
+    <div class="workingday-card">
+        <div class="total-workingday">
+            @if (Model.WorkingdayTypeId == MasterDataId.WorkingHour)
+            {
+                <i class="fas fa-calendar-check"></i>
+            }
+            else
+            {
+                <i class="fas fa-calendar-check"></i>               
+            }
+            <span class="working-day">@Model.TotalWorkingday</span>
+            @*<span>@M(Model.WorkingdayTypeId.ToString() + ";" + DataType.MasterData + ";Name").ToString().ToLower()</span>*@
+            @if (Model.WorkingdayTypeId == MasterDataId.WorkingHour)
+            {
+                <span>@T("Workingday.Unit.Hour")</span>
+            }
+
+</div>
+        <div class="checkinout">
+            <i class="far fa-clock"></i>
+            @{
+                var startTime = "__:__";
+                var endTime = "__:__";
+                var colorStartTime = "#F6636B";
+                var colorEndTime = "#F6636B";
+
+                if (Model.StartTime != null && Model.StartTime.ToString("HH:mm", CultureInfo.InvariantCulture) != "00:00")
+                {
+                    startTime = Model.StartTime.ToString("HH:mm", CultureInfo.InvariantCulture);
+                    colorStartTime = string.Empty;
+                }
+                if (Model.EndTime != null && Model.EndTime.ToString("HH:mm", CultureInfo.InvariantCulture)!="00:00")
+                {
+                    endTime = Model.EndTime.ToString("HH:mm", CultureInfo.InvariantCulture);
+                    colorEndTime = string.Empty;
+                }
+                if (Model.StartTime.Date==new DateTime(1900, 01, 01))
+                {
+                    colorStartTime = "#F6636B";
+                }
+                if (Model.EndTime.Date == new DateTime(1900, 01, 01))
+                {
+                    colorEndTime = "#F6636B";
+                }
+                if (Model.CheckIn!=null && Model.CheckIn.Value.TimeOfDay.Hours!= Model.StartTime.TimeOfDay.Hours)
+                {
+                    colorStartTime = "#F6636B";
+                }
+                if (Model.CheckOut != null && Model.CheckOut.Value.TimeOfDay.Hours != Model.EndTime.TimeOfDay.Hours)
+                {
+                    colorStartTime = "#F6636B";
+                }
+            }
+            <span  style="color:@colorStartTime"> @startTime</span> - <span style="color:@colorEndTime">@endTime</span>
+        </div>
+        @if (Model.CountWorkingdaySupplement > 0)
+        {
+            <div class="total-supplement">
+                <span class="total">@Model.CountWorkingdaySupplement</span>
+            </div>
+            <div class="icon-supplement" onclick="viewWorkingdayByDay('@Model.StaffId','@Model.Date.ToString("dd/MM/yyyy")','1')" style="cursor:pointer" data-toggle="tooltip" data-content="@T("Staff.Detail.View")">
+                <span class="far fa-calendar-plus add-total-request" style="display:block;"></span>
+            </div>
+        }     
+    </div>
+}

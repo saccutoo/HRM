@@ -1,0 +1,557 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@using Hrm.Framework.Context
+@using Hrm.Common.Helpers
+@model Hrm.Web.ViewModels.DashboardViewModel
+@{
+    ViewBag.Title = T("Dashboard.Title");
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var dateFormat = Config.GetConfig(Constant.DateFormat);
+}
+<link href="@Url.Content("~/Content/hrm-v2/_staffdetails.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/plugins/rangepicker/daterangepicker.min.js")"></script>
+<link href="@Url.Content("~/Scripts/plugins/rangepicker/daterangepicker.min.css")" rel="stylesheet" />
+<div class="col-md-12 bread-crumb hrmv2-tab dash-board-page">
+    <span class="bread-crumb-item"><a href="#" class="bread-crumb-item">@T("BreadCrumb.Label.OverView")</a></span>
+    @{
+        var active = new Dictionary<int, string>();
+        for (var i = 0; i < 2; i++)
+        {
+            if (i == Model.ActiveTab)
+            {
+                active.Add(i, "active in");
+            }
+            else
+            {
+                active.Add(i, string.Empty);
+            }
+        }
+    }
+
+    <ul class="nav nav-tabs visible-not-mobile" id="myTab" role="tablist">
+        <li class="nav-item @active[0]" index="0">
+            <a class="nav-link" id="checklist-tab" data-toggle="tab" data-target="#certification" role="tab" aria-controls="certification" aria-selected="false">@T("Dashboard.Label.General")</a>
+        </li>
+        <li class="nav-item @active[1]" index="1">
+            <a class="nav-link" id="staff-profile-tab" data-toggle="tab" data-target="#staff-profile" role="tab" aria-controls="staff-profile" aria-selected="true">@T("Workingday.TableHeader.Workingday")</a>
+        </li>
+    </ul>
+</div>
+<div class="col-md-12 hrmv2-tab visible-only-on-mobile">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item @active[0]" index="0">
+            <a class="nav-link" id="checklist-tab" data-toggle="tab" data-target="#certification" role="tab" aria-controls="certification" aria-selected="false">@T("Dashboard.Label.General")</a>
+        </li>
+        <li class="nav-item @active[1]" index="1">
+            <a class="nav-link" id="staff-profile-tab" data-toggle="tab" data-target="#staff-profile" role="tab" aria-controls="staff-profile" aria-selected="true">@T("Workingday.TableHeader.Workingday")</a>
+        </li>
+    </ul>
+</div>
+<div class="col-md-12 hrm-v2-inline-block pd-0 dash-board-container hrm-v2-scroll">
+
+    @if (active[0] != string.Empty) // tab chung
+            {
+        <section class="col-md-12 hrm-v2-inline-block pd-0" style="margin-bottom:30px">
+            @Html.Partial(UrlHelpers.View("~/Views/Dashboard/_Summary_Chart.cshtml"), Model)
+            @Html.Partial(UrlHelpers.View("~/Views/Dashboard/_Quit_Work_Chart.cshtml"), Model)
+            @Html.Partial(UrlHelpers.View("~/Views/Dashboard/_Staff_Bar_Chart.cshtml"))
+        </section>
+    }
+    @if (active[1] != string.Empty) //tab cá nhân
+    {
+        <section class="col-md-12 hrm-v2-inline-block pd-0" style="margin-bottom:30px">
+            @Html.Partial(UrlHelpers.View("~/Views/Dashboard/_WorkingDay_Chart.cshtml"), Model.DashboardPersonal)
+        </section>
+    }
+</div>
+@*<div class="col-md-12 hrm-v2-inline-block pd-0 dash-board-container hrm-v2-scroll visible-only-on-mobile">
+
+        @if (active[0] != string.Empty) // tab chung
+                {
+            <section class="col-md-12 hrm-v2-inline-block pd-0" style="margin-bottom:30px">
+                @Html.Partial(UrlHelpers.View("~/Views/Dashboard/_Summary_Chart.cshtml"), Model)
+                @Html.Partial(UrlHelpers.View("~/Views/Dashboard/_Quit_Work_Chart.cshtml"), Model)
+                @Html.Partial(UrlHelpers.View("~/Views/Dashboard/_Staff_Bar_Chart.cshtml"))
+            </section>
+        }
+        @if (active[1] != string.Empty) //tab cá nhân
+        {
+            <section class="col-md-12 hrm-v2-inline-block pd-0" style="margin-bottom:30px">
+                @Html.Partial(UrlHelpers.View("~/Views/Dashboard/_WorkingDay_Chart.cshtml"), Model.DashboardPersonal)
+            </section>
+        }
+    </div>*@
+<script>
+    var windownWidth = $(window).innerWidth();
+    var height = 330;
+    var width = 330;
+    var border = 0.58;
+    if (windownWidth >= 1366 && windownWidth < 1900) {
+        height = 230;
+        width = 300;
+        border = 0.4;
+    }
+
+    var start = moment().startOf('month');
+    var end = moment().endOf('month');
+    var label = '';
+    $(document).on('click', '.hrmv2-tab .nav-item', function () {
+        $('#loading-tab').show();
+        var activeTab = $(this).attr("index");
+        window.location = @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl)) +"dashboard-detail?tab=" + activeTab;
+    });
+    $('.hrm-v2-date-range').daterangepicker({
+        locale: {
+            format: 'DD MMM YYYY'
+        },
+        startDate: moment(start),
+        endDate: moment(end),
+        ranges: {
+            '@T("Dashboard.Label.Today")': [moment(), moment()],
+            '@T("Dashboard.Label.Yesterday")': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            '@T("Dashboard.Label.ThisMonth")': [moment().startOf('month'), moment().endOf('month')],
+            '@T("Dashboard.Label.LastMonth")': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    },
+    function (start, end, label) {
+        if (isDate(start)) {
+            $('.hrm-v2-date-range span').html(start.format(@Html.Raw(Json.Encode(dateFormat))) + ' - ' + end.format(@Html.Raw(Json.Encode(dateFormat))));
+        }
+    });
+    function isDate(val) {
+        var d = Date.parse(val);
+        return Date.parse(val);
+    }
+
+    function IncDecMonth(Action) {
+        start = moment(start).startOf('month');
+        end = moment(start).endOf('month')
+        if (isDate(start)) {
+            $('.hrm-v2-date-range span').html(start.format(@Html.Raw(Json.Encode(dateFormat))) + ' - ' + end.format(@Html.Raw(Json.Encode(dateFormat))));
+            $("#summary-startdate").val(start.format(@Html.Raw(Json.Encode(dateFormat))));
+            $("#summary-enddate").val(end.format(@Html.Raw(Json.Encode(dateFormat))));
+            $("#implementation-startdate").val(start.format(@Html.Raw(Json.Encode(dateFormat))));
+            $("#implementation-enddate").val(end.format(@Html.Raw(Json.Encode(dateFormat))));
+            $("#turnoverrate-startdate").val(start.format(@Html.Raw(Json.Encode(dateFormat))));
+            $("#turnoverrate-enddate").val(end.format(@Html.Raw(Json.Encode(dateFormat))));
+        }
+    }
+
+
+    if ("@Model.ActiveTab" == 0) {
+        IncDecMonth();
+        getImplementation();
+        getTurnoverrate();
+    }
+    else if ("@Model.ActiveTab" == 1) {
+        var staffId = $('#summary-chart-staff-select').val();
+        getWorkingDay(0, moment(new Date()).format('YYYY'), staffId, true);
+    }
+    function convertTimeStampToDate(date) {
+        var milli = date.replace(/\/Date\((-?\d+)\)\//, '$1');
+        var day = new Date(parseInt(milli));
+        return day;
+    }
+    // TÌNH HÌNH NHÂN SỰ
+    $('#summary-daterange-btn').daterangepicker({
+        locale: {
+            format: 'DD MMM YYYY'
+        },
+        startDate: moment(start),
+        endDate: moment(end),
+        ranges: {
+            '@T("Dashboard.Label.Today")': [moment(), moment()],
+            '@T("Dashboard.Label.Yesterday")': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            '@T("Dashboard.Label.ThisMonth")': [moment().startOf('month'), moment().endOf('month')],
+            '@T("Dashboard.Label.LastMonth")': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    },
+   function (start, end, label) {
+       var group1 = "'@T("Dashboard.Label.Today")','@T("Dashboard.Label.Yesterday")'";
+       var group2 = "'@T("Dashboard.Label.ThisMonth")','@T("Dashboard.Label.LastMonth")'";
+       var startPeriod = '';
+       var endPeriod = '';
+       if (group1.indexOf(label) != -1) {
+           startPeriod = moment(start).subtract(1, 'days');
+           endPeriod = moment(end).subtract(1, 'days')
+       }
+       else if (group2.indexOf(label) != -1) {
+           startPeriod = moment(start).subtract(1, 'month').startOf('month');
+           endPeriod = moment(end).subtract(1, 'month').endOf('month');
+       }
+       else { /* Select chọn Custom Rage*/
+           startPeriod = moment(start).subtract(1, 'month');
+           endPeriod = moment(end).subtract(1, 'month');
+       }
+       if (isDate(start)) {
+           $('#summary-daterange-btn span').html(start.format(@Html.Raw(Json.Encode(dateFormat))) + ' - ' + end.format(@Html.Raw(Json.Encode(dateFormat))));
+       }
+       $("#summary-startdate").val(start.format(@Html.Raw(Json.Encode(dateFormat))));
+       $("#summary-enddate").val(end.format(@Html.Raw(Json.Encode(dateFormat))));
+       getSummary(start, end, startPeriod, endPeriod);
+   });
+    function getSummary(startDate, endDate, startPeriod, endPeriod) {
+        startDate = startDate.format(@Html.Raw(Json.Encode(dateFormat)));
+        endDate = endDate.format(@Html.Raw(Json.Encode(dateFormat)));
+        startPeriod = startPeriod.format(@Html.Raw(Json.Encode(dateFormat)));
+        endPeriod = endPeriod.format(@Html.Raw(Json.Encode(dateFormat)));
+        console.log(startDate, endDate, startPeriod, endPeriod)
+        $.ajax(
+       {
+           url: "/Dashboard/GetSummary",
+           type: "POST",
+           data: {
+               startDate: startDate,
+               endDate: endDate,
+               startPeriod: startPeriod,
+               endPeriod: endPeriod
+           },
+           success: function (response) {
+               $('#db-note-piechart').load('/Dashboard/ReloadNotePieChart', { model: response })
+               var percentOfficial = response.Total == 0 ? 0 : response.Official / response.Total;
+               var percentOnboard = response.Total == 0 ? 0 : response.Onboard / response.Total;
+               var percentTotalOff = response.TotalOff == 0 ? 0 : response.TotalOff / response.Total;
+               google.charts.setOnLoadCallback(drawChart);
+               function drawChart() {
+
+                   var data = google.visualization.arrayToDataTable([
+                       ['Effort', 'Amount given'],
+                       ['@M("55;MasterData;Name")', percentOfficial],
+                       ['@M("25;MasterData;Name")', percentOnboard],
+                       ['@M("9;MasterData;Name")', percentTotalOff],
+                   ]);
+
+                   var options = {
+                       slices: { 0: { color: '#2CA01C' }, 1: { color: '#3797D3' }, 2: { color: '#F78E55' } },
+                       pieHole: border,
+                       pieSliceTextStyle: {
+                           color: 'white',
+                       },
+                       "width": width,
+                       "height": height,
+                       legend: 'none'
+                   };
+
+                   var chart = new google.visualization.PieChart(document.getElementById('hrm-v2-dashboard-donut'));
+                   chart.draw(data, options);
+               }
+           }
+       });
+    }
+
+    //BIẾN ĐỘNG NHÂN SỰ
+
+    $('#implementation-daterange-btn').daterangepicker({
+        locale: {
+            format: 'DD MMM YYYY'
+        },
+        startDate: moment(start),
+        endDate: moment(end),
+        ranges: {
+            '@T("Dashboard.Label.Today")': [moment(), moment()],
+            '@T("Dashboard.Label.Yesterday")': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            '@T("Dashboard.Label.ThisMonth")': [moment().startOf('month'), moment().endOf('month')],
+            '@T("Dashboard.Label.LastMonth")': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    },
+   function (start, end, label) {
+       if (isDate(start)) {
+           $('#implementation-daterange-btn span').html(start.format(@Html.Raw(Json.Encode(dateFormat))) + ' - ' + end.format(@Html.Raw(Json.Encode(dateFormat))));
+       }
+       $("#implementation-startdate").val(start.format(@Html.Raw(Json.Encode(dateFormat))));
+       $("#implementation-enddate").val(end.format(@Html.Raw(Json.Encode(dateFormat))));
+       var viewType = $("#implementation-view-type").val();
+       getImplementation(start, end, viewType);
+   });
+    $('#implementation-view-type').change(function (e) {
+        var startDate = $("#implementation-startdate").val();
+        var endDate = $("#implementation-enddate").val();
+        var viewType = $("#implementation-view-type").val();
+        getImplementation(startDate, endDate, viewType);
+    })
+    function getImplementation(startDate, endDate, viewType) {
+        startDate = !startDate ? start.format(@Html.Raw(Json.Encode(dateFormat))) : startDate.format(@Html.Raw(Json.Encode(dateFormat)));
+        endDate = !endDate ? end.format(@Html.Raw(Json.Encode(dateFormat))) : endDate.format(@Html.Raw(Json.Encode(dateFormat)));
+        if (!viewType) {
+            viewType = 2;
+        }
+        $.ajax(
+       {
+           url: "/Dashboard/GetImplementation",
+           type: "POST",
+           data: {
+               startDate: startDate,
+               endDate: endDate,
+               viewType: viewType
+           },
+           success: function (response) {
+               google.charts.setOnLoadCallback(drawStuff);
+
+               function drawStuff() {
+                   var label = "";
+                   var data3 = new google.visualization.DataTable();
+                   data3.addColumn('string', 'Time');
+                   data3.addColumn('number', 'Biến động của tổng số nhân sự');
+
+                   response.forEach(function (row, index) {
+                       if (viewType.toString() == "0") {
+                           label = "Tháng";
+                       }
+                       else if (viewType.toString() == "1") {
+                           label = "Quý";
+                       }
+                       else if (viewType.toString() == "2") {
+                           $("#implementation-view-type").val(viewType);
+                           label = "Tuần";
+                       }
+                       data3.addRow([
+                          label + row.DatePeriod,
+                         row.Total
+                       ]);
+                   });
+
+                   var options3 = {
+                       "height": 200,
+                       legend: { position: 'none' },
+                       chart: {
+                           title: 'Chess opening moves',
+                           subtitle: 'popularity by percentage'
+                       },
+                       bars: 'vertical', // Required for Material Bar Charts.
+                       bar: {
+                           //'vertical'
+                           groupWidth: 30
+                       },
+                       axes: {
+                           y: {
+                               0: { side: 'bottom', label: 'Percentage' } // Top x-axis.
+                           }
+                       },
+
+                   };
+
+                   var chart3 = new google.visualization.ColumnChart(document.getElementById('hrm-v2-bar-chart'));
+                   chart3.draw(data3, options3);
+               }
+           }
+       });
+    }
+
+
+    //TỶ LỆ NHÂN VIỆC NGHỈ VIỆC
+    $('#turnoverrate-daterange-btn').daterangepicker({
+        locale: {
+            format: 'DD MMM YYYY'
+        },
+        startDate: moment(start),
+        endDate: moment(end),
+        ranges: {
+            '@T("Dashboard.Label.Today")': [moment(), moment()],
+            '@T("Dashboard.Label.Yesterday")': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            '@T("Dashboard.Label.ThisMonth")': [moment().startOf('month'), moment().endOf('month')],
+            '@T("Dashboard.Label.LastMonth")': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    },
+    function (start, end, label) {
+        if (isDate(start)) {
+            $('#turnoverrate-daterange-btn span').html(start.format(@Html.Raw(Json.Encode(dateFormat))) + ' - ' + end.format(@Html.Raw(Json.Encode(dateFormat))));
+        }
+        $("#turnoverrate-startdate").val(start.format(@Html.Raw(Json.Encode(dateFormat))));
+        $("#turnoverrate-enddate").val(end.format(@Html.Raw(Json.Encode(dateFormat))));
+        var viewType = $("#turnoverrate-view-type").val();
+        getTurnoverrate(start, end, viewType);
+    });
+
+    $('#turnoverrate-view-type').change(function (e) {
+        var startDate = $("#turnoverrate-startdate").val();
+        var endDate = $("#turnoverrate-enddate").val();
+        var viewType = $("#turnoverrate-view-type").val();
+        getTurnoverrate(startDate, endDate, viewType);
+    })
+
+    function getTurnoverrate(startDate, endDate, viewType) {
+        startDate = !startDate ? start.format(@Html.Raw(Json.Encode(dateFormat))) : startDate.format(@Html.Raw(Json.Encode(dateFormat)));
+        endDate = !endDate ? end.format(@Html.Raw(Json.Encode(dateFormat))) : endDate.format(@Html.Raw(Json.Encode(dateFormat)));
+        if (!viewType) {
+            viewType = 2;
+        }
+        $.ajax(
+           {
+               url: "/Dashboard/GetTurnoverrate",
+               type: "POST",
+               data: {
+                   startDate: startDate,
+                   endDate: endDate,
+                   viewType: viewType
+               },
+               success: function (response) {
+                   var label = "";
+                   google.charts.setOnLoadCallback(drawTrendlines);
+                   function drawTrendlines() {
+                       if (viewType.toString() == "0") {
+                           label = "Tháng";
+                       }
+                       else if (viewType.toString() == "1") {
+                           label = "Quý";
+                       }
+                       else if (viewType.toString() == "2") {
+                           $("#turnoverrate-view-type").val(viewType)
+                           label = "Tuần";
+                       }
+                       var data = new google.visualization.DataTable();
+                       data.addColumn('string', 'X');
+                       data.addColumn('number', 'Tỷ lệ nhân sự nghỉ việc');
+
+                       response.forEach(function (row, index) {
+                           data.addRow([
+                             label + row.DatePeriod,
+                             row.TurnoverRate
+                           ]);
+                       });
+
+                       var options2 = {
+                           "height": 200,
+                           pointSize: 5,
+                           curveType: 'function',
+                           //hAxis: {
+                           //    title: 'Time',
+                           //},
+                           vAxis: {
+                           },
+                           colors: ['#f18c16', '#007329']
+                       };
+
+                       var chart2 = new google.visualization.LineChart(document.getElementById('line-chart-point'));
+                       chart2.draw(data, options2);
+                   }
+               }
+           });
+    }
+    //TÌNH HÌNH LÀM VIỆC
+    function reloadChartWorkingDayCallAjax() {
+        var typeVal = $('#workingday-view-type').val();
+        var dateChange = $('#dashboard-wkday-year').val();
+        var staffId = $('#summary-chart-staff-select').val();
+        getWorkingDay(typeVal, dateChange, staffId, false);
+    }
+    $('#workingday-view-type').change(function (e) {
+        reloadChartWorkingDayCallAjax();
+    })
+    function getWorkingDay(type, year, staffId, loadPackages) {
+        $.ajax(
+       {
+           url: "/Dashboard/GetWorkingDayChart",
+           type: "POST",
+           data: {
+               type: type,
+               year: year,
+               staffId: staffId
+           },
+           success: function (response) {
+               var listChartHasVal = response.filter(function (obj) {
+                   return obj.Total > 0
+               })
+
+               if (response.length == 0 || listChartHasVal.length == 0) {
+                   $('#working-day-chart').html('không có dữ liệu');
+               }
+               else {
+                   if (loadPackages) {
+                       google.charts.load('current', { 'packages': ['corechart'] });
+                   }
+                   google.charts.setOnLoadCallback(drawChart);
+                   function drawChart() {
+                       var data4 = [];
+                       var Header = ["Thời gian", "Công làm"];
+                       data4.push(Header);
+                       for (i = 1; i <= 12 ; i++) {
+                           temp = ["T" + i, 0];
+                           response.forEach(function (row, index) {
+                               if (row.Month == "T" + i) {
+                                   temp = ["T" + i, parseFloat(row.Total)];
+                               }
+                           });
+                           data4.push(temp);
+                       }
+                       console.log('data', data4);
+                       var data = new google.visualization.arrayToDataTable(data4);
+                       var view = new google.visualization.DataView(data);
+                       view.setColumns([0, 1,
+                                        {
+                                            calc: "stringify",
+                                            sourceColumn: 1,
+                                            type: "string",
+                                            role: "annotation"
+                                        }]);
+                       var options4 = {
+                           //title: 'Tình hình làm việc',
+                           height: height,
+                           legend: { position: 'Bottom' },
+                           //chart: {
+                           //    title: 'Chess opening moves',
+                           //    subtitle: 'popularity by percentage'
+                           //},
+                           bars: 'vertical', // Required for Material Bar Charts.
+                           bar: {
+                               //'vertical'
+                               groupWidth: 20
+                           },
+                           //axes: {
+                           //    y: {
+                           //        0: { side: 'top', label: 'Percentage' } // Top x-axis.
+                           //    }
+                           //},
+                           vAxis: {
+                               //baselineColor: '#a92929',
+                               //gridlineColor: '#a92929',
+                               textPosition: 'bottom'
+                           },
+                           hAxis: {
+                               //baseline: '0',
+                               //baselineColor: '#a92929',
+                               //gridlineColor: '#a92929',
+                               textPosition: 'left'
+                           },
+
+
+                       };
+
+                       var chart4 = new google.visualization.ColumnChart(document.getElementById('working-day-chart'));
+                       chart4.draw(view, options4);
+                   }
+
+               }
+
+           }
+       });
+    }
+    $('#dashboard-wkday-month-datetimepicker').on('dp.change', function (e) {
+        var dateChange = $('#dashboard-wkday-month').val();
+        if (dateChange != null) {
+            var dateNew = dateChange.split('/');
+            var m1 = dateNew[0];
+            var y1 = dateNew[1];
+            $('#working-summary-chart').load('/Dashboard/ReloadDataWorkingSummary', { month: m1, year: y1 })
+        }
+    });
+
+    $(document).ready(function () {
+        $('#dashboard-wkday-year-datetimepicker').on('dp.change', function (e) {
+            reloadChartWorkingDayCallAjax();
+        });
+
+        $('#summary-chart-staff-select').on('select2:selecting', function (e) {
+            var typeVal = $('#workingday-view-type').val();
+            var dateChange = $('#dashboard-wkday-year').val();
+            getWorkingDay(typeVal, dateChange, e.params.args.data.id, false);
+        });
+
+    })
+    function removeClassMore(className) {
+        $('.' + className).removeClass('more');
+    }
+    function addClassMore(className) {
+        $('.' + className).addClass('more');
+    }
+</script>

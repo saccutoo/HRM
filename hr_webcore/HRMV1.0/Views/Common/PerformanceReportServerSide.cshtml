@@ -1,0 +1,236 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<style>
+    #PerformanceReport span.label-btn.col-6 {
+        padding-right: 10px;
+        float: left;
+        line-height: 30px;
+    }
+
+    #PerformanceReport select.form-control.col-6 {
+        width: 60%;
+        float: left;
+    }
+
+    #PerformanceReport .col-md-1-2 {
+        width: 15%;
+        float: left;
+    }
+
+    #PerformanceReport label.col-sm-3.col-form-label {
+        line-height: 30px;
+    }
+
+    #PerformanceReport input.form-control.col-sm-6 {
+        width: 50px;
+        float: left;
+    }
+
+    #PerformanceReport label.col-md-2 {
+        line-height: 30px;
+    }
+
+    label.col-sm-3.col-form-label {
+        width: auto;
+    }
+
+    h3.ng-binding {
+        display: none;
+    }
+
+    .col-md-12.ng-isolate-scope > .col-md-12 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .hide-element {
+        display: none !important;
+    }
+</style>
+<script type="text/javascript">
+    var isShowGeneral = @Html.Raw(Json.Encode(Global.CurrentUser.OfficePositionID == 250 || Global.CurrentUser.OfficePositionID == 251 || Global.CurrentUser.OfficePositionID == 252 || Global.CurrentUser.OfficePositionID == 253 || Global.CurrentUser.OfficePositionID == 254 || Global.CurrentUser.RoleId == 1 || Global.CurrentUser.RoleId == 11));
+</script>
+<br />
+<div class="row" ng-if="!showReportLead && !showreportl && !showreportldepartment">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-7">
+                <div style="margin-left: 130px">
+                    <button ng-click="ExcelClick()" title="@AppRes.btnExcel" type="button" class="btn btn-labeled btn-primary">
+                        <span class="btn-label">
+                            <i class="fa fa-download"></i>
+                        </span>@AppRes.btnExcel
+                    </button>
+                    @if (Global.CurrentUser.RoleId == 1 || Global.CurrentUser.RoleId == 11)
+                    {
+                        <input type="radio" ng-model="data.filter7"  ng-if="viewONN" id="all" ng-change="ShowAllOrDetail();childmethod();" name="all" value="4" checked="checked"> <span  ng-if="viewONN" class="label-btn-radio">@AppRes.Company</span>
+                        <input type="radio" ng-model="data.filter7"  ng-if="viewONN" id="all" ng-change="ShowAllOrDetail();childmethod();" name="all" value="3">                    <span ng-if="viewONN" class="label-btn-radio">@AppRes.ByUnit</span>
+                    }
+                    @if (Global.CurrentUser.OfficePositionID == 250 || Global.CurrentUser.OfficePositionID == 251 || Global.CurrentUser.OfficePositionID == 252 || Global.CurrentUser.OfficePositionID == 253 || Global.CurrentUser.OfficePositionID == 254 || Global.CurrentUser.RoleId == 1 || Global.CurrentUser.RoleId == 11)
+                    {
+                        <input type="radio" ng-model="data.filter7" id="all" ng-change="ShowAllOrDetail();childmethod();" name="all" value="1"> <span class="label-btn-radio">@AppRes.Department</span>
+                    }
+                    <input type="radio" ng-model="data.filter7" id="detail" ng-change="ShowAllOrDetail();childmethod();" name="detail" value="2"> <span class="label-btn-radio"  style="padding-right: 5em;">@AppRes.Staff</span>
+                    
+                    
+                    <input type="radio" ng-model="data.filter8" ng-change="getColumnMonth();showColumn();" name="month" value="1"> <span class="label-btn-radio">@AppRes.Month</span>
+                    <input type="radio" ng-model="data.filter8" ng-change="getColumnQuater();showColumn();" name="quarter" value="2"> <span class="label-btn-radio">@AppRes.TitleQuarter</span>
+                    <input type="radio" ng-model="data.filter8" ng-if="viewType==6 || viewType==7 || viewType==8?true:false" ng-change="getColumnQuater();showColumn();" name="quarter" value="3">
+                    <span ng-if="viewType==6 || viewType==7 || viewType==8?true:false" class="label-btn-radio">@AppRes.Year</span>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="col-lg-push-2 col-md-1-2" ng-if="data.filter8==3?false:true" style="width: 90px; margin-right: 40px">
+                    <select class="form-control col-4" ng-model="data.filter5" ng-change="childmethod();">
+                        <option selected="selected">--@AppRes.Year--</option>
+                        <option ng-repeat="item in Listyears" value="{{item}}">{{item}}</option>
+                    </select>
+                </div>
+                <div class="col-md-1-2" ng-if="data.filter8==3?true:false" style="width: 90px; margin-right: 40px">
+                    <select class="form-control col-4" ng-model="data.filter5" ng-change="childmethod();">
+                        <option selected="selected">--@AppRes.FromYear--</option>
+                        <option ng-repeat="item in Listyears" value="{{item}}">{{item}}</option>
+                    </select>
+                </div>
+                <div class="col-md-1-2" ng-if="data.filter8==3?true:false" style="width: 90px; margin-right: 40px">
+                    <select class="form-control col-4" ng-model="data.filter5" ng-change="childmethod();">
+                        <option selected="selected">--@AppRes.ToYear--</option>
+                        <option ng-repeat="item in Listyears" value="{{item}}">{{item}}</option>
+                    </select>
+                </div>
+                <div ng-if="data.filter8=='2'?true:false">
+                    <span class="label-btn col-6">@AppRes.FromQuarter</span>
+                    <div class="col-md-1-2">
+                        <select class="form-control col-6" ng-model="data.filter3" ng-change="showColumn();ChangeValueQuarter();childmethod();">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option selected ="selected" value="4">4</option>
+                        </select>
+                    </div>
+                    <span class="label-btn col-6">@AppRes.ToQuarter</span>
+                    <div class="col-md-1-2">
+                        <select class="form-control col-6" ng-model="data.filter4" ng-change="showColumn();ChangeValueQuarter();childmethod();">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option selected="selected" value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+                <div ng-if="data.filter8=='1'?true:false">
+                    <span class="label-btn col-6">@AppRes.FromMonth</span>
+                    <div class="col-md-1-2">
+
+                        <select class="form-control col-6" ng-model="data.filter1" ng-change="showColumn();ChangeValueMonth();childmethod();" style="padding:0px;padding-left:5px">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option selected ="selected" value="12">12</option>
+                        </select>
+                    </div>
+
+                    <span class="label-btn col-6">@AppRes.ToMonth</span>
+                    <div class="col-md-1-2">
+                        <select class="form-control col-6" ng-model="data.filter2" ng-change="showColumn();ChangeValueMonth();childmethod();" style="padding:0px;padding-left:5px">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12" selected="selected">12</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+@*<div class="row">
+    <div class="col-md-6" ng-show="viewONN">
+        <div class="row">
+            <div class="col-md-2">
+                <label>@AppRes.FromYear</label>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control col-4" ng-model="data.filter5">
+                    <option selected="selected">--@AppRes.FromYear--</option>
+                    <option ng-repeat="item in Listyears" value="{{item}}">{{item}}</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label>@AppRes.ToYear</label>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control col-4" ng-model="data.filter6">
+                    <option selected="selected">--@AppRes.ToYear--</option>
+                    <option ng-repeat="item in Listyears" value="{{item}}">{{item}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>*@
+<br />
+<div class="row" ng-if="!showReportLead && !showreportl && !showreportldepartment">
+    <div class="col-md-2" ng-if="viewONN">
+        <input type="text"  class="form-control" ng-model="data.filter9" placeholder="@AppRes.Company" />
+    </div>
+    <div class="col-md-2" ng-if="(data.filter7!='4') && viewONN?true:false">
+        <input type="text"  class="form-control" ng-model="data.filter10" placeholder="@AppRes.ByUnit" />
+    </div>
+    <div class="col-md-2" ng-if="data.filter7=='2' || data.filter7=='1'?true:false">
+        <input type="text" class="form-control" ng-model="data.filter11" placeholder="@AppRes.Department" />
+    </div>
+    <div class="col-md-2" ng-if="data.filter7=='2'?true:false">
+        <input type="text" class="form-control" ng-model="data.filter12" placeholder="@AppRes.Staff" />
+    </div>
+    <div class="col-md-2">
+        <select chosen options="" on-no-result="doStuff" ng-model="data.filter6" convert-dropdown>
+            <option value="" disabled>-- @AppRes.TypeOfReport --</option>
+            <option value="1" selected>@AppRes.StandardSalaryAndAllowance</option>
+            <option value="2">@AppRes.RewardEffectiveRewards</option>
+            <option value="3">@AppRes.TotalIncome</option>
+            <option value="4">@AppRes.TotalFee</option>
+            @*<option ng-if="viewType==0?true:false" value="4">@AppRes.Totalcost1</option>*@
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button ng-click="childmethod();" id="submit" title="@AppRes.FindFilter"
+                type="button" class="btn btn-primary">
+            <i class="fa fa-search"></i>
+        </button>
+        &nbsp;&nbsp;
+        <button title="@AppRes.btnClearFilter" type="button" ng-click="ResetFilterString();childmethod();" class="btn btn-info">
+            @AppRes.btnClearFilter
+        </button>
+    </div>
+</div>
+
+<div class="row" ng-if="!viewONN && !showReportLead && !showreportl && !showreportldepartment">
+    <build-fixed-table table-url="'/PerformanceReport/TableServerSideGetData'"
+                       table-change-page-size="changePageSize"
+                       table-page-changed="pageChanged" notification="'@(AppRes.Notification)'">
+    </build-fixed-table>
+</div>
+<div class="row" ng-if="viewONN">
+    <build-fixed-table table-url="'/PerformanceReport/PerformanceReportONNGetData'"
+                       table-change-page-size="changePageSize"
+                       table-page-changed="pageChanged" notification="'@(AppRes.Notification)'">
+    </build-fixed-table>
+</div>
+

@@ -1,0 +1,68 @@
+﻿.jarviswidget {
+    margin-bottom: 0 !important;
+}
+
+.btn-groupPl {
+    padding-left: 5px !important;
+    /*margin-top: 10px;*/
+}
+
+.flr {
+    float: right;
+}
+
+.btn-default {
+    color: #0d0d05;
+    background-color: #ebebe9;
+    border-color: #886957;
+    border-width: 1px;
+    padding: 6px 13px;
+}
+
+a.btn-default, button.btn-default {
+    border-radius: 3px !important;
+    border: 1px solid #D8D0CC !important;
+}
+
+.leftControl {
+    width: 35%;
+    float: left;
+    text-align: left;
+    padding-right: 1%;
+    padding-top: 5px;
+    padding-left: 2%;
+}
+
+.rightControl {
+    width: 61%;
+    float: left;
+}
+
+.requiredControl {
+    float: right;
+    width: 12px;
+}
+
+.form-control:focus {
+    border-color: #2a80b2;
+}
+
+input[type=text]:focus {
+    border-color: #2a80b2 !important;
+}
+
+.select2-focused {
+    border-color: #2a80b2 !important;
+}
+
+.select2-choices:focus {
+    border-color: #2a80b2 !important;
+}
+
+.select2-container-active .select2-choice, .select2-container-active .select2-choices {
+    border-color: #2a80b2 !important;
+}
+
+.select2-drop-active {
+    border-color: #2a80b2 !important;
+}

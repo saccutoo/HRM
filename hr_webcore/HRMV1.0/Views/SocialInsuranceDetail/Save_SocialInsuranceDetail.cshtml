@@ -1,0 +1,246 @@
+﻿
+@using HRM.App_LocalResources;
+@using HRM.Common
+<div class="container-fluid">
+    <div class="row SaveSocialInsuranceDetail" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-heading"><b>@AppRes.InsuranceInformation</b></div>
+                <hr />
+                <div class="panel-body">
+                    <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)" novalidate>
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                @*---------------------------------------------------------------Đầu tiên-------------------------------------------------------------------------------------------------------*@
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.InsuranceCode <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-readonly=is_readonly class="form-control" ng-required="true" name="InsuranceCode" ng-model="editData.InsuranceCode"/>
+                                            <span ng-show="EditForm.$submitted && EditForm.InsuranceCode.$error.required" style="color: red">@AppRes.PleaseEnterInsuranceCode</span>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.InsuranceSalary <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-readonly=is_readonly class="form-control" ng-required="true" name="BasicSalary" ng-model="editData.BasicSalary" currency-mask/>
+                                            <span ng-show="EditForm.$submitted && EditForm.BasicSalary.$error.required" style="color: red">@AppRes.PleaseEnterInsuranceSalary</span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.InsuranceNumber <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-readonly=is_readonly data-modal="modal" name="orderNo" ng-required="true" name="InsuranceNumber" class="form-control" ng-model="editData.InsuranceNumber">
+                                            <span ng-show="EditForm.$submitted && EditForm.InsuranceNumber.$error.required" style="color: red">@AppRes.PleaseEnterInsuranceNumber</span>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.CompanyRate </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-readonly=is_readonly  ng-disabled="true" class="form-control" ng-model="editData.RateCompany" currency-mask />
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.MonthStart <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" required ng-readonly=is_readonly ng-model="editData.MonthStart" class="form-control" ng-required="true" name="MonthStart" id="datePicker" autocomplete="off">
+                                            <span ng-show="EditForm.$submitted && EditForm.MonthStart.$error.required" style="color: red">@AppRes.PleaseSelectMonthStart</span>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.PersonRate </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-disabled="true"   data-modal="modal" name="value" class="form-control" ng-model="editData.RatePerson" currency-mask>
+                                            
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.FamilyCode </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-readonly=is_readonly class="form-control" ng-model="editData.FamilyCode" />
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.HealthNumber </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-readonly=is_readonly data-modal="modal" class="form-control" ng-model="editData.HealthNumber">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.InsuranceStatus <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            @if (Global.CurrentLanguage == 5)
+                                            {
+                                                <select class="form-control" chosen options="getInsuranceStatus" ng-required="true" name="Status" on-no-result="doStuff" ng-disabled=is_readonly required data-modal="modal" ng-model="editData.Status" ng-options="list.GlobalListID as list.Name for list in getInsuranceStatus">
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select class="form-control" chosen options="getInsuranceStatus" ng-required="true" name="Status" on-no-result="doStuff" ng-disabled=is_readonly required data-modal="modal" ng-model="editData.Status" ng-options="list.GlobalListID as list.NameEN for list in getInsuranceStatus">
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>
+                                            }
+                                           
+                                            <span ng-show="EditForm.$submitted && EditForm.Status.$error.required" style="color: red">@AppRes.PleaseSelectInsuranceStatus</span>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.PlaceHeathCare </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-readonly=is_readonly data-modal="modal" class="form-control" ng-model="editData.PlaceHealthCare">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.FromMonth <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-required="true" name="FromMonth" ng-readonly=is_readonly ng-model="editData.FromMonth" class="form-control" id="datePicker2" autocomplete="off">
+                                            <span ng-show="EditForm.$submitted && EditForm.FromMonth.$error.required" style="color: red">@AppRes.PleaseSelectFromMonth</span>
+
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.PlaceHoldInsuranceNumber </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-readonly=is_readonly data-modal="modal" name="valueEN" class="form-control" ng-model="editData.PlaceHold">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.ToMonth</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-readonly=is_readonly ng-model="editData.ToMonth" class="form-control" id="datePicker3" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.Regime </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            @if (Global.CurrentLanguage==5)
+                                            {
+                                                <select class="chosen-select form-control col-sm-3" ng-disabled=is_readonly options="getRegimes" on-no-result="doStuff" ng-model="editData.Regime" chosen multiple>
+                                                    <option ng-repeat="list in getRegimes" value="{{list.GlobalListID}}">{{list.Name}}</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select class="chosen-select form-control col-sm-3" ng-disabled=is_readonly ng-model="editData.Regime" chosen multiple>
+                                                    <option ng-repeat="list in getRegimes" value="{{list.GlobalListID}}">{{list.NameEN}}</option>
+                                                </select>}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.TimeToPaySocialInsuranceNumber </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="date" ng-readonly=is_readonly class="form-control" ng-model="editData.DateReturn" format-date />
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.Timekeeping_Status <span style="color: red">(*)</span></label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            @if (Global.CurrentLanguage==5)
+                                            {
+                                                <select class="form-control" chosen options="getListStatus" on-no-result="doStuff" ng-disabled="disabled" ng-required="true" name="ApproveStatus" data-modal="modal" ng-model="editData.ApproveStatus" ng-options="list.GlobalListID as list.Name for list in getListStatus" convert-dropdown>
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <select class="form-control" chosen options="getListStatus" on-no-result="doStuff" ng-disabled="disabled" ng-required="true" name="ApproveStatus" data-modal="modal" ng-model="editData.ApproveStatus" ng-options="list.GlobalListID as list.NameEN for list in getListStatus" convert-dropdown>
+                                                    <option value="" disabled selected>--@AppRes.Select--</option>
+                                                </select>}
+                                            <span ng-show="EditForm.$submitted && EditForm.ApproveStatus.$error.required" style="color: red">@AppRes.PleaseSelectApproveStatus</span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.Note </label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <input type="text" ng-readonly=is_readonly class="form-control" ng-model="editData.Note" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        @*---------------------------------------------------------------Thêm mới và bỏ qua-------------------------------------------------------------------------------------------------------*@
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-4 col-md-push-5">
+                                <button type="submit" class="btn btn-labeled btn-success" ng-show="tablePermission.isEdit">
+                                    <span class="btn-label">
+                                        <i class="fa fa-save"></i>
+                                    </span>@AppRes.btnUpdate
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>

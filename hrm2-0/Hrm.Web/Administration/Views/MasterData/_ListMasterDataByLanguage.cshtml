@@ -1,0 +1,64 @@
+﻿@model Hrm.Admin.ViewModels.MasterDataViewModel
+
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common;
+@{
+    Layout = null;
+}
+@{
+    var datas = Model.ListMasterDataByLanguage;
+    if (datas != null && datas.Count > 0)
+    {
+        var index = 0;
+        foreach (var data in datas)
+        {
+            <div class="item-master-data-by-language">
+                <div style="width:100%;padding-top: 10px;margin-left:10px">
+                    <span class="hrm-v2-font-13">
+                        @T("MasterData.Language") <span style="color:red">*</span>
+                    </span>
+                    <select style="border: none;width: 80px;background-color:#f5f5f5;margin-left:25px" id="listData[@index].LanguageId" name="listData[@index].LanguageId" class="language hrm-v2-font-13">
+                        <option value="0" selected>@T("MasterData.Select")</option>
+                        @foreach (var item in Model.Languages)
+                        {
+                            var selected = string.Empty;
+                            if (item.Id == data.LanguageId)
+                            {
+                                selected = "selected";
+                            }
+                            <option value="@item.Id" @selected>@item.Name</option>
+                        }
+                    </select>
+                    <a hr="#" class="close-lst-master-data" onclick="RemoveMasterData(@index)"><i class="fa fa-times"></i></a>
+                    <span name="listData[@index].LanguageId-error" class="hrm-v2-error" label-name="@T("MasterData.Language")"></span>
+                </div>
+                <br />
+                <div style="width:100%">
+                    <div class="col-md-6 pd-l-0">
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "listData[" + index + "].Name", PlaceHolder = T("MasterData.Name").ToString(), Style = "width:100%; ", AngularModel = "list.MasterData.Name", IsAnimationLabel = true, LabelName = T("MasterData.Name").ToString(), Value = data.Name,IsRequired=true })
+                        </div>
+                        @*<div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "listData[" + index + "].Description", PlaceHolder = T("MasterData.Description").ToString(), LabelName = T("MasterData.Description").ToString(), Style = "width:100%; ", AngularModel = "list.MasterData.Description", IsAnimationLabel = true, Value = data.Description })
+                        </div>*@
+                    </div>
+                    <div class="col-md-6 pd-l-0">
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "listData[" + index + "].Description", PlaceHolder = T("MasterData.Description").ToString(), LabelName = T("MasterData.Description").ToString(), Style = "width:100%; ", AngularModel = "list.MasterData.Description", IsAnimationLabel = true, Value = data.Description })
+                        </div>
+                    </div>
+                    @*<div class="col-md-6 pd-r-0">
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "listData[" + index + "].Abbreviations", PlaceHolder = T("MasterData.Abbreviations").ToString(), LabelName = T("MasterData.Abbreviations").ToString(), Style = "width:100% ", AngularModel = "list.MasterData.Abbreviations", IsAnimationLabel = true, Value = data.Abbreviations })
+                        </div>
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "listData[" + index + "].Value", PlaceHolder = T("MasterData.Value").ToString(), LabelName = T("MasterData.Value").ToString(), Style = "width:100% ", AngularModel = "list.MasterData.Value", IsAnimationLabel = true, Value = data.Value })
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+            index++;
+        }
+    }
+}

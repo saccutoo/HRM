@@ -1,0 +1,85 @@
+﻿@model Hrm.Framework.Models.StaffModel
+@using Hrm.Common
+<style>
+    .emp-main-card .emp-location {
+        vertical-align: middle;
+        padding-left: 5px;
+    }
+
+    .emp-main-card .icon-location {
+        vertical-align: middle;
+        font-size: 16px;
+    }
+
+    .emp-main-card .rep-count {
+        left: calc(50% - 18px);
+        bottom: -18px;
+        width: 36px;
+        height: 36px;
+        border-radius: 18px;
+        line-height: 36px;
+        text-align: center;
+        color: #183247;
+        background-color: #fff;
+        font-size: 13px;
+        border: 1px solid #dfdfdf;
+    }
+
+    .emp-card.emp-main-card {
+        background-color: #fff;
+        width: 350px;
+        padding: 15px 15px 10px;
+        border-radius: 10px;
+        -webkit-box-shadow: 0 5px 10px 0 rgba(0,0,0,.11);
+        box-shadow: 0 5px 10px 0 rgba(0,0,0,.11);
+    }
+
+    .icon-with-text > i {
+        font-size: 16px;
+        display: inline-block;
+        vertical-align: middle;
+        width: 20px;
+        margin-right: 5px;
+        color: #607787;
+    }
+
+    .icon-with-text > span {
+        display: inline-block;
+        vertical-align: middle;
+        width: calc(100% - 30px);
+    }
+
+    .link-color {
+        color: #0070d0;
+    }
+</style>
+
+<div class="emp-card emp-main-card" id-value="@Model.Id">
+    <div>
+        <div class="middle-bound">
+            <div class="avatar-circle ">
+                <div class="avatar-inside">N</div>
+            </div>
+        </div>
+        <div class="middle-bound profile-details">
+            <div class="name">@Model.Name : @M(Model.OfficePositionId.ToString() + ";" + DataType.MasterData + ";Name")</div>
+            @{ 
+                var format = Model.OfficePositionId.ToString() + ";" + DataType.MasterData + ";Name";
+                var positionName = M(format);
+            }
+            <div class="sec-text-color ellipsis" title="@positionName">@positionName</div>
+            <div class="ellipsis" title="@Model.ContactAddress">
+                <i class="icon-location sec-text-color fas fa-map-marker-alt"></i><span class="emp-location">@Model.Address</span>
+            </div>
+        </div>
+    </div>
+    <div class="gray-bg">
+        <div class="icon-with-text ellipsis" title="@Model.EmailCompany">
+            <i class="far fa-envelope"></i><span class="link-color">@Model.EmailCompany</span>
+        </div>
+        <div class="icon-with-text ellipsis" title="@Model.PhoneCompany">
+            <i class="fas fa-phone-alt"></i><span class="link-color">@Model.PhoneCompany</span>
+        </div>
+    </div>
+    <div class="rep-count">@Model.NumberOfChild</div>
+</div>

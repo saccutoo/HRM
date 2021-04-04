@@ -1,0 +1,20 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = "HR_WorkingDaySupplement";
+}
+
+<script>
+    var errorNoRecordsSelected= @Html.Raw(Json.Encode(AppRes.ErrorNoRecordsSelected));
+    var errorListContainsPublic= @Html.Raw(Json.Encode(AppRes.ErrorListContainsPublic));
+    var errorReasonNotApproved= @Html.Raw(Json.Encode(AppRes.ErrorReasonNotApproved));
+    var timekeeping_Ms_ApprovalSuccess= @Html.Raw(Json.Encode(AppRes.Timekeeping_Ms_ApprovalSuccess));
+    var timekeeping_Ms_ApprovalFalse= @Html.Raw(Json.Encode(AppRes.Timekeeping_Ms_ApprovalFalse));
+
+</script>
+<div class="row" ng-controller="WorkingDaySupplement" ng-init="init()">
+    @Html.Action("TimeKeepingServerSide", "Common")
+    <div style="display: none;">
+        @Html.Action("DuyetCong", "HR_WorkingDaySupplement")
+    </div>
+</div>
+

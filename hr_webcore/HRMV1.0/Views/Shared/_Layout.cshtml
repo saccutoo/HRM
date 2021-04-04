@@ -1,0 +1,661 @@
+﻿@using HRM.Common
+@using HRM.App_LocalResources
+@using StackExchange.Profiling
+@{
+
+}
+<!DOCTYPE html>
+<html lang="en-us">
+
+<!-- Mirrored from 192.241.236.31/themes/preview/smartadmin/1.8.x/ajax/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Mar 2017 03:58:30 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <title>@ViewBag.Title</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <!-- #CSS Links -->
+    <!-- Basic Styles -->
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/font-awesome.min.css">
+    <!-- =============== APP STYLES ===============-->
+    @*<link href="@Styles.Url("~/Content/app/css/app.css")" rel="stylesheet" type="text/css" id="maincss" />*@
+    <!-- SmartAdmin Styles : Caution! DO NOT change the order -->
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/smartadmin-production-plugins.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/smartadmin-production.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/smartadmin-skins.min.css">
+
+    @* css get time *@
+    <link href="~/css/clockface.css" rel="stylesheet" />
+
+    <!-- DEV links : turn this on when you like to develop directly -->
+    <!--<link rel="stylesheet" type="text/css" media="screen" href="../Source_UNMINIFIED_CSS/smartadmin-production.css">-->
+    <!--<link rel="stylesheet" type="text/css" media="screen" href="../Source_UNMINIFIED_CSS/smartadmin-skins.css">-->
+    <!-- SmartAdmin RTL Support -->
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/smartadmin-rtl.min.css">
+
+    <!-- We recommend you use "your_style.css" to override SmartAdmin
+    specific styles this will also ensure you retrain your customization with each SmartAdmin update.
+    <link rel="stylesheet" type="text/css" media="screen" href="css/your_style.css"> -->
+    <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/demo.min.css">
+
+    <!-- #FAVICONS -->
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/favicon/favicon.ico" type="image/x-icon">
+
+    <!-- #GOOGLE FONT -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+
+    <!-- #APP SCREEN / ICONS -->
+    <!-- Specifying a Webpage Icon for Web Clip
+    Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
+    <link rel="apple-touch-icon" href="/img/splash/sptouch-icon-iphone.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/splash/touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/splash/touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/splash/touch-icon-ipad-retina.png">
+
+    <!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Startup image for web apps -->
+    <link rel="apple-touch-startup-image" href="/img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+    <link rel="apple-touch-startup-image" href="/img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+    <link rel="apple-touch-startup-image" href="/img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+
+    <link href="/css/style.css" rel="stylesheet" />
+    <link href="/css/custom.css" rel="stylesheet" />
+    <link href="/css/validation.css" rel="stylesheet" />
+
+    <link href="/css/myNotification.css" rel="stylesheet" />
+    <!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+
+    <script src="/js/libs/jquery-2.1.1.min.js"></script>
+    <script src="/js/libs/jquery-ui-1.10.3.min.js"></script>
+    <script src="/js/jquery.blockUI.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/loadding.css">
+    <!-- Message BOX -->
+    <script src="/js/plugin/messagebox/messagebox.min.js"></script>
+    <link rel="stylesheet" href="/js/plugin/messagebox/messagebox.css" />
+
+    <link href="/js/scrollbox/jquery.scrollbox.css" rel="stylesheet" />
+    <script src="/js/scrollbox/jquery.scrollbox.js"></script>
+    <script src="~/Scripts/mycustom/mycustom.js"></script>
+    <link href="~/Content/my-custom.css" rel="stylesheet" />
+    <script src="~/Scripts/mycustom/toastr/toastr.min.js"></script>
+    <link href="~/Scripts/mycustom/toastr/toastr.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Vendor/loaders.css/loaders.css" rel="stylesheet" type="text/css" />
+    <link href="~/Scripts/Colorbox/colorbox.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/Colorbox/jquery.colorbox-min.js"></script>
+    <link href="~/Scripts/boostrap-dialog/bootstrap-dialog.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/autocomplete.css" rel="stylesheet" />
+    <link href="~/Content/datepicker.css" rel="stylesheet" />
+    <link href="~/js/Muuri/Muuri.css" rel="stylesheet" />
+    <link href="~/js/jquery-sortable/jquery-sortable.css" rel="stylesheet" />
+    <!-- timepicker css -->
+    <link href="~/js/timepicker/jquery.timepicker.min.css" rel="stylesheet" />
+
+
+    @Scripts.Render("~/bundles/HRM")
+    @Scripts.Render("~/bundles/angularjs2")
+
+
+
+    <script src="~/Scripts/Extention/ckfinder/ckfinder.js"></script>
+    <script src="~/js/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <link href="~/Scripts/Extention/multiple_select_dropdown/assets/chosen.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Extention/multiple_select_dropdown/assets/mulitple.jquery.min.js"></script>
+    <script src="~/Scripts/Extention/multiple_select_dropdown/assets/multiple-select-chosen/multiple-chosen.min.js"></script>
+    <script src="~/Scripts/numeric-directive.js"></script>
+    <script src="~/js/autocomplete.js"></script>
+
+    <link href="~/Vendor/loading/please-wait.css" rel="stylesheet" />
+    <script src="~/Vendor/loading/please-wait.min.js"></script>
+    <link href="~/Vendor/loading/Spinner.css" rel="stylesheet" />
+    <!-- LINK THÔNG BÁO BẢO TRÌ HỆ THỐNG-->
+    @*<script type="text/javascript">
+        $(document).ready( function() {
+            url = "/Maintenance.html";
+           $(location).attr("href", url);
+        });
+         </script>*@
+    
+    <script>
+        var notification= @Html.Raw(Json.Encode(AppRes.MS_Title)); // thông báo
+        var errorNotiFalse= @Html.Raw(Json.Encode(AppRes.Error)); // ... Lỗi rồi !
+        var successfulUpdate= @Html.Raw(Json.Encode(AppRes.SuccessfulUpdate)); //Cập nhập thành công
+        var successfulAdd= @Html.Raw(Json.Encode(AppRes.SuccessfulAdd)); //Thêm thành công
+        var updateFailed= @Html.Raw(Json.Encode(AppRes.UpdateFailed)); //Cập nhập thất bại
+        var notificationDelete= @Html.Raw(Json.Encode(AppRes.notificationDelete));//Bạn có chắc chắn muốn xóa
+        var deleteSuccess= @Html.Raw(Json.Encode(AppRes.DeleteSuccess));//Xóa thành công
+        var errorFullInformation= @Html.Raw(Json.Encode(AppRes.ErrorFullInformation));//Vui lòng nhập đầy đủ thông tin
+        var success= @Html.Raw(Json.Encode(AppRes.Success));//Vui lòng nhập đầy đủ thông tin
+
+        var editTitle= @Html.Raw(Json.Encode(AppRes.IsEdit));//Title sửa
+        var deleteTitle= @Html.Raw(Json.Encode(AppRes.Timekeeping_DelTitle));//Title xóa
+        var department='--'+ @Html.Raw(Json.Encode(AppRes.Department)) +'--';//option first select
+        var typeMoney='--'+ @Html.Raw(Json.Encode(AppRes.C_CurrencyID)) +'--';//option first select
+        var employeeOption='--'+ @Html.Raw(Json.Encode(AppRes.Employee)) +'--';//option first select
+        var hideTitle=@Html.Raw(Json.Encode(AppRes.btnHide));//option first select
+        var contractType='--'+ @Html.Raw(Json.Encode(AppRes.ContractType)) +'--';//option first select
+        var optionShowName=@Html.Raw(Json.Encode(AppRes.OptionShowName));//option select language name
+        var optionShowFullName=@Html.Raw(Json.Encode(AppRes.OptionShowFullName));//option select language full name
+        var statusType = '@Html.Raw(AppRes.StatusType)';
+        var relatedDataArises = '@Html.Raw(AppRes.RelatedDataArises)';//Phát dinh dữ liệu liên quan
+        var dataNotFound = '@Html.Raw(AppRes.DataNotFound)';//Không tìm thấy dữ liệu
+        var selectCheckBoxPayslip = '@Html.Raw(AppRes.SelectCheckBoxPayslip)'; //Chọn checkbox trước khi chốt phiếu lương.
+        var selectCheckBoxBonus = '@Html.Raw(AppRes.SelectCheckBoxBonus)'; //Chọn checkbox trước khi chốt phiếu lương.
+        var setRoleSuccessful = '@Html.Raw(AppRes.SetRoleSuccessful)'; // Phân quyền thành công.
+        var youMustChooseRoleAnDept = '@Html.Raw(AppRes.YouMustChooseRoleAnDept)'; //Bạn phải chọn Tên quyền và Tên phòng ban.
+        var clickOkOrCancelTreeview = '@Html.Raw(AppRes.ClickOkOrCancelTreeview)'; //Nhấn OK để show toàn bộ treeview con và Cancel để không show treeview con.
+        var mustBeChooseUserAndMenu = '@Html.Raw(AppRes.MustBeChooseUserAndMenu)';//Bạn phải chọn tên user và menu.
+        var mustBeChooseUserAndRole = '@Html.Raw(AppRes.MustBeChooseUserAndRole)';//Bạn phải chọn tên user và role.
+        var mustBeChooseUserAndCompany = '@Html.Raw(AppRes.MustBeChooseUserAndCompany)';//Bạn phải chọn tên user và Công ty.
+        var mustBeChooseRoleAndFunction = '@Html.Raw(AppRes.MustBeChooseRoleAndFunction)'; //Bạn phải chọn nhóm quyền và chức năng.
+
+        var commomRolId = '@Html.Raw(Global.CurrentUser.RoleId)';
+        var commomUserID = '@Html.Raw(Global.CurrentUser.UserID)';
+    </script>
+</head>
+
+<body class="smart-style-3 hidden-menu">
+    <script>
+        var currentLanguage = @Html.Raw(Json.Encode(Global.CurrentLanguage));
+    </script>
+    <!-- #HEADER -->
+    <header id="header">
+        <div id="logo-group">
+
+            <!-- PLACE YOUR LOGO HERE -->
+            <span id="logo"> <img src="/img/logo.png" alt="NOVAON ERP"> </span>
+            <input type="hidden" value="@Global.CurrentUser.UserID" />
+            <!-- END LOGO PLACEHOLDER -->
+        </div>
+        <div class="project-context hidden-xs">
+            <span>&nbsp;</span>
+            <span class="project-selector" style="font-size: 12px;padding-top: 3px">ERP/@ViewBag.Title</span>
+
+
+            <!-- end dropdown-menu-->
+
+        </div>
+        <!-- end projects dropdown -->
+        <!-- #TOGGLE LAYOUT BUTTONS -->
+        <!-- pulled right: nav area -->
+        <div class="pull-right">
+
+
+            <div id="logout" class="btn-header transparent pull-right">
+                <span> <a href="/Authentication/DoLogout" title="Sign Out"><i class="glyphicon glyphicon-off" style="font-weight: bold; top: 3px;"></i></a> </span>
+            </div>
+        </div>
+        <!-- end pulled right: nav area -->
+
+    </header>
+    <!-- END HEADER -->
+    <!-- #NAVIGATION -->
+    <!-- Left panel : Navigation area -->
+    <!-- Note: This width of the aside area can be adjusted through LESS/SASS variables -->
+    <aside id="left-panel" class="hidden-menu">
+
+        <!-- User info -->
+        <div class="login-info">
+            <span>
+                <!-- User image size is adjusted inside CSS, it should stay as is -->
+                @*<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">*@
+                <img src="/img/avatars/user.jpg" alt="@Global.CurrentUser.DisplayName" class="online" />
+                <span style="font-weight: bold; font-size:12px;">
+                    @Global.CurrentUser.DisplayName
+                </span>
+                <br />
+                <span style="padding-left: 27px">
+                    <a onclick="ChangePassword(@Global.CurrentUser.UserID)">@AppRes.ChangePassword</a>
+                </span>
+                @*<i class="fa fa-angle-down"></i>*@
+                @*</a>*@
+
+            </span>
+        </div>
+        <nav>
+            @Html.Action("LoadMenu", "SecMenu")
+        </nav>
+        <a href="#ajax/difver.html" class="btn btn-primary nav-demo-btn"><i class="fa fa-info-circle"></i> SmartAdmin Package (187 MB)</a>
+
+
+        <span class="minifyme" data-action="minifyMenu"> <i class="fa fa-arrow-circle-left hit"></i> </span>
+
+    </aside>
+    <!-- END NAVIGATION -->
+    <!-- #MAIN PANEL -->
+    <div id="main" role="main">
+
+        <!-- #MAIN CONTENT -->
+        @RenderBody()
+        <div id="dialog-form"></div>
+        <!-- END #MAIN CONTENT -->
+    </div>
+    <!-- END #MAIN PANEL -->
+    <!-- #PAGE FOOTER -->
+    <div class="page-footer hide">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                <span class="txt-color-white">SmartAdmin 1.8.0 <span class="hidden-xs"> - Web Application Framework</span> © 2014-2016</span>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 text-right hidden-xs">
+                <div class="txt-color-white inline-block">
+                    <i class="txt-color-blueLight hidden-mobile">Last account activity <i class="fa fa-clock-o"></i> <strong>52 mins ago &nbsp;</strong> </i>
+                    <div class="btn-group dropup">
+                        <button class="btn btn-xs dropdown-toggle bg-color-blue txt-color-white" data-toggle="dropdown">
+                            <i class="fa fa-link"></i> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right text-left">
+                            <li>
+                                <div class="padding-5">
+                                    <p class="txt-color-darken font-sm no-margin">Download Progress</p>
+                                    <div class="progress progress-micro no-margin">
+                                        <div class="progress-bar progress-bar-success" style="width: 50%;"></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <div class="padding-5">
+                                    <p class="txt-color-darken font-sm no-margin">Server Load</p>
+                                    <div class="progress progress-micro no-margin">
+                                        <div class="progress-bar progress-bar-success" style="width: 20%;"></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <div class="padding-5">
+                                    <p class="txt-color-darken font-sm no-margin">
+                                        Memory Load
+                                        <span class="text-danger">*critical*</span>
+                                    </p>
+                                    <div class="progress progress-micro no-margin">
+                                        <div class="progress-bar progress-bar-danger" style="width: 70%;"></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <div class="padding-5">
+                                    <button class="btn btn-block btn-default">refresh</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- end btn-group-->
+                </div>
+                <!-- end div-->
+            </div>
+            <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- END FOOTER -->
+    <!-- #SHORTCUT AREA : With large tiles (activated via clicking user name tag)
+    Note: These tiles are completely responsive, you can add as many as you like -->
+    @*<div id="shortcut">
+            <ul>
+                <li>
+                    <a href="#ajax/inbox.html" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i class="fa fa-envelope fa-4x"></i> <span>Mail <span class="label pull-right bg-color-darken">14</span></span> </span> </a>
+                </li>
+                <li>
+                    <a href="#ajax/calendar.html" class="jarvismetro-tile big-cubes bg-color-orangeDark"> <span class="iconbox"> <i class="fa fa-calendar fa-4x"></i> <span>Calendar</span> </span> </a>
+                </li>
+                <li>
+                    <a href="#ajax/gmap-xml.html" class="jarvismetro-tile big-cubes bg-color-purple"> <span class="iconbox"> <i class="fa fa-map-marker fa-4x"></i> <span>Maps</span> </span> </a>
+                </li>
+                <li>
+                    <a href="#ajax/invoice.html" class="jarvismetro-tile big-cubes bg-color-blueDark"> <span class="iconbox"> <i class="fa fa-book fa-4x"></i> <span>Invoice <span class="label pull-right bg-color-darken">99</span></span> </span> </a>
+                </li>
+                <li>
+                    <a href="#ajax/gallery.html" class="jarvismetro-tile big-cubes bg-color-greenLight"> <span class="iconbox"> <i class="fa fa-picture-o fa-4x"></i> <span>Gallery </span> </span> </a>
+                </li>
+                <li>
+                    <a href="#ajax/profile.html" class="jarvismetro-tile big-cubes selected bg-color-pinkDark"> <span class="iconbox"> <i class="fa fa-user fa-4x"></i> <span>My Profile </span> </span> </a>
+                </li>
+            </ul>
+        </div>*@
+    <!-- END SHORTCUT AREA -->
+    <!--================================================== -->
+    <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)
+    <script data-pace-options='{ "restartOnRequestAfter": true }' src="/js/plugin/pace/pace.min.js"></script>-->
+    <!-- #PLUGINS -->
+    <!-- IMPORTANT: APP CONFIG -->
+    <script src="/js/app.config.js"></script>
+
+    <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
+    <script src="/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script>
+
+    <!-- BOOTSTRAP JS -->
+
+    <script src="/js/bootstrap/bootstrap.min.js"></script>
+
+
+    <script src="~/Scripts/boostrap-dialog/bootstrap-dialog.js"></script>
+
+    <!-- CUSTOM NOTIFICATION -->
+    <script src="/js/notification/SmartNotification.min.js"></script>
+
+    <!-- JARVIS WIDGETS -->
+    <script src="/js/smartwidgets/jarvis.widget.min.js"></script>
+
+    <!-- EASY PIE CHARTS -->
+    <script src="/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
+
+    <!-- SPARKLINES -->
+    <script src="/js/plugin/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- JQUERY VALIDATE -->
+    <script src="/js/plugin/jquery-validate/jquery.validate.min.js"></script>
+
+    <!-- JQUERY MASKED INPUT -->
+    <script src="/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
+
+    <!-- JQUERY SELECT2 INPUT -->
+    <script src="/js/plugin/select2/select2.min.js"></script>
+
+    <!-- JQUERY combodate INPUT -->
+    <script src="/js/plugin/combodate/combodate.js"></script>
+    <script src="/js/plugin/combodate/moment.js"></script>
+
+    <!-- JQUERY UI + Bootstrap Slider -->
+    <script src="/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
+
+    <!-- browser msie issue fix -->
+    <script src="/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
+
+    <!-- FastClick: For mobile devices: you can disable this in app.js -->
+    <script src="/js/plugin/fastclick/fastclick.min.js"></script>
+
+    <!-- PAGE RELATED PLUGIN(S) -->
+    <script src="/js/plugin/jquery-nestable/jquery.nestable.min.js"></script>
+
+    @*JS get time*@
+    <script src="~/js/plugin/clockface/clockface.js"></script>
+
+    <!-- timepicker js -->
+    <script src="~/js/timepicker/jquery.timepicker.min.js"></script>
+
+    <script src="~/Scripts/angular-sanitize.min.js"></script>
+
+    <script type="text/javascript" src="/js/plugin/ckeditor/ckeditor.js"></script>
+    <link rel="stylesheet" href="/js/plugin/ckeditor/samples/sample.css" />
+
+    <!--[if IE 8]>
+            <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+        <![endif]-->
+    <!-- Demo purpose only -->
+    <script src="/js/demo.min.js"></script>
+
+    <!-- MAIN APP JS FILE -->
+    <script src="/js/app.min.js"></script>
+
+    <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
+    <!-- Voice command : plugin -->
+    <script src="/js/speech/voicecommand.min.js"></script>
+
+    <!-- SmartChat UI : plugin -->
+    <script src="/js/smart-chat-ui/smart.chat.ui.min.js"></script>
+    <script src="/js/smart-chat-ui/smart.chat.manager.min.js"></script>
+
+    @*<script type="text/javascript" src="/js/plugin/flot/jquery.flot.tooltip.min.js"></script>*@
+
+
+    <!-- Muuri UI : plugin -->
+    @*<script src="https://unpkg.com/web-animations-js@2.3.1/web-animations.min.js"></script>*@
+    <script src="~/js/Web-animations/web-animations.min.js"></script>
+    @*<script src="https://unpkg.com/hammerjs@2.0.8/hammer.min.js"></script>*@
+    <script src="~/js/Hammner/hammer.min.js"></script>
+    @*<script src="https://unpkg.com/muuri@0.7.1/dist/muuri.min.js"></script>*@
+    <script src="~/js/Muuri/muuri.min.js"></script>
+
+    @*@{Html.RenderAction("Index", "JavaScript");}*@
+    @*<script type="text/javascript" src="/JavaScript/_Index.cshtml"></script>*@
+    <script src="/js/global.js"></script>
+    @*@MiniProfiler.RenderIncludes()*@
+
+    <script src="~/Scripts/jquery.inputmask.bundle.js"></script>
+
+    <script src="~/js/jquery-sortable/jquery.sortable.js"></script>
+
+
+    @* @Html.Partial("~/Views/PopupModel/PopupModelJs.cshtml")*@
+    @*<script>
+        $("[rel=tooltip]").tooltip({ placement: 'right' });
+        function ChangePassword(userId) {
+            var options = {
+                id: 'frmChangPassword',
+                title: '@AppRes.ChangePassword',
+                width: 600,
+                url: '/Home/ChangePassword',
+                data: '{userId: "' + userId + '"}',
+                idform: 'frmChangPassword',
+                //  urlback: '/Customer/GetCustomerList',
+                //databack: '{contractId:' + contractId + '}',
+                //  divload: 'GridCustomerList',
+                //  fnNameReload: 'GetCustomerWhenAssignCustommer'
+            };
+            CreatePopup(options);
+        }
+    </script>*@
+    <div id="over"></div>
+    <div id="proccessing" class="proccessing">
+        <br />
+        <img src="/img/processing.gif" alt="" border="0" />
+        <br />
+        <br />
+        <font size="4">Please wait...</font>
+    </div>
+    <div class="waitting" style="display: none" id="loadingSend">
+        <img src="/img/sending.gif" />
+    </div>
+    <div class="waittingsub" style="display: none" id="loadingSubmit">
+        <img src="/img/processing.gif" />
+    </div>
+
+    <style>
+        .proccessing {
+            background: #FFF;
+            display: none;
+            height: 100px;
+            left: 40%;
+            overflow: auto;
+            position: fixed;
+            text-align: center;
+            top: 30%;
+            width: 350px;
+            z-index: 1005;
+            padding: 0;
+        }
+
+        .overlay {
+            -khtml-opacity: 0.8;
+            -moz-opacity: 0.8;
+            -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
+            background: #333;
+            filter: alpha(opacity=80) !important;
+            height: 100%;
+            left: 0;
+            opacity: 0.8;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1001;
+        }
+
+
+        .waittingsub img {
+            width: 190px;
+            position: absolute;
+            top: 44%;
+            left: 44%;
+        }
+
+        .waittingsub {
+            background: rgba(255,255,255, 0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 999999999;
+        }
+
+        .waitting {
+            background: rgba(255,255,255, 0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 999999999;
+        }
+
+            .waitting img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+            }
+    </style>
+    <style>
+        b.badgeNotifi {
+            position: absolute;
+            top: 8px;
+            right: 47px;
+            cursor: pointer;
+            background: #981155;
+            display: inline-block;
+            font-size: 11px;
+            box-shadow: inset 1px 1px 0 rgba(0,0,0,.1), inset 0 -1px 0 rgba(0,0,0,.07);
+            color: #fff;
+            font-weight: 700;
+            border-radius: 50%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            padding: 2px 3px 2px;
+            text-align: center;
+            line-height: normal;
+        }
+    </style>
+</body>
+
+@*Modal edit passworld*@
+@{Html.RenderAction("ChangePassword", "Authentication");}
+
+
+
+
+
+<!-- Mirrored from 192.241.236.31/themes/preview/smartadmin/1.8.x/ajax/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Mar 2017 03:59:24 GMT -->
+</html>
+
+<script type="text/javascript">
+    var LoginStaffId = @Html.Raw(Json.Encode(Global.CurrentUser.UserID));
+    function showProcessing() {
+        $('#over').fadeIn('fast', function () {
+            $('#over').addClass("overlay");
+            $('#proccessing').show();
+            $('#proccessing').animate({ 'left': '40%', 'top': '30%' }, 500);
+        });
+        setTimeout('hideProcessingTimeout()', 3000);
+    }
+
+    function hideProcessingTimeout() {
+        hideProcessing();
+    }
+
+    function hideProcessing() {
+        $('#over').fadeOut('fast', function () {
+            $('#proccessing').hide();
+        });
+    }
+    //$(document).ready(function () {
+    //    _global.init();
+
+
+    //});
+
+    // var oTbl;
+    // var newTbl;
+    // function scrolify(tblAsJQueryObject) {
+    //     oTbl = tblAsJQueryObject;
+
+    //     // for very large tables you can remove the four lines below
+    //     // and wrap the table with <div> in the mark-up and assign
+    //     // height and overflow property
+    //     var oTblDiv = $("<div id='BodyDiv'/>");
+    //     oTbl.wrap(oTblDiv);
+
+    //     // save original width
+    //     oTbl.attr("data-item-original-width", oTbl.width());
+    //     oTbl.find('thead tr td').each(function () {
+    //         $(this).attr("data-item-original-width", $(this).width());
+    //     });
+    //     oTbl.find('tbody tr:eq(0) td').each(function () {
+    //         $(this).attr("data-item-original-width", $(this).width());
+    //     });
+    //     // clone the original table
+    //     newTbl = oTbl.clone();
+
+    //     // remove table header from original table
+    //     oTbl.find('thead tr').remove();
+    //     // remove table body from new table
+    //     newTbl.find('tbody tr').remove();
+
+    //     oTbl.parent().parent().prepend(newTbl);
+    //     newTbl.wrap("<div id='HeaderDiv'/>");
+
+    //     // replace ORIGINAL COLUMN width
+    //     newTbl.width(newTbl.attr('data-item-original-width'));
+    //     newTbl.find('thead tr td').each(function () {
+    //         $(this).width($(this).attr("data-item-original-width"));
+    //     });
+    //     oTbl.width(oTbl.attr('data-item-original-width'));
+    //     oTbl.find('tbody tr:eq(0) td').each(function () {
+    //         $(this).width($(this).attr("data-item-original-width"));
+    //     });
+    // }
+    //// scrolify($('table.scroll'));
+    // var td = $("table.scroll").find('tbody tr:eq(0) td');
+    // var th = $("table.scroll").find('thead tr th');
+    // for (var i = 0; i < th.length; i++) {
+    //     $(th[i]).resizable({
+    //         handles: "e",
+    //         resize: function (event) {
+    //             for (var i = 0; i < td.length; i++) {
+    //                 $(td[i]).width($(th[i]).width());
+    //                 $(th[i]).width($(td[i]).width());
+    //             }
+
+
+    //         }
+    //     });
+    // }
+    // //if (td.length) {
+    // //    for (var i = 0; i < th.length; i++) {
+    // //        for (var i = 0; i < td.length; i++) {
+    // //            $(td[i]).width($(th[i]).width() + 1);
+    // //        }
+    // //    }
+    // //}
+
+
+</script>
+

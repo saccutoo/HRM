@@ -1,0 +1,36 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.ReportTheCostOfCSX;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #Control {
+        display: none;
+    }
+</style>
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<div class="container-fluid" ng-app="tableApp" ng-cloak>
+
+    <div id="AttendanceManagement" class="row" style="margin: 0;" ng-controller="PerformanceReport" ng-init="init()">
+        <div class="col-md-12" id="PerformanceReport">
+            @Html.Action("PerformanceReportServerSide", "Common")
+        </div>
+
+    </div>
+</div>
+
+
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/PerformanceReport/PerformanceReportBDUntil.js"></script>
+<script>
+    BuildTable('tableApp', 'PerformanceReport', '@(ViewBag.url)',@(ViewBag.viewType));
+</script>
+<script src="~/Scripts/directive/datePicker(NewDate)/datePicker.js"></script>
+
+
+
+
+
+

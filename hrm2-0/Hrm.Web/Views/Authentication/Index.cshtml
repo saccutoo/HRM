@@ -1,0 +1,68 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@model  Hrm.Framework.Models.AuthenticationModel
+@{
+    ViewBag.Title = "Login";
+    Layout = UrlHelpers.View("~/Views/Shared/_Layout.cshtml");
+}
+<div class="class-md-12 hrm-login-container pd-0">
+    <div class="box-login-left pull-left">
+        <div class="content-login-left pull-left">
+            <img src="~/Content/Images/left-bg-menu.png" />
+        </div>
+    </div>
+    <div class="box-login-right pull-left" style="width: calc(100% - 615px)">
+        <div class="content-login-right-top text-center">
+            <img src="~/Content/Images/logo-onfinance.png" />
+        </div>
+        <div class="content-login-right-contaner text-center">
+            <form action="/Authentication/Login" id="login-form" method="POST">
+                <div class="hrmv2-form-login">
+                    <div class="group-input-login">
+
+                        <span><i class="icon-append fa fa-user"></i></span>
+                        <input type="text" id="UserName" name="UserName" class="form-control" placeholder="Tên đăng nhập">
+                    </div>
+                    <div class="group-input-login">
+                        <span><i class="icon-append fa fa-lock"></i></span>
+                        <input type="password" id="Password" name="Password" class="form-control" placeholder="Mật khẩu">
+                    </div>
+                    @if (Model.User.ErrMess != null && Model.User.ErrMess != string.Empty)
+                    {
+                        <lable style="color:red;margin-top:10px;">@Model.User.ErrMess</lable>
+                    }
+                    <div class="group-remember">
+                        <div class="remember">
+                            <label for="chk-remember" class="label-cbx">
+                                <input id="chk-remember" type="checkbox" name="chk-remember" class="invisible chk-remember pull-left">
+                                <div class="checkbox">
+                                    <svg width="20px" height="20px" viewBox="0 0 20 20">
+                                        <path d="M3,1 L17,1 L17,1 C18.1045695,1 19,1.8954305 19,3 L19,17 L19,17 C19,18.1045695 18.1045695,19 17,19 L3,19 L3,19 C1.8954305,19 1,18.1045695 1,17 L1,3 L1,3 C1,1.8954305 1.8954305,1 3,1 Z"></path>
+                                        <polyline points="4 11 8 15 16 6"></polyline>
+                                    </svg>
+                                </div>
+                            </label>
+                            <span class="pull-right hrm-v2-font-13 hrm-v2-bold" style="line-height:45px">@G("Login.RememberPassword")</span>
+                        </div>
+                        <div class="fogot-password pull-right">
+                            <a href="@Url.Action("ForgotPassword", "Authentication")">@G("Login.ForgotPassword")?</a>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <div class="footer-login">
+                            <div class="pull-left">
+                                @Html.Partial(UrlHelpers.Template("_DropdownList.cshtml"), new DropdownListModel() { Name = "LanguageId", IsUseImage = true, ValueField = "Id", Style= "width:160px;height:32px", DisplayField = "Name", Data = Model.Languages })
+                            </div>
+                            <div class="pull-right">
+                                <button type="submit" class="btn btn-primary hrm-v2-btn-save">
+                                    @G("Login.Login")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>        
+    </div>
+</div>

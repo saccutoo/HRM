@@ -1,0 +1,121 @@
+﻿@model Hrm.Admin.ViewModels.MenuPermissionViewModel
+@using System.Linq
+@using Hrm.Common
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@{
+    Layout = null;
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+
+}
+<style>
+    .permission-role-right-body-list-content {
+        padding-left: 0px;
+    }
+
+    .permission-role-right-body {
+        border: 1px solid #ccc;
+    }
+
+        .permission-role-right-body.checkbox-tree {
+            overflow: auto;
+        }
+
+    .positon-fixed {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        height: 60px;
+        border-top: 1px solid #ccc;
+        background: white;
+        z-index: 999;
+    }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a>
+    <a href="/admin" class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Setting.Permisson")</a>
+    <a href="/admin/Permission/PermissionUser" class="bread-crumb-item"> &nbsp; &gt; &nbsp; @T("Setting.User")</a>
+    <span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Permission.AddPermissonUser")</span>
+</div>
+<form id="frm-permission-user">
+    <div class="col-md-12">
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "DataId", LabelName = T("Permission.PermissionUser").ToString(), Style = "width:100%;max-width:100%", IsAnimationLabel = true, Data = Model.Staffs, ValueField = "Id", DisplayField = "Name", SearchField = true, Value = Model.Staff.Id.ToString(), IsRequired = true })
+        </div>
+    </div>
+    <div class="col-md-12 add-permission-role">
+
+        <div class="permission-role-right-title-permission" style="margin-left:20px;margin-bottom:10px">
+            <span style="background: #fff;">@T("Permission.ListPermission")</span>
+        </div>
+        <div class="permission-role-right-body checkbox-tree hrm-v2-scroll" id="permission-role-right-body">
+            @Html.Partial(UrlHelpers.TemplateAdmin("Permission", "_ListPermission.cshtml"), Model)
+        </div>
+    </div>
+    <div class="col-md-12 positon-fixed">
+        <div style="float:right">
+            @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-organization", OnClick = "SavePermissionUser()", Value = "Permission.Save", Style = "width:100px;height:38px;margin-top:10px;margin-right:60px;", Type = "button", ClassName = "hrm-v2-btn-save" })
+        </div>
+        <div style="float:right;margin-right: 20px;">
+            @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Permission.Close", Style = "width:100px;height:38px;margin-top:10px", ClassName = "hrm-v2-btn-close" })
+        </div>
+    </div>
+</form>
+<script>
+
+    $("#DataId").change(function () {
+        $.ajax(
+       {
+           type: "POST",
+           url: "/Admin/Permission/GetPermissionByStaffId",
+           data: { id: $("#DataId").val(), isView: false },
+           success: function (response) {
+               $("#permission-role-right-body").html(response)
+           }
+       });
+    })
+    function SavePermissionUser() {
+        $("#frm-permission-user span[name*='-error']").text("");
+        var listCheckPermissionUser = [];
+        var checkPermissionUser = document.getElementsByName('cb-checklist-permission-user');
+        for (var i = 0; i < checkPermissionUser.length; i++) {
+            if (checkPermissionUser[i].checked == true) {
+                var permissionId = checkPermissionUser[i].getAttribute("value-id");
+                var menuId = checkPermissionUser[i].getAttribute("menu-id");
+                var obj = { PermissionId: permissionId, MenuId: menuId, IsCheck: true };
+                listCheckPermissionUser.push(obj);
+            }
+        }
+        var staffRolePermisson = {};
+        staffRolePermisson.DataId = $("#DataId").val();
+        staffRolePermisson.Name = "Pass";
+        staffRolePermisson.DataTypeName = '@DataType.Personal';
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/Permission/SavePermission",
+            data: { staffRolePermisson: staffRolePermisson, menuPermission: listCheckPermissionUser },
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    for (var i = 0; i < validations.length; i++) {
+                        var list = validations[i].ColumnName.split('.');
+                        validations[i].ColumnName = list[1];
+                    }
+                    RenderError(validations, "frm-permission-user");
+                }
+                else {
+                    if (response.result.Success == true) {
+                        window.location.href = "/Admin/Permission/PermissionUser";
+                        ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    }
+                    else {
+                        ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                    }
+                }
+
+            }
+        });
+    }
+</script>

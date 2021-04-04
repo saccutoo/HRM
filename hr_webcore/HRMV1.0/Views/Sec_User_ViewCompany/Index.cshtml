@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "Sec_User_ViewCompany";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid" ng-app="tableApp">
+    <div ng-controller="secRole">
+        <div class="row">
+            <div class="col-sm-6 col-sm-push-6">
+                @Html.Action("SecRoleUserServerSide", "Common")
+            </div>
+            <div class="col-sm-6 col-sm-pull-6" ng-controller="mytable">
+                @Html.Action("Sec_User_ViewCompanyServerSide", "Common")
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/mycustom/Sec_User_ViewCompany/Sec_User_ViewCompanyUntil.js"></script>
+<script src="~/Scripts/mycustom/Sec_User_ViewCompany/Sec_User_ViewCompanyService.js"></script>
+
+<script>
+    BuildTable('tableApp', 'secRole', '@(ViewBag.urlUser)');
+    BuildTable('tableApp', 'mytable', '@(ViewBag.urlCompany)');
+</script>

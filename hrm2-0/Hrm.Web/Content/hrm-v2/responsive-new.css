@@ -1,0 +1,251 @@
+﻿/*default*/
+.visible-only-on-mobile {
+    display: none;
+}
+/*for small divices (tablets and large phones, 600px and up)*/
+@media screen and (min-width: 600px) {
+}
+/*for extra small divices (phones, 600px and down)*/
+@media screen and (max-width: 600px) {
+}
+/*iphone*/
+/*for mobile phone 4/4s*/
+@media screen and (min-device-width: 320px) and (max-device-width: 480px) and (-webkit-min-device-picel-radio: 2) and (orientation: portrait /*landscape*/ ) {
+}
+/*for mobile phone 5/5s*/
+@media screen and (min-device-width: 320px) and (max-device-width: 568px) and (-webkit-min-device-picel-radio: 2) and (orientation: portrait /*landscape*/ ) {
+}
+/*for mobile phone 6/7/8*/
+@media screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-picel-radio: 2) and (orientation: portrait /*landscape*/ ) {
+}
+/*for mobile phone 6/7/8+*/
+@media screen and (min-width: 414px) and (max-width: 767px) and (orientation: portrait) {
+    .visible-not-mobile {
+        display: none;
+    }
+
+    .visible-only-on-mobile {
+        display: block;
+    }
+
+        .visible-only-on-mobile.smart-search {
+            width: 90%;
+            padding: 13px 15px;
+        }
+
+            .visible-only-on-mobile.smart-search span {
+                position: absolute;
+                right: 20px;
+            }
+
+    .bread-crumb {
+        padding: 0 15px;
+    }
+
+    .main-header .hrm-v2-floating-form {
+        margin-left: 25px !important;
+    }
+
+    .visible-only-on-mobile .global-search {
+        width: 100%;
+    }
+
+    .visible-only-on-mobile.header-menu.navbar-menu {
+        width: calc(100% - 90%);
+    }
+
+    .header-menu.navbar-menu ul .navbar-item.item-user {
+        margin: 2px 0px 0px 0px;
+    }
+
+    .visible-only-on-mobile .nav-tabs {
+        position: relative;
+        width: 100%;
+    }
+
+        .visible-only-on-mobile .nav-tabs .nav-item {
+            width: 50%;
+        }
+
+    .hrm-v2-date-range {
+        width: 50%;
+    }
+
+    #hrm-v2-dashboard-donut {
+        padding-bottom: 0;
+        position: absolute;
+        top: 255px;
+        left: 30px;
+    }
+
+    .header-menu.navbar-menu ul .navbar-item:first-child .fa {
+        line-height: 67px;
+        font-size: 25px;
+    }
+
+    .dash-board-container {
+        margin: 0;
+        padding: 0 6px 0 15px !important;
+        overflow: unset;
+        overflow-y: auto;
+    }
+
+    .main-contain-right {
+        width: 100% !important;
+    }
+
+    .visible-only-on-mobile.dash-board-container.hrm-v2-scroll {
+        margin: 0 15px;
+        height: calc(100% - 70px);
+    }
+
+    .visible-only-on-mobile.dash-board-left {
+        width: 100%;
+    }
+
+    .dash-board-left {
+        height: 100%;
+        max-height: unset;
+        border: none;
+    }
+
+        .dash-board-left .header {
+            padding-right: 0;
+            margin-bottom: 15px;
+        }
+
+            .dash-board-left .header .col-md-6 {
+                padding: 0;
+            }
+
+                .dash-board-left .header .col-md-6:first-child {
+                    padding-left: 5px;
+                }
+
+        .dash-board-left .contain-left {
+            height: 100%;
+        }
+
+    .contain-left .note-chart {
+        width: 100%;
+        float: left;
+        margin: 0;
+    }
+
+    .contain-left .hrm-v2-dashboard-donut {
+        height: auto;
+        padding: 0 !important;
+    }
+
+
+    .contain-left .hrm-v2-inline-block {
+        height: auto;
+    }
+
+    .contain-left .dashboard-donut-chart {
+        padding: 0;
+    }
+
+    .hrmv2-tab .nav-tabs {
+        height: 40px !important;
+    }
+
+        .hrmv2-tab .nav-tabs > li > a {
+            line-height: 40px !important;
+        }
+
+    .hrm-v2-inline-block {
+        width: 100%;
+    }
+
+        .hrm-v2-inline-block .dash-board-left {
+            width: 100%;
+            overflow: hidden;
+        }
+
+    .note-chart-donut {
+        position: absolute;
+        border: 0px;
+        right: 0px;
+        bottom: 120px;
+        display: inline-flex;
+        width: 100%;
+        padding: 0 0 0 40px;
+    }
+
+    .navbar-item.mobile {
+        height: 736px;
+    }
+
+    .header-menu.navbar-menu ul .navbar-item.item-user .sub-menu-navbar {
+        height: inherit;
+        z-index: 99999;
+        top: 0;
+        right: 155px;
+    }
+
+    .sub-menu-navbar {
+        width: 255px;
+        position: absolute;
+        right: 155px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.38);
+        background-color: #fff;
+        z-index: 9;
+        height: 0px;
+        transition: height 0.1s;
+        margin-left: 0px;
+        overflow: hidden;
+        font-family: Roboto-Bold;
+    }
+
+    .note-chart-donut.visible-not-mobile {
+        display: none;
+    }
+
+    .hrm-v2-font-14.hrm-v2-bold {
+        padding: 0;
+        width: 50%;
+    }
+
+    .date-to-date {
+        padding: 0;
+    }
+
+    .dash-board-right {
+        border: none;
+        width: 100%;
+        position: relative;
+        bottom: 60px;
+    }
+
+        .dash-board-right .box-dashboard {
+            padding: 0;
+        }
+    /*workingday tab*/
+    .contain-chart, .personal-tab-header {
+        padding: 0;
+    }
+
+        .personal-tab-header .left {
+            width: 100%;
+            padding: 15px 5px;
+        }
+
+        .personal-tab-header .right {
+            width: 100%;
+            padding: 15px 5px;
+            margin-top: 30px;
+            height: auto;
+        }
+
+    .tab-wk-content {
+        margin-top: 30px;
+    }
+}
+/*for ipad mini*/
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+}
+
+/*larger than mobile*/
+@media screen and (min-width: 768px) and (orientation: portrait) {
+}

@@ -1,0 +1,101 @@
+﻿@model Hrm.Web.ViewModels.FormWorkingdaySupplenmentAndSummaryDetailViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@using Hrm.Framework.Context
+@using Hrm.Common
+@using Newtonsoft.Json
+@{
+
+}
+<div class="list-workingday-supplement hrm-v2-scroll">
+
+    @{
+        if (Model.WorkingdaySupplements.Count() > 0)
+        {
+            foreach (var item in Model.longTypes)
+            {
+                var request = Model.WorkingdaySupplements.Where(s => s.RequestStatus == item.Value).ToList();
+                if (request != null && request.Count() > 0)
+                {
+                    <div class="request">
+                        <div class="request-type">@M(item.Value.ToString() + ";" + DataType.MasterData + ";Name").ToString().ToUpper() (@request.Count())</div>
+                        @if (request.Count() > 0)
+                        {
+                            foreach (var workingday in request)
+                            {
+                                <div class="description">
+                                    <div class="left">
+                                        <div class="name">
+                                            <span>@M(workingday.SupplementTypeId.ToString() + ";" + DataType.MasterData + ";Name").ToString()</span>
+                                        </div>
+                                        <div class="date-and-working">
+                                            @if (workingday.SupplementTypeId == MasterDataId.AdditionalWorkOverTime || workingday.SupplementTypeId == MasterDataId.AdditionalWork)
+                                            {
+                                                <span class="wokingday-date" style="margin-left:15px;">
+                                                    @workingday.StartTime.Value.ToString("dd/MM/yyyy HH:mm:ss")
+                                                    ->
+                                                    @workingday.EndTime.Value.ToString("dd/MM/yyyy HH:mm:ss")
+                                                </span>
+                                            }
+                                            else if (workingday.SupplementTypeId == MasterDataId.Vacation)
+                                            {
+                                                <span class="wokingday-date" style="margin-left:15px;">
+                                                    @workingday.Date.Value.ToString("dd/MM/yyyy HH:mm:ss")
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                if (workingday.SupplementTypeId == MasterDataId.LateDuration || workingday.SupplementTypeId==MasterDataId.EarlyDuration)
+                                                {
+                                                    <div class="date-and-working">
+                                                        <span class="wokingday">@workingday.MissingTimeDuration.Value.TimeOfDay.Minutes</span>
+                                                        <span class="title-working">@T("Workingday.Unit.Minute")</span>
+                                                        <span class="wokingday-date">@workingday.Date.Value.ToString("dd/MM/yyyy")</span>
+                                                    </div>
+                                                }
+
+                                            }
+                                        </div>
+                                    </div>
+                                    @if (item.Value == MasterDataId.RequestDraff && workingday.StaffId==CurrentUser.UserId)
+                                {
+                                        <div class="right">
+                                            <span class="fas fa-pencil-alt" onclick="EditWorkingdaySupplement(@workingday.Id)"></span>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+
+            }
+            if (Model.WorkingdaySupplements.Where(s => s.RequestStatus == MasterDataId.RequestPending).ToList().Count() > 0)
+            {
+                <a onclick="viewAllNeedAproval()" style="float:right">@T("Workingday.Label.ViewAll")</a>
+            }
+        }
+        else
+        {
+            <span style="color:#ccc">@T("Workingday.Supplement.ThereIsNoSuggestion")</span>
+        }
+    }
+</div>
+<script>
+    function EditWorkingdaySupplement(id) {
+        $(".modal-backdrop").remove();
+        var data={id:id}
+        var options = {
+            id: 'frmAddWorkingdaySupplement',
+            isNotificationPoup: false,
+            align: "center",
+            url: '/Workingday/EditWorkingdaySupplement',
+            isDataTypeJson:true,
+            width: 600,
+            data: data,
+            idform: 'frm-working-day-supplement',
+        };
+        CreatePopup(options);
+    }
+</script>

@@ -1,0 +1,435 @@
+﻿    @using HRM.App_LocalResources;
+@using HRM.Common
+<div class="container-fluid">
+    <div id="SaveContent" class="row" style="margin: 0;">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="pull-right" style="margin: 0px -10px 0px 0px;">
+                    <a ng-click="CloseForm()">
+                        <span><i class="fa fa-close" style="width: 15px;"></i></span>
+                    </a>
+                </div>
+                <div class="panel-body">
+                    <div id="tabs">
+                        <ul>
+                            <li><a href="#tabs1" ng-click="reloadTab1(check)">@AppRes.C_General</a></li>
+                            <li><a href="#tabs2" ng-show="ShowTab" ng-click="LoadTab('tabs2')">@AppRes.WorkingProcess</a></li>
+                            <li><a href="#tabs3" ng-show="ShowTab" ng-click="LoadTab('tabs3')">@AppRes.SocialInsurance</a></li>
+                            <li><a href="#tabs4" ng-show="ShowTab" ng-click="LoadTab('tabs4')">@AppRes.RewardDiscipline</a></li>
+                            <li><a href="#tabs5" ng-show="ShowTab" ng-click="LoadTab('tabs5')">@AppRes.RelativeInformation</a></li>
+                        </ul>
+                        <div id="tabs1" class="formEmployee">
+                            <br />
+                            <form role="form" name="SaveFormEmployee" ng-submit="SaveAction(tableInfo.AddUrl,SaveFormEmployee)" novalidate>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <pre><img style="width:100%" ng-src="{{editData.imageLink}}" /></pre>
+                                        <button ng-disabled=is_readonly type="button" ng-click="ChooseImage()">@AppRes.Choose_file</button>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="row">
+                                            <div class="col-md-2"><label>@AppRes.StaffCode <span style="color: red">(*)</span></label> </div>
+                                            <div class="col-md-4">
+                                                <input ng-readonly=is_readonly ng-required="true" class="form-control" data-modal="modal" name="StaffCode" type="text" ng-model="editData.StaffCode" />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.StaffCode.$error.required" style="color: red">@AppRes.ValidationStaffCode</span>
+                                            </div>
+                                            <div class="col-md-2"><label>@AppRes.FullName <span style="color: red">(*)</span></label></div>
+                                            <div class="col-md-4">
+                                                <input ng-readonly=is_readonly ng-required="true" name="FullName" class="form-control" type="text" ng-model="editData.FullName" />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.FullName.$error.required" style="color: red">@AppRes.ValidationFullName</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2"><label>@AppRes.Gender <span style="color: red">(*)</span></label> </div>
+                                            <div class="col-md-4">
+                                                @if (Global.CurrentLanguage == 5)
+                                                {
+                                                    <select ng-readonly=is_readonly class="form-control" chosen options="getListGerder" on-no-result="doStuff" ng-required="true" name="GenderID" ng-model="editData.GenderID" ng-options="list.GlobalListID as list.Name for list in getListGerder" convert-dropdown>
+                                                        <option value="" disabled selected>--@AppRes.Select--</option>
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    <select ng-readonly=is_readonly class="form-control" chosen options="getListGerder" on-no-result="doStuff" ng-required="true" name="GenderID" ng-model="editData.GenderID" ng-options="list.GlobalListID as list.NameEN for list in getListGerder" convert-dropdown>
+                                                        <option value="" disabled selected>--@AppRes.Select--</option>
+                                                    </select>
+                                                }
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.GenderID.$error.required" style="color: red">@AppRes.ValidationGender</span>
+                                            </div>
+                                            <div class="col-md-2"><label>@AppRes.Date_Birth </label></div>
+                                            <div class="col-md-4"><input ng-readonly=is_readonly class="form-control" type="date" ng-model="editData.BirthDay" format-date /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2"><label>@AppRes.GoogleAccount </label> </div>
+                                            <div class="col-md-4">
+                                                <input ng-readonly=is_readonly class="form-control" type="text" ng-model="editData.MCCs">
+                                            </div>
+                                            <div class="col-md-2"><label>@AppRes.FacebookAccount</label></div>
+                                            <div class="col-md-4">
+                                                <input ng-readonly=is_readonly class="form-control" type="text" ng-model="editData.BMs" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2"><label>@AppRes.PasswordNew <span ng-if="requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-4">
+                                                <input ng-readonly=is_readonly class="form-control" ng-required="requied" name="Password" type="Password" ng-model="editData.Password" />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.Password.$error.required" style="color: red">@AppRes.ValidationPassword</span>
+                                            </div>
+                                            <div class="col-md-2"><label>@AppRes.PasswordNewAgain <span ng-if="requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-4">
+                                                <input ng-readonly=is_readonly class="form-control" type="password" ng-required="requied" name="PasswordRepeat" ng-model="editData.PasswordRepeat" />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.PasswordRepeat.$error.required" style="color: red">@AppRes.ValidationPasswordRepeat</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2"><label>@AppRes.Department <span style="color: red">(*)</span></label> </div>
+                                            <div class="col-md-4">
+                                                <select class="form-control" ng-required="true" name="OrganizationUnitID" ng-disabled="disabled" chosen options="getListOrganizationUnit" on-no-result="doStuff" ng-cloak ng-model="editData.OrganizationUnitID" ng-options="list.OrganizationUnitID as list.Name for list in getListOrganizationUnit" convert-dropdown></select>
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.OrganizationUnitID.$error.required" style="color: red">@AppRes.ValidationOrganizationUnit</span>
+                                            </div>
+                                            <div class="col-md-2"><label>@AppRes.HoldSaraly</label></div>
+                                            <div class="col-md-4">
+                                                <input ng-disabled=is_readonly type="checkbox" ng-model="editData.HoldSaraly" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2"><label>@AppRes.Role <span style="color: red">(*)</span></label> </div>
+                                            <div class="col-md-4">
+                                                <select class="form-control" ng-required="true" name="RoleID" chosen options="getListRoleID" on-no-result="doStuff" ng-cloak ng-model="editData.RoleID" ng-options="list.RoleID as list.Name for list in getListRoleID" convert-dropdown>
+                                                    <option value="" selected>--@AppRes.Select--</option>
+                                                </select>
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.RoleID.$error.required" style="color: red">@AppRes.ValidationRole</span>
+                                            </div>
+                                            <div class="col-md-2"><label>@AppRes.IsActivated</label></div>
+                                            <div class="col-md-4">
+                                                <input ng-disabled=is_readonly type="checkbox" ng-model="editData.IsActivated" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-2"><label>@AppRes.UserName <span ng-if="requied" style="color: red">(*)</span></label> </div>
+                                            <div class="col-md-4">
+                                                <input ng-readonly=is_readonly class="form-control" type="text" ng-required="requied" name="UserName" ng-model="editData.UserName">
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.UserName.$error.required" style="color: red">@AppRes.ValidationUserName</span>
+                                            </div>
+                                            <div class="col-md-2" ng-if="currentRoleId==1"><label>@AppRes.CommitmentBudgetLimit</label> </div>
+                                            <div class="col-md-4" ng-if="currentRoleId==1">
+                                                <input ng-readonly=is_readonly class="form-control" type="text"  name="CommitmentBudgetLimit" ng-model="editData.CommitmentBudgetLimit">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-5"> <label>@AppRes.PermanentAddress <span ng-if="!requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7 ">
+                                                <textarea ng-readonly=is_readonly class="form-control" ng-required="!requied" name="Address" ng-model="editData.Address"></textarea>
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.Address.$error.required" style="color: red">@AppRes.ValidationAddress</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.ContactAddress <span ng-if="!requied" style="color: red">(*)</span></label> </div>
+                                            <div class="col-md-7 ">
+                                                <textarea ng-readonly=is_readonly class="form-control" ng-required="!requied" name="ContactAddress" ng-model="editData.ContactAddress"></textarea>
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.ContactAddress.$error.required" style="color: red">@AppRes.ValidationContactAddress</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.DateIntoTheCompany <span ng-if="!requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7">
+                                                <input ng-readonly=is_readonly class="form-control" type="date" ng-required="!requied" name="StartWorkingDate" ng-model="editData.StartWorkingDate" format-date />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.StartWorkingDate.$error.required" style="color: red">@AppRes.ValidationStartWorkingDate</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.IssueId <span ng-if="!requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7 ">
+                                                <input ng-readonly=is_readonly class="form-control" ng-required="!requied" name="IdentityNumber" type="text" ng-model="editData.IdentityNumber" />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.IdentityNumber.$error.required" style="color: red">@AppRes.ValidationIdentityNumber</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.TaxCode</label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control" type="text" ng-model="editData.TaxID" /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.ReceipientAccountNumber <span ng-if="!requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7 ">
+                                                <input ng-readonly=is_readonly class="form-control" type="text" ng-required="!requied" name="BankNumber" ng-model="editData.BankNumber" />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.BankNumber.$error.required" style="color: red">@AppRes.ValidationBankNumber</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.Skype</label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control"  ng-required="!requied" name="Skype" type="text" ng-model="editData.Skype" /></div>
+                                            <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.Skype.$error.required" style="color: red">@AppRes.TitleRequired</span>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.Facebook</label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control" type="text" ng-model="editData.LinkFacebook" /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.Mobile <span ng-if="!requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7 ">
+                                                <input ng-readonly=is_readonly class="form-control" type="text" ng-required="!requied" name="Mobile" ng-model="editData.Mobile" />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.Mobile.$error.required" style="color: red">@AppRes.ValidationMobile</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.ContactName</label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control" type="text" ng-model="editData.ContactName" /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.StatusContract</label></div>
+                                            <div class="col-md-7 ">
+                                                @if (Global.CurrentLanguage == 5)
+                                                {
+                                                    <select class="form-control" ng-disabled="true" ng-cloak ng-model="editData.Ds_StatusContractID" ng-options="list.GlobalListID as list.Name for list in getListStatusContract" convert-dropdown></select> }
+                                                else
+                                                {
+                                                    <select class="form-control" ng-disabled="true" ng-cloak ng-model="editData.Ds_StatusContractID" ng-options="list.GlobalListID as list.NameEN for list in getListStatusContract" convert-dropdown></select>}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.SSN <span ng-if="requied" style="color: red">(*)</span></label> </div>
+                                            <div class="col-md-7 ">
+                                                <input ng-readonly=is_readonly type="text" class="form-control" ng-required="true" name="SSN" ng-model="editData.SSN" />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.SSN.$error.required" style="color: red">@AppRes.ValidationAttendanceCode</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.ManagerApproId </label></div>
+                                            <div class="col-md-7 ">
+                                                <select ng-readonly=is_readonly class="form-control" chosen options="getListStaff" on-no-result="doStuff" ng-model="editData.WorkingManagerID" ng-options="list.UserID as list.FullName for list in getListStaff" convert-dropdown>
+                                                    <option value="" selected>--@AppRes.Select--</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.TitleCountry <span ng-if="!requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7 ">
+                                                <select ng-readonly=is_readonly class="form-control" chosen options="getListCountry" on-no-result="doStuff" ng-required="!requied" name="CountryID" ng-model="editData.CountryID" ng-options="list.GlobalListID as list.Name for list in getListCountry" ng-change="onCountryChange()" convert-dropdown>
+                                                    <option value="" selected>--@AppRes.Select--</option>
+                                                </select>
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.CountryID.$error.required" style="color: red">@AppRes.ValidationCountry</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.TitleCountry <span ng-if="!requied" style="color: red">(*)</span></label> </div>
+                                            <div class="col-md-7 ">
+                                                <select ng-readonly=is_readonly class="form-control" chosen options="getListCountry" on-no-result="doStuff" ng-required="!requied" name="ContactCountryID" ng-model="editData.ContactCountryID" ng-options="list.GlobalListID as list.Name for list in getListCountry" ng-change="onContactCountryChange()" convert-dropdown>
+                                                    <option value="" selected>--@AppRes.Select--</option>
+                                                </select>
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.ContactCountryID.$error.required" style="color: red">@AppRes.ValidationCountry</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.TrialDate</label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control" type="date" ng-model="editData.TrialDate" format-date /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.IDIssuedDate <span ng-if="!requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7 ">
+                                                <input ng-readonly=is_readonly class="form-control" type="date" ng-required="!requied" name="IDIssuedDate" ng-model="editData.IDIssuedDate" format-date />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.IDIssuedDate.$error.required" style="color: red">@AppRes.ValidationIDIssuedDate</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.DateRange</label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control" type="date" ng-model="editData.TaxDate" format-date /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.ReceipientBankName</label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control" type="text" ng-model="editData.BankName" /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.AssignManagerOld <span ng-if="requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7">
+                                                <select class="form-control" ng-disabled="disabled" chosen options="getListStaff" on-no-result="doStuff" ng-required="true" name="ParentID" ng-model="editData.ParentID" ng-options="list.UserID as list.FullName for list in getListStaff" convert-dropdown>
+                                                    <option value="" selected>--@AppRes.Select--</option>
+                                                </select>
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.ParentID.$error.required" style="color: red">@AppRes.ValidationCurrentManager</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.EmailPersonal <span ng-if="!requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7 ">
+                                                <input ng-readonly=is_readonly class="form-control" type="email" ng-required="!requied" name="EmailPersonal" ng-model="editData.EmailPersonal" />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.EmailPersonal.$error.required" style="color: red">@AppRes.ValidationEmailPersonal</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.ContactPhone</label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control" type="text" ng-model="editData.ContactPhone" /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.WorkingStatus</label></div>
+                                            <div class="col-md-7 ">
+                                                @if (Global.CurrentLanguage == 5)
+                                                {
+                                                    <select class="form-control" ng-disabled="true" ng-model="editData.Status" ng-options="list.GlobalListID as list.Name for list in getListStatus" convert-dropdown></select>
+                                                }
+                                                else
+                                                {
+                                                    <select class="form-control" ng-disabled="true" ng-model="editData.Status" ng-options="list.GlobalListID as list.NameEN for list in getListStatus" convert-dropdown></select>
+                                                }
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.WorkingDayMachine <span style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7 ">
+                                                @if (Global.CurrentLanguage == 5)
+                                                {
+                                                    <select ng-readonly=is_readonly class="form-control" chosen options="getListWorkingDayMachine" on-no-result="doStuff" ng-required="true" name="WorkingDayMachineID" ng-model="editData.WorkingDayMachineID" ng-options="list.WorkingDayMachineID as list.Name for list in getListWorkingDayMachine" convert-dropdown>
+                                                        <option value="" selected>--@AppRes.Select--</option>
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    <select ng-readonly=is_readonly class="form-control" chosen options="getListWorkingDayMachine" on-no-result="doStuff" ng-required="true" name="WorkingDayMachineID" ng-model="editData.WorkingDayMachineID" ng-options="list.WorkingDayMachineID as list.NameEN for list in getListWorkingDayMachine" convert-dropdown>
+                                                        <option value="" selected>--@AppRes.Select--</option>
+                                                    </select>
+                                                }
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.WorkingDayMachineID.$error.required" style="color: red">@AppRes.ValidationWorkingDayMachine</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.LastChildBirthday </label></div>
+                                            <div class="col-md-7 ">
+                                                <input ng-readonly=is_readonly type="date" class="form-control" ng-model="editData.LastChildBirthday" format-date />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.EndWorkingsDate </label></div>
+                                            <div class="col-md-7 ">
+                                                <input ng-readonly=is_readonly type="date" class="form-control"   ng-disabled="true" ng-model="editData.EndWorkingDate" format-date />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.Province </label> <span ng-if="!requied" style="color: red">(*)</span></div>
+                                            <div class="col-md-7 ">
+                                                <select ng-readonly=is_readonly class="form-control" chosen options="getListProvince" on-no-result="doStuff" ng-required="!requied" name="ProvinceID" ng-model="editData.ProvinceID" ng-options="list.ProvinceID as list.Name for list in getListProvince" convert-dropdown>
+                                                    <option value="" selected>--@AppRes.Select--</option>
+                                                </select>
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.ProvinceID.$error.required" style="color: red">@AppRes.ValidationProvince</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.Province </label> <span ng-if="!requied" style="color: red">(*)</span></div>
+                                            <div class="col-md-7 ">
+                                                <select ng-readonly=is_readonly class="form-control" chosen options="getListContactProvince" on-no-result="doStuff" ng-required="!requied" name="ContactProvinceID" ng-model="editData.ContactProvinceID" ng-options="list.ProvinceID as list.Name for list in getListContactProvince" convert-dropdown>
+                                                    <option value="" selected>--@AppRes.Select--</option>
+                                                </select>
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.ContactProvinceID.$error.required" style="color: red">@AppRes.ValidationProvince</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.OfficialDate</label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control" type="date" ng-model="editData.OfficialDate" format-date /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.IssuePlace <span ng-if="!requied" style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7 ">
+                                                <input ng-readonly=is_readonly class="form-control" type="text" ng-required="!requied" name="IDIssuedBy" ng-model="editData.IDIssuedBy" />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.IDIssuedBy.$error.required" style="color: red">@AppRes.ValidationIDIssuedBy</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.IssuePlace</label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control" type="text" ng-model="editData.TaxBy" /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.BankAccountName </label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control" type="text" ng-model="editData.AcountName" /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.HRManagement <span style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7 ">
+                                                <select class="chosen-select form-control col-sm-3" ng-disabled="disabled" ng-model="editData.HRIds" ng-required="true" name="HRIds" chosen multiple>
+                                                    <option ng-repeat="list in getListHRIds" value="{{list.UserID}}">{{list.FullName}}</option>
+                                                </select>
+
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.HRIds.$error.required" style="color: red">@AppRes.ErrorHR</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.EmailCompany <span style="color: red">(*)</span></label></div>
+                                            <div class="col-md-7 ">
+                                                <input ng-readonly=is_readonly ng-required="true" name="EmailCompany" class="form-control" type="email" ng-model="editData.EmailCompany" />
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.EmailCompany.$error.required" style="color: red">@AppRes.ValidationEmailCompany</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.AddressOfContact</label></div>
+                                            <div class="col-md-7 "><input ng-readonly=is_readonly class="form-control" type="text" ng-model="editData.AddressOfContact" /></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.Note</label></div>
+                                            <div class="col-md-7 "><textarea ng-readonly=is_readonly class="form-control" ng-model="editData.Note"></textarea></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.HrId </label><span style="color: red">(?)</span> </div>
+                                            <div class="col-md-7">
+                                                <select ng-readonly=is_readonly class="form-control" ng-required="true" name="WorkingHRID" chosen options="getListHRIds" on-no-result="doStuff" ng-model="editData.WorkingHRID" ng-options="list.UserID as list.FullName for list in getListHRIds" convert-dropdown>
+                                                    <option value="" selected>--@AppRes.Select--</option>
+                                                </select>
+                                                <span ng-show="SaveFormEmployee.$submitted && SaveFormEmployee.WorkingHRID.$error.required" style="color: red">@AppRes.ValidationWorkingHR</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-5"><label>@AppRes.OnlyApproveDirectManagerialStaff </label></div>
+                                            <div class="col-md-7 "><input ng-disabled=is_readonly type="checkbox" ng-model="editData.OnlyApproveDirectManagerialStaff" /></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:20px">
+                                    <div class="col-md-5 col-md-push-5">
+                                        <button ng-show="tablePermission.isEdit" type="submit" class="btn btn-labeled btn-success">
+                                            <span class="btn-label">
+                                                <i class="fa fa-save"></i>
+                                            </span>@AppRes.SaveData
+                                        </button>
+                                        <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                            <span class="btn-label">
+                                                <i class="fa fa-close"></i>
+                                            </span>@AppRes.btnCancel
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                        <div ng-show="ShowTab">
+                            <div id="tabs2">
+                                <div ng-if="flagShow == 'tabs2'" compile="tab2Data"></div>
+                            </div>
+                            <div id="tabs3">
+                                <div ng-if="flagShow == 'tabs3'" compile="tab3Data"></div>
+                            </div>
+                            <div id="tabs4">
+                                <div ng-if="flagShow == 'tabs4'" compile="tab4Data"></div>
+                            </div>
+                            <div id="tabs5">
+                                <div ng-if="flagShow == 'tabs5'" compile="tab5Data"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>
+
+
+

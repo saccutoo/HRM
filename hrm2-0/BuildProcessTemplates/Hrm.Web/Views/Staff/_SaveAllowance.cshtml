@@ -1,0 +1,64 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Web.ViewModels.StaffAllowanceViewModel
+@{
+    Layout = null;
+}
+<form id="create-allowance-form">
+    <div class="detail-allowance-container display-inline-block">
+        @if (Model.StaffAllowance.Id == 0)
+        {
+            <div class="hrm-v2-modal-header">Thêm mới phụ cấp</div>
+        }
+        else
+        {
+            <div class="hrm-v2-modal-header">@Model.StaffAllowance.Name</div>
+        }
+        <input type="hidden" name="StaffId" id="StaffId" />
+        <input type="hidden" name="Id" id="Id" />
+        <input type="hidden" name="" id="" />
+        <input type="hidden" name="" id="" />
+        <input type="hidden" name="" id=""/>
+        <div class="hrm-v2-modal-body" style="margin-top:0px">
+            <section class="hrmv2-section">
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Name").ToString(), IsAnimationLabel = true, Value = Model.StaffAllowance.Name, Name = "Name" })
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.StatusApprove").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownStatusAprove, ValueField = "Id", DisplayField = "Name", Name = "Status", Value = Model.StaffAllowance.Status.ToString() })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Table.Title.RewardLevel").ToString(), IsAnimationLabel = true, Name = "Amount", Value = Model.StaffAllowance.Amount.ToString(), PlaceHolder = " ", Type = "Number" })
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "SignDate", LabelName = T("Staff.Detail.StartDate").ToString(), Value = Model.StaffAllowance.StartDate })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "SignDate", LabelName = T("Staff.Detail.EndDate").ToString(), Value = Model.StaffAllowance.StartDate, PlaceHolder = " " })
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Content").ToString(), IsAnimationLabel = true, Value = Model.StaffAllowance.Content, Name = "Content" })
+                    </div>
+                </div>
+            </section>
+            <div class="footer">
+                <div class="footer-login">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                            @T("Staff.Detail.Cancel")
+                        </button>
+                        <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="saveBonusDiscipline('create-discipline-form')">
+                            @T("Staff.Detail.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

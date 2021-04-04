@@ -1,0 +1,385 @@
+﻿@model Hrm.Admin.ViewModels.EmailDetailViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Common;
+<style>
+    .hrm-v2-multiple .select2-container {
+        width: 100% !important;
+    }
+
+    .hrm-v2-email-to {
+        position: relative;
+    }
+
+    .cc-bcc {
+        position: absolute;
+        right: 10px;
+        top: 22px;
+        font-size: 13px;
+        font-family: Roboto-Regular;
+    }
+
+        .cc-bcc span {
+            width: 30px;
+            text-align: center;
+            float: left;
+            display: block;
+            cursor: pointer;
+        }
+
+    .hrmv2-section .hrm-v2-multiple.hrm-v2-email-to ul {
+        margin-top: 4px;
+    }
+
+    .hrmv2-section .hrm-v2-multiple.cc ul {
+        margin-top: 4px;
+    }
+
+    .hrmv2-section .hrm-v2-multiple.bcc ul {
+        margin-top: 4px;
+    }
+
+    .hrmv2-section .display-inline-block #Column {
+        margin-top: 18px;
+    }
+    #frm-email .select2-selection.select2-selection--multiple{
+        border: none;
+        border-bottom: 1px solid #ccc;
+        border-radius: 0px;
+    }
+     #frm-email .select2.select2-container.select2-container--default{
+        border: none;
+    }
+</style>
+
+
+@if (Model.Email.Id != 0 || Model.isAdd==true)
+{
+    <form id="frm-email">
+        <section class="hrmv2-section">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <input type="text" id="templateId" value="@Model.Email.Id" hidden />
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Mail.NameMail").ToString(), IsAnimationLabel = true, IsRequired = true, Name = "Name", Value = Model.Email.Name })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-9 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Mail.TitleMail").ToString(), IsAnimationLabel = true, IsRequired = true, Name = "Title", Value = Model.Email.Title })
+                </div>
+                <div class="col-md-3 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_DropdownList.cshtml"), new DropdownListModel() { LabelName = T("Mail.SelectTheDisplayField").ToString(), IsAnimationLabel = true, Name = "Column", ValueField = "ColumnName", DisplayField = "ColumnName", Data = Model.Columns,IsMultipleLanguage=true,DataType= "TableColumn", PropertyName= "ColumnName",Value="Id" })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block hrm-v2-multiple hrm-v2-email-to">
+                @Html.Partial(UrlHelpers.Template("_MultiSelect.cshtml"), new DropdownListModel() { LabelName = T("Mail.Receiver").ToString(), IsAnimationLabel = true, ValueField = "Email", DisplayField = "Email", Name = "ListMailTo", ValueMultiSelect = Model.Email.ListMailTo, Data = Model.Staffs })
+                <div class="cc-bcc">
+                    <span onclick="showButton('CC')">CC</span>
+                    <span onclick="showButton('BCC')">BCC</span>
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 hrm-v2-display-none hrm-v2-multiple cc">
+                @Html.Partial(UrlHelpers.Template("_MultiSelect.cshtml"), new DropdownListModel() { LabelName = T("CC").ToString(), IsAnimationLabel = true, Data = Model.Staffs, ValueField = "Email", DisplayField = "Email", Name = "ListMailCc", ValueMultiSelect = Model.Email.ListMailCc })
+            </div>
+            <div class="col-md-12 pd-0 hrm-v2-display-none hrm-v2-multiple bcc">
+                @Html.Partial(UrlHelpers.Template("_MultiSelect.cshtml"), new DropdownListModel() { LabelName = T("BCC").ToString(), IsAnimationLabel = true, Data = Model.Staffs, ValueField = "Email", DisplayField = "Email", Name = "ListMailBcc", ValueMultiSelect = Model.Email.ListMailBcc })
+            </div>
+            @*<div class="col-md-12 pd-0 display-inline-block">
+                    <input type="text" id="vkl" data-role="tagsinput" />
+                    <script>
+                        var data = ["Amsterdam",
+                           "London",
+                           "Paris",
+                           "Washington",
+                           "New York",
+                           "New Jersey",
+                           "New Orleans",
+                           "Los Angeles",
+                           "Sydney",
+                           "Melbourne",
+                           "Canberra",
+                           "Beijing",
+                           "New Delhi",
+                           "Kathmandu",
+                           "Cairo",
+                           "Cape Town",
+                           "Kinshasa"];
+                        var citynames = new Bloodhound({
+                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                            queryTokenizer: Bloodhound.tokenizers.whitespace,
+                            local: $.map(data, function (city) {
+                                return {
+                                    name: city
+                                };
+                            })
+                        });
+                        citynames.initialize();
+
+                        $('#vkl').tagsinput({
+                            typeaheadjs: [{
+                                minLength: 1,
+                                highlight: true,
+                            }, {
+                                minlength: 1,
+                                name: 'citynames',
+                                displayKey: 'name',
+                                valueKey: 'name',
+                                source: citynames.ttAdapter()
+                            }],
+                            freeInput: true
+                        });
+                    </script>
+                </div>*@
+            <div class="col-md-12 pd-0 display-inline-block" id="attackment-bottom-content">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_CkEditor.cshtml"), new TextEditorModel() { Name = "ContentTemplateValue", Value = Model.Email.ContentTemplate })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block" style="min-height:50px;display:flex;align-items:center;">
+                <div id="list-attchment">
+                    @Html.Partial(UrlHelpers.TemplateAdmin("Checklist", "_ListAttackment.cshtml"), Model.Attachments)
+                </div>
+
+                <a class="new-btn new-attach"><i class="fas fa-paperclip hrm-v2-font-16" style="color:black;margin-left:10px"></i></a>
+                <input id="file-upload" type="file" style="display:none" onchange="changeInputFile()" multiple />
+            </div>
+
+            @if (Model.isSendWelcomeKit == true)
+            {
+                <div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-master-data-continue", ClassName = "hrm-v2-btn-save", OnClick = "SendWelcomeKit()", Value = "Onboarding.Button.Send", Style = "width:100px;height:38px;", Type = "button" })
+                </div>
+            }
+            else
+            {
+                <div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-master-data-continue", ClassName = "hrm-v2-btn-save", OnClick = "saveTemplateEmail()", Value = "Checklist.Save", Style = "width:100px;height:38px;", Type = "button" })
+                </div>
+            }
+            @*<div style="float:right;margin-right: 10px;">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", ClassName = "hrm-v2-btn-close", Value = "Checklist.Close", Style = "width:100px;height:38px;" })
+                </div>*@
+        </section>
+    </form>
+}
+else
+{
+    <style>
+        .hrmv2-section{
+            height: 500px;
+            text-align: center;
+        }
+        .hrmv2-section .add-template-weilcomekit-icon{
+            font-size: 200px;
+            margin-top: 100px;
+        }
+        .hrmv2-section .add-template-weilcomekit-content{
+            font-family: Rotobo-bold;
+            font-size: 30px;
+        }
+        .hrmv2-section .add-template-weilcomekit-button{
+            margin-top: 10px;
+        }
+    </style>
+    <section class="hrmv2-section">
+        <div class="add-template-weilcomekit-icon">
+            <span class="fab fa-envira"></span>
+        </div>
+        <div class="add-template-weilcomekit-content">
+            <span>@T("Checklist.NoEmailsHaveBeenAddedYet")</span>
+        </div>
+        <div class="add-template-weilcomekit-button">
+            <button class="hrm-v2-btn-save" onclick="addWelcomeKit(0)">@T("System.Button.Add")</button>
+        </div>
+
+    </section>
+}
+<script>
+
+    var FileUpload = [];
+    var JustUpload = [];
+    var listAttachmentJs =@Html.Raw(JsonConvert.SerializeObject(Model.AttachmentJs));
+    var staff =@Html.Raw(JsonConvert.SerializeObject(Model.staff));
+
+    if (listAttachmentJs!=null && listAttachmentJs.length>0) {
+        FileUpload=listAttachmentJs;
+    }
+    var isfocusTitle = true;
+    $('.new-attach').bind("click", function () {
+        $('#file-upload').click();
+    })
+
+    function showButton(button) {
+        if ($('.' + button).hasClass('hrm-v2-display-none')) {
+            $('.' + button).removeClass('hrm-v2-display-none');
+        }
+        else {
+            $('.' + button).addClass('hrm-v2-display-none');
+        }
+    }
+
+    function changeInputFile() {
+        var fileData = [];
+        var file = $('#file-upload')[0].files;
+        var formData = new FormData();
+        for (var i = 0; i < file.length; i++) {
+            formData.append('attachment', file[i]);
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/Admin/Email/Save",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.IsSuccess) {
+                    if (response.Result != null && response.Result.length>0) {
+                        for (var i = 0; i < response.Result.length;i++){
+                            var current = {
+                                extension: response.Result[i].name.split(".")[1],
+                                size: response.Result[i].size,
+                                name: response.Result[i].name,
+                                realname: response.Result[i].realname,
+                                CreatedDate: response.Result[i].CreatedDate,
+                            }
+                            FileUpload.push(current);
+                        }
+                    }
+                    $('#file-upload').val('');
+                }
+                $("#list-attchment").load('/Admin/Checklist/ReloadEmailAttachment', { atchments: FileUpload });
+            },
+        });
+    }
+
+    function removeFile(realName,id) {
+        var formData = new FormData();
+        if(id==0){
+            formData.append('realName', realName);
+            $.ajax({
+                type: 'POST',
+                url: "/Admin/Email/Remove",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    debugger
+                    if (response.IsSuccess) {                       
+                        FileUpload = FileUpload.filter(function (value) {
+                            return value.realname != realName
+                        });
+                        $("#list-attchment").load('/Admin/Checklist/ReloadEmailAttachment', { atchments: FileUpload });
+
+                    }                 
+                },
+            });
+        }
+        else{
+            var listDelete = FileUpload.filter(function (value) {
+                return value.realname == realName
+            })
+            if (listDelete != null && listDelete.length>0) {
+                for (var i = 0; i < listDelete.length;i++){
+                    JustUpload.push(listDelete[i]);
+                }
+            }
+            FileUpload = FileUpload.filter(function (value) {
+                return value.realname != realName
+            });
+            $("#list-attchment").load('/Admin/Checklist/ReloadEmailAttachment', { atchments: FileUpload });
+        }
+    }
+
+    function saveTemplateEmail() {
+        $("#frm-email span[name*='-error']").text("");
+        var contentTemplate = CKEDITOR.instances["ContentTemplateValue"].getData();
+        var email = {
+            Id: $("#templateId").val(),
+            Name: $("#name").val(),
+            Title: $("#title").val(),
+            ListMailTo: $("#ListMailTo").select2("val"),
+            ListMailCc: $("#ListMailCc").select2("val"),
+            ListMailBcc: $("#ListMailBcc").select2("val"),
+            ContentTemplate: contentTemplate,
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Email/SaveTemplateEmail",
+            data: {
+                model: email,
+                attachments: FileUpload,
+                deleteAttachments:JustUpload
+            },
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-email");
+                }
+                if (response.result.Success==true) {
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                }
+            },
+        });
+    }
+
+    $("#title").focus(function () {
+        isfocusTitle = true;
+    });
+
+    function selectDropdown(value,name) {
+        if (isfocusTitle==true) {
+            var title = $("#title").val() + "{{" + value + "}}";
+            $("#title").val(title);
+        }
+        else {
+            var contentTemplate = CKEDITOR.instances["ContentTemplateValue"].getData() + "{{" + value + "}}";
+            CKEDITOR.instances["ContentTemplateValue"].setData(contentTemplate);
+        }
+    }
+
+    function SendWelcomeKit(){
+        var contentTemplate = CKEDITOR.instances["ContentTemplateValue"].getData();
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Checklist/SendWelcomeKit",
+            data: {
+                subject:Interpolate($("#title").val()),
+                body:Interpolate(contentTemplate),
+                toMail:$("#ListMailTo").select2("val"),
+                cc:$("#ListMailCc").select2("val"),
+                bcc:$("#ListMailBcc").select2("val"),
+                from:"@Mail.MailFrom",
+                replyTo:"@Mail.MailReplyTo",
+                attachments:FileUpload
+            },
+            success: function (response) {
+                if (response.IsSuccess) {
+                    ShowMessage(response.IsSuccess, msgSuccessful, response.Result, 500, 3000);
+                }
+                else{
+                    ShowMessage(response.IsSuccess, msgFalse, response.Result, 500, 3000);
+                }
+            },
+        });
+    }
+
+    function Interpolate (template) {
+        var reg = /{{(\w*\.)?\w*}}/g;
+        if (template != null) {
+            var listText = template.match(reg);
+            if (listText != null && listText != undefined) {
+                for (var i = 0; i < listText.length; i++) {
+                    var variableName = listText[i].replace('{{', '').replace('}}', '');
+                    if (eval('staff.' + variableName) != null || eval('staff.' + variableName) != null || undefined) {
+                        template = template.replace(listText[i], eval('staff.' + variableName));
+                    }
+                }
+            }
+        }
+        return template;
+    }
+
+    function addWelcomeKit(activeTab){
+        window.location = "/Admin/Checklist/AddWelcomeKit?activeTab=" + activeTab+"&isAdd=true";
+    }
+</script>

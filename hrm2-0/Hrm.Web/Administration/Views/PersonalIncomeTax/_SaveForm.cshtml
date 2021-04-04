@@ -1,0 +1,79 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Admin.ViewModels.PersonalIncomeTaxViewModel
+@{
+    Layout = null;
+}
+<form id="save-personal-income-tax-form">
+    <div class="detail-allowance-container display-inline-block">
+        @if (Model.PersonalIncomeTax.Id == 0)
+        {
+            <div class="hrm-v2-modal-header">@T("Setting.PersonalIncomeTax.Create")</div>
+        }
+        else
+        {
+            <div class="hrm-v2-modal-header">@T("Setting.PersonalIncomeTax.Update")</div>
+        }
+        <input type="hidden" name="Id" id="Id" value="@Model.PersonalIncomeTax.Id" />
+        <div class="hrm-v2-modal-body" style="margin-top:0px">
+            <section class="hrmv2-section">
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "PersonalIncomeTax.StartDate", LabelName = T("Setting.PersonalIncomeTax.FromDate").ToString(), Value = Model.PersonalIncomeTax.StartDate })
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "PersonalIncomeTax.EndtDate", LabelName = T("Setting.PersonalIncomeTax.ToDate").ToString(), Value = Model.PersonalIncomeTax.EndDate })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Setting.PersonalIncomeTax.Status").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownStatus, ValueField = "Id", DisplayField = "Name", Name = "PersonalIncomeTax.Status", Value = Model.PersonalIncomeTax.Status.ToString() })
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        <div class="col-md-9 pd-0">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Setting.PersonalIncomeTax.personalDeductions").ToString(), IsAnimationLabel = true, Name = "PersonalIncomeTax.DeductionItself", Value = Model.PersonalIncomeTax.DeductionItself.ToString(), Type = "Number" })
+                        </div>
+                        <div class="col-md-3 pd-0">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = "", IsAnimationLabel = false, Data = Model.DataDropdownCurrency, ValueField = "Id", DisplayField = "Name", Name = "PersonalIncomeTax.CurrencyId", Value = "20", Disabled = true, SearchField = true, IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        <div class="col-md-9 pd-0">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Setting.PersonalIncomeTax.DependentPersonDeductions").ToString(), IsAnimationLabel = true, Name = "PersonalIncomeTax.PersonalIncomeTax", Value = Model.PersonalIncomeTax.DeductionItself.ToString(), Type = "Number" })
+                        </div>
+                        <div class="col-md-3 pd-0">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = "", IsAnimationLabel = false, Data = Model.DataDropdownCurrency, ValueField = "Id", DisplayField = "Name", Name = "PersonalIncomeTax.CurrencyIds", Value = "20", Disabled = true, SearchField = true, IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                        </div>
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Setting.PersonalIncomeTax.Note").ToString(), IsAnimationLabel = true, Name = "PersonalIncomeTax.Description.", Value = Model.PersonalIncomeTax.Description, PlaceHolder = ""})
+                    </div>
+                </div>
+            </section>
+            <section class="hrmv2-section">
+                @{
+                    Model.TablePersonalIncomeTaxDetails.ViewType = 1;
+                }
+                <div class="col-md-12 display-inline-block text-uppercase">
+                    @T("Setting.PersonalIncomeTax.TaxRate")
+                </div>
+                @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.TablePersonalIncomeTaxDetails)
+            </section>
+            <div class="footer">
+                <div class="footer-login">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                            @T("Button.Cancel")
+                        </button>
+                        <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="saveBonusDiscipline('create-discipline-form')">
+                            @T("Button.Update")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

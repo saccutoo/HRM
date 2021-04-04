@@ -1,0 +1,140 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<br />
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 50%;
+    }
+
+    td, th {
+        border: 1px solid #d1e0e0;
+        padding: 8px;
+    }
+</style>
+<br />
+<div class="row">
+    <div class="col-md-1">
+        <input type="text" ng-model="FromMonth" class="form-control" id="datePicker3" autocomplete="off">
+    </div>
+    <div class="col-md-2">
+        <select chosen options="getListAllOrganizationUnit" on-no-result="doStuff" ng-model="OrganizationUnitID" ng-options="list.OrganizationUnitID as list.Name for list in getListAllOrganizationUnit" ng-change="onOrganizationUnitChange()" convert-dropdown>
+            <option value="" selected>-- @AppRes.Department --</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+
+        <select chosen options="ListEmployeeWhereOrganizationUnit" on-no-result="doStuff" ng-model="StaffID" ng-options="list.StaffID as list.NamePB for list in ListEmployeeWhereOrganizationUnit" ng-change="onStaffChange()" convert-dropdown>
+            <option value="" selected>-- ALL --</option>
+        </select>
+    </div>
+    <div class="col-md-1">
+        <button ng-click="GetListData();" id="submit" title="@AppRes.FindFilter"
+                type="button" class="btn btn-primary">
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+
+</div>
+<br />
+
+
+@if (Global.CurrentLanguage == 5)
+{
+    <table>
+        @*Phieu luong thang*@
+        <tr>
+            <td colspan="2" style="{{employees[0].Align}}">
+                {{employees[0].Name}} {{employees[0].DisplayValue}}
+            </td>
+        </tr>
+        @*Ten va email*@
+        <tr>
+            <td colspan="2" style="{{employees[1].Align}}">
+
+                {{employees[1].DisplayValue}} - {{employees[37].DisplayValue}}
+            </td>
+        </tr>
+        @*Ma nhan vien, phong ban*@
+        <tr>
+            <td>
+                {{employees[2].Name}} : {{employees[2].DisplayValue}}
+            </td>
+            <td colspan="{{employees[3].Colspan}}">
+                {{employees[3].Name}} : {{employees[3].DisplayValue}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{employees[4].Name}} : {{formatData(employees[4].Type,employees[4].DisplayValueFloat,employees[4].DataFormat)}}
+            </td>
+            <td colspan="{{employees[5].Colspan}}">
+                {{employees[5].Name}} : {{formatData(employees[5].Type,employees[5].DisplayValueFloat,employees[5].DataFormat)}}
+            </td>
+        </tr>
+        @*Noi dung, thu nhap, khau tru*@
+        <tr>
+            <td ng-repeat="employee in employees.slice(6,8)" style="{{employee.Align}}">
+                {{employee.Name}}
+            </td>
+        </tr>
+        <tr ng-repeat="employee in employees.slice(8)| orderBy:'OrderNo'" ng-hide="{{employee.HideRow}}">
+            <td style="{{employee.Align}}" colspan="{{employee.Colspan}}">{{employee.Name}}</td>
+            @*<td style="{{employee.Css}}" ng-hide="{{employee.Hide}}" align="{{employee.Align}}" ng-bind="employee.DisplayType == 0 ? employee.DisplayValue : employee.DisplayValueFloat"></td>*@
+            <td style="{{employee.Css}}" ng-hide="{{employee.Hide}}" ng-if="employee.CustomHTML == null&& employee.Type==3" ng-bind="employee.DisplayType == 0 ? employee.DisplayValue : employee.DisplayValueFloat | date:'dd/MM/yyyy'"></td>
+            <td style="{{employee.Css}}" ng-hide="{{employee.Hide}}" ng-if="employee.CustomHTML == null&& employee.Type==2" ng-bind="employee.DisplayType == 0 ? employee.DisplayValue : employee.DisplayValueFloat | number:employee.DataFormat"></td>
+            <td style="{{employee.Css}}" ng-hide="{{employee.Hide}}" ng-if="employee.CustomHTML == null&& employee.Type!=2 && employee.Type!=3" ng-bind="employee.DisplayType == 0 ? employee.DisplayValue : employee.DisplayValueFloat"></td>
+
+        </tr>
+    </table>
+}
+else
+{
+    <table>
+        @*Phieu luong thang*@
+        <tr>
+            <td colspan="2" style="{{employees[0].Align}}">
+                {{employees[0].NameEN}} {{employees[0].DisplayValue}}
+            </td>
+        </tr>
+        @*Ten va email*@
+        <tr>
+            <td colspan="2" style="{{employees[1].Align}}">
+
+                {{employees[1].DisplayValue}} - {{employees[37].DisplayValue}}
+            </td>
+        </tr>
+        @*Ma nhan vien, phong ban*@
+        <tr>
+            <td>
+                {{employees[2].NameEN}} : {{employees[2].DisplayValue}}
+            </td>
+            <td colspan="{{employees[3].Colspan}}">
+                {{employees[3].NameEN}} : {{employees[3].DisplayValue}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{employees[4].NameEN}} : {{formatData(employees[4].Type,employees[4].DisplayValueFloat,employees[4].DataFormat)}}
+            </td>
+            <td colspan="{{employees[5].Colspan}}">
+                {{employees[5].NameEN}} : {{formatData(employees[5].Type,employees[5].DisplayValueFloat,employees[5].DataFormat)}}
+            </td>
+        </tr>
+        @*Noi dung, thu nhap, khau tru*@
+        <tr>
+            <td ng-repeat="employee in employees.slice(6,8)" style="{{employee.Align}}">
+                {{employee.NameEN}}
+            </td>
+        </tr>
+        <tr ng-repeat="employee in employees.slice(8)| orderBy:'OrderNo'" ng-hide="{{employee.HideRow}}">
+            <td style="{{employee.Align}}" colspan="{{employee.Colspan}}">{{employee.NameEN}}</td>
+            @*<td style="{{employee.Css}}" ng-hide="{{employee.Hide}}" align="{{employee.Align}}" ng-bind="employee.DisplayType == 0 ? employee.DisplayValue : employee.DisplayValueFloat"></td>*@
+            <td style="{{employee.Css}}" ng-hide="{{employee.Hide}}" ng-if="employee.CustomHTML == null&& employee.Type==3" ng-bind="employee.DisplayType == 0 ? employee.DisplayValue : employee.DisplayValueFloat | date:'dd/MM/yyyy'"></td>
+            <td style="{{employee.Css}}" ng-hide="{{employee.Hide}}" ng-if="employee.CustomHTML == null&& employee.Type==2" ng-bind="employee.DisplayType == 0 ? employee.DisplayValue : employee.DisplayValueFloat | number:employee.DataFormat"></td>
+            <td style="{{employee.Css}}" ng-hide="{{employee.Hide}}" ng-if="employee.CustomHTML == null&& employee.Type!=2 && employee.Type!=3" ng-bind="employee.DisplayType == 0 ? employee.DisplayValue : employee.DisplayValueFloat"></td>
+
+        </tr>
+    </table>
+}

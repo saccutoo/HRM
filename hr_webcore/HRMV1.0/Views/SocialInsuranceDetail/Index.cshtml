@@ -1,0 +1,66 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = "Index";
+}
+<div class="container-fluid" ng-controller="SocialInsuranceDetail" ng-init="initSID()">
+    <div class="row">
+        <div class="ViewInsurance" ng-cloak ng-repeat="data in getDataLastID">
+            <br />
+
+            <div class="row">
+                <div class="col-md-2"><label><b>@AppRes.InsuranceCode</b></label></div>
+                <div class="col-md-3" ng-cloak>{{data.InsuranceCode}}</div>
+                <div class="col-md-2"><label><b>@AppRes.MonthStart</b></label></div>
+                <div class="col-md-3" ng-cloak ng-bind="data.MonthStart| date:'MM/yyyy'"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"><label><b>@AppRes.InsuranceNumber</b></label></div>
+                <div class="col-md-3 " ng-cloak>{{data.InsuranceNumber}}</div>
+                <div class="col-md-2"><label><b>@AppRes.FamilyCode</b></label></div>
+                <div class="col-md-3" ng-cloak>{{data.FamilyCode}}</div>
+            </div>
+            <br />
+        </div>
+        <build-table table-url="urlSocialInsuranceDetail"
+                     table-edit="editClick"
+                     table-delete="deleteClick"
+                     table-excel-click="ExcelClick"
+                     table-add="addClick"
+                     table-param-filter="Filter"
+                     table-model="tableSocialModel"></build-table>
+        <div style="display: none;">
+            @Html.Action("Save_SocialInsuranceDetail", "SocialInsuranceDetail")
+        </div>
+    </div>
+
+</div>
+<script>
+    var endYear = new Date(new Date().getFullYear(), 11, 31);
+    $("#datePicker").datepicker({
+        autoclose: true,
+        format: "mm/yyyy",
+        startDate: "1/2013",
+        endDate: endYear,
+        startView: "months",
+        minViewMode: "months",
+        maxViewMode: "years"
+    })
+    $("#datePicker2").datepicker({
+        autoclose: true,
+        format: "mm/yyyy",
+        startDate: "1/2013",
+        endDate: endYear,
+        startView: "months",
+        minViewMode: "months",
+        maxViewMode: "years"
+    })
+    $("#datePicker3").datepicker({
+        autoclose: true,
+        format: "mm/yyyy",
+        startDate: "1/2013",
+        endDate: endYear,
+        startView: "months",
+        minViewMode: "months",
+        maxViewMode: "years"
+    })
+</script>

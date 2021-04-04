@@ -1,0 +1,56 @@
+﻿
+<div class="container-fluid">
+    <div id="SaveContent" class="row" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="panel-heading">Chi tiết Sec Role</div>
+                    <hr />
+                    <form role="form" name="SaveForm" ng-submit="SaveAction(tableInfo.AddUrl,SaveForm)">
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Role Name <span style="color: red">(*)</span></label>
+                                </div>
+                                <div class="col-md-7 no-padding">
+                                    <input required class="form-control" name="Name" type="text" ng-model="editData.Name" />
+                                    <span ng-show=is_TenPBSpecial style="color: red">
+                                        Do not contain special characters!
+                                    </span>
+                                </div>
+                            </div>
+                            <div style="padding-bottom:10px"></div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Role Name English<span style="color: red">(*)</span></label>
+                                </div>
+                                <div class="col-md-7 no-padding">
+                                    <input required class="form-control" name="NameEN" type="text" ng-pattern="/^[0-9a-zA-Z\s]*$/"  ng-model="editData.NameEN" />
+                                    <span style="color:red" ng-show="SaveForm.NameEN.$error.pattern">
+                                        Do not contain special characters!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:20px">
+                                <div class="col-md-5 col-md-push-5">
+                                    <button type="submit" class="btn btn-labeled btn-success">
+                                        <span class="btn-label">
+                                            <i class="fa fa-save"></i>
+                                        </span>Cập nhật
+                                    </button>
+                                    <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                        <span class="btn-label">
+                                            <i class="fa fa-close"></i>
+                                        </span>Bỏ qua
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>

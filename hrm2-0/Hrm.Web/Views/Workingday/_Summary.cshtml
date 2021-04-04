@@ -1,0 +1,249 @@
+﻿@model Hrm.Web.ViewModels.WorkingdaySummaryViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@using Hrm.Framework.Context
+@using Hrm.Common
+@{
+    Layout = null;
+    var workingdays = new List<WorkingdayModel>();
+    if (Model.Workingdays != null && Model.Workingdays.Any())
+    {
+        workingdays = Model.Workingdays;
+    }
+    var workingdayMachines = new List<WorkingdayCheckInOutModel>();
+    if (Model.WorkingdayMachines != null && Model.WorkingdayMachines.Any())
+    {
+        workingdayMachines = Model.WorkingdayMachines;
+    }
+    var dayOffTypes = new List<MasterDataModel>();
+    if (Model.DayOffTypes != null && Model.DayOffTypes.Any())
+    {
+        dayOffTypes = Model.DayOffTypes;
+    }
+    var supplementRequest = new List<WorkingdaySupplementModel>();
+    if (Model.WorkingdaySupplements != null && Model.WorkingdaySupplements.Any())
+    {
+        supplementRequest = Model.WorkingdaySupplements;
+    }
+    float countWorkingday=0;
+    int countMinutesLateDuration = 0;
+    int countMinutesEarlyDuration = 0;
+    float countOverTime = 0;
+    foreach (var item in workingdays)
+    {
+        countWorkingday += item.TotalWorkingday;
+        countMinutesLateDuration += Convert.ToInt32(item.LateDuration.Minute.ToString());
+        countMinutesEarlyDuration += Convert.ToInt32(item.EarlyDuration.Minute.ToString());
+        countOverTime += item.WorkingdayOvertime;
+    }
+}
+@{string paddingSection = string.Empty;
+    if (Model.ViewType == Hrm.Common.ViewType.Calendar)
+    {
+        paddingSection = "0px 37px 0px 30px;";
+    }
+}
+<section class="hrmv2-section" style="padding:@paddingSection">
+    <div id="workingday-tab">
+        @if (Model.ViewType == Hrm.Common.ViewType.Calendar)
+        {
+            <div id="workingday-summary" class="workingday-summary">
+                <div class="workingday infor">
+                    <div class="infor-header pull-left">
+                        <div class="infor-title ellipsis hrm-v2-font-13 hrm-v2-inline-block pull-left">@T("Workingday.Title.TotalWorkingday")</div>
+                    </div>
+                    <div class="infor-value hrm-v2-inline-block">
+                        <div class="value pull-left hrm-v2-color-green">@workingdays.Sum(x => x.TotalWorkingday)</div><span class="description ellipsis pull-left">@T("Workingday.Unit.Workingday")</span>
+                    </div>
+                </div>
+                <div class="overtime infor">
+                    <div class="infor-header pull-left">
+                        <div class="infor-title ellipsis hrm-v2-font-13 hrm-v2-inline-block pull-left">@T("Workingday.Title.Overtime")</div>
+                    </div>
+                    <div class="infor-value hrm-v2-inline-block">
+                        <div class="value pull-left hrm-v2-color-green">@workingdays.Sum(x => x.WorkingdayOvertime)</div><span class="description ellipsis pull-left">@T("Workingday.Unit.Hour")</span>
+                    </div>
+                </div>
+                <div class="late-early infor">
+                    <div class="infor-header pull-left">
+                        <div class="infor-title ellipsis hrm-v2-font-13 hrm-v2-inline-block pull-left">@T("Workingday.Title.LateEarly")</div>
+                    </div>
+                    <div class="infor-value hrm-v2-inline-block">
+                        @{
+                            double totalLateEarly = 0;
+                            foreach (var wd in workingdays)
+                            {
+                                TimeSpan late = TimeSpan.Parse(wd.LateDuration.ToString("HH:mm", CultureInfo.InvariantCulture));
+                                TimeSpan early = TimeSpan.Parse(wd.EarlyDuration.ToString("HH:mm", CultureInfo.InvariantCulture));
+                                totalLateEarly += (late + early).TotalMinutes;
+                            }
+                        }
+                        <div class="value pull-left hrm-v2-color-red">@totalLateEarly</div><span class="description ellipsis pull-left">@T("Workingday.Unit.Minute")</span>
+                    </div>
+                </div>
+                <div class="approved-request infor">
+                    <div class="infor-header pull-left">
+                        <div class="infor-title ellipsis hrm-v2-font-13 hrm-v2-inline-block pull-left">@T("Workingday.Title.ApprovedRequest")</div>
+                    </div>
+                    <div class="infor-value hrm-v2-inline-block">
+                        <div class="value pull-left hrm-v2-color-orange">@supplementRequest.Where(x => x.IsCompleted).Count()/@supplementRequest.Count()</div><span class="description ellipsis pull-left">@T("Workingday.Unit.Request")</span>
+                    </div>
+                </div>
+            </div>
+            <div id="hrm-working-day" class="hrm-v2-working-day">
+                <div id="left-panel">
+                    <div class="header-month-control">
+                        <div class="month-control">
+                            <div class="year-division hrm-v2-font-14">
+                                @Model.Year
+                            </div>
+                            <div class="month-prev month-control-button"><i class="fas fa-chevron-left"></i></div>
+                            <div class="month-division pull-left">
+                                <div class="month-title ellipsis">
+                                    @T("Table.Control.Month")
+                                </div>
+                                <div class="month-value">
+                                    <div class="month">@Model.Month</div>
+                                </div>
+                            </div>
+                            <div class="month-next month-control-button"><i class="fas fa-chevron-right"></i></div>
+                        </div>
+                    </div>
+                    @{
+                        foreach (var dayOffType in dayOffTypes)
+                        {
+                            var color = C(dayOffType.Id.ToString());
+                            <div class="description-day-off">
+                                <div class="day-off-item pull-left">
+                                    <span class="day-off-color pull-left" style="background:@color"></span>
+                                    <span class="hrm-v2-font-13 pull-left">@dayOffType.Value - @M(dayOffType.Id.ToString() + ";MasterData;Name")</span>
+                                    <span class="hrm-v2-font-13 pull-left">&nbsp;&nbsp;(@Model.Workingdays.Where(s => s.TypeHolidayId == dayOffType.Id).ToList().Count())</span>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+                <div id="calendar" class="hrm-v2-calendar">
+                    @{
+                        var dayIds = new List<string>() {
+                                                T("Calendar.Date.Monday").ToString(),
+                                                T("Calendar.Date.Tuesday").ToString(),
+                                                T("Calendar.Date.Wednesday").ToString(),
+                                                T("Calendar.Date.Thursday").ToString(),
+                                                T("Calendar.Date.Friday").ToString(),
+                                                T("Calendar.Date.Saturday").ToString(),
+                                                T("Calendar.Date.Sunday").ToString()};
+                        var firstDateOfMonth = new DateTime(Model.Year, Model.Month, 1);
+                        var dayOf = (int)firstDateOfMonth.DayOfWeek;
+                        if (dayOf == 0)
+                        {
+                            dayOf = 7;
+                        }
+                        DateTime startDate = firstDateOfMonth.AddDays(-dayOf);
+                    }
+                    <table style="min-width: 100%">
+                        <thead>
+                            <tr>
+                                @foreach (var day in dayIds)
+                                {
+                                    <th>
+                                        @day
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 1; i <= 6; i++)
+                            {
+                                if (startDate.AddDays((i - 1) * 7 + 1).Month == Model.Month || startDate.AddDays((i - 1) * 7 + 7).Month == Model.Month)
+                                {
+                                    <tr>
+                                        @for (int j = 1; j <= 7; j++)
+                                        {
+                                            var monthClass = string.Empty;
+                                            var dayClass = string.Empty;
+                                            DateTime date = startDate.AddDays((i - 1) * 7 + j);
+                                            if (date.Date == DateTime.Now.Date)
+                                            {
+                                                //monthClass = "current-month";
+                                                monthClass = "normal-month";
+                                                dayClass = "day-class";
+                                            }
+                                            
+                                            if (date.Date>=Model.FromDate.Date && date<=Model.ToDate.Date)
+                                            {
+                                                monthClass = "normal-month";
+                                            }
+                                            else
+                                            {
+                                                monthClass = "other-month";
+                                            }
+                                            var workingday = workingdays.Where(x => x.Date == date).FirstOrDefault();
+                                            var color=string.Empty;
+                                            if (workingday!=null && workingday.TypeHolidayId!=0)
+                                            {
+                                                color= "background:"+C(workingday.TypeHolidayId.ToString());
+                                            }
+                                            <td class="@monthClass" style="@color">
+                                                @if (monthClass == "normal-month")
+                                                {
+                                                        <i class="fas fa-eye" onclick="viewWorkingdayByDay('@Model.StaffId','@date.ToString("dd/MM/yyyy")')" data-toggle="tooltip" data-content="@T("Staff.Detail.View")"></i>
+                                                        <i class="fa fa-plus" data-toggle="tooltip" data-content="@T("Workingday.Title.AdditionalSuggestions")" onclick="addWorkingdayByDate('@date.ToString("dd/MM/yyyy")')"></i>
+                                                }                                                     
+                                              <div class="date-number hrm-v2-font-13">
+                                                    <span class="day @dayClass">@date.Day</span>
+                                                   
+                                                    @if (workingday != null)
+                                                    {
+                                                        @Html.Partial(UrlHelpers.View("~/Views/Workingday/_WorkingdayCard.cshtml"), workingday)
+                                                    }
+                                                </div>
+                                                @*<i class="far fa-calendar-plus"></i>*@
+                                                <div class="popover-detail-sumary-@date.Day" style="display:none">
+                                                </div>
+                                            </td>
+                                          }
+
+                                    </tr>
+                                 }
+                              }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+                                                        }
+                                                        else if(Model.ViewType == Hrm.Common.ViewType.List || Model.ViewType == Hrm.Common.ViewType.Card)
+                                                        {
+                                                            <div class="workingday-summary-list">
+                                                                <div class="summary-list hrm-v2-table" id="@TableName.TableWorkingdaySummaryFinal">                                                                   
+                                                                    @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+                                                                </div>
+                                                                @{
+                                                                    <div class="dayoff-type-fixed">
+                                                                        @foreach (var dayOffType in dayOffTypes)
+                                                                        {
+                                                                            var color = C(dayOffType.Id.ToString());
+                                                                            <div class="description-day-off">
+                                                                                <div class="day-off-item pull-left">
+                                                                                    <span class="day-off-color pull-left" style="background:@color"></span>
+                                                                                    <span class="hrm-v2-font-13 pull-left">@dayOffType.Value - @M(dayOffType.Id.ToString() + ";MasterData;Name")</span>
+                                                                                    <span class="hrm-v2-font-13 pull-left">&nbsp;&nbsp;(@Model.Workingdays.Where(s => s.TypeHolidayId == dayOffType.Id).ToList().Count())</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                                    }
+    </div>
+</section>
+<script>
+    $('[data-toggle="tooltip"]').popover({
+        placement: 'right'
+        ,trigger: 'hover'
+        ,html: true
+    })
+</script>

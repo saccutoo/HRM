@@ -1,0 +1,23 @@
+﻿@model Hrm.Framework.Models.ButtonModel
+@{
+    Layout = null;
+}
+<style>
+    .close-button{
+        background-color: #fff;
+        height:30px;
+        color:black;
+        border-radius: 100px;
+        border:1px solid #ccc
+    }
+    .close-button:focus{
+        box-shadow:0px;
+        outline:none;
+    }
+</style>
+<input id="@Model.Name" class="close-button button-close @Model.ClassName"  data-dismiss="modal" aria-label="Close" type="button" value="@T(Model.Value)" ng-click="@Model.OnClick" onclick="@Model.OnClick" Style="@Model.Style"/>
+
+<script type="text/javascript">
+
+</script>
+

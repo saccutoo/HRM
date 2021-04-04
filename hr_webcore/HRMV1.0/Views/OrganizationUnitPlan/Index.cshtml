@@ -1,0 +1,68 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.DepartmentalOrganization;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+<script>
+    var errorMoneyIsNumber= @Html.Raw(Json.Encode(AppRes.ErrorMoneyIsNumber));
+    var errorDepartment= @Html.Raw(Json.Encode(AppRes.ErrorDepartment));
+    var errorYear= @Html.Raw(Json.Encode(AppRes.ErrorYear));
+    var errorYearIsNumber= @Html.Raw(Json.Encode(AppRes.ErrorYearIsNumber));
+    var errorNotFixed= @Html.Raw(Json.Encode(AppRes.ErrorNotFixed));
+    var errorStatus= @Html.Raw(Json.Encode(AppRes.ErrorStatus));
+
+</script>
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row">
+        <div ng-controller="mytable" ng-init="init()">
+            <div style="display: none;">
+                @Html.Action("OrganizationUnitPlanSave", "OrganizationUnitPlan")
+            </div>
+            <build-table1 table-url="'@(ViewBag.url)'"
+                          table-edit="EditClick"
+                          table-delete="deleteClick"
+                          table-excel-click="ExcelClick"
+                          table-add="addClick"
+                          table-hide="HideClick"
+                          change-organization-Unit="ChangeOrganizationUnit"
+                          change-year="ChangeYear"
+                          change-status="ChangeStatus"
+                          change-m1="ChangeM1"
+                          change-m2="ChangeM2"
+                          change-m3="ChangeM3"
+                          change-m4="ChangeM4"
+                          change-m5="ChangeM5"
+                          change-m6="ChangeM6"
+                          change-m7="ChangeM7"
+                          change-m8="ChangeM8"
+                          change-m9="ChangeM9"
+                          change-m10="ChangeM10"
+                          change-m11="ChangeM11"
+                          change-m12="ChangeM12"
+                          save-edit-click="SaveEditClick"
+                          table-param-filter="employeeFilter"
+                          table-model="OrganizationUnitPlannData">
+            </build-table1>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/OrganizationUnitPlan/OrganizationUnitPlanUntil.js"></script>
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+</script>
+<script>
+    var endYear = new Date(new Date().getFullYear(), 11, 31);
+    $(".datePicker123").datepicker({
+        autoclose: true,
+        format: "yyyy",
+        startView: "years",
+        minViewMode: "years",
+        maxViewMode: "years"
+    }).datepicker("setDate", new Date());
+</script>
+

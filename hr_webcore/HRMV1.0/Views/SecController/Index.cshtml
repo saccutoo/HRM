@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "SecController";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row" ng-controller="mytable">
+        @Html.Action("TableServerSide", "Common")
+        <div style="display: none;">
+            @Html.Action("AddSecContrl","SecController")
+        </div>
+        <div style="display: none;">
+         @Html.Action("EditSecContrl","SecController")
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/mycustom/SecControllerUntil.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+
+
+
+
+<script>
+    BuildTable('tableApp', 'mytable','@(ViewBag.url)');
+</script>
+
+
+

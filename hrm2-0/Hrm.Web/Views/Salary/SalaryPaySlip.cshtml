@@ -1,0 +1,117 @@
+﻿@model Hrm.Web.ViewModels.GeneralnformationAndSalaryViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using System.Globalization
+@using Hrm.Framework.Context
+@using Hrm.Common
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Salary";
+    var timeVersion = "140320181446";
+    Layout = UrlHelpers.View("~/Views/Shared/_MenuSidebarTop.cshtml");
+}
+
+<link href="@Url.Content("~/Content/hrm-v2/_staffdetails.css?v=" + timeVersion)" rel="stylesheet" type="text/css" />
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="hrm-v2-font-13 hrm-v2-bold" style="color:#7C7C7C">@T("Payroll.BreadCrumb.List")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><a href="#" class="bread-crumb-item">@T("Salary.SalaryPaySlip")</a>
+    <div class="pull-right">      
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.Salary + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Salary.Table.TableName)) + "'" + ", 0, 0)" })
+
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.Salary + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Salary.Table.TableName)) + "'" + ", 1, 0)" })
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="col-md-2">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Table.Title.OrganizationName").ToString(), Data =Model.Organizations, ValueField = "Id", Name = "filter-organization", IsMultipleLanguage = true, DataType = "Organization", PropertyName = "OrganizationName" ,Value=Model.OrganizationId.ToString() })
+    </div>
+    <div class="col-md-2" id="drop-down-staff">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { ValueField = "Id", DisplayField = "Name", Name = "filter-salary-staff", Data = Model.Staffs, SearchField = true, LabelName = T("Dropdown.Label.Staff").ToString(),Value= Model.StaffId.ToString() })
+    </div>
+    <div class="col-md-1 hrm-v2-inline-block hrm-v2-font-13 pull-right">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "filter-salary-month-year", DateFormat = "MM/yyyy", Value = Convert.ToDateTime(Model.Month + "/" + Model.Year) })
+    </div>
+</div>
+
+<div class="col-md-12 hrm-v2-inline-block">
+    <div class="col-md-12">
+        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Salary.Table)
+    </div>
+</div>
+<script>
+    @*stringJson = "{Month:" + '@Model.Month' + ",Year:" + '@Model.Year' + ",StaffId:" + '@Model.StaffId' + ",OrganizationById:" + '@Model.OrganizationId' + "}";*@
+
+    function showSalaryPaySlip(staffId) {
+        var dateChange = $('#filter-salary-month-year').val();
+        var month=0;
+        var year=0;
+
+        if (dateChange != null) {
+            var dateNew = dateChange.split('/');
+            month = dateNew[0];
+            year = dateNew[1];         
+        }
+        var data = {
+            staffId: staffId,
+            month: month,
+            year: year
+        };
+        var options = {
+            url: '/Salary/showSalaryPaySlip',
+            width: 1000,
+            isDataTypeJson: true,
+            data: data,
+            isNotificationPoup: false,
+            align: "right",
+        };
+        CreatePopup(options);
+    }
+
+    $(document).ready(function(){
+        $('#filter-salary-month-year-datetimepicker').on('dp.change', function (e) {
+            var tableName = '@Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Salary.Table.TableName))'
+            var dateChange = $('#filter-salary-month-year').val();
+            if (dateChange != null) {
+                var dateNew = dateChange.split('/');
+                var month = dateNew[0];
+                var year = dateNew[1];
+                var staffid = $("#filter-salary-staff").val();
+                var organizationId = $("#filter-organization").val();
+                 stringJson = "{Month:" + month + ",Year:" + year + ",StaffId:" + staffid + ",OrganizationId:" + organizationId + "}";
+                reloadTable(ControlModel[tableName].TableName, ControlModel[tableName].TableDataUrl, ControlModel[tableName].CurrentPage, ControlModel[tableName].ItemsPerPage, filterStr, referenceId, stringJson)
+
+            }
+        });
+
+    });
+
+    $(document).on('select2:selecting', '#filter-organization', function (e) {
+        var tableName = '@Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Salary.Table.TableName))'
+        var dateChange = $('#filter-salary-month-year').val();
+        if (dateChange != null) {
+            var dateNew = dateChange.split('/');
+            var month = dateNew[0];
+            var year = dateNew[1];
+            var organizationId = e.params.args.data.id;
+            var staffid=$("#filter-salary-staff").val();
+            stringJson = "{Month:" + month + ",Year:" + year + ",StaffId:" + staffid + ",OrganizationId:" + organizationId + "}";
+            reloadTable(ControlModel[tableName].TableName, ControlModel[tableName].TableDataUrl, ControlModel[tableName].CurrentPage, ControlModel[tableName].ItemsPerPage, filterStr, referenceId, stringJson)
+        }
+
+    });
+
+    $(document).on('select2:selecting', '#filter-salary-staff', function (e) {
+        var tableName = '@Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Salary.Table.TableName))'
+        var dateChange = $('#filter-salary-month-year').val();
+        if (dateChange != null) {
+            var dateNew = dateChange.split('/');
+            var month = dateNew[0];
+            var year = dateNew[1];
+            var organizationId = $("#filter-organization").val();
+            var staffid = e.params.args.data.id;
+            stringJson = "{Month:" + month + ",Year:" + year + ",StaffId:" + staffid + ",OrganizationId:" + organizationId + "}";
+            reloadTable(ControlModel[tableName].TableName, ControlModel[tableName].TableDataUrl, ControlModel[tableName].CurrentPage, ControlModel[tableName].ItemsPerPage, filterStr, referenceId, stringJson)
+        }
+
+    });
+</script>

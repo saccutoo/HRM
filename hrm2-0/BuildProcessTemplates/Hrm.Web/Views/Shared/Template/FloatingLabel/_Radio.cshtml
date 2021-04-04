@@ -1,0 +1,10 @@
+﻿@model Hrm.Framework.Models.TextEditorModel
+@{
+    Layout = null;
+}
+<div class="hrm-v2-radio">
+    <label for="@Model.NameId" class="radio hrm-v2-font-13">
+        <input type="radio" name="@Model.Name" id="@Model.NameId" value="@Model.Value" class="hrm-v2-display-none" />
+        <span class="label"></span>@Model.LabelName
+    </label>
+</div>

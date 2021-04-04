@@ -1,0 +1,198 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = AppRes.OrganizationUnitPlanImplementation;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Scripts/directive/angular-table/build-table.css" rel="stylesheet" />
+
+<script>
+    var errorMoneyIsNumber= @Html.Raw(Json.Encode(AppRes.ErrorMoneyIsNumber));
+    var errorDepartment= @Html.Raw(Json.Encode(AppRes.ErrorDepartment));
+    var errorYear= @Html.Raw(Json.Encode(AppRes.ErrorYear));
+    var errorYearIsNumber= @Html.Raw(Json.Encode(AppRes.ErrorYearIsNumber));
+    var errorNotFixed= @Html.Raw(Json.Encode(AppRes.ErrorNotFixed));
+    var errorEnterYear= @Html.Raw(Json.Encode(AppRes.ErrorEnterYear));
+    var errorStatus= @Html.Raw(Json.Encode(AppRes.ErrorStatus));
+
+</script>
+<style>
+    body {
+        overflow-x: hidden;
+    }
+
+    .menu-department {
+        height: 95vh;
+        border-right: 1px solid #f3f3f3;
+    }
+
+    .demo-section1 {
+        display: block;
+        margin-top: 32px;
+        height: 500px;
+        margin-right: -50px;
+        overflow: scroll;
+        margin-left: -28px;
+    }
+
+        .demo-section1 li {
+            display: inline-block;
+            width: 100%;
+        }
+
+    input[type='file'] {
+        width: 400px;
+        height: 25px;
+        opacity: 0;
+        background: none;
+        background-image: none;
+        border: none;
+        outline: none;
+        position: absolute;
+        top: 0px;
+    }
+
+    #val {
+        width: 400px;
+        height: 25px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 13px;
+        line-height: 31px;
+        text-indent: 10px;
+        pointer-events: none;
+    }
+
+    #button {
+        cursor: pointer;
+        display: block;
+        width: 90px;
+        background-color: #ccc;
+        height: 31px;
+        color: black;
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 15px;
+        line-height: 31px;
+        text-align: center;
+        -webkit-transition: 500ms all;
+        -moz-transition: 500ms all;
+        transition: 500ms all;
+    }
+
+    .custom form-control {
+        display: block;
+        width: 395px;
+        padding-top: 2px;
+        padding-left: 2px;
+        height: 22px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #71706f;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        border-radius: 0px !important;
+    }
+
+    #div {
+        width: 560px;
+        height: 25px;
+        background-color: white;
+        box-shadow: 1px 2px 3px #ededed;
+        position: relative;
+    }
+</style>
+<div class="container-fluid" ng-app="tableApp">
+    <div class="row">
+        <div ng-controller="mytable" ng-init="init()">
+            <div style="display: none;">
+                @Html.Action("OrganizationUnitPlanImplementationSave", "OrganizationUnitPlanImplementation")
+            </div>
+            <build-table1 table-url="'@(ViewBag.url)'"
+                          table-edit="EditClick"
+                          table-delete="deleteClick"
+                          table-excel-click="ExcelClick"
+                          table-down-load-file="downLoadFileClick"
+                          table-add="addClick"
+                          table-hide="HideClick"
+                          change-organization-Unit="ChangeOrganizationUnit"
+                          change-status="ChangeStatus"
+                          change-year="ChangeYear"
+                          change-m1="ChangeM1"
+                          change-m2="ChangeM2"
+                          change-m3="ChangeM3"
+                          change-m4="ChangeM4"
+                          change-m5="ChangeM5"
+                          change-m6="ChangeM6"
+                          change-m7="ChangeM7"
+                          change-m8="ChangeM8"
+                          change-m9="ChangeM9"
+                          change-m10="ChangeM10"
+                          change-m11="ChangeM11"
+                          change-m12="ChangeM12"
+                          save-edit-click="SaveEditClick"
+                          table-param-filter="employeeFilter"
+                          table-model="OrganizationUnitPlanImplementationData">
+            </build-table1>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <b>@AppRes.Choose_file</b>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="div">
+                                <label for="FileUploadInput" class="custom form-control"></label>
+                                <input type='file' title="" class="form-control" my-files="files" id="FileUploadInput"> <span id='val'></span>
+                                <span id='button'>@AppRes.SelectFile</span>
+                            </div>
+                        </div>
+                        <button ng-click="upload()" class="form-control btn btn-primary">Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/directive/angular-treeview/angular-treeview.js"></script>
+<script src="~/Scripts/directive/angular-table/angular-table.js"></script>
+<script src="~/Scripts/mycustom/TableService.js"></script>
+<script src="~/Scripts/mycustom/OrganizationUnitPlanImplementation/OrganizationUnitPlanImplementationUntil.js"></script>
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+</script>
+<script>
+    var endYear = new Date(new Date().getFullYear(), 11, 31);
+    $(".datePicker123").datepicker({
+        autoclose: true,
+        format: "yyyy",
+        startView: "years",
+        minViewMode: "years",
+        maxViewMode: "years"
+    }).datepicker("setDate", new Date());
+
+    $(document).ready(function () {
+        $('#button').click(function () {
+            $("input[type='file']").trigger('click');
+        })
+
+        $("input[type='file']").change(function () {
+            $('#val').text(this.value.replace(/C:\\fakepath\\/i, ''))
+            $('.custom form-control').hide();
+        })
+    });
+</script>  

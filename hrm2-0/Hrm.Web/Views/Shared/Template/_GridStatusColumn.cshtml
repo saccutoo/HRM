@@ -1,0 +1,12 @@
+﻿@model Hrm.Framework.Models.ColoredTextModel
+<div class="presentation-status">
+    @if (Model.Rows != null && Model.Rows.Count > 0)
+    {
+        foreach (var item in Model.Rows)
+        {
+            <div class="first-row" style="color:@Model.Color">
+                @item
+            </div>
+        }
+    }
+</div>

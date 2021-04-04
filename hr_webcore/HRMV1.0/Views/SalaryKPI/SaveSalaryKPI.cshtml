@@ -1,0 +1,249 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<style>
+    .datepicker-quarter table tr td span {
+        width: 100%;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row" id="SaveSalaryKPI" style="margin: 0;">
+        <form role="form" name="saveSalaryKPI" ng-submit="SaveAction(saveSalaryKPI)" novalidate>
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;margin:0">@AppRes.SalaryKPI</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;"> @AppRes.TypeUse<span style="color:red"> (*) </span></label>
+                                </div>
+                                <div class="col-md-4">
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select class="form-control" chosen options="ListStatusOfUse" on-no-result="doStuff" ng-required="true" data-modal="modal" ng-model="Data.StatusOfUse" name="StatusOfUse" ng-options="list.Value as list.Name for list in ListStatusOfUse" >
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" chosen options="ListStatusOfUse" on-no-result="doStuff" ng-required="true" data-modal="modal" ng-model="Data.StatusOfUse" name="StatusOfUse" ng-options="list.Value as list.NameEN for list in ListStatusOfUse" >
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    @*<span style="color:red;line-height:30px;" ng-bind="ErrorStaff"></span>*@
+                                    <span style="color:red;line-height:30px;" ng-show="saveSalaryKPI.$submitted && saveSalaryKPI.StatusOfUse.$error.required">@AppRes.ErrorStatusOfUse</span>
+
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;"> @AppRes.Staff<span style="color:red" ng-if="Data.StatusOfUse==0"> (*) </span></label>
+                                </div>
+                                <div class="col-md-4">
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select class="form-control" chosen options="ListEmployees" on-no-result="doStuff" ng-required="Data.StatusOfUse==0?true:false" data-modal="modal" ng-model="Data.StaffID" name="StaffID" ng-options="list.StaffID as (list.FullName + '-' + list.OrganizationUnitName) for list in ListEmployees" ng-change="ChangeStaff()">
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" chosen options="ListEmployees" on-no-result="doStuff" ng-required="Data.StatusOfUse==0?true:false" data-modal="modal" ng-model="Data.StaffID" name="StaffID" ng-options="list.StaffID (list.FullNameEN + '-' + list.OrganizationUnitName) for list in ListEmployees" ng-change="ChangeStaff()">
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    @*<span style="color:red;line-height:30px;" ng-bind="ErrorStaff"></span>*@
+
+                                    <span style="color:red;line-height:30px;" ng-show="saveSalaryKPI.$submitted && saveSalaryKPI.StaffID.$error.required">@AppRes.ErrorSelectStaff</span>
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.Timekeeping_DepartmentName<span style="color:red" ng-if="Data.StatusOfUse==0"> (*) </span></label>
+                                </div>
+                                <div class="col-md-4">
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select class="form-control" chosen options="getListAllOrganizationUnit" ng-disabled="true" on-no-result="doStuff" ng-required="Data.StatusOfUse==0?true:false" data-modal="modal" name="OrganizationUnitID" ng-model="Data.OrganizationUnitID" ng-options="list.OrganizationUnitID as list.Name for list in getListAllOrganizationUnit" ng-change="ChangeWorkingDayMachineIDOld()">
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" chosen options="getListAllOrganizationUnit" ng-disabled="true" on-no-result="doStuff" ng-required="Data.StatusOfUse==0?true:false" data-modal="modal" name="OrganizationUnitID" ng-model="Data.OrganizationUnitID" ng-options="list.OrganizationUnitID as list.NameEN for list in getListAllOrganizationUnit" ng-change="changeOrganizationUnit()">
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    <span style="color:red;line-height:30px;" ng-show="saveSalaryKPI.$submitted && saveSalaryKPI.OrganizationUnitID.$error.required">@AppRes.ErrorSelectDepartment</span>
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.TitleMonth <span style="color:red"> (*) </span></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="number" ng-focus="btnblurblur()" name="month" id="month" class="form-control" ng-model="Data.Month" ng-change="changeKpiID()" 
+                                           ng-required="(Data.Quarter != '' && Data.Quarter != underfined) ? false: true" />
+                                    <span style="color:red;line-height:30px;" ng-show="saveSalaryKPI.$submitted && saveSalaryKPI.month.$error.required  && saveSalaryKPI.quarter.$error.required">@AppRes.ErrorMonthQuatar</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.TitleQuarter<span style="color:red"> (*) </span></label>
+                                </div>
+                                <div class="col-md-4">                                   
+                                    <select class="form-control" chosen on-no-result="doStuff" ng-required="(Data.Month != '' && Data.Month != underfined) ? false: true" data-modal="modal"  name="quarter"  ng-model="Data.Quarter">
+                                        <option value="">--@AppRes.Select--</option>
+                                        <option value="1">@AppRes.Q1</option>
+                                        <option value="2">@AppRes.Q2</option>
+                                        <option value="3">@AppRes.Q3</option>
+                                        <option value="4">@AppRes.Q4</option>
+                                    </select>
+                                    <span style="color:red;line-height:30px;" ng-show="saveSalaryKPI.$submitted && saveSalaryKPI.quarter.$error.required && saveSalaryKPI.month.$error.required">@AppRes.ErrorMonthQuatar</span>
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.Year<span style="color:red"> (*) </span></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="number" name="year" id="year"  ng-focus="btnblurblur()" class="form-control" ng-model="Data.Year" ng-change="changeYear()" required />
+                                    <span style="color:red;line-height:30px;" ng-show="saveSalaryKPI.$submitted && saveSalaryKPI.year.$error.required">@AppRes.ErrorSelectYear</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.StatusInput </label>
+                                </div>
+                                <div class="col-md-4">
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select chosen options="ListStatusInput" ng-options="list.Value as list.Name for list in ListStatusInput"  class="form-control" name="statusinput" ng-model="Data.StatusInput"  disabled>      
+                                            <option value="">--@AppRes.Select--</option>                                     
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select chosen options="ListStatusInput" ng-options="list.Value as list.NameEN for list in ListStatusInput" class="form-control" name="statusinput" ng-model="Data.StatusInput" disabled>
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.TypeKPI <span style="color:red"> (*) </span></label>
+                                </div>
+                                <div class="col-md-4">
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select class="form-control" chosen options="getListListKPI" on-no-result="doStuff" ng-required="true" data-modal="modal" ng-model="Data.KpiID" name="kpi" ng-options="list.GlobalListID as list.Name for list in getListListKPI" ng-change="changeKpi()">
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" chosen options="getListListKPI" on-no-result="doStuff" ng-required="true" data-modal="modal" ng-model="Data.KpiID" name="kpi" ng-options="list.GlobalListID as list.NameEN for list in getListListKPI" ng-change="changeKpi()">
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    <span style="color:red;line-height:30px;" ng-show="saveSalaryKPI.$submitted && saveSalaryKPI.kpi.$error.required">@AppRes.ErrorSelectKPI</span>
+
+                                </div>
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.KpiCode </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="Data.KpiCode" ng-change="changeKpiCode()" disabled />
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.KpiValue</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="Data.KpiValue" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.ExchangeValue</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" ng-model="Data.KpiAmount" currency-mask-four-space/>
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.Promotion_CreatedBy</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input ng-model="Data.CreatedName" class="form-control" disabled />
+                                </div>
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.ModifiedBy</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input ng-model="Data.ModifiedName" class="form-control" disabled />
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.Rewards</label>
+                                </div>
+                                <div class="col-md-4">
+                                    @if (Global.CurrentLanguage == 5)
+                                    {
+                                        <select chosen options="ListReward" ng-options="list.GlobalListID as list.Name for list in ListReward" class="form-control" name="reward" ng-model="Data.PolicyBonusID" >
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select chosen options="ListReward" ng-options="list.GlobalListID as list.NameEN for list in ListReward" class="form-control" name="reward" ng-model="Data.PolicyBonusID" >
+                                            <option value="">--@AppRes.Select--</option>
+                                        </select>
+                                    }
+                                </div>
+                                <div class="col-md-2">
+                                    <label style="line-height:30px;">@AppRes.TitleDescription</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <textarea ng-model="Data.Description" class="form-control" ng-change="changeDescription()" style="height:32px;"></textarea>
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-4 col-md-push-5">
+                                <button type="submit" class="btn btn-labeled btn-primary">
+                                    <span class="btn-label">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </span>@AppRes.btnUpdate
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CloseForm(saveSalaryKPI)">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,160 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@using Hrm.Common
+@model Hrm.Admin.ViewModels.ChecklistDetailViewModel
+@{
+    ViewBag.Title = "GroupChecklist";
+    var Index = 0;
+}
+<style>
+    .list-group-mission .fas.fa-pencil-alt{
+        color:#2CA01C;
+    }
+    .list-group-mission  .fas.fa-trash-alt{
+        color:red;
+    }
+</style>
+@if (Model.ChecklistDetail.Count > 0)
+{
+    var data = Model.ChecklistDetail;
+    if (data != null)
+    {
+        var listNode = data.Where(s => s.TypeControlId == 0).ToList();
+        foreach (var node in listNode)
+        {
+            var nodeChild = data.Where(s => s.ParentId == node.Index).ToList();
+            var number = 0;
+            if (nodeChild != null && nodeChild.Count()>0)
+            {
+                number = nodeChild.Count();
+            }
+            <div class="list-group-mission">
+                <div class="group-mission-name">
+                    <span class="name">@node.Name</span>
+                    <span class="number">(@number)</span>
+                    <div class="checklist-detail-single-action" style="float: right;margin-right: 20px;cursor:pointer">
+                        <span class="fas fa-pencil-alt" onclick="EditCheckGroupList(@node.Index,@node.ParentId)"></span>
+                        <span class="fas fa-trash-alt" style="margin-left:20px;" onclick="DeleteCheckList(@node.Index,@node.ParentId)"></span>
+                    </div>
+                </div>
+                @if (nodeChild != null && nodeChild.Count() > 0)
+                {
+                    foreach (var item in nodeChild)
+                    {
+                        var isShowName = "display:none;";
+                        if (item.AssigneeName != null)
+                        {
+                            isShowName = "display:block;";
+                        }
+                        <div class="list-mission-assign">
+    
+                            @if (item.ControlTypeName == ControlType.Checkbox)
+                            {
+                                <div class="checklist-detail-single">
+                                    <div class="checklist-detail-single-checkbox">
+                                        @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-checkbox" ,Attribute="disabled"})
+                                    </div>
+                                    <div class="checklist-detail-single-name">
+                                        <span> @item.Name</span>
+                                    </div>
+                                    <div class="checklist-detail-single-user" style="@isShowName">
+                                        <span class="fas fa-user"></span>
+                                        <span style="margin-left:10px;">@item.AssigneeName</span>
+                                    </div>
+                                    <div class="checklist-detail-single-action">
+                                        <span class="fas fa-pencil-alt" onclick="EditCheckList(@item.Index,@item.ParentId)"></span>
+                                        <span class="fas fa-trash-alt" style="margin-left:20px;" onclick="DeleteCheckList(@item.Index,@item.ParentId)"></span>
+                                    </div>
+                                </div>
+                            }
+                            else if (item.ControlTypeName == ControlType.FieldUpdating)
+                            {
+                                <div class="checklist-detail-single">
+                                    <div class="checklist-detail-single-checkbox">
+                                        @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-columnName", Attribute = "disabled" })
+                                    </div>
+                                    <div class="checklist-detail-single-name">
+                                        <span>@item.Name</span>
+                                    </div>
+                                    <div class="checklist-detail-single-input-text">
+                                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() {Name="abc", PlaceHolder = M(item.ColumnLink.Value + ";" + DataType.TableName + ";ColumnName").ToString(), IsAnimationLabel = false, Attribute="disabled" })
+                                    </div>
+                                    <div class="checklist-detail-single-user" style="@isShowName">
+                                        <span class="fas fa-user"></span>
+                                        <span style="margin-left:10px;">@item.AssigneeName</span>
+                                    </div>
+
+                                    <div class="checklist-detail-single-action">
+                                        <span class="fas fa-pencil-alt" onclick="EditCheckList(@item.Index,@item.ParentId)"></span>
+                                        <span class="fas fa-trash-alt" style="margin-left:20px;" onclick="DeleteCheckList(@item.Index,@item.ParentId)"></span>
+                                    </div>
+                                </div>
+                            }
+                            else if (item.ControlTypeName == ControlType.TextEditor)
+                            {
+                                <div class="checklist-detail-single">
+                                    <div class="checklist-detail-single-checkbox">
+                                        @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-textEditor", Attribute = "disabled" })
+                                    </div>
+                                    <div class="checklist-detail-single-name">
+                                        <span>@item.Name</span>
+                                    </div>
+                                    <div class="checklist-detail-single-input-text">
+                                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "abc", PlaceHolder = item.Name, IsAnimationLabel = false,
+                                       Attribute = "disabled" })
+                                    </div>
+                                    <div class="checklist-detail-single-user" style="@isShowName">
+                                        <span class="fas fa-user"></span>
+                                        <span style="margin-left:10px;">@item.AssigneeName</span>
+                                    </div>
+
+                                    <div class="checklist-detail-single-action">
+                                        <span class="fas fa-pencil-alt" onclick="EditCheckList(@item.Index,@item.ParentId)"></span>
+                                        <span class="fas fa-trash-alt" style="margin-left:20px;" onclick="DeleteCheckList(@item.Index,@item.ParentId)"></span>
+                                    </div>
+                                </div>
+                            }
+
+                            else if (item.ControlTypeName == ControlType.Datepicker)
+                            {
+                                <div class="checklist-detail-single ">
+                                    <div class="checklist-detail-single-checkbox">
+                                        @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "cb-checklist-datepicker", Attribute = "disabled" })
+                                    </div>
+                                    <div class="checklist-detail-single-name" >
+                                        <span>@item.Name</span>
+                                    </div>
+                                                                                                            
+                                    <div class="checklist-detail-single-input-text">
+                                        @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "setting-checklist-datepicker", Attribute = "disabled" })
+                                    </div>
+                                    <div class="checklist-detail-single-user" style="@isShowName">
+                                        <span class="fas fa-user"></span>
+                                        <span style="margin-left:10px;">@item.AssigneeName</span>
+                                    </div>
+                                    <div class="checklist-detail-single-action">
+                                        <span class="fas fa-pencil-alt" onclick="EditCheckList(@item.Index,@item.ParentId)"></span>
+                                        <span class="fas fa-trash-alt" style="margin-left:20px;" onclick="DeleteCheckList(@item.Index,@item.ParentId)"></span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                }               
+               <div class="click-add-mission"  style="cursor:pointer">
+                    <div class="icon-add">
+                        <span class="fas fa-plus-circle" onclick="ShowFormAddChecklist(@node.Index)" ></span>
+                    </div>
+                    <div class="title-add">                       
+                        <span onclick="ShowFormAddChecklist(@node.Index)" > @T("Checklist.AddMission")</span>
+                    </div>
+                </div>               
+            </div>           
+        }
+    }
+}
+<script>
+    listchecklistDetail=@Html.Raw(JsonConvert.SerializeObject(Model.ChecklistDetail));
+</script>

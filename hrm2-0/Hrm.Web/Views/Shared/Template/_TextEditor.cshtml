@@ -1,0 +1,34 @@
+﻿@model Hrm.Framework.Models.TextEditorModel
+@{
+    Layout = null;
+}
+<style>
+    .text-editor {
+        border: 1px solid #ccc;
+        height: 32px;
+        border-radius: 4px;
+        padding: 0px;
+    }
+
+        .text-editor:focus {
+            outline: 0px;
+        }
+</style>
+@if (Model.IsAnimationLabel)
+{
+    <div class="floating-form hrm-v2-floating-form">
+        <div class="floating-label" style="@Model.Style">
+            <input class="floating-input" name="@Model.Name" id="@Model.Name" value="@Model.Value" style="@Model.Style" type="@Model.Type" >
+            <span class="highlight"></span>
+            <label>@T(Model.PlaceHolder)</label>
+        </div>
+    </div>
+}
+else
+{
+    <input  id="@Model.Name" name="@Model.Name" class="text-editor" type="text" placeholder="@T(Model.PlaceHolder)" value="@Model.Value" style="@Model.Style" />
+}
+<script type="text/javascript">
+
+</script>
+

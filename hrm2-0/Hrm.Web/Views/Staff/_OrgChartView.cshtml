@@ -1,0 +1,73 @@
+﻿@model Hrm.Web.ViewModels.OrgChartViewModel
+@using Hrm.Framework.Models
+@using Hrm.Web.ViewModels
+@using Hrm.Framework.Helper
+@{
+    Layout = null;
+    var listStaff = new List<StaffByLevel>();
+    var grandFather = new StaffModel();
+    var father = new StaffModel();
+    var selectedStaff = new StaffModel();
+    var childs = new List<StaffModel>();
+    if (Model.StaffsByLevel != null)
+    {
+        listStaff = Model.StaffsByLevel;
+        var grandFatherType = listStaff.FirstOrDefault(x => x.Level == -2);
+        if (grandFatherType != null)
+        {
+            grandFather = grandFatherType.Staff;
+        }
+        var fatherType = listStaff.FirstOrDefault(x => x.Level == -1);
+        if (fatherType != null)
+        {
+            father = fatherType.Staff;
+        }
+        var selectedStaffType = listStaff.FirstOrDefault(x => x.Level == 0);
+        if (selectedStaffType != null)
+        {
+            selectedStaff = selectedStaffType.Staff;
+        }
+        var childType = listStaff.Where(x => x.Level == 1).Select(y => y.Staff);
+        if (childType != null)
+        {
+            childs = childType.ToList();
+        }
+    }
+}
+<div class="col-md-12 bread-crumb">
+    <a href="/staff-list" class="hrm-v2-font-13 hrm-v2-bold" style="color:#7C7C7C">@T("Menu.Staff")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp;</span><a href="/staff-orgchart" class="bread-crumb-item">@T("OrgChart.Title")</a>
+</div>
+<div class="org-chart">
+    @if (selectedStaff != null && selectedStaff.Id != 0)
+    {
+        if (grandFather != null && grandFather.Id != 0)
+        {
+            <div class="grand-father">
+                @Html.Partial(UrlHelpers.View("~/Views/Staff/_EmpCard.cshtml"), grandFather)
+            </div>
+        }
+        if (father != null && father.Id != 0)
+        {
+            <div class="father">
+                @Html.Partial(UrlHelpers.View("~/Views/Staff/_EmpCard.cshtml"), father)
+            </div>
+        }
+
+        <div class="main-card">
+            @Html.Partial(UrlHelpers.View("~/Views/Staff/_EmpMainCard.cshtml"), selectedStaff)
+        </div>
+        if (childs != null && childs.Count > 0)
+        {
+            <div class="child-panel">
+                <div class="childs">
+                    <div class="center-group">
+                        @foreach (var child in childs)
+                        {
+                            @Html.Partial(UrlHelpers.View("~/Views/Staff/_EmpCard.cshtml"), child)
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

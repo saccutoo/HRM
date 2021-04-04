@@ -1,0 +1,12 @@
+﻿1.SecRole Controller
+- chạy file
+- lấy dữ liệu GlobalList từ GlobalListID
++ chạy file để tiến hành lấy dữ liệu GlobalListID GlobalList_globallist_GetByGlobalListID
+- thêm mới GlobalList 
++ chạy file để tiến hành thêm mới GlobalList GlobalList_globallist_Save
+- cập nhật GlobalList 
++ chạy file để tiến hành lấy dữ liệu GlobalListID GlobalList_globallist_GetByGlobalListID
++ chạy file để tiến hành thêm mới GlobalList GlobalList_globallist_Save
+- xóa dữ liệu GlobalList 
++ chạy file để tiến hành lấy dữ liệu GlobalListID GlobalList_globallist_GetByGlobalListID
++ chạy file để tiến hành xóa dữ liệu GlobalListID GlobalList_globallist_Detele

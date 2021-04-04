@@ -1,0 +1,30 @@
+﻿@model Hrm.Admin.ViewModels.ConfigInsuranceDetailViewModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@{
+    ViewBag.Title = "config-insurance-detail";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("SalaryType.SalaryType")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormAddSalaryType()" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.SalaryType + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 0, 0)" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.SalaryType + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 1, 0)" })
+    </div>
+</div>
+<div class="holiday-table">
+    <div id="table-salary-type">
+        @if (Model.Table != null)
+        {
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+        }
+    </div>
+</div>
+<script>
+ 
+</script>

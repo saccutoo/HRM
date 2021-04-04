@@ -1,0 +1,386 @@
+﻿
+@using HRM.App_LocalResources;
+
+<div class="col-md-12" style="padding-right: 0">
+    <div class="col-md-12">
+        <h3>{{tableInfo.TableName}}</h3>
+        <!--binding all list action-->
+        <div class="row" ng-show="showreportldepartment">
+            <div class="col-md-2">
+                <input type="radio" ng-model="status" value="0" ng-checked="true" /> @AppRes.Department
+                <input type="radio" ng-model="status" style="margin-left:10px;" value="1" /> @AppRes.Staff
+            </div>
+        </div><br />
+        <div class="row" style="padding: 0 0 10px 0;">
+            <div class="col-md-5 text-left" id="Control">
+                <button ng-show="tablePermission.isAdd" ng-click="tableAdd(tblInfo)" title="@AppRes.btnAdd"  type="button" class="btn btn-labeled btn-success btn-merge" >
+                    <span class="btn-label">
+                        <i class="fa fa-plus-circle"></i>
+                    </span>@AppRes.btnAdd
+                </button>
+                <button ng-if="AddList==true" ng-show="tablePermission.isAdd" ng-click="tableAddList(tblInfo)" title="@AppRes.btnAdd" type="button" class="btn btn-labeled btn-primary">
+                    <span class="btn-label">
+                        <i class="fa fa-plus-circle"></i>
+                    </span>@AppRes.More
+                </button>
+                <button id="btnCopy" ng-click="tableCopy()"  title="@AppRes.btnCopy" type="button" class="btn btn-labeled btn-primary" hidden>
+                    <span class="btn-label">
+                        <i class="fa fa-copy"></i>
+                    </span>@AppRes.btnCopy
+                </button>
+                <button ng-if="OpeningAdditionalWork==true"  ng-click="tableOpeningAdditionalWork(tblInfo)" title="@AppRes.PublicOpening" type="button" class="btn btn-labeled btn-primary">
+                    <span class="btn-label">
+                        <i class="fa fa-plus-circle"></i>
+                    </span>@AppRes.PublicOpening
+                </button>
+                <button ng-show="tablePermission.isFilterButton && !isShowFilter" ng-click="isShowFilter = true; getFilterColumns()" title="@AppRes.btnCreateFilter" type="button" class="btn btn-labeled btn-warning">
+                    <span class="btn-label">
+                        <i class="fa fa-filter"></i>
+                    </span>@AppRes.btnCreateFilter
+                </button>
+                <button ng-show="isShowFilter" ng-click="isShowFilter = false;cancelFilterClick()" title="@AppRes.btnClearFilter" type="button" class="btn btn-labeled btn-danger">
+                    <span class="btn-label">
+                        <i class="fa fa-filter"></i>
+                    </span> @AppRes.btnClearFilter
+                </button>
+                <button ng-show="tablePermission.isAdd" ng-click="columnFormat(tblInfo)" title="@AppRes.btnAdd" type="button" class="btn btn-light">
+                    @AppRes.FomatColumn
+                </button>
+                <button ng-show="tablePermission.isExcel" ng-click="ExcelClick()" title="@AppRes.btnExcel" type="button" class="btn btn-labeled btn-primary">
+                    <span class="btn-label">
+                        <i class="fa fa-file-excel-o"></i>
+                    </span>@AppRes.btnExcel
+                </button>
+                <button ng-show="tablePermission.isImportExcel" ng-click="tableImport(tblInfo)" title="@AppRes.btnImportExcel" type="button" class="btn btn-labeled btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    <span class="btn-label">
+                        <i class="fa fa-upload"></i>
+                    </span>@AppRes.btnImportExcel
+                </button>
+                <button ng-show="tablePermission.isExcel && isDownLoad==true" ng-click="tableDownLoadFile(tblInfo)" title="@AppRes.btnImportExcel" type="button" class="btn btn-labeled btn-primary">
+                    <span class="btn-label">
+                        <i class="fa fa-download"></i>
+                    </span>@AppRes.DownloadFileTemplate
+                </button>
+            </div>
+            <button ng-show="ViewFilter" ng-click="isShowFilter = true; getFilterColumns()" style="position: absolute;left: 1px;top: -100px;" title="@AppRes.btnCreateFilter" type="button" class="btn btn-labeled btn-warning">
+                <span class="btn-label">
+                    <i class="fa fa-filter"></i>
+                </span>@AppRes.btnCreateFilter
+            </button>
+            <div class="col-md-7">
+                <!--binding quick filter-->
+                <div class="row">
+
+                    <!--dành cho báo cao chi tiêu tăng thêm trick để thêm dropdown Kỳ-->
+                    <div ng-repeat="tblColumn in listFilterColumns  | filter : {isQuickFilter: true, Class: 'period'} | orderBy:'OrderNo'">
+                        <div class="pull-left" ng-if="tblColumn.Type == 4 && tblColumn.Class == 'period'" style="width: 100px">
+                            <div class="form-group" >
+                                <select chosen options="tblColumn.SelectBox" on-no-result="doStuff" class="form-control" data-modal="modal" ng-model="FilterPeriod" id="period"
+                                        data-ng-options="filterItem.Value as filterItem.Name for filterItem in tblColumn.SelectBox" ng-change="changeTypeFour()">
+                                    <option value="" selected="selected">{{@ViewBag.LanguageCode==5?tblColumn.DisplayName:tblColumn.DisplayNameEn}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-show="FromDateToDate">
+                        <div class="form-group col-md-2">
+                            <input type="text" ng-model="FromDate" my-date-picker value={{FromDate}} class="form-control">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <input type="text" ng-model="ToDate" my-date-picker value={{ToDate}} class="form-control">
+                        </div>
+                    </div>
+                    <div ng-show="FromDateToDate1">
+                        <div class="form-group col-md-2">
+                            <input type="text" ng-model="FromDate" my-date-picker value={{FromDate}} class="form-control">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <input type="text" ng-model="ToDate" my-date-picker value={{ToDate}} class="form-control">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <select chosen options="getListAllOrganizationUnit" on-no-result="doStuff" ng-model="OrganizationUnitID" ng-options="list.OrganizationUnitID as list.Name for list in getListAllOrganizationUnit" ng-change="onOrganizationUnitChange()" convert-dropdown>
+                                <option value="" selected>-- @AppRes.Department --</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-1">
+                            <button ng-click="bindQuickFilterToFilter() && GetListData()" title=@AppRes.FindFilter
+                                    type="button" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div ng-repeat="tblColumn in listFilterColumns  | filter : {isQuickFilter: true} | orderBy:'OrderNo'">
+                        <div class="form-group col-md-2" ng-if="tblColumn.Type == 1 && tblColumn.DisplayNameEn!='MonthYear'">
+                            <input type="text"  placeholder="{{@ViewBag.LanguageCode==5?tblColumn.DisplayName:tblColumn.DisplayNameEn}}" class="form-control {{tblColumn.Class}}"
+                                   data-modal="modal" ng-model="quickFilter[tblColumn.ColumnName]" ng-change="changeTypeOne()"/>
+                        </div>
+                        <div class="form-group col-md-2" ng-if="tblColumn.Type == 1 && tblColumn.DisplayNameEn=='MonthYear'">
+                            <input type="text" placeholder="{{@ViewBag.LanguageCode==5?tblColumn.DisplayName:tblColumn.DisplayNameEn}}" class="form-control MonthYear"
+                                   data-modal="modal" ng-model="quickFilter[tblColumn.ColumnName]" convert-to-month-year />
+                        </div>
+                        <div class="col-md-3" ng-if="tblColumn.Type == 2">
+                            <div class="form-group">
+                                <input type="number" placeholder="{{@ViewBag.LanguageCode==5?tblColumn.DisplayName:tblColumn.DisplayNameEn}}" class="form-control" data-modal="modal"
+                                       ng-model="quickFilter[tblColumn.ColumnName]" ng-change="changeTypeTwo()"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3" ng-if="tblColumn.Type == 3">
+                            <div class="form-group">
+                                <input type="date" placeholder="{{@ViewBag.LanguageCode==5?tblColumn.DisplayName:tblColumn.DisplayNameEn}}" class="form-control" data-modal="modal"
+                                       ng-model="quickFilter[tblColumn.ColumnName]" ng-change="changeTypeThree()"/>
+                            </div>
+                        </div>
+                        <div class="col-md-2 selectdiv " ng-class="tblColumn.Class == 'period'? 'period' : ' '" ng-if="tblColumn.Type == 4 && tblColumn.Class != 'period'" >
+                            @if (ViewBag.LanguageCode.ToString() == "5")
+                            {
+                                <div class="form-group" ng-if="StaffStatus != 1">
+                                    <select chosen options="tblColumn.SelectBox" on-no-result="doStuff" class="form-control" data-modal="modal" ng-model="quickFilter[tblColumn.ColumnName]"
+                                            data-ng-options="filterItem as filterItem.Name for filterItem in tblColumn.SelectBox" ng-change="changeTypeFour()"> 
+                                        <option value="" selected="selected">{{@ViewBag.LanguageCode==5?tblColumn.DisplayName:tblColumn.DisplayNameEn}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" ng-if="StaffStatus == 1">
+                                    <select chosen options="tblColumn.SelectBox" on-no-result="doStuff" class="form-control" data-modal="modal" ng-model="quickFilter[tblColumn.ColumnName]"
+                                            ng-init="quickFilter[tblColumn.ColumnName] = quickFilter"
+                                            data-ng-options="filterItem as filterItem.Name for filterItem in tblColumn.SelectBox" ng-change="changeTypeFour()">
+                                        <option value="">{{@ViewBag.LanguageCode==5?tblColumn.DisplayName:tblColumn.DisplayNameEn}}</option>
+                                    </select>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group" ng-if="StaffStatus != 1">
+                                    <select chosen options="tblColumn.SelectBox" on-no-result="doStuff" class="form-control" data-modal="modal" ng-model="quickFilter[tblColumn.ColumnName]"
+                                            data-ng-options="filterItem as filterItem.NameEN for filterItem in tblColumn.SelectBox" ng-change="changeTypeFour()">
+                                        <option value="" selected="selected">{{@ViewBag.LanguageCode==5?tblColumn.DisplayName:tblColumn.DisplayNameEn}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" ng-if="StaffStatus == 1">
+                                    <select chosen options="tblColumn.SelectBox" on-no-result="doStuff" class="form-control" data-modal="modal" ng-model="quickFilter[tblColumn.ColumnName]"
+                                            ng-init="quickFilter[tblColumn.ColumnName] = quickFilter"
+                                            data-ng-options="filterItem as filterItem.NameEN for filterItem in tblColumn.SelectBox" ng-change="changeTypeFour()">
+                                        <option value="">{{@ViewBag.LanguageCode==5?tblColumn.DisplayName:tblColumn.DisplayNameEn}}</option>
+                                    </select>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div ng-show="(listFilterColumns| filter:{isQuickFilter: true}).length">
+                        <button ng-click="bindQuickFilterToFilter() && GetListData()" title=@AppRes.FindFilter
+                                type="button" class="btn btn-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--binding filter-->
+        <div class="row" ng-show="isShowFilter">
+            <div class="col-md-12">
+                <div class="panel" style="background:#f3f3f3">
+                    <div class="panel-heading" ng-click="toggleChange()" style="cursor:pointer">
+                        <span class="pull-left clickable">
+                            <i ng-show="!toggle" style="top: -5px;" class="glyphicon glyphicon-chevron-down"></i>
+                            <i ng-show="toggle" style="top: -5px;" class="glyphicon glyphicon-chevron-up"></i>
+                        </span>
+                        <span class="pull-right">
+                            <a ng-show="isShowFilter" ng-click="isShowFilter = false;cancelFilterClick()" style="position:relative;top:-5px;text-transform: none;">[@AppRes.btnClearFilter]</a>
+                        </span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row toggler" style="padding: 10px 0 10px 0;" ng-show="isShowFilter&&toggle"
+             ng-keydown="$event.keyCode === 13 && showFilterApplyButton() && GetListData()">
+            <div ng-repeat="filterItemChoosed in filterColumnsChoosed track by $index"
+                 class="col-md-12 text-left filter-item-container" style="padding:0">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @if (ViewBag.LanguageCode.ToString() == "5")
+                        {
+                            <select class="form-control" data-modal="modal" ng-model="filterItemChoosed.filterSelected"
+                                    ng-change="filterColumnsChange(filterItemChoosed.filterSelected,filterItemChoosed,$index)" data-ng-options="filterItem as filterItem.DisplayName for filterItem in filterItemChoosed.filterColumns">
+                                <option value="" disabled="disabled" selected="selected">@AppRes.ChooseColumn</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <select class="form-control" data-modal="modal" ng-model="filterItemChoosed.filterSelected"
+                                    ng-change="filterColumnsChange(filterItemChoosed.filterSelected,filterItemChoosed,$index)" data-ng-options="filterItem as filterItem.DisplayNameEn for filterItem in filterItemChoosed.filterColumns">
+                                <option value="" disabled="disabled" selected="selected">@AppRes.ChooseColumn</option>
+                            </select>
+                        }
+
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        @if (ViewBag.LanguageCode.ToString() == "5")
+                        {
+                            <select data-modal="modal" ng-model="filterItemChoosed.typeFilterSelected" data-ng-options="filterItem as filterItem.Name for filterItem in filterItemChoosed.typeFilter" class="form-control">
+                                <option value="" disabled="disabled" selected="selected">@AppRes.Filtercondition</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <select data-modal="modal" ng-model="filterItemChoosed.typeFilterSelected" data-ng-options="filterItem as filterItem.NameEN for filterItem in filterItemChoosed.typeFilter" class="form-control">
+                                <option value="" disabled="disabled" selected="selected">@AppRes.Filtercondition</option>
+                            </select>
+                        }
+
+                    </div>
+                </div>
+                <div class="col-md-3" ng-if="filterItemChoosed.filterSelected.Type == 1 && filterItemChoosed.typeFilterSelected != null">
+                    <div class="form-group">
+                        <input type="text" placeholder="..." class="form-control" data-modal="modal" ng-model="filterItemChoosed.textValue" />
+                    </div>
+                </div>
+                <div class="col-md-3" ng-if="filterItemChoosed.filterSelected.Type == 3 && filterItemChoosed.typeFilterSelected != null">
+                    <div class="form-group">
+                        <input type="date" placeholder="..." class="form-control" data-modal="modal" ng-model="filterItemChoosed.textValue" />
+                    </div>
+                </div>
+                <div class="col-md-2" ng-if="filterItemChoosed.filterSelected.Type == 2 && filterItemChoosed.typeFilterSelected != null">
+                    <div class="form-group">
+                        <input type="number" placeholder="..." class="form-control" data-modal="modal"
+                               ng-model="filterItemChoosed.textValue" />
+                    </div>
+                </div>
+                <div class="col-md-2 selectdiv" ng-if="filterItemChoosed.filterSelected.Type == 4">
+                    <div class="form-group">
+                        @if (ViewBag.LanguageCode.ToString() == "5")
+                        {
+                            <select chosen options="filterItemChoosed.filterSelected.SelectBox" on-no-result="doStuff" class="form-control" data-modal="modal" ng-model="filterItemChoosed.textValue"
+                                    data-ng-options="filterItem as filterItem.Name for filterItem in filterItemChoosed.filterSelected.SelectBox">
+                                <option value="{{filterItem.Value}}" disabled="disabled" selected="selected">@AppRes.Filtercondition</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <select chosen options="filterItemChoosed.filterSelected.SelectBox" on-no-result="doStuff" class="form-control" data-modal="modal" ng-model="filterItemChoosed.textValue"
+                                    data-ng-options="filterItem as filterItem.NameEN for filterItem in filterItemChoosed.filterSelected.SelectBox">
+                                <option value="{{filterItem.Value}}" disabled="disabled" selected="selected">@AppRes.Filtercondition</option>
+                            </select>
+                        }
+
+                    </div>
+                </div>
+
+                <div ng-if="setShowTypeEnd($index)" class="col-md-2">
+                    @if (ViewBag.LanguageCode.ToString() == "5")
+                    {
+                        <select data-modal="modal" ng-model="filterItemChoosed.typeEndsSeleted"
+                                data-ng-options="filterItem as filterItem.name for filterItem in filterItemChoosed.typeEnds" class="form-control"></select>
+                    }
+                    else
+                    {
+                        <select data-modal="modal" ng-model="filterItemChoosed.typeEndsSeleted"
+                                data-ng-options="filterItem as filterItem.value for filterItem in filterItemChoosed.typeEnds" class="form-control"></select>
+                    }
+
+                </div>
+                <div class="col-md-2">
+                    <div class="col-md-3" style="display:inline-flex;">
+                        <div ng-if="setShowTypeEnd($index)">
+                            <a ng-show="showLink($index)" class="a-link"
+                               ng-click="Addlinkfilter($index,false)" id="link'{{ClickFilter}}'">
+                                <i class="fa fa-link fa-lg"></i>
+                            </a>
+                            <a ng-show="!showLink($index)" class="a-link"
+                               ng-click="Addlinkfilter($index,true)" id="link'{{ClickFilter}}'">
+                                <i class="fa fa-chain-broken fa-lg"></i>
+                            </a>
+                        </div>
+
+                        <a class="a-link text-danger" ng-click="removeColumnFilterByIndex($index)" style="margin-left:2px;" title="loại bỏ">
+                            <i class="fa fa-remove fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="col-md-12 text-left" style="padding: 10px 0 10px 0;">
+                    <div class="col-md-3">
+                        <button ng-click="addFilterColumns()" title=@AppRes.Addfilter type="button" class="btn btn-success">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        <button ng-click="GetListData()" ng-if="showFilterApplyButton()" title=@AppRes.FindFilter
+                                type="button" class="btn btn-labeled btn-primary">
+                            <span class="btn-label">
+                                <i class="fa fa-search"></i>
+                            </span>@AppRes.Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divTable">
+            <div class="fixedTable">
+                <div class="divTableData">
+                    <div class="divTableHeading">
+                        <div class="divTableCell {{tblColumn.isFixed==true?'fix-column':''}} {{tblColumn.Class}}" ng-repeat="tblColumn in tblColumns | orderBy:['-isFixed', 'Order']" style="{{tblColumn.Css}}">
+                            <label ng-show="tblColumn.Type == 11"> <input type="checkbox" id="checkAll" compiler-add-events></label>
+                            <span ng-bind='@ViewBag.LanguageCode==5?tblColumn.DisplayName:tblColumn.DisplayNameEn' ng-click="sort(tblColumn.ColumnName)" style="cursor: pointer;"></span><br />
+                        </div>
+                        <div class="divTableCell {{tblColumn.isFixed==true?'fix-column':''}} " ng-show="SetHiddenActionColumn(tablePermission.isEdit,tablePermission.isDelete)">
+                            <span style="cursor: pointer;">@AppRes.Option</span><br />
+                            <!--<span class="show-total">-</span>-->
+                        </div>
+                    </div>
+                    <div class="divTableHeading">
+                        <div title="Total {{@ViewBag.LanguageCode==5?tblColumn.DisplayName:tblColumn.DisplayNameEn.toLowerCase()}}" class="divTableCell {{tblColumn.isFixed==true?'fix-column':''}} {{tblColumn.ShowTotal==null?'no-padding':''}} {{tblColumn.Class}}" ng-repeat="tblColumn in tblColumns | orderBy:['-isFixed', 'Order']" style="{{tblColumn.Css}}">
+                            <span class="titleTotal" ng-bind="SetTotalByColumns(tblColumn.ShowTotal,tblColumn.DataFomat)"></span>
+                        </div>
+                    </div>
+                    <div class="divTableRow" ng-repeat="tblData in tblDatas | orderBy:'Order'" }>
+                        <div class="divTableCell {{tblColumn.isFixed==true?'fix-column':''}} {{tblColumn.Class}}" style="{{tblColumn.Css}}" @*ng-if="tblColumn.isVisible"*@ ng-repeat="tblColumn in tblColumns| orderBy:['-isFixed', 'Order']">                        
+                            <div ng-if="tblColumn.CustomHTML != null"
+                                 compile="tblColumn.CustomHTML" style="{{tblColumn.Css}}"></div>
+                            <span ng-if="tblColumn.CustomHTML == null&&tblColumn.Type==3"
+                                  ng-bind="tblData[tblColumn.ColumnName]| date:'dd/MM/yyyy'" style="{{tblColumn.Css}}"></span>
+                            <span ng-if="tblColumn.CustomHTML == null&&tblColumn.Type==2"
+                                  ng-bind='tblData[tblColumn.ColumnName]| number:tblColumn.DataFomat' style="{{tblColumn.Css}}"></span>
+                            <span ng-if="tblColumn.CustomHTML == null&& tblColumn.Type!=2 && tblColumn.Type!=3 && tblColumn.Type!=5"
+                                  ng-bind='tblData[tblColumn.ColumnName]' style="{{tblColumn.Css}}"></span>
+
+                            <span ng-if="tblData.Message != null && tblColumn.Type==5 && tblColumn.ColumnName=='Message'" compile="tblData[tblColumn.ColumnName]"></span>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="divTableFooter clearfix">
+
+                <div class="row">
+                    <div class="col-md-3 pull-right totalBuildTable">
+                        View 1 to {{pageSizeSelected}} of {{totalCount}} total records
+                    </div>
+                    <div class="col-md-1 pull-right">
+                        <select class="form-control control-color" style="margin-top: 17px;"
+                                ng-model="pageSizeSelected"
+                                ng-change="ChangePageSize()" convert-to-number>
+                            <option ng-repeat="pageSizeItem in lstPageSize" value="{{pageSizeItem}}">{{pageSizeItem}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 pull-right">
+                        <ul style="float:right" uib-pagination total-items="totalCount" ng-change="PageChanged();"
+                            items-per-page="pageSizeSelected" direction-links="true" ng-model="pageIndex"
+                            max-size="maxSize" class="pagination" boundary-links="true"
+                            rotate="false" num-pages="numPages"></ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div style="display: none;">
+            @Html.Action("ColumnFormat", "Common")
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,18 @@
+﻿@model Hrm.Framework.Models.TableViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@{
+    ViewBag.Title = "";
+    Layout = null;
+    var timeVersion = "140320181446";
+
+}
+
+<div class="staff-table">
+    <div id="table-staff-contaner">
+        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model)
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/hrm-v2/Staff/_list.js?v=" + timeVersion)"></script>

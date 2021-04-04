@@ -1,0 +1,243 @@
+﻿@model Hrm.Admin.ViewModels.AddWorkingdayShiftViewModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+<style>
+    .add-shift .hrm-v2-modal-body {
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-top: 0px;
+    }
+
+    .add-shift .table-request-other .frames-th {
+        border: 1px solid #ccc;
+        width: 100px;
+        text-align: center;
+        height: 60px;
+        cursor: pointer;
+        margin-left: 10px;
+        float: left;
+    }
+
+        .add-shift .table-request-other .frames-th .frames-th-icon {
+            width: 100%;
+            height: 30px;
+        }
+
+            .add-shift .table-request-other .frames-th .frames-th-icon span {
+                line-height: 35px;
+                /*color: #2CA01C;*/
+                color: #ccc;
+            }
+
+        .add-shift .table-request-other .frames-th .frames-th-th span {
+            font-family: Roboto-bold;
+        }
+
+    .stripe {
+        background: repeating-linear-gradient( -32deg, white, white 10px, #ccc 10px, #ccc 11px );
+    }
+
+        .stripe .frames-th-icon span {
+            color: #2CA01C !important;
+        }
+
+    .add-shift .table-request-other .td-span {
+        line-height: 60px;
+    }
+
+    .add-shift.table-request-other .cb-control {
+        margin-top: 7px;
+    }
+
+    .add-shift .table-request-other .cb-control {
+        margin-top: 7px;
+    }
+
+    .add-shift .table-request-other .floating-input {
+        border: none;
+    }
+
+        .add-shift .table-request-other .floating-input:focus {
+            border-bottom: 1px solid #1DAB8C;
+        }
+        .add-shift  .display-inline-button {
+           height: 50px;
+           border-top: 1px solid #ccc;
+           bottom: 0px;
+           position: fixed;
+        }
+         .add-shift #table-list-shift-detail {
+           max-height: 430px;
+           overflow: auto;
+        }
+</style>
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><a href="/Admin/Workingday/Shift" class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Workingday.Shift.Shift")</a>
+    @if (Model.WorkingdayShift.ShiftId == 0)
+    {
+        <span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Workingday.Shift.AddNewShift")</span>
+    }
+    else
+    {
+        <span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("Workingday.Shift.EditWorkingdayShift")</span>
+    }
+</div>
+<div class="add-shift">
+    <form id="frm-workingday-shift">
+        <div class="hrm-v2-modal-body">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    <input type="text" name="model.ShiftId" value="@Model.WorkingdayShift.ShiftId" hidden/>
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.Name", IsRequired = true, LabelName = T("Workingday.Shift.ShiftName").ToString(), IsAnimationLabel = true,Value=Model.WorkingdayShift.Name })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.Shift.Stauts").ToString(), IsAnimationLabel = true, Data = Model.Status, ValueField = "Id", Name = "model.Status", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", Value = Model.WorkingdayShift.Status.ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.Shift.Period").ToString(), IsAnimationLabel = true, Data = Model.Periods, ValueField = "Id", Name = "model.PeriodId", IsMultipleLanguage = false, DataType = "Period", PropertyName = "Name", DisplayField = "Name", Value = Model.WorkingdayShift.PeriodId.ToString() })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                  
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @{ 
+
+                        }
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Time.cshtml"), new TextEditorModel() { Name = "model.ToShift", Value = Model.WorkingdayShift.ToShift != null ? Model.WorkingdayShift.ToShift.Value.ToString(@"hh\:mm") : null, Style = "Width:100%" })
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Time.cshtml"), new TextEditorModel() { Name = "model.FromShift", Value = Model.WorkingdayShift.FromShift != null ? Model.WorkingdayShift.FromShift.Value.ToString(@"hh\:mm") : null, Style="Width:100%" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.LateAllowed" ,LabelName = T("Workingday.Shift.LateAllowed").ToString(), IsAnimationLabel = true,Value= Model.WorkingdayShift.LateAllowed.ToString() })
+                </div>
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.EarlyAllowed", LabelName = T("Workingday.Shift.EarlyAllowed").ToString(), IsAnimationLabel = true, Value = Model.WorkingdayShift.EarlyAllowed.ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Workingday.Shift.TypeWork").ToString(), IsAnimationLabel = true, Data = Model.Works, ValueField = "Id", Name = "model.WorkId", IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name", IsRequired = true, Value = Model.WorkingdayShift.WorkId.ToString() })
+                </div>
+                <div class="col-md-6 pd-l-0">
+                    @{
+                        string check = string.Empty;
+                        if (Model.WorkingdayShift.IsOverNight)
+                        {
+                            check = "checked";
+                        }
+                    }
+                    <div class="checkbox" style="float:left;padding:0px">
+                        @Html.Partial(UrlHelpers.Template("_Checkbox.cshtml"), new CheckboxModel() { Name = "ck-checked-over-night", Value = "true", Attribute = check, Id = "model.IsOverNight" })
+                    </div>
+                    <span style="float: left;line-height:65px;">@T("Workingday.Shift.OverNight")</span>
+                </div>            
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <span>@T("Workingday.Shift.EstablishDetailShift")</span>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-12 pd-0 display-inline-block" id="table-list-shift-detail">
+                    @Html.Partial(UrlHelpers.TemplateAdmin("Workingday", "_tableContentListShiftDetail.cshtml"), Model.WorkingdayShiftDetails)
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block" style="margin-top:10px;z-index:999">
+                    <a onclick="addFramesTime()" class="add-frames-time"><i class="fa fa-plus-circle"></i> <span>@T("Workingday.Shift.AddFrames") </span></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block display-inline-button">
+            @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", OnClick = "saveWorkingdayShift()", Value = "Workingday.Save", Type = "button", ClassName = "hrm-v2-btn-save", Style = "float:right;margin-right:80px;margin-top:10px;margin-left:10px" })
+            
+            @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Workingday.Close", ClassName = "hrm-v2-btn-close", Style = "float:right;;margin-top:10px;margin-left:10px",OnClick = "closeWorkingdayShift()" })                  
+        </div>
+    </form>
+</div>
+
+<script>
+    //$(document).ready(function () {
+    //    $('#model-WorkId').on('select2:selecting', function (e) {
+    //        $("#model-WorkId").val(e.params.args.data.id);
+    //        $.ajax(
+    //        {
+    //            type: "POST",
+    //            url: "/Admin/Workingday/ReloadTableWorkingShiftDetail",
+    //            data: $('#frm-workingday-shift').serializeArray(),
+    //            success: function (response) {
+    //                $('#table-list-shift-detail').html(response);
+    //            }
+    //        });
+    //    })
+    //});
+    function closeWorkingdayShift(){
+        window.location.reload();
+    }
+
+    function clickCheck(e) {
+        if ($($(e).find('input')[0]).prop("checked")) {
+            $($(e).find('input')[0]).prop("checked", false);
+            $(e).removeClass('stripe');
+        }
+        else {
+            $($(e).find('input')[0]).prop("checked", true);
+            $(e).addClass('stripe');
+        }
+    }
+    function addFramesTime() {
+        $.ajax(
+         {
+             type: "POST",
+             url: "/Admin/Workingday/AddRowShiftDetail",
+             data: $('#frm-workingday-shift').serializeArray(),
+             success: function (response) {
+                 $('#table-list-shift-detail').html(response);
+
+             }
+         });
+    }
+    function deleteRowsShiftDetail(index) {
+        var listData=$('#frm-workingday-shift').serializeArray();
+        listData.push({ name: "index", value: index });
+        $.ajax(
+          {
+              type: "POST",
+              url: "/Admin/Workingday/RemoveRowShiftDetail",
+              data: listData,
+              success: function (response) {
+                  $('#table-list-shift-detail').html(response);
+
+              }
+          });
+    }
+    function saveWorkingdayShift() {
+        $("#frm-workingday-shift span[name*='-error']").text("");
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/Workingday/SaveWorkingdayShift",
+            data: $('#frm-workingday-shift').serializeArray(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-workingday-shift");
+                }
+                if (response.result.Success == true) {
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    window.location.href = "/Admin/Workingday/Shift";
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                }
+            }
+        });
+    }
+</script>

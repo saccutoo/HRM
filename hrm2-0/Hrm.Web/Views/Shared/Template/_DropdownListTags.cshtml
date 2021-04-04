@@ -1,0 +1,25 @@
+﻿@model Hrm.Framework.Models.DropdownListModel
+@using Newtonsoft.Json;
+@using Hrm.Framework.Helper;
+@using Newtonsoft.Json;
+
+@{
+    var data = JsonConvert.DeserializeObject<List<dynamic>>(JsonConvert.SerializeObject(Model.Data));
+    Layout = null;
+}
+
+<select id="@Model.Name.Replace(".","-").Replace("[","-").Replace("]","-").ToString()" name="@Model.Name" class="select2-container" multiple="multiple" style="@Model.Style">
+   @{ 
+       for (int i = 1; i <= Model.CountOption; i++)
+       {
+           <option value="@i" >@i</option>
+       }
+   }
+</select>
+<script>
+    $('#@Model.Name.Replace(".","-").Replace("[","-").Replace("]","-").ToString()').select2({
+        tags: true,
+        tokenSeparators: [',', ' '],
+    });
+    $('#@Model.Name.Replace(".","-").Replace("[","-").Replace("]","-").ToString()').val([@Model.ValueField]).change();
+</script>

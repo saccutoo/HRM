@@ -1,0 +1,113 @@
+﻿@using Hrm.Admin.ViewModels
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@model Hrm.Admin.ViewModels.OrganizationViewModel
+@{
+    ViewBag.Title = "OrganizationFormAdd";
+}
+<style>
+    .padding{
+        padding:0px;
+    }
+    .hrm-v2-modal-body{
+        margin-top:10px;
+    }
+</style>
+<form>
+</form>
+<div >
+    @if (Model.Organization.Id != 0)
+    {
+        <div class="hrm-v2-modal-header">@T("Organization.UpdateUnit")</div>
+    }
+    else
+    {
+        <div class="hrm-v2-modal-header">@T("Organization.AddNewUnit")</div>
+    }
+    <div class="hrm-v2-modal-body" >
+        <div >
+            <form id="frm-organization">
+                <div class="col-md-12 padding" >
+                    <div class="col-md-6 padding">
+                        <div class="form-group">
+                            <input name="data.Id" value="@Model.Organization.Id" hidden/>
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.OrganizationCode", LabelName = T("Organization.Code").ToString(), Style = "width:100%;", IsAnimationLabel = true, IsRequired = true,Value=Model.Organization.OrganizationCode, })
+                        </div>
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.OrganizationName", LabelName = T("Organization.Name").ToString(), Style = "width:100%;", IsAnimationLabel = true, IsRequired = true, Value = Model.Organization.OrganizationName })
+                        </div>
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.Branch", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataBrand,LabelName = T("Organization.Branch").ToString(), IsAnimationLabel = true,Value=Model.Organization.Branch.ToString(),SearchField=true })
+                        </div>
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.CurrencyTypeId", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataCurrency, LabelName = T("Organization.Currency").ToString(), IsAnimationLabel = true,Value=Model.Organization.CurrencyTypeId.ToString(), SearchField = true })
+                        </div>
+                    </div>
+                    <div class="col-md-6 padding">
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.Status", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataStatus, LabelName = T("Organization.Status").ToString(), IsAnimationLabel = true, Value = Model.Organization.Status.ToString(), SearchField = true })
+                        </div>
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.OrganizationType", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataCategoryCompany, LabelName = T("Organization.OrganizationType").ToString(), IsAnimationLabel = true, IsRequired = true,Value=Model.Organization.OrganizationType.ToString(), SearchField = true })
+                        </div>
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.ParentId", ValueField = "Id", Style = "width:100%", DisplayField = "OrganizationName", Data = Model.Organizations, LabelName = T("Organization.Parent").ToString(), IsAnimationLabel = true, Value = Model.Organization.ParentId.ToString(), SearchField = true })
+                        </div>
+                        <div class="form-group">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.Note", LabelName = T("Organization.Note").ToString(), Style = "width:100%;", IsAnimationLabel = true, Value = Model.Organization.Note })
+                        </div>
+                    </div>
+                </div>
+                <div style="clear:both;display:inline-block;float:right">
+                    <div style="float:left;margin-right: 10px;">
+                        @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Organization.Close", Style = "width:100px;height:38px;", ClassName = "hrm-v2-btn-close" })
+                    </div>
+                    <div style="float:left;margin-right: 10px;">
+                        @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-organization", OnClick = "SaveOrganization()", Value = "Organization.Save", Style = "width:100px;height:38px;",Type="button", ClassName = "hrm-v2-btn-save" })
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+        
+</div>
+<script>
+    function SaveOrganization() {
+        $("#frm-organization span[name*='-error']").text("");
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/Organization/SaveOrganization",
+            data: $('#frm-organization').serializeArray(),
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-organization");
+                }
+                else {
+                    if (response.result.Success == true) {
+                        if (($("#table-staff-contaner").length) > 0)
+                        {
+                            var tableName = "table-organization";
+                            var currentPage = $('#table-organization-paging-current-page').val();
+                            var itemsPerPage = $('#table-organization-paging-items-per-page').val();
+                            var dataUrl = "/Admin/Organization/GetDataOrganization";
+                            var currentPageNew = parseInt(currentPage);                           
+                            reloadTable(tableName, dataUrl, currentPageNew, itemsPerPage, filterStr, referenceId);
+                        }
+                        else {
+                            $("#organization-tree").load('/Admin/Organization/ReloadTreeOrganization');
+                        }
+                       
+                        $("#myModal").modal("hide");
+                        ShowMessage(true, msgSuccessful, response.responeseResources, 500, 3000);
+                    }
+                    else {
+                        ShowMessage(false, msgFalse, response.responeseResources, 500, 3000);
+                    }
+                }              
+            }
+        });
+    }
+</script>
+

@@ -1,0 +1,147 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<div class="container-fluid">
+    <div class="row" id="SaveWorkingDayMachineSatList" style="margin: 0;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;">@AppRes.Workingday</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label style="line-height:30px;">@AppRes.WorkingDayMachineName<span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                      
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select class="form-control" chosen options="getListHR_WorkingDayMachine" on-no-result="doStuff" required data-modal="modal" ng-model="editData.WorkingDayMachineID" ng-options="list.WorkingDayMachineID as list.Name for list in getListHR_WorkingDayMachine" ng-change="ChangeType()">
+                                                <option value="" selected>--@AppRes.Select--</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select class="form-control" chosen options="getListHR_WorkingDayMachine" on-no-result="doStuff" required data-modal="modal" ng-model="editData.WorkingDayMachineID" ng-options="list.WorkingDayMachineID as list.NameEN for list in getListHR_WorkingDayMachine" ng-change="ChangeType()">
+                                                <option value="" selected>--@AppRes.Select--</option>
+                                            </select>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:35px;">@AppRes.MorningHourStart<span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control timeselect" ng-model="editData.MorningHourStart1" ng-change="ChangeTime()" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:35px;">@AppRes.MorningHourMid <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control timeselect" ng-model="editData.MorningHourMid1" ng-change="ChangeTime()" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:35px;">@AppRes.MorningHourEnd<span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control timeselect" ng-model="editData.MorningHourEnd1" ng-change="ChangeTime()" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:30px;">@AppRes.AfernoonHourStart<span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control timeselect" ng-model="editData.AfernoonHourStart1" ng-change="ChangeTime()" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:30px;">@AppRes.AfernoonHourMid <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control timeselect" ng-model="editData.AfernoonHourMid1" ng-change="ChangeTime()" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:35px;">@AppRes.AfternoonHourEnd<span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control timeselect" ng-model="editData.AfternoonHourEnd1" ng-change="ChangeTime()" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:30px;">@AppRes.StartDate</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control StartDate1" ng-model="editData.StartDate1" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label style="line-height:30px;">@AppRes.EndDate</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control EndDate1" ng-model="editData.EndDate1" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="col-sm-12">
+                            <span style="color:red" ng-bind="Mesenger"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+                <center>
+                    <button ng-show="tablePermission.isEdit" type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>@AppRes.btnUpdate
+                    </button>
+                    <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                        <span class="btn-label">
+                            <i class="fa fa-close"></i>
+                        </span>@AppRes.btnCancel
+                    </button>
+                </center>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+﻿@model Hrm.Admin.ViewModels.OrganizationViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using System.Linq
+@using Newtonsoft.Json;
+@{
+    ViewBag.Title = "MergerOrganization";
+
+}
+<div class="col-md-12 padding">
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="form-group">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.OrganizationCode", LabelName = T("Organization.CodeNew").ToString(), Style = "width:100%;", IsAnimationLabel = true, IsRequired = true })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.OrganizationName", LabelName = T("Organization.NameNew").ToString(), Style = "width:100%;", IsAnimationLabel = true, IsRequired = true })
+        </div>
+        <div class="form-group">
+
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.Branch", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataBrand, LabelName = T("Organization.Branch").ToString(), IsAnimationLabel = true , IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name" })
+        </div>
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.CurrencyTypeId", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataCurrency, LabelName = T("Organization.Currency").ToString(), IsAnimationLabel = true, IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name" })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.Status", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataStatus, LabelName = T("Organization.Status").ToString(), IsAnimationLabel = true, IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name" })
+        </div>
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.OrganizationType", ValueField = "Id", Style = "width:100%", DisplayField = "Name", Data = Model.MasterDataCategoryCompany, LabelName = T("Organization.OrganizationType").ToString(), IsAnimationLabel = true,IsRequired=true, IsMultipleLanguage = true, DataType = "MasterData", PropertyName = "Name" })
+        </div>
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DropDown.cshtml"), new DropdownListModel() { Name = "data.ParentId", ValueField = "Id", Style = "width:100%", DisplayField = "OrganizationName", Data = Model.Organizations, LabelName = T("Organization.Parent").ToString(), IsAnimationLabel = true, IsMultipleLanguage = true, DataType = "Organization", PropertyName = "OrganizationName" })
+        </div>
+        @*<div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.Note", LabelName = T("Organization.Note").ToString(), Style = "width:100%;", IsAnimationLabel = true })
+        </div>*@
+    </div>
+
+</div>
+<div class="form-group" style="clear:both;">
+    <div class="header" style="height:15px;">
+        <div class="col-md-6 header-left">
+            @T("Organization.MergerDecision").ToString().ToUpper()
+        </div>
+    </div>
+</div>
+<div class="col-md-12 padding" style="clear:both">
+    <div class="form-group col-md-6">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.DecisionNo", LabelName = T("Staff.Detail.DecisionNo").ToString(), Style = "width:100%;", IsAnimationLabel = true })
+    </div>
+    <div class="form-group col-md-6">
+       @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel()
+      {
+          Name = "data.DecisionDate",
+          Vertical = "top",
+          DateFormat = "dd/MM/yyyy",
+          IsAnimationLabel = true,
+          LabelName = T("Table.Title.DecisionDate").ToString(),
+      })
+    </div>
+
+
+</div>
+<div class="col-md-12 padding" style="clear:both">
+
+    <div class="col-md-6">
+        <div class="form-group">           
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel()
+        {
+            Name = "data.StartDate",
+            Value = DateTime.Now,
+            Vertical = "top",
+            DateFormat = "dd/MM/yyyy",
+            IsAnimationLabel = true,
+            LabelName = T("Table.Title.ApplyDate").ToString(),
+            IsRequired = true
+        })
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel()
+       {
+           Name = "data.EndDate",
+           Vertical = "top",
+           DateFormat = "dd/MM/yyyy",
+           IsAnimationLabel = true,
+           LabelName = T("Staff.Detail.EndDateApply").ToString()
+       })
+        </div>
+
+    </div>
+
+</div>
+<div class="col-md-12 padding" style="clear:both">
+    <div class="form-group col-md-12">
+        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "data.Note", LabelName = T("Organization.Note").ToString(), Style = "width:100%;", IsAnimationLabel = true })
+    </div>
+</div>

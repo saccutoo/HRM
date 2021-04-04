@@ -1,0 +1,69 @@
+﻿@model Hrm.Web.ViewModels.GeneralnformationAndSalaryViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using System.Collections.Generic
+@using System.Globalization
+
+@{
+    ViewBag.Title = T("Payroll.AddPayrollDetail");
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+    //TableViewModel tableViewModel = JsonConvert.DeserializeObject<TableViewModel>(JsonConvert.SerializeObject(Model..Table.Clone()));
+    //tableViewModel.TableData = new List<dynamic>();
+    //tableViewModel.lstItemsPerPage = new List<dynamic>();
+}
+
+<link href="@Url.Content("~/Content/hrm-v2/Payroll.css?v="+timeVersion)" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/hrm-v2/Payroll/_list.js?v=" + timeVersion)"></script>
+
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="hrm-v2-font-13 hrm-v2-bold" style="color:#7C7C7C">@T("Payroll.BreadCrumb.List")</a><span class="hrm-v2-font-13 hrm-v2-bold" style="color:#7C7C7C">&nbsp; &gt; &nbsp;</span><a href="#" class="hrm-v2-font-13 hrm-v2-bold" style="color:#7C7C7C"> @T("Payroll.AddPayrollDetail") </a>
+</div>
+
+<div class="col-md-12 hrm-v2-inline-block pd-l-0">
+    <div class="wrapper">
+        <div class="arrow-steps clearfix">
+            <div class="step">
+                <span>1 - Tạo bảng lương</span>
+            </div>
+            <div class="step current">
+                <span>2 - Kiểm tra bảng lương</span>
+            </div>
+            <div class="step">
+                <span>3 - Summary</span>
+            </div>
+        </div>
+    </div>
+    <div id="payroll-detail-view">
+        <div class="col-md-12 bread-crumb">
+            <div class="pull-right">
+                @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter('Payroll', " + Html.Raw(Json.Encode(Model.Salary.Table.TableName)) + ", 1, 0)" })
+                @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter('Payroll',  " + Html.Raw(Json.Encode(Model.Salary.Table.TableName)) + ",  1, 0)" })
+            </div>
+        </div>
+        <div class="payroll-table">
+            <div id="table-payroll-contaner">
+                @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Salary.Table)
+            </div>
+        </div>
+        <div class="footer-add-staff">
+            <div class="footer-login">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal" onclick="gotoPayrollList();">
+                        @T("Payroll.Detail.Cancel")
+                    </button>
+                    <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal" onclick="gotoAddPayroll();">
+                        @T("Payroll.Detail.Back")
+                    </button>
+                    <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="gotoSummary(@Model.PayrollId)">
+                        @T("Payroll.Detail.Next")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/hrm-v2/Payroll/_list.js?v=" + timeVersion)"></script>

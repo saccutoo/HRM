@@ -1,0 +1,200 @@
+﻿@using HRM.App_LocalResources;
+@using HRM.Common
+<div class="container-fluid">
+    <div class="row" id="StaffPlanRenewalRateSave" style="margin: 0;">
+        <form role="form" name="editForm" novalidate>
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;">@AppRes.EmployExtensionPlan</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            @*<div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Staff <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen options="ListEmployees" on-no-result="doStuff" ng-model="StaffPlanRenewalRateModel.StaffID" name="staff" ng-options="list.UserID as list.FullName for list in ListEmployees" ng-change="ChangeAddEmployees()" convert-dropdown required>
+                                                <option value="" selected>-- @AppRes.Employee --</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen options="ListEmployees" on-no-result="doStuff" ng-model="StaffPlanRenewalRateModel.StaffID" name="staff" ng-options="list.UserID as list.FullNameEN for list in ListEmployees" ng-change="ChangeAddEmployees()" convert-dropdown required>
+                                                <option value="" selected>-- @AppRes.Employee --</option>
+                                            </select>
+                                        }
+
+                                        <span ng-show="editFromsubmit && editForm.staff.$invalid" style="color:red;line-height:30px;">@AppRes.ErrorStaff</span>
+                                    </div>
+
+                                </div>
+                            </div>*@
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Department <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen options="getListAllOrganizationUnit" on-no-result="doStuff" ng-model="StaffPlanRenewalRateModel.DS_OrganizationUnitID" name="organizationUnit" ng-options="list.OrganizationUnitID as list.Name for list in getListAllOrganizationUnit" ng-change="ChangeAddOrganizationUnit()" convert-dropdown required>
+                                                <option value="" selected>-- @AppRes.Department --</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen options="getListAllOrganizationUnit" on-no-result="doStuff" ng-model="StaffPlanRenewalRateModel.DS_OrganizationUnitID" name="organizationUnit" ng-options="list.OrganizationUnitID as list.NameEN for list in getListAllOrganizationUnit" ng-change="ChangeAddOrganizationUnit()" convert-dropdown required>
+                                                <option value="" selected>-- @AppRes.Department --</option>
+                                            </select>
+                                        }
+                                        <span ng-show="editFromsubmit && editForm.organizationUnit.$invalid" style="color:red;line-height:30px;">@AppRes.ErrorDepartment</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.C_CurrencyID</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select chosen options="ListCurrencyName" on-no-result="doStuff" ng-model="StaffPlanRenewalRateModel.CurrencyTypeID" name="currency" ng-options="list.GlobalListID as list.Name for list in ListCurrencyName" convert-dropdown>
+                                                <option value="" selected>-- @AppRes.C_CurrencyID --</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select chosen options="ListCurrencyName" on-no-result="doStuff" ng-model="StaffPlanRenewalRateModel.CurrencyTypeID" name="currency" ng-options="list.GlobalListID as list.NameEN for list in ListCurrencyName" convert-dropdown>
+                                                <option value="" selected>-- @AppRes.C_CurrencyID --</option>
+                                            </select>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Year <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="StaffPlanRenewalRateModel.Year" name="year" class="form-control datePicker12345" convert-to-year required />
+                                        <span ng-show="editFromsubmit && editForm.year.$invalid" style="color:red;line-height:30px;">@AppRes.ErrorYear</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.Promotion_Status <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        @if (Global.CurrentLanguage == 5)
+                                        {
+                                            <select class="form-control" chosen options="getListStatus" data-modal="modal" name="status" ng-model="StaffPlanRenewalRateModel.Status" ng-options="list.Value as list.Name for list in getListStatus" required>
+                                                <option value="" selected>--@AppRes.Select--</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select class="form-control" chosen options="getListStatus" data-modal="modal" name="status" ng-model="StaffPlanRenewalRateModel.Status" ng-options="list.Value as list.NameEN for list in getListStatus" required>
+                                                <option value="" selected>--@AppRes.Select--</option>
+                                            </select>
+                                        }
+                                        <span ng-show="editFromsubmit && editForm.status.$invalid" style="color:red;line-height:30px;">@AppRes.ErrorStatus1</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 label-form-save-policydetail" style="line-height:30px;">
+                                        <label>@AppRes.Note</label>
+                                    </div>
+                                    <div class="col-md-9 input-form-save-policydetail">
+                                        <textarea class="form-control" ng-model="StaffPlanRenewalRateModel.Description" style="height:32px"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Q1</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="StaffPlanRenewalRateModel.Q1" name="quarter1" class="form-control text-right" currency-mask-four-space/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Q2</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="StaffPlanRenewalRateModel.Q2" name="quarter2" class="form-control text-right" currency-mask-four-space/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Q3</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="StaffPlanRenewalRateModel.Q3" name="quarter3" class="form-control text-right" currency-mask-four-space/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="line-height:30px;">
+                                        <label>@AppRes.Q4</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" ng-model="StaffPlanRenewalRateModel.Q4" name="quarter4" class="form-control text-right" currency-mask-four-space/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+                <!-- END panel-->
+            </div>
+            <br />
+            <center>
+                <button type="button" class="btn btn-success btn-labeled" ng-click="Save(editForm)">
+                    <span class="btn-label">
+                        <i class="fa fa-save"></i>
+                    </span>@AppRes.btnUpdate
+                </button>
+                <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                    <span class="btn-label">
+                        <i class="fa fa-close"></i>
+                    </span>@AppRes.btnCancel
+                </button>
+            </center>
+        </form>
+    </div>
+</div>
+
+

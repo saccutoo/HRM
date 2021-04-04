@@ -1,0 +1,248 @@
+﻿@using HRM.App_LocalResources;
+<div class="container-fluid">
+    <div class="row EditPayBill" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-heading"><b>@AppRes.PayslipDetail</b></div>
+                <hr />
+                <div class="panel-body">
+                    <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @*---------------------------------------------------------------Đầu tiên-------------------------------------------------------------------------------------------------------*@
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.StaffCode</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-readonly="true" class="form-control" ng-model="editData.StaffCode" />
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.PayOff</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" readonly class="form-control" ng-model="editData.MonthYear" />
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.FullName  </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" ng-readonly="true" data-modal="modal" name="orderNo" class="form-control" ng-model="editData.AccountName">
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.Position </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" readonly class="form-control" ng-model="editData.OfficePositionName" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.OrganizationUnit </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" readonly class="form-control" ng-model="editData.OrganizationUnitName" />
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.SalarylastMonth</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" numeric readonly ng-disabled="is_readonly" ng-model="editData.SalarylastMonth" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.AdvancePayment </label>
+                                        </div>
+                                        <div class="col-md-3">
+
+                                            <input type="text" class="form-control" numeric ng-readonly="editData.Locked" ng-disabled="is_readonly" ng-model="editData.AdvancePayment" />
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.DecemberBonus </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" numeric ng-model="editData.Decemberbonus" ng-readonly="editData.Locked" ng-disabled="is_readonly" />
+                                        </div>
+                                    </div>
+                                    @*<div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.BDOAllowances </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" numeric ng-model="editData.BDOAllowances" ng-disabled="is_readonly" ng-readonly="editData.Locked" />
+                                        </div>
+                                    </div>*@
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        @*<div class="col-md-3">
+                                            <label>@AppRes.OtherBonus</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" numeric ng-model="editData.OtherBonus" ng-readonly="editData.Locked" ng-disabled="is_readonly" />
+                                        </div>*@
+                                        <div class="col-md-3">
+                                            <label>@AppRes.RewardsEnterHands</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" numeric ng-model="editData.SysBonus" ng-readonly="editData.Locked" ng-disabled="is_readonly" />
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.BonusNote</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <textarea class="form-control" ng-readonly="editData.Locked" ng-disabled="is_readonly" ng-model="editData.BonusNote" ng-required="angular.isDefined(editData.OtherBonus) && editData.OtherBonus > 0">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.Nontaxableincome </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" numeric ng-model="editData.Nontaxableincome" ng-readonly="editData.Locked" ng-disabled="is_readonly" />
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.NontaxableincomeNote</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <textarea class="form-control" ng-readonly="editData.Locked" ng-disabled="is_readonly" ng-model="editData.NontaxableincomeNote">
+
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.OtherReduction </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" numeric ng-model="editData.OtherReduction" ng-readonly="editData.Locked" ng-disabled="is_readonly" />
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.ReductionNote </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <textarea class="form-control" ng-readonly="editData.Locked" ng-disabled="is_readonly" ng-model="editData.ReductionNote">
+
+                                            </textarea>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.OtherAllowances </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" numeric ng-model="editData.OtherAllowances" ng-readonly="editData.Locked" ng-disabled="is_readonly" />
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.AllowancesNote </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <textarea class="form-control" ng-readonly="editData.Locked" ng-disabled="is_readonly" ng-model="editData.AllowancesNote">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.Margincompensation </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" numeric ng-model="editData.Margincompensation" ng-readonly="editData.Locked" ng-disabled="is_readonly" />
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.MargincompensationNote </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <textarea class="form-control" ng-readonly="editData.Locked" ng-disabled="is_readonly" ng-model="editData.MargincompensationNote">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.BonusKPIYear </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" numeric ng-model="editData.BonusKPIYear" ng-readonly="editData.Locked" ng-disabled="is_readonly" />
+                                        </div>
+                                    </div>
+
+                                   <div class="">
+                                        <div class="col-md-3">
+                                            <label>@AppRes.OtherKPIYear</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" numeric ng-model="editData.OtherKPIYear" ng-readonly="editData.Locked" ng-disabled="is_readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*---------------------------------------------------------------Thêm mới và bỏ qua-------------------------------------------------------------------------------------------------------*@
+                        <div class="row" style="margin-top:20px">
+                            <div class="col-md-4 col-md-push-5">
+                                <button type="submit" class="btn btn-labeled btn-success" ng-show="tablePermission.isEdit" ng-disabled="editData.Locked">
+                                    <span class="btn-label">
+                                        <i class="fa fa-save"></i>
+                                    </span>@AppRes.btnUpdate
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                    <span class="btn-label">
+                                        <i class="fa fa-remove"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>
+

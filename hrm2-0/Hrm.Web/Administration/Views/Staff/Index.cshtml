@@ -1,0 +1,735 @@
+﻿
+@{
+    ViewBag.Title = "Setting staff";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+}
+
+<style>
+    .padding {
+        padding: 0px;
+    }
+
+    .gereral {
+        width: 100%;
+    }
+
+    .gereral-left {
+        width: 73%;
+        height: 100%;
+        float: left;
+    }
+
+    .gereral-right {
+        width: 25%;
+        height: 100%;
+        float: right;
+        border-left: 1px solid #ccc;
+    }
+
+    .staff-title-header {
+        width: 100%;
+        height: 30px;
+    }
+
+    .staff-title-header-left {
+        float: left;
+        width: 200px;
+        height: 100%;
+        line-height: 30px;
+        color: #90B553;
+    }
+
+    .staff-title-header-right {
+        float: left;
+        width: 100%-200px;
+        width: calc(100% - 200px);
+        margin-top: 13px;
+        border: 1px solid #90B553;
+    }
+
+    .staff-general-information {
+        height: 500px;
+        width: 100%;
+    }
+
+    .general-information-left {
+        height: 100%;
+        width: 50%;
+        float: left;
+    }
+
+    .general-information-left-header {
+        height: 30%;
+        width: 100%;
+    }
+
+    .general-information-left-img {
+        height: 100%;
+        width: 40%;
+        float: left;
+    }
+
+    .general-information-right {
+        float: left;
+        height: 100%;
+        width: 50%;
+        float: left;
+    }
+
+    .general-information-left-img-top {
+        width: 45%;
+        height: 60%;
+        padding: 36px;
+        margin-left: 74px;
+        margin-top: 10px;
+        border: 1px solid red;
+    }
+
+    .general-information-left-img-bottom {
+        width: 100%;
+        height: calc(100% - 60%);
+        text-align: center;
+    }
+
+        .general-information-left-img-bottom a {
+            line-height: 45px;
+        }
+
+    .general-information-right-radio {
+        width: 100%;
+        height: 35px;
+    }
+
+    .general-information-right-img {
+        float: left;
+        height: 100%;
+        width: 50%;
+        float: left;
+    }
+
+    .radio-male {
+        float: left;
+        width: 30%;
+        height: 100%;
+        line-height: 35px;
+    }
+
+    .radio-female {
+        float: left;
+        height: 100%;
+        width: 70%;
+        line-height: 35px;
+    }
+
+    .general-information-right-radio .input-radio {
+        float: left;
+    }
+
+    .general-information-right-radio .title-radio {
+        float: left;
+        margin-left: 20px;
+    }
+
+    .general-information-right-radio .input-radio input {
+        margin-top: 11px;
+    }
+    .personal-information-checkbox{
+            float: left;
+    }
+    .personal-information-title{
+        float: left;
+        margin-left: 10px;
+        line-height: 21px;
+    }
+    .personal-information{
+        height:30px;
+        clear:both;
+    }
+    .color-red{
+        color:red;
+    }
+    .system-table-tbody-Staff{
+        display:block;
+    }
+</style>
+<div class="gereral" style="height: 768px;overflow: auto">
+    <div class="gereral-left">
+
+        @*Thông tin chung*@
+        <div>
+            <div class="staff-title-header">
+                <div class="staff-title-header-left">
+                    <i class="fa fa-user"></i>
+                    <span>@T("Staff.GeneralInformation")</span>
+                </div>
+                <div class="staff-title-header-right">
+
+                </div>
+            </div>
+            <div class="staff-general-information">
+                <div class="general-information-left">
+                    <div class="general-information-left-header">
+                        <div class="general-information-left-img">
+                            <div class="general-information-left-img-top">
+                                @*img*@
+                            </div>
+                            <div class="general-information-left-img-bottom">
+                                <a>@T("Staff.UploadImg")</a>
+                            </div>
+                        </div>
+                        <div class="general-information-right-img">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <lable class="lable">@T("Staff.StaffCode")</lable>
+                                </div>
+                                <div class="col-md-12">
+                                    <input type="text" class="form-control" value="ON000123" disabled />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <lable class="lable">@T("Staff.FirstAndLastName") <span class="color-red">*</span></lable>
+                                </div>
+                                <div class="col-md-12">
+                                    <input type="text" class="form-control" value="Trần Quang Vịnh" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="general-information-body">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <span class="lable">@T("Staff.Nation")</span>
+                            </div>
+                            <div class="col-md-12">
+                                <select class="form-control">
+                                    <option>Kinh</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <span class="lable">@T("Staff.Address")</span>
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" value="199 Hồ Tùng Mậu,Cầu Giấy" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <span class="lable">@T("Staff.Domicile")</span>
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" value="" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <span class="lable">@T("Staff.Mariage")</span>
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="general-information-right">
+                    <div class="general-information-right-top" style="height:30%;">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <span class="lable">@T("Staff.Gender")</span>
+                            </div>
+                            <div class="col-md-12 general-information-right-radio">
+                                <div class="radio-male">
+                                    <div class="input-radio">
+                                        <input type="radio" name="radio" checked />
+                                    </div>
+                                    <div class="title-radio">
+                                        <span>@T("Staff.Male")</span>
+                                    </div>
+
+                                </div>
+                                <div class="radio-female">
+                                    <div class="input-radio">
+                                        <input type="radio" name="radio" />
+                                    </div>
+                                    <div class="title-radio">
+                                        <span>@T("Staff.Female")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <span class="lable">@T("Staff.DateOfBirth")</span>
+                            </div>
+                            <div class="col-md-12">
+                                <input type="date" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <div class="col-md-6 padding form-group">
+                            <div class="col-md-12 padding">
+                                <span class="lable">@T("Staff.CardId")</span>
+                            </div>
+                            <div class="col-md-12 padding">
+                                <input type="number" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 padding form-group" style="padding-left:10px;">
+                            <div class="col-md-12 padding ">
+                                <span class="lable">@T("Staff.DateRange")</span>
+                            </div>
+                            <div class="col-md-12 padding">
+                                <input type="date" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6 padding form-group">
+                            <div class="col-md-12 padding">
+                                <span class="lable">@T("Staff.City")</span>
+                            </div>
+                            <div class="col-md-12 padding">
+                                <select class="form-control">
+                                    <option>Hà Nội</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 padding form-group" style="padding-left:10px;">
+                            <div class="col-md-12 padding ">
+                                <span class="lable">@T("Staff.Nation")</span>
+                            </div>
+                            <div class="col-md-12 padding">
+                                <select class="form-control">
+                                    <option>Việt Nam</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6 padding form-group">
+                            <div class="col-md-12 padding">
+                                <span class="lable">@T("Staff.City")</span>
+                            </div>
+                            <div class="col-md-12 padding">
+                                <select class="form-control">
+                                    <option>Hà Nội</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 padding form-group" style="padding-left:10px;">
+                            <div class="col-md-12 padding ">
+                                <span class="lable">@T("Staff.Nation")</span>
+                            </div>
+                            <div class="col-md-12 padding">
+                                <select class="form-control">
+                                    <option>Việt Nam</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.TaxCode")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.Note")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Thông tin liên lạc*@
+        <div>
+            <div class="staff-title-header">
+                <div class="staff-title-header-left">
+                    <i class="fa fa-id-card-o"></i>
+                    <span>@T("Staff.Communications")</span>
+                </div>
+                <div class="staff-title-header-right">
+                </div>
+                
+            </div>
+            <div class="staff-general-information" style="height:215px">
+                <div class="general-information-left">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.EmailWorking")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.PhoneWorking")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.FacebookPersonal")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="general-information-right">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.EmailPersonal")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.PhonePersonal")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.Sky")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Trạng thái nhân sự*@
+        <div>
+            <div class="staff-title-header">
+                <div class="staff-title-header-left">
+                    <i class="fa fa-id-card-o"></i>
+                    <span>@T("Staff.StatusStaff")</span>
+                </div>
+                <div class="staff-title-header-right">
+                </div>
+            </div>
+            <div class="staff-general-information"  style="height:215px">
+                <div class="general-information-left">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.StatusWorking") <span class="color-red">*</span></span>
+                           
+                        </div>
+                        <div class="col-md-12">
+                            <select class="form-control">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.ManagePublicReview") <span class="color-red">*</span></span>
+                        </div>
+                        <div class="col-md-12">
+                            <select class="form-control">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.HRPublicReview")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <select class="form-control">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="general-information-right">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.Manager")<span class="color-red">*</span></span>
+                        </div>
+                        <div class="col-md-12">
+                            <select class="form-control">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.HRManager") <span class="color-red">*</span></span>
+                        </div>
+                        <div class="col-md-12">
+                            <select class="form-control">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        @*Thông tin thanh toán*@
+        <div>
+            <div class="staff-title-header">
+                <div class="staff-title-header-left">
+                    <i class="fa fa-id-card-o"></i>
+                    <span>@T("Staff.BillingInformation")</span>
+                </div>
+                <div class="staff-title-header-right">
+                </div>
+
+            </div>
+            <div class="staff-general-information" style="height:215px">
+                <div class="general-information-left">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.AccountNumber")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.BankName")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.Currency")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <select class="form-control">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="general-information-right">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.AccountName")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.Branch")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        @*Thông tin tài khoản*@
+
+        <div>
+            <div class="staff-title-header">
+                <div class="staff-title-header-left">
+                    <i class="fa fa-id-card-o"></i>
+                    <span>@T("Staff.AccountInformation")</span>
+                </div>
+                <div class="staff-title-header-right">
+                </div>
+
+            </div>
+            <div class="staff-general-information" style="height:150px">
+                <div class="general-information-left">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.UserName") <span class="color-red">*</span></span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.PassWord") <span class="color-red">*</span></span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="password" class="form-control" />
+                        </div>
+                    </div>
+                   
+                </div>
+                <div class="general-information-right">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.RightGroup") <span class="color-red">*</span></span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12" >
+                            
+                        </div>
+                        <div class="col-md-12" style="margin-top:26px;">
+                            <div style="float:left">
+                                <input type="checkbox" checked />
+                            </div>
+                            <div style="float:left;margin-left:10px">
+                                @T("Staff.Activated")
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @*Thông tin nhân thân*@
+        <div>
+            <div class="staff-title-header">
+                <div class="staff-title-header-left">
+                    <i class="fa fa-id-card-o"></i>
+                    <span>@T("Staff.PersonalInformation")</span>
+                </div>
+                <div class="staff-title-header-right">
+                </div>
+
+            </div>
+            <div class="staff-general-information" style="height:140px">
+                <div class="general-information-left">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@("Staff.FirstAndLastName") <span class="color-red">*</span></span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.DateOfBirth")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="date" class="form-control" />
+                        </div>
+                    </div>                    
+                </div>
+                <div class="general-information-right">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.Relationship")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <select class="form-control" >
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>                  
+                </div>
+
+                <div class="col-md-12">
+                    <div class="col-md-12 padding">
+                        <span class="lable">@T("Staff.PersonalNote")</span>
+                    </div>
+                    <div class="col-md-12 padding">
+                        <div class="form-group">
+                            <textarea class="form-control"></textarea>
+                        </div>
+                    </div>
+                   
+                </div>
+                <div class="col-md-12 personal-information" >
+                    <div class="personal-information-checkbox">
+                        <input type="checkbox" checked/>
+                    </div>
+                    <div  class="personal-information-title">
+                        <span>@T("Staff.ContractUrgent")</span>
+                    </div>
+                </div>
+                <div class="col-md-12 personal-information" >
+                    <div class="personal-information-checkbox">
+                        <input type="checkbox" checked/>
+                    </div>
+                    <div class="personal-information-title">
+                        <span>@T("Staff.FamilyAllowances")</span>
+                    </div>
+                </div>
+
+                <div class="general-information-left">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.Status") <span class="color-red">*</span></span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.TimeApplication")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="general-information-right">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.FamilyDeductionCode") <span class="color-red">*</span></span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="date" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <span class="lable">@T("Staff.Note")</span>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="date" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="gereral-right">
+
+    </div>
+</div>
+

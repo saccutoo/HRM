@@ -1,0 +1,105 @@
+﻿
+@model Hrm.Web.ViewModels.PayrollDetailViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using System.Collections.Generic
+@using System.Globalization
+@{
+    ViewBag.Title = T("Payroll.UpdatePayrollDetail");
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+    var timeVersion = "140320181446";
+}
+<link href="@Url.Content("~/Content/hrm-v2/Payroll.css?v="+timeVersion)" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/hrm-v2/Payroll/_list.js?v=" + timeVersion)"></script>
+
+<div class="col-md-12 bread-crumb">
+    <a href="#" class="hrm-v2-font-13 hrm-v2-bold" style="color:#7C7C7C">@T("Payroll.BreadCrumb.List")</a><span class="hrm-v2-font-13 hrm-v2-bold" style="color:#7C7C7C">&nbsp; &gt; &nbsp;</span><a href="#" class="hrm-v2-font-13 hrm-v2-bold" style="color:#7C7C7C"> @T("Payroll.UpdatePayrollDetail") </a>
+</div>
+
+<div class="col-md-12 hrm-v2-inline-block pd-l-0">
+    <div class="wrapper">
+        <div class="arrow-steps clearfix">
+            <div class="step current">
+                <span>1 - Sửa bảng lương</span>
+            </div>
+            <div class="step">
+                <span>2 - Kiểm tra bảng lương</span>
+            </div>
+            <div class="step">
+                <span>3 - Summary</span>
+            </div>
+        </div>
+    </div>
+    <div id="payroll-detail-view">
+        <form name="addPayrollform" id="addPayrollform">
+            @*<input type="checkbox" hidden name="IsOnboarding" id="IsOnboarding" value="@Model.IsOnboarding.ToString().ToLower()" />*@
+            <div class="hrm-v2-modal-body">
+                <section class="hrmv2-section">
+                    @*@Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "icon-append fa fa-user", SectionName = T("Staff.Detail.GeneralInformation").ToString(), Style = "width:160px;", Width = "160px" })*@
+                    <div class="col-md-12 pd-0 display-inline-block">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6 display-inline-block justify-content-center">
+                            <div class="pull-left" style="width:calc(100% - 120px)">
+                                <div class="col-md-12">
+                                    <input type="text" name="Id" value="@Model.Payroll.Id" hidden />
+                                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Payroll.Detail.Name").ToString(), Name = "Name", Value = Model.Payroll.Name, IsAnimationLabel = true, IsRequired = true })
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.Partial(UrlHelpers.FloatingTemplate("_MonthYearSelect.cshtml"), new MonthYearSelectModel() { LabelName = T("Payroll.Detail.MonthYear").ToString(), Name = "MonthYear", IsAnimationLabel = true, Value = new DateTime(Model.Payroll.Year == 0 ? 1 : Model.Payroll.Year, Model.Payroll.Month == 0 ? 1 : Model.Payroll.Month, 1), StartDate = DateTime.Now.AddYears(-2), EndDate = DateTime.Now, IsRequired = true })
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Payroll.Detail.SalaryType").ToString(), Name = "SalaryTypeId", Value = Model.Payroll.SalaryTypeId.ToString(), SearchField = true, IsAnimationLabel = true, Data = Model.DataDropdownSalaryType, ValueField = "Id", DisplayField = "Name", IsMultipleLanguage = true, DataType = DataType.SalaryType, PropertyName = "Name", IsRequired = true })
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Payroll.Detail.PaymentStatus").ToString(), Name = "Status", Value = Model.Payroll.Status.ToString(), SearchField = true, IsAnimationLabel = true, Data = Model.DataDropdownPayrollStatus, ValueField = "Id", DisplayField = "Name", IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name", IsRequired = true })
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { LabelName = T("Payroll.Detail.PeriodDate").ToString(), Name = "PaymentDate", Value = Model.Payroll.CreatedDate, DateFormat = "dd/MM/yyyy", PlaceHolder = " ", IsRequired = true })
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Payroll.Detail.Description").ToString(), Name = "Description", Value = Model.Payroll.Description, IsAnimationLabel = true })
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="direct-popup hidden">
+                                        <i class="fas fa-hand-point-right"></i>
+                                        <a onclick="ShowSalaryPaySlip($('#SalaryTypeId').val())">Xem phiếu lương mẫu</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="footer-add-staff">
+                <div class="footer-login">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                            @T("Payroll.Detail.Cancel")
+                        </button>
+                        <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="SavePayroll();">
+                            @*SavePayroll()*@
+                            @T("Payroll.Detail.Next")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $('#SalaryTypeId').change(function (e) {
+        let direct = $('.direct-popup');
+        if ($('#SalaryTypeId').val() == 0) {
+            if (!direct.hasClass('hidden')) {
+                direct.addClass('hidden');
+            }
+        }
+        else {
+            direct.removeClass('hidden');
+        }
+    });
+</script>

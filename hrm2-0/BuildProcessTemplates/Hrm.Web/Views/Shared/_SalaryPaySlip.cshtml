@@ -1,0 +1,283 @@
+﻿@model Hrm.Framework.Models.SalaryPaySlipViewModel
+@using Hrm.Common;
+@using Hrm.Framework.Models;
+@using Hrm.Framework.Helper;
+<style>
+    .salary-pay-slip table tr {
+        cursor: -webkit-grab;
+        cursor: grab;
+    }
+
+        .salary-pay-slip table tr:hover {
+            background: none;
+        }
+
+    .salary-pay-slip table, td, th {
+        border: 1px solid #ddd;
+    }
+
+    .salary-pay-slip table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size:14px;
+    }
+
+    .disabledbutton {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+</style>
+<style>
+    .salary-pay-slip .frm-salary-pay-slip {
+        height: 100%;
+    }
+
+
+        .salary-pay-slip .frm-salary-pay-slip .button-save {
+            width: 100%;
+            border: 1px solid #ddd;
+            position: fixed;
+            height: 50px;
+            bottom: 0px;
+            background-color: white;
+            z-index: 10;
+        }
+
+            .salary-pay-slip .frm-salary-pay-slip .button-save input {
+                float: right;
+                margin-top: 8px;
+                margin-right: 20px;
+            }
+    .salary-pay-slip .frm-salary-pay-slip .css-group {
+                font-family:Roboto-bold;
+                background-color:#ececec;
+            }
+    .salary-pay-slip .frm-salary-pay-slip .sort-div {
+                font-family:Roboto;
+                background-color:white;
+            }
+</style>
+<div class="salary-pay-slip display-inline-block col-md-12 pd-0">
+    <form id="frm-salary-pay-slip" class="frm-salary-pay-slip">
+        <table class="table">
+            <tbody id="sortable">
+                @{
+                    if (Model.SalaryElements.Count() > 0)
+                    {
+                        var listOrther = Model.SalaryElements.Where(s =>(s.TypeId != MasterDataId.GeneralInformation || s.MergeCells==true) && s.IsShowPayslip == true).OrderBy(s => s.OrderNo).ToList();
+                        if (listOrther.Count() > 0)
+                        {
+                            int index = 0;
+                            foreach (var item in listOrther)
+                            {
+                                var attributeTr = "attribute-tr-index=" + index;
+                                var attributeSalaryElement = "attribute-element-id=" + item.Id;
+                                <tr class="box-item" @attributeTr @attributeSalaryElement>
+                                    @if (item.MergeCells)
+                                    {
+                                        var cssClass = string.Empty;
+                                        if (item.TypeId != MasterDataId.GeneralInformation)
+                                        {
+                                            cssClass = "css-group";
+                                        }
+                                        <td colspan="2" class="@cssClass">
+                                            @if (item.TypeId==MasterDataId.GeneralInformation)
+                                            {
+                                                var listGeneralInformation = Model.SalaryElements.Where(s => s.TypeId == MasterDataId.GeneralInformation && s.IsShowPayslip == true && s.MergeCells==false).OrderBy(s => s.OrderNo).ToList();
+                                                if (listGeneralInformation.Count()>0)
+                                                {
+                                                    <div class="col-md-12 pd-0 sort-div" id="sortDiv">
+                                                        @{
+                                                            var count = listGeneralInformation.Count();
+                                                            int start = 0;
+                                                            do
+                                                            {
+                                                                var data = listGeneralInformation.Skip(start).Take(2).OrderBy(s => s.OrderNo).ToList();
+                                                                if (data != null && data.Count() > 0)
+                                                                {
+                                                                    var attributeGeneral = "attribute-general-index=" + start;
+                                                                    attributeSalaryElement = "attribute-element-id=" + data[0].Id;
+                                                                    <div class="col-md-6 pd-0 div-item" @attributeGeneral @attributeSalaryElement>
+                                                                        <div class="col-md-5">
+                                                                            <span style="line-height:40px;">
+                                                                                @M(data[0].Id.ToString() + ";" + DataType.SalaryElement + ";Name").ToString()
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="col-md-7 pd-0">
+                                                                            <span style="line-height:40px;">
+                                                                                @if (data[0].DataFormat == MasterDataId.TypeNumber)
+                                                                                {
+                                                                                    @*@string.Format("{0:#,0}", 300000)*@
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    @*value*@
+                                                                                }
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    if (data.Count() == 2)
+                                                                    {
+                                                                        attributeGeneral = "attribute-general-index=" + (start + 1);
+                                                                        attributeSalaryElement = "attribute-element-id=" + data[1].Id;
+                                                                        <div class="col-md-6 pd-0 div-item" @attributeGeneral @attributeSalaryElement>
+                                                                            <div class="col-md-5">
+                                                                                <span style="line-height:40px;">
+                                                                                    @M(data[1].Id.ToString() + ";" + DataType.SalaryElement + ";Name").ToString()
+                                                                                </span>
+                                                                            </div>
+                                                                            <div class="col-md-7 pd-0">
+                                                                                <span style="line-height:40px;">
+                                                                                    @if (data[1].DataFormat == MasterDataId.TypeNumber)
+                                                                                    {
+                                                                                        @*@string.Format("{0:#,0}", 300000)*@
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        @*value*@
+                                                                                    }
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                }
+
+                                                                start += 2;
+                                                            } while (start < count);
+                                                        }
+                                                    </div>
+                                                 }
+                                            }
+                                            else
+                                            {
+                                                <span>@M(item.Id.ToString() + ";" + DataType.SalaryElement + ";Name").ToString().ToUpper()</span>
+                                            }                                           
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="width:70%;">
+                                            <span>@M(item.Id.ToString() + ";" + DataType.SalaryElement + ";Name").ToString()</span>
+                                        </td>
+                                        <td style="width:30%;text-align:right">
+                                            <span>
+                                                @if (item.DataFormat == MasterDataId.TypeNumber)
+                                                {
+                                                    @*@string.Format("{0:#,0}", 300000)*@
+                                                }
+                                                else
+                                                {
+                                                    @*value*@
+                                                }
+
+                                            </span>
+                                        </td>
+                                    }
+
+                                </tr>
+                                index++;
+                            }
+
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+        @if (Model.IsSave)
+        {
+            <div class="col-md-12 button-save">
+                @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", OnClick = "orderSalaryPaySlip()", Value = "Workingday.Save", Type = "button", ClassName = "hrm-v2-btn-save", })
+                @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Workingday.Close", ClassName = "hrm-v2-btn-close" })
+            </div>
+        }
+    </form>
+</div>
+<script>
+
+    var isViewOrder = '@Model.IsViewOrder';
+    if (isViewOrder == 'True') {
+        $(document).ready(function () {
+            $('#sortable').sortable({
+                items: ".box-item",
+                start: function (event, ui) {
+                    $(".box-item").css("opacity", "0.5")
+                    $($(ui)[0].placeholder[0]).css("border", "2px dashed #2CA01C");
+                    $($(ui)[0].placeholder[0]).css("opacity", "1");
+                },
+                update: function (event, ui) {
+                    $(".box-item").css("opacity", "1");
+                    var listItem = $(".box-item");
+                    for (var i = 0; i < listItem.length; i++) {
+                        listItem[i].setAttribute("attribute-tr-index", i);
+                    }
+                },
+                revert: true,
+                beforeRevert: function (e, ui) {
+                    $(".box-item").css("opacity", "1")
+                },
+                stop: function (event, ui) {
+                    $(".box-item").css("opacity", "1")
+                }
+            });
+            $(".unsortable").addClass("disabledbutton");
+
+            $('#sortDiv').sortable({
+                items: ".div-item",
+                start: function (event, ui) {
+                    $(".div-item").css("border", "1px solid #ddd")
+                    $($(ui)[0].placeholder[0]).css("border", "2px dashed #2CA01C");
+                },
+                update: function (event, ui) {
+                    $(".div-item").css("border", "none");
+                    var listItem = $(".div-item");
+                    for (var i = 0; i < listItem.length; i++) {
+                        listItem[i].setAttribute("attribute-general-index", i);
+                    }
+                },
+                revert: true,
+                beforeRevert: function (e, ui) {
+                    $(".div-item").css("border", "none");
+                },
+                stop: function (event, ui) {
+                    $(".div-item").css("border", "none");
+                }
+            });
+        });
+    }
+
+    function orderSalaryPaySlip() {
+        var listData = [];
+        var index = 0;
+        var data = $('#form-add-salary-type').serializeArray();
+
+        var listItem = $(".box-item");
+        for (var i = 0; i < listItem.length; i++) {
+            if (listItem[i].getAttribute('attribute-element-id') == null) {
+                data.push({ name: "listData[" + index + "].Id", value: "0" })
+            }
+            else {
+                data.push({ name: "listData[" + index + "].Id", value: listItem[i].getAttribute('attribute-element-id') })
+            }
+            data.push({ name: "listData[" + index + "].OrderNo", value: index })
+            index++;
+        }
+        var listItem = $(".div-item");
+        for (var i = 0; i < listItem.length; i++) {
+            data.push({ name: "listData[" + index + "].Id", value: listItem[i].getAttribute('attribute-element-id') })
+            data.push({ name: "listData[" + index + "].OrderNo", value: index })
+            index++;
+        }
+       
+        $.ajax(
+      {
+          type: "POST",
+          url: "/Admin/SalaryType/ReloadTableAfterOrder",
+          data: data,
+          success: function (response) {
+              $("#table-salary-element-type").html(response);
+              $("#myModal").modal("hide");
+
+          }
+      });
+    }
+</script>

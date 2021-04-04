@@ -1,0 +1,320 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Context;
+@{
+    Layout = UrlHelpers.View("~/Views/Shared/_MenuSidebarLeft.cshtml");
+}
+<style>
+    .main-header .hrm-v2-floating-form {
+        width: 50px;
+        margin-top: 6px;
+        margin-left: 40px;
+        position: absolute;
+        z-index: 99;
+    }
+
+    .SearchSelector-custom-container, .SearchSelector-custom-drop, .main-header span.select2 {
+        border: none !important;
+    }
+
+    .main-header .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        margin-top: 2px !important;
+    }
+
+    .SearchSelector-custom-drop {
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.38);
+        width: auto;
+        min-width: 175px !important;
+        position: absolute;
+        border-radius: 4px !important;
+        top: 9px;
+    }
+
+        .SearchSelector-custom-drop li {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+            .SearchSelector-custom-drop li i {
+                margin-right: 10px;
+            }
+
+        .SearchSelector-custom-drop .select2-results__option--highlighted[aria-selected] {
+            background-color: #fff;
+            background-image: none;
+            color: unset;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+        }
+
+            .SearchSelector-custom-drop .select2-results__option--highlighted[aria-selected]:hover {
+                background-color: #EFEFEF;
+                /*color:#fff;*/
+            }
+
+    #global-search-result {
+        background-color: white;
+        width: 850px;
+        height: auto;
+        position: absolute;
+        top: 60px;
+        left: 30px;
+        box-shadow: 0px 0px 15px #000000;
+    }
+
+        #global-search-result tbody tr {
+            background-color: #fff;
+        }
+
+            #global-search-result tbody tr:hover {
+                background-color: #F7F7F7;
+            }
+
+        #global-search-result th {
+            text-align: center !important;
+        }
+
+        #global-search-result tbody td {
+            padding-left: 15px;
+        }
+
+        #global-search-result tbody tr:nth-child(2n) {
+            background-color: #F7F7F7;
+        }
+
+        #global-search-result .presentation-name {
+            min-height: 50px !important;
+        }
+
+    .visible-only-on-mobile.dash-board-container {
+        position: relative;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 15px !important;
+    }
+
+    .sub-menu-navbar li {
+        height: auto;
+    }
+
+    .visible-only-on-mobile.dash-board-container .hrm-v2-inline-block {
+        width: 100%;
+    }
+
+    .navbar-li-item:hover .sub-menu-navbar {
+        display: unset;
+    }
+
+    .header .col-md-6 {
+        width: 50%;
+        float: left;
+    }
+
+    .sub-menu-navbar {
+        display: none;
+    }
+
+        .sub-menu-navbar:hover.show-left-nav {
+            max-height: 736px;
+            transition: max-height 0.25s ease-in;
+        }
+
+        .sub-menu-navbar.show-left-nav {
+            display: block !important;
+            transition: height 0.1s;
+            transition-delay: 0.1s;
+            transition-timing-function: ease-out;
+        }
+
+    .hide-left-nav {
+        display: none !important;
+    }
+
+    .show-sub-menu {
+        display: block !important;
+    }
+</style>
+<div class="main-contain-right pull-left" style="width:calc(100% - 60px);height:100vh;background:#fff;">
+    <header class="main-header">
+        @Html.Action("SearchSelector", "Common")
+        <div class="smart-search pull-left visible-not-mobile">
+            <span>
+                <button class="btn-search icon">
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+            <input type="text" class="global-search" placeholder="@T("GlobalSearch.PlaceHolder.Title")" onkeypress="globalSearch()" onkeyup="globalSearch()" />
+        </div>
+        <div class="smart-search pull-left visible-only-on-mobile">
+            <span>
+                <button class="btn-search icon">
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+            <input type="text" class="global-search" placeholder="@T("GlobalSearch.PlaceHolder.Title")" onkeypress="globalSearch()" onkeyup="globalSearch()" />
+        </div>
+        <div id="global-search-result" hidden></div>
+        <div class="header-menu navbar-menu pull-right visible-not-mobile">
+            @*@Html.Action("LanguageSelector", "Common")*@
+            <ul>
+                <li class="pull-left navbar-li-item navbar-item-plus">
+                    <div class="navbar-item">
+                        <i class="fa fa-plus navbar-a" title="" style="color:#fff"></i>
+                        <ul class="sub-menu-navbar">
+                            <li class="sub-menu-title">@T("Layout.NewAdd")</li>
+                            <li><i class="fas fa-user navbar-a" title=""></i> @T("Menu.Staff")</li>
+                            <li onclick="showFormAdditionalWork()"><i class="fas fa-calendar-plus navbar-a" title=""></i>@T("Layout.AdditionalWork")</li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="navbar-item navbar-li-item"><i class="far fa-envelope navbar-a hrm-v2-icon" title=""></i><div class="hrm-v2-alert-info"><span class="label hrm-v2-pink">6</span></div></li>
+                <li class="navbar-item navbar-li-item"><i class="far fa-bell navbar-a hrm-v2-icon" title=""></i><div class="hrm-v2-alert-info"><span class="label hrm-v2-pink">8</span></div></li>
+                <li class="navbar-item item-user navbar-li-item">
+                    <a><img src="~/Content/Images/avatar.png" style="width:46px;height:46px;border-radius:50%;" /></a>
+                    <div class="navbar-item">
+                        <ul class="sub-menu-navbar">
+                            <li class="user-header">
+                                <img src="~/Content/Images/avatar.png" style="width:46px;height:46px;border-radius:50%;" />
+                                <p>@CurrentContext.User.DisplayName</p>
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat hrm-v2-btn-save">@T("System.Bottom.Profile")</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="~/Authentication/logout" class="btn btn-default btn-flat hrm-v2-btn-save">@T("System.Bottom.SignOut")</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="header-menu navbar-menu pull-right visible-only-on-mobile">
+            <ul>
+                <li class="navbar-item item-user navbar-li-item">
+                    <a style="width:46px;height:46px;" id="nav"><i class="fa fa-bars"></i></a>
+                    <div class="navbar-item mobile">
+                        <ul class="sub-menu-navbar hide-left-nav">
+                            <li style="height: 66px;background: rgba(34, 49, 51, 1);">
+                                <img src="/Content/Images/logo.png" style="padding: 11px 0 0 0;">
+                            </li>
+                            <li><a href="/dashboard"><i class="fas fa-chart-pie"></i>Dashboard</a></li>
+                            <li id="staff" onclick="showSubMenu('#staff .sub-menu')">
+                                <a href="#"><i class="fas fa-users"></i>Nhân sự</a>
+                                <ul class="sub-menu hide-left-nav">
+                                    <li> <a href="/staff-detail"> <i class="fas fa-user"></i>Hồ sơ cá nhân</a> </li>
+                                    <li> <a href="/staff-list"> <i class="fas fa-users"></i>Danh sách nhân sự</a> </li>
+                                    <li> <a href="/staff-orgchart"> <i class="fas fa-sitemap"></i>Sơ đồ tổ chức</a> </li>
+                                    <li> <a href="/staff-onboarding?viewtype=card"> <i class="fas fa-rocket"></i>Tiếp nhận thử việc</a> </li>
+                                    <li> <a href="/#"> <i class="fas fa-sign-out-alt"></i>Đề nghị nghỉ việc</a> </li>
+                                </ul>
+                            </li>
+                            <li class="">
+                                <a href="/workingday-detail"><i class="fas fa-calendar-check"></i>Công</a>
+                            </li>
+                            <li class="" id="staffSalary" onclick="showSubMenu('#staffSalary .sub-menu')">
+                                <a href="#"><i class="fas fa-hand-holding-usd"></i>Quản lí lương</a>
+                                <ul class="sub-menu hide-left-nav">
+                                    <li> <a href="/salary-paycheck"><i class="fas fa-money-check-alt"></i> Phiếu lương</a> </li>
+                                    <li> <a href="/salary-table-salary"><i class="fas fa-comments-dollar"></i>Bảng lương</a> </li>
+                                </ul>
+                            </li>
+                            <li class="">
+                                <a href="/#"><i class="fas fa-chart-area"></i>Báo cáo</a>
+                            </li>
+                            <li class="">
+                                <a href="/admin"><i class="fa fa-cog"></i>Cài đặt</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <div class="col-md-12" style="padding: 0px 0px 0px 0px; height: 100%;">
+        @RenderBody()
+    </div>
+</div>
+<script type="text/javascript">
+    function showSubMenu(id) {
+        if ($(id).hasClass('hide-left-nav')) {
+            $(id).removeClass('hide-left-nav');
+            $(id).addClass('show-sub-menu');
+        } else {
+            $(id).removeClass('show-sub-menu');
+            $(id).addClass('hide-left-nav');
+        };
+    }
+    $(document).ready(function () {
+        $('#nav').click(function () {
+            if ($('.sub-menu-navbar').hasClass('show-left-nav')) {
+                $('.sub-menu-navbar').removeClass('show-left-nav');
+                $('.sub-menu-navbar').addClass('hide-left-nav');
+            } else {
+
+                $('.sub-menu-navbar').removeClass('hide-left-nav');
+                $('.sub-menu-navbar').addClass('show-left-nav');
+            }
+        });
+    });
+    var timeout;
+    function globalSearch() {
+        if (event.which == 13) {
+            var searchKey = $(".global-search").val();
+            if (searchKey != '') {
+                justSearch(searchKey);
+            }
+            else {
+                $("#global-search-result").html("");
+            }
+        }
+        else {
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                var searchKey = $(".global-search").val();
+                if (searchKey != '') {
+                    justSearch(searchKey);
+                }
+                else {
+                    $("#global-search-result").html("");
+                }
+            }, 300);
+        }
+    }
+    function justSearch(searchKey) {
+        $.ajax(
+        {
+            url: "/Search/GlobalSearch",
+            type: "POST",
+            data: {
+                searchKey: searchKey,
+                menuSearch: $("#SearchSelector").val()
+            },
+            success: function (response) {
+                $("#global-search-result").show();
+                $("#global-search-result").html(response);
+            }
+        });
+    }
+    $("#SearchSelector").on("change", function () {
+        globalSearch();
+    });
+    function showFormAdditionalWork() {
+        var data = { isSendApproval: true }
+        var options = {
+            id: 'frmAddWorkingdaySupplement',
+            isNotificationPoup: false,
+            align: "center",
+            url: '/Workingday/AddWorkingdaySupplement',
+            isDataTypeJson: true,
+            width: 600,
+            data: data,
+            idform: 'frm-working-day-supplement',
+        };
+        CreatePopup(options);
+    }
+</script>

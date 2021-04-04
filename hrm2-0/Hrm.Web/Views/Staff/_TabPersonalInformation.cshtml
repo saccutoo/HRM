@@ -1,0 +1,214 @@
+﻿@model Hrm.Web.ViewModels.StaffDetailsViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@using Hrm.Common;
+
+
+<div class="hrmv2-section-collapse">
+    <section class="hrmv2-section hrmv2-section-first">
+        @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "icon-append fa fa-user", SectionName = T("Staff.Detail.GeneralInformation").ToString(), Style = "width:200px", Width = "200px" })
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-0">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.StaffCode").ToString(), Text = Model.Staff.StaffCode })
+            </div>
+            <div class="col-md-6 pd-0">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Gender").ToString(), Text = M(Model.Staff.GenderId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-0">
+                @if (Model.Staff != null && Model.Staff.Birthday != null)
+                {
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.DateOfBirth").ToString(), Text = Model.Staff.Birthday.Value.ToString("dd/MM/yyyy") })
+                }
+                else
+                {
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.DateOfBirth").ToString(), Text = "-" })
+                }
+
+
+            </div>
+            <div class="col-md-6 pd-0">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.MaritalStatus").ToString(), Text = M(Model.Staff.MaritalStatus.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+            </div>
+        </div>
+        <div class="expand-section-body">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-0">
+                    <div class="col-md-6 pd-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Domicile").ToString(), Text = Model.Staff.Domicile })
+                    </div>
+                </div>
+                <div class="col-md-6 pd-0">
+                    <div class="col-md-6 pd-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Address").ToString(), Text = Model.Staff.Address })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-0">
+                    <div class="col-md-6 pd-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Note").ToString(), Text = Model.Staff.Note })
+                    </div>
+                </div>
+                <div class="col-md-6 pd-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.EthnicGroup").ToString(), Text = M(Model.Staff.EthnicityId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-0">
+                    <div class="col-md-6 pd-0">
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.TaxNumber").ToString(), Text = Model.Staff.TaxId })
+                    </div>
+                </div>
+                <div class="col-md-6 pd-0">
+                    @if (Model.Staff != null && Model.Staff.TaxDate != null)
+                    {
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.TaxIssuedDate").ToString(), Text = Model.Staff.TaxDate.Value.ToString("dd/MM/yyyy") })
+                    }
+                    else
+                    {
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.TaxIssuedDate").ToString(), Text = "-" })
+                    }
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-6 pd-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.IdentityNumber").ToString(), Text = Model.Staff.IdentityNumber })
+                </div>
+                <div class="col-md-6 pd-0">
+                    <div class="col-md-6 pd-0">
+                        @if (Model.Staff != null && Model.Staff.IdIssuedDate != null)
+                        {
+                            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.CreateDate").ToString(), Text = Model.Staff.IdIssuedDate.Value.ToString("dd/MM/yyyy") })
+                        }
+                        else
+                        {
+                            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.CreateDate").ToString(), Text = "-" })
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <span class="pull-left btn-expand" onclick="StaffInfoShowMore(true)">@T("Staff.Detail.ViewMore") <i class="fas fa-sort-down"></i></span>
+    <span class="pull-left btn-collapse" onclick="StaffInfoShowMore(false)">@T("Staff.Detail.Collapse")<i class="fas fa-sort-up"></i></span>
+</div>
+<section class="hrmv2-section">
+    @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-briefcase", SectionName = T("Staff.WorkingDayInfomation").ToString(), Style = "width:250px", Width = "250px" })
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.TimekeepingForm").ToString(), Text = M(Model.Staff.TimekeepingForm.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+        </div>
+        <div class="col-md-6 pd-0">
+            <div class="col-md-6 pd-0">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.AllowToBeLate").ToString(), Text = Model.Staff.TimeLateLimit.ToString() + " " + T("Staff.Minute").ToString() })
+            </div>
+            <div class="col-md-6 pd-0">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.AllowedToLeaveEarly").ToString(), Text = Model.Staff.TimeLeaveEarlyLimit.ToString() + " " + T("Staff.Minute").ToString() })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block">
+        @{
+            Model.ListStaffWorkingDayMachines.ShowFooter = false;
+        }
+        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListStaffWorkingDayMachines)
+    </div>
+</section>
+<section class="hrmv2-section">
+    @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "icon-append fa fa-user", SectionName = T("Staff.Detail.ContactInformation").ToString(), Style = "width:250px;", Width = "250px" })
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.OfficeEmail").ToString(), Text = Model.Staff.EmailCompany })
+        </div>
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.PersonalEmail").ToString(), Text = Model.Staff.Email })
+        </div>
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.WorkPhoneNumber").ToString(), Text = Model.Staff.PhoneCompany })
+        </div>
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.PersonalPhoneNumber").ToString(), Text = Model.Staff.Phone })
+        </div>
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-0">
+            <div class="col-md-6 pd-0">
+                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.PersonalFacebook").ToString(), Text = Model.Staff.LinkFacebook })
+            </div>
+        </div>
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Skype").ToString(), Text = Model.Staff.Skype })
+        </div>
+    </div>
+</section>
+<section class="hrmv2-section">
+    @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-credit-card", SectionName = T("Staff.Detail.PaymentInformation").ToString(), Style = "width:250px", Width = "250px" })
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.BankAccount").ToString(), Text = Model.Staff.BankNumber })
+        </div>
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.AccountName").ToString(), Text = Model.Staff.BankAccount })
+        </div>
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.BankName").ToString(), Text = Model.Staff.BankName })
+
+        </div>
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.BankBranch").ToString(), Text = Model.Staff.BankBranch })
+        </div>
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Currency").ToString(), Text = M(Model.Staff.CurrencyId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+        </div>
+    </div>
+</section>
+<section class="hrmv2-section">
+    @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-user-circle", SectionName = T("Staff.Detail.AccountInformation").ToString(), Style = "width:250px", Width = "250px" })
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.UserName").ToString(), Text = Model.Staff.UserName })
+        </div>
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Password").ToString(), Text = "*****************" })
+            <span class="pull-left sync-slash"><i class="fas fa-sync" onclick="changePassword()"></i>@*<i class="fas fa-eye-slash" onclick="relationDetailView()"></i> </span>*@
+        </div>
+    </div>
+    <div class="col-md-12 pd-0 display-inline-block">
+        <div class="col-md-6 pd-0">
+            @if (Model.ListRole != null && Model.ListRole.Count > 0)
+            {
+                //foreach (var item in Model.ListRole)
+                //{
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.RoleGroup").ToString(), Text = M(Model.ListRole[0].RoleId.ToString() + ";" + DataType.Role + ";Name").ToString() })
+                //}
+            }
+
+        </div>
+        <div class="col-md-6 pd-0">
+            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Status").ToString(), Text = M(Model.Staff.WorkingStatus.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+        </div>
+    </div>
+</section>
+<section class="hrmv2-section pull-left" style="min-width:100%;width: auto;">
+    @Html.Partial(UrlHelpers.Template("_SectionTitle.cshtml"), new SectionTitleModel() { Icon = "fas fa-users", SectionName = T("Staff.Detail.RelativesInformation").ToString(), Style = "width:250px", Width = "250px" })
+    <div class="col-md-12 pd-0 display-inline-block">
+        @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.ListStaffRelationShips)
+        @*<script type="text/javascript">
+                function editStaffRelationship(id, data)
+                {
+                    var tableClassName = 'table-relation-ship';
+                    var sqlTableName = 'Data_Staff_Relationships';
+                    showEditInline(tableClassName, sqlTableName, id, data);
+                }
+            </script>*@
+    </div>
+</section>

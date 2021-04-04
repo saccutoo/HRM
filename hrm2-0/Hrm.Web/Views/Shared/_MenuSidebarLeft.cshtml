@@ -1,0 +1,7 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@{ 
+    Layout = UrlHelpers.View("~/Views/Shared/_Layout.cshtml");
+}
+@Html.Action("LeftMenu", "Menu")
+@RenderBody()

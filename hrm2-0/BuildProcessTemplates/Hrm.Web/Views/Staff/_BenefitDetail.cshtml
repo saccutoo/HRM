@@ -1,0 +1,67 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model StaffBenefitsModel
+@{
+    Layout = null;
+}
+<div class="detail-benifit-container display-inline-block">
+    <div class="hrm-v2-modal-header">@M(Model.BenefitType.ToString() + ";" + DataType.MasterData + ";Name")</div>
+    <div class="hrm-v2-modal-body" style="margin-top:0px">
+        <section class="hrmv2-section">
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @{
+                        var fromDateString = string.Empty;
+                        var minus = string.Empty;
+                        if (Model.StartDate != null && Model.StartDate != DateTime.MinValue)
+                        {
+                            fromDateString = Model.StartDate.Value.ToString("dd/MM/yyyy");
+                        }
+                        var toDateString = string.Empty;
+                        if (Model.EndDate != null && Model.EndDate != DateTime.MinValue )
+                        {
+                            toDateString = Model.EndDate.Value.ToString("dd/MM/yyyy");
+                        }
+                        else
+                        {
+                            toDateString = T("Staff.Detail.Now").ToString();
+                            Model.EndDate = DateTime.Now;
+                        }
+                        if (fromDateString != string.Empty || toDateString != string.Empty)
+                        {
+                            minus = " - ";
+                        }
+                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.TimeApply").ToString(), Text = fromDateString + minus + toDateString })
+                    }
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Status").ToString(), Text = M(Model.Status.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Content").ToString(), Text = Model.Content })
+                </div>
+                <div class="col-md-5 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.BenefitAmount").ToString(), Text = String.Format("{0:#,##0.##}", Model.Amount) + " " + M(Model.CurrencyId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                </div>
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <div class="col-md-7 pd-l-0">
+                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Description").ToString(), Text = Model.Note })
+                </div>
+                    
+            </div>
+        </section>
+    </div>
+    <div class="footer">
+        <div class="footer-login">
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary hrm-v2-btn-close close-popup" data-dismiss="modal">
+                    @T("Staff.Close")
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

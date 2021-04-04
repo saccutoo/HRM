@@ -1,0 +1,80 @@
+﻿@model Hrm.Framework.ViewModels.MenuViewModel
+@using Hrm.Framework.Models
+@using Hrm.Common
+@using Hrm.Framework.Context
+@{
+    Layout = null;
+    var data = Model.Menus;
+    if (data == null)
+    {
+        data = new List<MenuModel>();
+    }
+}
+
+@helper RenderTree(List<MenuModel> data, long parentId)
+{
+var listNode = data.Where(x => x.ParentId == parentId);
+foreach (var node in listNode)
+{
+    var listChildNode = data.Where(x => x.ParentId == node.Id);
+    if (listChildNode.Count() > 0)
+    {
+            <ul class="treeview-menu text-left pd-0">
+                <li class="sub-menu-title">@node.MenuName</li>
+                @foreach (var childNode in listChildNode)
+                {
+                    <li> <a class="@childNode.Icon icon"></a> @childNode.MenuName</li>
+                    @RenderTree(data, childNode.Id);
+                }
+            </ul>
+    }
+}
+}
+
+<div class="main-contain-left pull-left visible-not-mobile" style="width:60px;height:100vh;background:rgba(34, 49, 51, 1);text-align:center;position:relative">
+    <div class="header-sibar-left">
+        <img src="~/Content/Images/logo.png" />
+    </div>
+    <ul class="sidebar-menu-tree" data-widget="tree">
+        @{
+            var listNode = data.Where(x => x.ParentId == 0 && x.MenuName != MenuName.Setting);
+            foreach (var node in listNode)
+            {
+                <li class="treeview">
+                    @{
+                        var pUrl = CurrentContext.WebBaseUrl + node.RouteUrl;
+                    }
+                    <a href="@pUrl" class="@node.Icon icon"></a>
+                    @{
+                        var listChildNode = data.Where(x => x.ParentId == node.Id);
+                    }
+                    @if (listChildNode.Count() > 0)
+                    {
+                        <a class="fa icon fa-ellipsis-v nav-submenu-ellipsis"></a>
+                        <ul class="treeview-menu text-left pd-0">
+                            <li class="sub-menu-title">@M(node.Id + ";" + DataType.Menu + ";MenuName")</li>
+                            @foreach (var childNode in listChildNode)
+                            {
+                                var url = CurrentContext.WebBaseUrl + childNode.RouteUrl;
+                                <li> <a href="@url"> <i class="@childNode.Icon"></i>@M(childNode.Id + ";" + DataType.Menu + ";MenuName")</a> </li>
+                            }
+                        </ul>
+                    }
+                </li>
+                        }
+        }
+    </ul>
+    @if (data.Any(x => x.MenuName == MenuName.Setting))
+    {
+        var setting = data.FirstOrDefault(x => x.MenuName == MenuName.Setting);
+        if (setting != null)
+        {
+            <div class="menu-setting">
+                @{ 
+                    var sUrl = CurrentContext.WebBaseUrl + setting.RouteUrl;
+                }
+                <a href="@sUrl" class="@setting.Icon icon"></a>
+            </div>
+        }
+    }
+</div>

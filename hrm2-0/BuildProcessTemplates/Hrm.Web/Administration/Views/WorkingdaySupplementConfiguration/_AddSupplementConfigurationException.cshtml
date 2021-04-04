@@ -1,0 +1,160 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Newtonsoft.Json
+@model Hrm.Admin.ViewModels.WorkingdaySupplementConfigurationViewModel
+<style>
+    .add-working-supplement-container {
+        width: 100%;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 42px;
+        height: 15px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 15px;
+            width: 15px;
+            bottom: 0px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+    input:checked + .slider {
+        background-color: #2ca01c;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+    .select2-container .select2-selection--multiple {
+        max-height: 40px;
+        overflow-y: scroll;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+        max-height: 40px;
+    }
+</style>
+
+<div class="add-working-supplement-container display-inline-block">
+    <form id="frm-add-supplement-configuration">
+        @if (@Model.SupplementConfigurationException.Id == 0)
+        {
+            <div class="hrm-v2-modal-header">@T("SupplementConfiguration.Title.AddExceptionModerator").ToString()</div>
+        }
+        else
+        {
+            <div class="hrm-v2-modal-header">@T("SupplementConfiguration.Title.EditExceptionModerator").ToString()</div>
+        }
+        <div class="hrm-v2-modal-body">
+            <input type="text" name="model.Id" id="templateId" value="@Model.SupplementConfigurationException.Id" hidden />
+            <div class="col-md-12 pd-0 display-inline-block">
+                @Html.Partial(UrlHelpers.Template("_MultiSelect.cshtml"), new DropdownListModel() { LabelName = T("SupplementConfiguration.LabelName.StaffApply").ToString(), IsAnimationLabel = true, ValueField = "Id", DisplayField = "Name", Name = "StaffApply", Data = Model.ListStaffs, ValueMultiSelect = Model.SupplementConfigurationException.ListStaffApply })
+            </div>
+            <div class="col-md-12 pd-0 display-inline-block">
+                <section class="hrmv2-section" id="add-working-supplement-section">
+                    @Html.Partial(UrlHelpers.View("~/Administration/Views/WorkingdaySupplementConfiguration/_AddSupplementConfigurationExceptionBody.cshtml"), Model)
+                </section>
+            </div>
+            <div class="col-md-12 pd-l-0 hrm-v2-floating-form">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { Name = "model.Note", IsRequired = false, LabelName = T("SupplementConfiguration.LabelName.Note").ToString(), IsAnimationLabel = true, Value = Model.SupplementConfigurationException.Note })
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-login">
+                <div class="pull-right">
+                    @Html.Partial(UrlHelpers.Template("_CloseButton.cshtml"), new ButtonModel() { Name = "close-model", Value = "Workingday.Close", ClassName = "hrm-v2-btn-close", Style = "float:left;margin-right:10px;" })
+                    @Html.Partial(UrlHelpers.Template("_NormalButton.cshtml"), new ButtonModel() { Name = "save-and-continue", OnClick = "saveSupplementConfigurationException()", Value = "Workingday.Save", Type = "button", ClassName = "hrm-v2-btn-save" })
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function saveSupplementConfigurationException() {
+        $("#frm-add-supplement-configuration span[name*='-error']").text("");
+        debugger;
+        var model = {
+            Id: $("#templateId").val(),
+            ListStaffApply: $("#StaffApply").select2("val"),
+            ListApprovedBy: $("#ApprovedBy").select2("val"),
+            PreApprovalStatus: $("#model-PrevStatus").select2("val"),
+            Note: $('#model-note').val()
+        }
+        $.ajax(
+        {
+            type: "POST",
+            url: "/Admin/WorkingdaySupplementConfiguration/SaveSupplementConfigurationException",
+            data: {
+                model: model
+            },
+            success: function (response) {
+                if (response.Invalid) {
+                    var validations = response.Result;
+                    RenderError(validations, "frm-add-supplement-configuration");
+                }
+                if (response.result.Success == true) {
+                    ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                    $('#myModal').modal('hide');
+                    var par = {};
+                    par.PageNumber = $("#" + tableName + "-paging-current-page").val();
+                    par.PageSize = $("#" + tableName + "-paging-items-per-page").val();
+                    $('#exception').load('/Admin/WorkingdaySupplementConfiguration/GetSupplementConfigurationException', { param: par }, function () {
+                        $('#cover-spin').hide();
+                    });
+                }
+                else {
+                    ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                }
+            }
+        });
+    }
+    $('#StaffApply').on('change', function (e) {
+        $('#add-working-supplement-section').load('/Admin/WorkingdaySupplementConfiguration/GetApprovedBySaff', { listApprovedSaffs: $("#StaffApply").select2("val") ? $("#StaffApply").select2("val").toString() : '' }, function () {
+            $('#model-PrevStatus').attr('disabled', 'disabled');
+        });
+    });
+    $(document).ready(function () {
+        $('#model-PrevStatus').attr('disabled', 'disabled');
+    });
+</script>

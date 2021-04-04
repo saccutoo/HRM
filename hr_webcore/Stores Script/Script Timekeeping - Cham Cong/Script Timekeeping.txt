@@ -1,0 +1,56 @@
+﻿1. Tab Công trên máy
+- Kiểm tra user có được duyệt bổ sung công
++> load quyền duyệt bổ sung công : Timekeeping_HR_CheckMissDayApproval
+- Load dữ liệu
++> load danh sách phòng ban theo quyền của người đăng nhập : OrganizationUnit_Get_All_OrganizationUnitWhereRole
++> load danh sách nhân viên theo quyền của người đăng nhập hoặc phòng ban : OrganizationUnit_EmployeeByOrganizationUnitID
++> load dữ liệu bảng công trên máy : Timekeeping_Get_TimeKeepingMachine
+- Click bổ sung công
++> load các bản nháp muốn chuyển sang bổ sung công theo tháng và userid : Timekeeping_HR_WorkingDaySupplement_Get
+	- Click duyệt công
+	+> gửi dữ liệu bổ sung công từ bản nháp sang chờ duyệt : Timekeeping_HR_WorkingDaySupplement_SendNew
+	- Click button Edit
+	+> lấy dữ liệu của công bổ sung dạng bản nháp cần chỉnh sửa theo autoid : Timekeeping_HR_WorkingDaySupplement_GetByAutoId
+	- Click button Delete
+	+> xóa dữ liệu bản nháp theo autoid : Timekeeping_HR_WorkingDaySupplement_DeleteByAutoId
+	- Click dấu cộng bổ sung công
+	+> load dữ liệu về danh sách khách hàng theo userid : Timekeeping_Customer_Gets_ByUserID
+	+> load dữ liệu về thông tin liên hệ của khách hàng theo user khách hàng : Timekeeping_HR_CustomerContactGetsByCustomerID
+	+> load dữ liệu giờ làm việc của nhân viên theo userid : Timekeeping_HR_WorkingDay_GetHour
+		- Click tạo công
+		+> kiểm tra số phép còn hay đã hết : Timekeeping_HR_CheckFurlough
+		+> kiểm tra dữ liệu đã tồn tại trong danh sách bổ sung : Timekeeping_HR_WorkingDaySupplement_CheckExists
+		+> lưu dữ liệu bổ sung công dạng bản nháp : Timekeeping_HR_WorkingDaySupplement_Add
+2. Tab Danh sách đề nghị
+-Cilck tap danh sách đề nghị
+	+ Chạy stroed HR_WorkingDaySupplement_Get lấy danh sách đề nghị bổ sung công
+-Click vào button Edit
+ 	+ Chạy  stroed HR_WorkingDaySupplement_GetByAutoId lấy toàn bộ thông tin của đề nghị đó
+	+ Chạy stroed Globallist_GetsWhereParentIDnotTree lấy danh sách loại đề nghị,danh sách trạng thái duyệt,danh sách lý do,danh sách mục đích
+	+ Chạy stroed Get_TimeKeepingMachine lấy danh sách công trên máy
+	+ Chạy  stroed HR_WorkingDay_GetHour lấy danh sách giờ bắt đầu làm việc và kết thúc làm việc
+	+ Chạy stroed Timekeeping_Customer_Gets_ByUserID để lấy thông tin khách hàng theo userid 
+	+ Chạy stroed Timekeeping_HR_CustomerContactGetsByCustomerID để lấy thông tin liên hệ của khách hàng đang được chọn 
+-Click vào button gửi duyệt lại
+	+ Chạy stroed Timekeeping_HR_WorkingDaySupplement_CheckExists kiểm tra đề nghị đã tồn tại chưa
+	+Chạy stroed HR_WorkingDaySupplement_Add lưu bổ sung công đã sửa
+3. Tab Duyệt bổ sung công
+- Load dữ liệu
++> kiểm tra quyền được duyệt những yêu cầu duyệt bổ sung nào theo cấp quản lý, HR hay Admin : Timekeeping_HR_GetStatusForCheckApproval
++> load danh sách phòng ban theo quyền của người đăng nhập : OrganizationUnit_Get_All_OrganizationUnitWhereRole
++> load danh sách nhân viên theo quyền của người đăng nhập hoặc phòng ban : OrganizationUnit_EmployeeByOrganizationUnitID
++> load dữ liệu duyệt bổ sung công : HR_WorkingDaySupplement_GetNew 
+- Click button duyệt công đã chọn hoặc button không duyệt công đã chọn
++> lấy dữ liệu các bổ sung đang được chọn bằng check box : HR_WorkingDaySupplement_Get
+	- Click duyệt công hoặc không duyệt
+	+> tiến hành gửi duyệt hoặc không duyệt công các công đang được chọn : Timekeeping_HR_WorkingDaySupplement_Approval
+4. Tab Tổng hợp phiếu công
+- load dữ liệu
++> load danh sách phòng ban theo quyền của người đăng nhập : OrganizationUnit_Get_All_OrganizationUnitWhereRole
++> load danh sách nhân viên theo quyền của người đăng nhập hoặc phòng ban : OrganizationUnit_EmployeeByOrganizationUnitID
++> load dữ liệu tổng hợp phiếu công : Timekeeping_HR_WorkingDaySummary_Get
+5. Tab Quản lý chấm công
+
+6. Tab Quản lý phép
+-Cilck tap quản lý phép
+	+ Chạy stroed HR_Furlough_GetManager lấy danh sách quản lý phép

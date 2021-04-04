@@ -1,0 +1,53 @@
+﻿@model Hrm.Web.ViewModels.StaffBonusDisciplineViewModel
+@using Hrm.Common
+
+@{
+    foreach (var item in Model.ListStaffBonusDiscipline)
+    {
+        if (item.TypeId == MasterDataId.Reward)
+        {
+            <div class="section-reward-discipline reward">
+                <i class="fas fa-medal"></i>
+                <span class="action-tiem">
+                    <p class="action">
+                        @*@if (Model.ViewType == 1)
+                    {*@
+                            <button onclick="rewardDetail(@item.Id,1)"><i class="fas fa-pencil-alt"></i></button>
+                            <button><i class="fas fa-trash-alt"></i></button>
+                        @*}
+                        else
+                        {
+                            <button onclick="rewardDetail(@item.Id)"><i class="fas fa-eye"></i></button>
+                        }*@
+
+                    </p>
+                </span>
+                
+                <p onclick="rewardDetail(@item.Id,0)" title="@M(item.GroupId.ToString() + ";" + DataType.MasterData + ";Name")">@M(item.GroupId.ToString() + ";" + DataType.MasterData + ";Name")</p>
+                <p class="price">@String.Format("{0:#,##0.##}", item.Amount)</p>
+            </div>
+        }
+        else if (item.TypeId == MasterDataId.Discipline)
+        {
+            <div class="section-reward-discipline discipline">
+                <div class="discipline-info"><i class="fas fa-info"></i></div>
+                <span class="action-tiem">
+                    <p class="action">
+                        @*@if (Model.ViewType == 1)
+                    {*@
+                            <button onclick="disciplineDetail(@item.Id,1)"><i class="fas fa-pencil-alt"></i></button>
+                            <button><i class="fas fa-trash-alt"></i></button>
+                        @*}
+                        else
+                        {
+                            <button onclick="disciplineDetail(@item.Id)"><i class="fas fa-eye"></i></button>
+                        }*@
+                    </p>
+                </span>
+                <p onclick="disciplineDetail(@item.Id,0)" title="@M(item.GroupId.ToString() + ";" + DataType.MasterData + ";Name")">@M(item.GroupId.ToString() + ";" + DataType.MasterData + ";Name")</p>
+                <p class="price">@String.Format("{0:#,##0.##}", item.Amount)</p>
+            </div>
+        }
+    }
+
+}

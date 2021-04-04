@@ -1,0 +1,198 @@
+﻿@model Hrm.Web.ViewModels.DashboardViewModel
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@using Hrm.Framework.Context
+@{
+    Layout = null;
+}
+
+<div class="dash-board-left pull-left">
+    <div class="header">
+        <h4 class="col-md-12 pull-left hrm-v2-font-14 hrm-v2-bold">@T("Dashboard.Title.HumanResource")</h4>
+        <!-- Date and time range -->
+        <div class="pull-right visible-not-mobile">
+            <button type="button" class="btn btn-default  hrm-v2-date-range" id="summary-daterange-btn">
+                <i class="fa fa-calendar"></i>&nbsp; <span class="date-display"></span>
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <input type="hidden" id="summary-startdate" />
+            <input type="hidden" id="summary-enddate" />
+        </div>
+        <div class="col-md-12 date-to-date visible-only-on-mobile">
+            <button type="button" class="btn btn-default  hrm-v2-date-range" id="summary-daterange-btn">
+                <i class="fa fa-calendar"></i>&nbsp; <span class="date-display"></span>
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <input type="hidden" id="summary-startdate" />
+            <input type="hidden" id="summary-enddate" />
+        </div>
+        <!-- /.form group -->
+    </div>
+    <div class="contain-left">
+        <div class="note-chart">
+            <div id="db-note-piechart">
+                @Html.Partial(UrlHelpers.View("~/Views/Dashboard/_Note_PieChart.cshtml"), Model.DashboardSummary)
+            </div>
+        </div>
+        <div id="hrm-v2-dashboard-donut" class="hrm-v2-inline-block dashboard-donut-chart">
+            <script type="text/javascript">
+                @{
+                    var percentOfficial = Model.DashboardSummary.Total == 0 ? 0 : Math.Round((float)Model.DashboardSummary.Official / Model.DashboardSummary.Total, 2);
+                    var percentOnboard = Model.DashboardSummary.Total == 0 ? 0 : Math.Round((float)Model.DashboardSummary.Onboard / Model.DashboardSummary.Total, 2);
+                    var percentTotalOff = Model.DashboardSummary.TotalOff == 0 ? 0 : Math.Round((float)Model.DashboardSummary.TotalOff / Model.DashboardSummary.Total, 2);
+                }
+
+
+                google.charts.load('current', { 'packages': ['corechart'] });
+                google.charts.setOnLoadCallback(drawChart);
+
+                function drawChart() {
+                    var data = [];
+                    data = google.visualization.arrayToDataTable([
+                        ['Effort', 'Amount given'],
+                        ['@M("55;MasterData;Name")', @percentOfficial],
+                        ['@M("25;MasterData;Name")', @percentOnboard],
+                        ['@M("9;MasterData;Name")', @percentTotalOff],
+                    ]);
+
+                    var options = {
+                        slices: { 0: { color: '#2CA01C' }, 1: { color: '#3797D3' }, 2: { color: '#F78E55' } },
+                        pieHole: border,
+                        pieSliceTextStyle: {
+                            color: 'white',
+                            "font-style": "10px"
+                        },
+                        "width": width,
+                        "height": height,
+                        legend: 'none'
+                    };
+
+                    var chart = new google.visualization.PieChart(document.getElementById('hrm-v2-dashboard-donut'));
+                    chart.draw(data, options);
+                }
+
+            </script>
+        </div>
+
+        <div class="note-chart-donut visible-not-mobile">
+            <span class="item"><span class="color" style="background-color:#2CA01C"></span> Chính thức </span>
+            <span class="item"><span class="color" style="background-color:#3797D3"></span> Thử việc </span>
+            <span class="item"><span class="color" style="background-color:#F78E55"></span> Nghỉ việc </span>
+        </div>
+        <div class="note-chart-donut col-md-12 visible-only-on-mobile">
+            <span class="item"><span class="color" style="background-color:#2CA01C"></span> Chính thức </span>
+            <span class="item"><span class="color" style="background-color:#3797D3"></span> Thử việc </span>
+            <span class="item"><span class="color" style="background-color:#F78E55"></span> Nghỉ việc </span>
+        </div>
+    </div>
+</div>
+
+<div class="dash-board-right pull-right">
+    <div class="box-dashboard">
+        <div class="header">@T("Dashboard.Label.CurrentName"),<span class="hrm-v2-bold">  @T("Calendar.Date." + DateTime.Now.DayOfWeek.ToString())</span> @DateTime.Now.ToString("dd/MM/yyyy")</div>
+        <div class="body-box dashboard-event more">
+            @{
+                foreach (var item in Model.DashboardEvent)
+                {
+                    if (item.IsBirthday)
+                    {
+                        <div class="item">
+                            <span class="avata"><i class="fas fa-user"></i></span>
+                            <span class="info">
+                                <a class="name" href="/staff-detail?staffid=@item.StaffId">@item.StaffName</a>
+                                <span class="officeposition" style="color:#223133">@item.OrganizationName</span>
+                            </span>
+                            <i class="icon-right fas fa-birthday-cake" style="color:#F6636B"></i>
+                        </div>
+                    }
+                    else if (item.IsOnboard)
+                    {
+                        <div class="item">
+                            <span class="avata"><i class="fas fa-user"></i></span>
+                            <span class="info">
+                                <a class="name" href="/staff-detail?staffid=@item.StaffId">@item.StaffName</a>
+                                <span class="officeposition" style="color:#223133">@item.OrganizationName</span>
+                            </span>
+                            <i class="icon-right fas fa-rocket"></i>
+                        </div>
+                    }
+                }
+
+                if (Model.DashboardEvent.Count == 0)
+                {
+                    <div class="item  lbl-not-event">Không có sự kiện</div>
+                }
+            }
+        </div>
+        @if (Model.DashboardEvent.Count > 3)
+        {
+            <a class="pull-right link expand" onclick="removeClassMore('dashboard-event')">Xem thêm(@Html.Raw(Model.DashboardEvent.Count - 3))</a>
+            <a class="pull-right link collapse" onclick="addClassMore('dashboard-event')">Thu gọn(@Html.Raw(Model.DashboardEvent.Count - 3))</a>
+        }
+    </div>
+    <div class="box-dashboard">
+        <div class="header uppercase">
+            <span>Đề Nghị cần duyệt</span>
+            @{
+                if (Model.WorkingdaySupplements.Count > 0)
+                {
+                    <span class="label hrm-v2-pink infor-number">@Model.WorkingdaySupplements.Count</span>
+                }
+            }
+        </div>
+        <div class="body-box db-supplement more">
+            @if (Model.WorkingdaySupplements.Count > 0)
+            {
+                foreach (var item in Model.WorkingdaySupplements)
+                {
+                    <div class="item info-request">
+                        <span class="avata-pretation">@item.StaffName.Substring(0, 1)</span>
+                        <span class="info">
+                            <a class="name hrm-v2-font-13">@item.StaffName</a>
+                            <span class="officeposition hrm-v2-font-13" style="color:#223133">@M(item.SupplementTypeId.ToString() + ";" + DataType.MasterData + ";Name")</span>
+                            <span class="text">@*<span class="hrm-v2-color-green"> 27 </span> phút -*@ @item.Date.Value.ToString("dd/MM/yyyy")</span>
+                        </span>
+                        @*<div class="icon-right action">
+                                <i class="fas fa-check" style="background: #2CA01C"></i>
+                                <i class="fas fas fa-times" style="background: #F86367;"></i>
+                            </div>*@
+                    </div>
+                }
+            }
+            @if (Model.WorkingdaySupplements.Count == 0)
+            {
+                <div class="item  lbl-not-event">Không có đề nghị nào cần duyệt</div>
+            }
+        </div>
+        @if (Model.WorkingdaySupplements.Count > 2)
+        {
+            var month = DateTime.Now.Month;
+            var year = DateTime.Now.Year;
+            var urlLink = CurrentContext.WebBaseUrl + "workingday-detail?staffid=" + CurrentUser.UserId.ToString() + "&month=" + month + "&year=" + year + "&activeTab=4&viewtype=List";
+            <a class="pull-right link expand" href="@urlLink">Xem thêm</a>
+        }
+    </div>
+    <div class="box-dashboard">
+        <div class="header uppercase"><span>NHIỆM VỤ CHƯA THỰC HIỆN</span><span class="label hrm-v2-pink infor-number">@Model.Staffs.Count</span></div>
+        <div class="body-box body-line-chart db-checklist more">
+            <ul>
+                @if (Model.Staffs.Count > 0)
+                {
+                    foreach (var item in Model.Staffs)
+                    {
+                        <li><a>@item.Name</a><span class="lst-check"><i class="fas fa-clipboard-check" style="margin-right: 10px"></i>@item.TotalCurrentCheckListDetailCompleted/@item.TotalCurrentChecklistChild</span></li>
+                    }
+                }
+            </ul>
+            @if (Model.Staffs.Count == 0)
+            {
+                <div class="item  lbl-not-event">Không có nhiệm vụ nào</div>
+            }
+        </div>
+        @if (Model.Staffs.Count > 4)
+            {
+            <a class="pull-right link expand" onclick="removeClassMore('db-checklist')">Xem thêm(@Html.Raw(Model.Staffs.Count - 4))</a>
+            <a class="pull-right link collapse" onclick="addClassMore('db-checklist')">Thu gọn(@Html.Raw(Model.Staffs.Count - 4))</a>
+        }
+    </div>
+</div>

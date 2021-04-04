@@ -1,0 +1,55 @@
+﻿@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@model Hrm.Web.ViewModels.StaffCertificateViewModel
+@{
+    Layout = null;
+}
+<form id="save-certification-form">
+    <div class="detail-allowance-container display-inline-block">
+        @if (Model.StaffCertificate.Id == 0)
+        {
+            <div class="hrm-v2-modal-header">@T("Staff.Detail.CreateCertificate")</div>
+        }
+        else
+        {
+            <div class="hrm-v2-modal-header">@T("Staff.Detail.EditCertificate")</div>
+        }
+        <input type="hidden" name="StaffId" id="cf-staffId" value="@Model.StaffCertificate.StaffId" />
+        <input type="hidden" name="Id" id="Id" value="@Model.StaffCertificate.Id" />
+        <div class="hrm-v2-modal-body" style="margin-top:0px">
+            <section class="hrmv2-section">
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "IssuedDate", LabelName = T("Staff.Detail.Time").ToString(), Value = Model.StaffCertificate.IssuedDate, PlaceHolder = " " })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.CertificateName").ToString(), IsAnimationLabel = true, Value = Model.StaffCertificate.Name, Name = "Name", IsRequired = true })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Rank").ToString(), IsAnimationLabel = true, Data = Model.DataDropdownRank, ValueField = "Id", DisplayField = "Name", Name = "RankId", Value = Model.StaffCertificate.RankId.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Point").ToString(), IsAnimationLabel = true, Value = Model.StaffCertificate.Point.ToString(), Name = "Point", Type= "Number" })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.IssuedBy").ToString(), IsAnimationLabel = true, Value = Model.StaffCertificate.IssuedBy, Name = "IssuedBy" })
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block hrm-v2-floating-form are-template">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_TextArea.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Description").ToString(), Name = "Note", Value= Model.StaffCertificate.Note, IsAnimationLabel = true })
+                </div>
+            </section>
+            <div class="footer">
+                <div class="footer-login">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                            @T("Staff.Detail.Cancel")
+                        </button>
+                        <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="saveCertification()">
+                            @T("Staff.Detail.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

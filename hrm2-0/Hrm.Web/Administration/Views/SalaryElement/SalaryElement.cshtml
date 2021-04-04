@@ -1,0 +1,90 @@
+﻿@model Hrm.Admin.ViewModels.SalaryElementViewModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@{
+    ViewBag.Title = "salary-element";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("SalaryElement.PayrollComposition")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormAddSalaryElement()" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.SalaryElement + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 0, 0)" })
+
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.SalaryElement + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 1, 0)" })
+    </div>
+</div>
+<div class="holiday-table">
+    <div id="table-salary-element">
+        @if (Model.Table != null)
+        {
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+        }
+    </div>
+</div>
+<script>
+    function ShowFormAddSalaryElement() {
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/SalaryElement/ShowFormAddSalaryElement',
+            width:800,
+            isNotificationPoup: true,
+            align: "center",
+        };
+        CreatePopup(options);
+    }
+    function showEditFormEditSalaryElement(id) {
+        var data = { id: id };
+        var options = {
+            id: 'frmAddCategory',
+            url: '/Admin/SalaryElement/ShowFormAddSalaryElement',
+            isDataTypeJson: true,
+            width: 800,
+            isNotificationPoup: true,
+            data: data,
+            align: "center",
+        };
+        CreatePopup(options);
+    }
+    function deleteSalaryElement(id) {
+        bootbox.confirm({
+            message: '@T("Message.Delete.QuestionDelete")',
+            buttons: {
+                confirm: {
+                    label: '@T("Message.Delete.Yes")',
+                    className: 'hrm-v2-btn-save'
+                },
+                cancel: {
+                    label: '@T("Message.Delete.No")',
+                    className: 'hrm-v2-btn-close'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                  $.ajax(
+                  {
+                      type: "POST",
+                      url: "/Admin/SalaryElement/DeleteSalaryElement",
+                      data: {
+                          id:id
+                      },
+                      success: function (response) {
+                          if (response.result.Success) {
+                              ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                              changeItemsPerpage('@TableName.TableSalaryElement');
+                          }
+                          else {
+                              ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                          }
+
+                      }
+                  });
+                }
+            }
+        });
+    }
+</script>

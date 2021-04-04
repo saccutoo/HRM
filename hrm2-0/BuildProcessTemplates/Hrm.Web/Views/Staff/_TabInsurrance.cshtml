@@ -1,0 +1,302 @@
+﻿@model Hrm.Web.ViewModels.StaffDetailsViewModel
+@using Hrm.Framework.Models
+@using Hrm.Framework.ViewModels
+@using Hrm.Framework.Helper
+@using Hrm.Common
+<div class="pull-right" id="pull-right-personal-info">
+    @if (Model.ViewType == 1)
+    {
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-eye", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "openEditForm()" })
+    }
+    else
+    {
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-pencil-alt", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "openEditForm()" })
+    }
+</div>
+<br />
+@if (Model.ViewType == 1)
+{
+
+<form id="save-insurance-form">
+    <section class="hrmv2-section">
+        <div class="hrmv2-section-staff-care" ng-class="IsStaffCareMore == true ? 'open':''" ng-cloak>
+            <section class="hrmv2-section hrmv2-section-first">
+                <input type="hidden" name="StaffSocialInsurance.Id" value="@Model.SocialInsurance.Id" />
+                <input type="hidden" name="StaffSocialInsurance.StaffId" value="@Model.SocialInsurance.StaffId"/>
+                @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.SocialInsurance").ToString(), WidthSecitonName = "250px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() { new IconRight { Icon = "fas fa-history", Action = "historySocialInsurance()" }, new IconRight { Icon = "fa fa-plus", Action = "addSocialInsurance()" } } })
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.SocialInsuranceCode").ToString(), Name = "StaffSocialInsurance.InsuranceCode", IsRequired = true, IsAnimationLabel = true, Value = Model.SocialInsurance.InsuranceCode })
+                    </div>
+                    <div class="col-md-6 pd-l-0">
+                        @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Form").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownInsuranceType, ValueField = "Id", DisplayField = "Name", Name = "StaffSocialInsurance.TypeId", Value = Model.SocialInsurance.TypeId.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                    </div>
+                </div>
+                <div class="col-md-12 pd-0 display-inline-block">
+                    <div class="col-md-6 pd-l-0">
+                        <div class="col-md-6 pd-l-0">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "StaffSocialInsurance.StartDate", LabelName = T("Staff.Detail.StarDateApply").ToString(), Value = Model.SocialInsurance.StartDate, PlaceHolder = " " })
+                        </div>
+                        <div class="col-md-6 pd-r-0 hrm-v2-floating-form">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "StaffSocialInsurance.EndDate", LabelName = T("Staff.Detail.EndDateApply").ToString(), Value = Model.SocialInsurance.EndDate, PlaceHolder = " " })
+                        </div>
+                    </div>
+                    <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                        <div class="col-md-9 pd-0">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.AmountLevel").ToString(), IsAnimationLabel = true, Name = "StaffSocialInsurance.UnionAmount", Value = Model.SocialInsurance.UnionAmount.ToString(), Type = "Number" })
+                        </div>
+                        <div class="col-md-3 pd-0">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = "", IsAnimationLabel = false, Data = Model.DataDropdownCurrency, ValueField = "Id", DisplayField = "Name", Name = "StaffSocialInsurance.CurrencyId", Value = Model.SocialInsurance.CurrencyId.ToString(), SearchField = true, IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+                        </div>
+                    </div>
+                </div>
+                <div class="expand-section-body">
+                    <div class="col-md-12 pd-0 display-inline-block">
+                        <div class="col-md-6 pd-l-0">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Note").ToString(), Name = "StaffSocialInsurance.Note", IsAnimationLabel = true, Value = Model.SocialInsurance.Note })
+                        </div>
+                        <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.FamilyCode").ToString(), Name = "StaffSocialInsurance.FamilyCode", IsAnimationLabel = true, Value = Model.SocialInsurance.FamilyCode })
+                        </div>
+                    </div>
+                    <div class="col-md-12 pd-0 display-inline-block">
+                        <div class="col-md-6 pd-l-0">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.PlaceHold").ToString(), Name = "StaffSocialInsurance.PlaceHold", IsAnimationLabel = true, Value = Model.SocialInsurance.PlaceHold })
+                        </div>
+                        <div class="col-md-6 pd-l-0">
+                            @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "StaffSocialInsurance.DateReturn", LabelName = T("Staff.Detail.TimeReturnBook").ToString(), Value = Model.SocialInsurance.DateReturn, PlaceHolder = " " })
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <span class="pull-left btn-expand" onclick="StaffCareShowMore(true)">@T("Staff.Detail.ViewMore") <i class="fas fa-sort-down"></i></span>
+            <span class="pull-left btn-collapse" onclick="StaffCareShowMore(false)">@T("Staff.Detail.Collapse") <i class="fas fa-sort-up"></i></span>
+        </div>
+    </section>
+    <section class="hrmv2-section">
+        <input type="hidden" name="HealthInsurance.Id" value="@Model.HealthInsurance.Id" />
+        <input type="hidden" name="HealthInsurance.StaffId" value="@Model.HealthInsurance.StaffId" />
+        @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.HealthInsurance").ToString(), WidthSecitonName = "250px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() { new IconRight { Icon = "fas fa-history", Action = "historyHealthInsurance()" }, new IconRight { Icon = "fa fa-plus", Action = "addHealthInsurance()" } } })
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.HealthInsuranceCode").ToString(), Name = "HealthInsurance.InsuranceCode", IsRequired = true, IsAnimationLabel = true, Value = Model.HealthInsurance.InsuranceCode })
+            </div>
+            <div class="col-md-6 pd-l-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_Dropdown.cshtml"), new DropdownListModel() { LabelName = T("Staff.Detail.Form").ToString(), IsRequired = true, IsAnimationLabel = true, Data = Model.DataDropdownInsuranceType, ValueField = "Id", DisplayField = "Name", Name = "HealthInsurance.TypeId", Value = Model.HealthInsurance.TypeId.ToString(), IsMultipleLanguage = true, DataType = DataType.MasterData, PropertyName = "Name" })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "HealthInsurance.IssuedDate", LabelName = T("Staff.Detail.IssueDate").ToString(), Value = Model.HealthInsurance.IssuedDate, Vertical = "top", PlaceHolder = " " })
+            </div>
+            <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.PlaceHealthCare").ToString(), Name = "HealthInsurance.PlaceHealthCare", IsAnimationLabel = true, Value = Model.HealthInsurance.PlaceHealthCare })
+            </div>
+        </div>
+        <div class="col-md-12 pd-0 display-inline-block">
+            <div class="col-md-6 pd-l-0">
+                <div class="col-md-6 pd-l-0">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "HealthInsurance.StartDate", LabelName = T("Staff.Detail.StarDateApply").ToString(),  Value = Model.HealthInsurance.StartDate, Vertical = "top", PlaceHolder = " " })
+                </div>
+                <div class="col-md-6 pd-r-0 hrm-v2-floating-form">
+                    @Html.Partial(UrlHelpers.FloatingTemplate("_DatePicker.cshtml"), new DatePickerModel() { Name = "HealthInsurance.EndDate", LabelName = T("Staff.Detail.EndDateApply").ToString(),  Value = Model.HealthInsurance.EndDate, Vertical = "top", PlaceHolder = " " })
+                </div>
+            </div>
+            <div class="col-md-6 pd-l-0 hrm-v2-floating-form">
+                @Html.Partial(UrlHelpers.FloatingTemplate("_TextEditor.cshtml"), new TextEditorModel() { LabelName = T("Staff.Detail.Note").ToString(), Name = "HealthInsurance.Note",  IsAnimationLabel = true, Value = Model.HealthInsurance.Note })
+            </div>
+        </div>
+    </section>
+
+    <section class="hrmv2-section">
+        <div class="footer-add-staff">
+            <div class="footer-login">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-primary hrm-v2-btn-close" data-dismiss="modal">
+                        @T("Staff.Detail.Cancel")
+                    </button>
+                    <button type="button" class="btn btn-primary hrm-v2-btn-save" onclick="saveInsurance()">
+                        @T("Staff.Detail.Save")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+<script>
+    var healthInsuranceCode = "@Model.HealthInsurance.InsuranceCode"
+    if ("@Model.HealthInsurance.TypeId" == "@MasterDataId.InsuranceTypeIncrease") {
+        $('#StaffSocialInsurance-InsuranceCode').prop('disabled', true);
+    }
+    $("#StaffSocialInsurance-TypeId").change(function () {
+        if ($("#StaffSocialInsurance-TypeId").val() == "@MasterDataId.InsuranceTypeIncrease" && healthInsuranceCode != "") {
+            $('#StaffSocialInsurance-InsuranceCode').prop('disabled', true);
+            $('#StaffSocialInsurance-InsuranceCode').val(healthInsuranceCode);
+        } else {
+            $('#StaffSocialInsurance-InsuranceCode').prop('disabled', false);
+        }
+    })
+
+
+    var socialInsuranceCode = "@Model.HealthInsurance.InsuranceCode"
+    if ("@Model.SocialInsurance.TypeId" == "@MasterDataId.InsuranceTypeIncrease") {
+        $('#HealthInsurance-InsuranceCode').prop('disabled', true);
+    }
+    $("#HealthInsurance-TypeId").change(function () {
+        if ($("#HealthInsurance-TypeId").val() == "@MasterDataId.InsuranceTypeIncrease" && socialInsuranceCode != "") {
+            $('#HealthInsurance-InsuranceCode').prop('disabled', true);
+            $('#HealthInsurance-InsuranceCode').val(socialInsuranceCode);
+        } else {
+            $('#HealthInsurance-InsuranceCode').prop('disabled', false);
+        }
+    })
+</script>
+}
+else
+{
+                        <section class="hrmv2-section">
+                            <div class="hrmv2-section-staff-care">
+                            @if (Model.SocialInsurance.Id > 0)
+                            {
+                                <section class="hrmv2-section hrmv2-section-first">
+                                    
+                                        @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.SocialInsurance").ToString(), WidthSecitonName = "250px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() { new IconRight { Icon = "fas fa-history", Action = "historySocialInsurance()" } } })
+                                        <div class="col-md-12 pd-0 display-inline-block">
+                                            <div class="col-md-6 pd-0">
+                                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.SocialInsuranceCode").ToString(), Text = Model.SocialInsurance.InsuranceCode, LabelIcon = "<i class='fas fa-info-circle' title='"+ T("Staff.Detail.SocialInsuranceCodes")+ "'></i>" })
+                                            </div>
+                                            <div class="col-md-6 pd-0">
+                                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Form").ToString(), Text = M(Model.SocialInsurance.TypeId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 pd-0 display-inline-block">
+                                            <div class="col-md-6 pd-0">
+                                                @{
+                                                    var fromDateString = string.Empty;
+                                                    var minus = string.Empty;
+                                                    if (Model.SocialInsurance.StartDate != null && Model.SocialInsurance.StartDate != DateTime.MinValue)
+                                                    {
+                                                        fromDateString = Model.SocialInsurance.StartDate.Value.ToString("dd/MM/yyyy");
+                                                    }
+                                                    var toDateString = string.Empty;
+                                                    if (Model.SocialInsurance.EndDate != null && Model.SocialInsurance.EndDate != DateTime.MinValue)
+                                                    {
+                                                        toDateString = Model.SocialInsurance.EndDate.Value.ToString("dd/MM/yyyy");
+                                                    }
+                                                    else if (Model.SocialInsurance.StartDate != DateTime.MinValue && Model.SocialInsurance.StartDate != null)
+                                                    {
+                                                        toDateString = T("Staff.Detail.Now").ToString();
+                                                    }
+                                                    if (fromDateString != string.Empty && toDateString != string.Empty)
+                                                    {
+                                                        minus = " - ";
+                                                    }
+                                                }
+                                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.TimeApplication").ToString(), Text = (fromDateString + minus + toDateString).ToString() })
+
+                                            </div>
+                                            <div class="col-md-6 pd-0">
+                                                @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.AmountLevel").ToString(), Text = @String.Format("{0:#,##0.##}", Model.SocialInsurance.UnionAmount) })
+                                            </div>
+                                        </div>
+                                        <div class="expand-section-body">
+                                            <div class="col-md-12 pd-0 display-inline-block">
+                                                <div class="col-md-6 pd-0">
+                                                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Note").ToString(), Text = Model.SocialInsurance.Note })
+                                                </div>
+                                                <div class="col-md-6 pd-0">
+                                                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.FamilyCode").ToString(), Text = Model.SocialInsurance.FamilyCode })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 pd-0 display-inline-block">
+                                                <div class="col-md-6 pd-0">
+                                                    @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.PlaceHold").ToString(), Text = Model.SocialInsurance.PlaceHold })
+                                                </div>
+                                                <div class="col-md-6 pd-0">
+                                                    @if (Model.SocialInsurance.DateReturn != null)
+                                                    {
+                                                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.TimeReturnBook").ToString(), Text = Model.SocialInsurance.DateReturn.Value.ToString("dd/MM/yyyy") })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.TimeReturnBook").ToString(), Text = "" })
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                </section>
+                                
+                                    <span class="pull-left btn-expand" onclick="StaffCareShowMore(true)">@T("Staff.Detail.ViewMore") <i class="fas fa-sort-down"></i></span>
+                                    <span class="pull-left btn-collapse" onclick="StaffCareShowMore(false)">@T("Staff.Detail.Collapse") <i class="fas fa-sort-up"></i></span>
+                               }
+                               else
+                               {
+                                   <section class="hrmv2-section">
+                                       @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.SocialInsurance").ToString(), WidthSecitonName = "250px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() { new IconRight { Icon = "fas fa-history", Action = "historySocialInsurance()" } } })
+                                   </section>
+                               }
+</div>
+                        </section>
+                        <section class="hrmv2-section">
+                            
+                                @Html.Partial(UrlHelpers.Template("_SectionWithIconRight.cshtml"), new SectionWithIconRight() { SectionName = T("Staff.Detail.HealthInsurance").ToString(), WidthSecitonName = "250px", WidthSectionIconRight = "80px", ListIcon = new List<IconRight>() { new IconRight { Icon = "fas fa-history", Action = "historyHealthInsurance()" } } })
+                            @if (Model.HealthInsurance.Id > 0)
+                            {
+                                <div class="col-md-12 pd-0 display-inline-block">
+                                    <div class="col-md-6 pd-0">
+                                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.HealthInsuranceCode").ToString(), Text = Model.HealthInsurance.InsuranceCode, LabelIcon = "<i class='fas fa-info-circle' title='" + T("Staff.Detail.HealthInsuranceCodes") + "'></i>" })
+                                    </div>
+                                    <div class="col-md-6 pd-0">
+                                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Form").ToString(), Text = M(Model.HealthInsurance.TypeId.ToString() + ";" + DataType.MasterData + ";Name").ToString() })
+                                    </div>
+                                </div>
+                                <div class="col-md-12 pd-0 display-inline-block">
+                                    <div class="col-md-6 pd-0">
+                                        @if (Model.HealthInsurance.IssuedDate == null || Model.HealthInsurance.IssuedDate == DateTime.MinValue)
+                                        {
+                                            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.IssueDate").ToString(), Text = "" })
+                                        }
+                                        else
+                                        {
+                                            @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.IssueDate").ToString(), Text = Model.HealthInsurance.IssuedDate.Value.ToString("dd/MM/yyyy") })
+                                        }
+                                    </div>
+                                    <div class="col-md-6 pd-0">
+                                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.PlaceHealthCare").ToString(), Text = Model.HealthInsurance.PlaceHealthCare })
+                                    </div>
+                                </div>
+                                <div class="col-md-12 pd-0 display-inline-block">
+                                    <div class="col-md-6 pd-0">
+                                        @{
+                                            var fromDateStringSI = string.Empty;
+                                            var minusSI = string.Empty;
+                                            if (Model.HealthInsurance.StartDate != null && Model.HealthInsurance.StartDate != DateTime.MinValue)
+                                            {
+                                                fromDateStringSI = Model.HealthInsurance.StartDate.Value.ToString("dd/MM/yyyy");
+                                            }
+                                            var toDateStringSI = string.Empty;
+                                            if (Model.HealthInsurance.EndDate != null && Model.HealthInsurance.EndDate != DateTime.MinValue)
+                                            {
+                                                toDateStringSI = Model.HealthInsurance.EndDate.Value.ToString("dd/MM/yyyy");
+                                            }
+                                            else if (Model.HealthInsurance.StartDate != DateTime.MinValue && Model.HealthInsurance.StartDate != null)
+                                            {
+                                                toDateStringSI = T("Staff.Detail.Now").ToString();
+                                            }
+                                            if (fromDateStringSI != string.Empty && toDateStringSI != string.Empty)
+                                            {
+                                                minusSI = " - ";
+                                            }
+                                        }
+                                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.TimeApplication").ToString(), Text = (fromDateStringSI + minusSI + toDateStringSI).ToString() })
+
+                                    </div>
+                                    <div class="col-md-6 pd-0">
+                                        @Html.Partial(UrlHelpers.Template("_PropertyField.cshtml"), new PropertyField() { Label = T("Staff.Detail.Note").ToString(), Text = Model.HealthInsurance.Note })
+                                    </div>
+                                </div>
+                                            }
+                            
+                        </section>
+                                        }
+

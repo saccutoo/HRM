@@ -1,0 +1,92 @@
+﻿@using HRM.App_LocalResources;
+@{
+    ViewBag.Title = @AppRes.PayslipSynthetic;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<style>
+    .panel{
+        margin:0px
+    }
+</style>
+<link href="~/Content/PayBillCss.css" rel="stylesheet" />
+<link href="~/Scripts/Extention/BeautifulCheckBox/Bcheckbox.css" rel="stylesheet" />
+<div class="container-fluid" ng-app="tableApp" ng-cloak>
+    <div id="AttendanceManagement" class="row" style="margin: 0;" ng-controller="mytable" ng-init="init()">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <div id="tabs">
+                        <ul>
+                            <li></li>
+                            <li><a href="#tabs1" ng-click="LoadTab('tabs1')">@AppRes.PayslipSynthetic</a></li>
+                            <li><a href="#tabs2" ng-click="LoadTab('tabs2')">@AppRes.Payslip</a></li>
+                            <li><a href="#tabs3" ng-click="LoadTab('tabs3')">@AppRes.PaycheckDetail</a></li>
+                        </ul>
+                        <div id="tabs1">
+                            @Html.Action("SalaryServerSide", "Common")
+                            <div style="display:none">
+                                @Html.Action("EditSalary", "Salary")
+                            </div>
+                        </div>
+                        <div id="tabs2" ng-controller="SalaryDetail">
+                            @Html.Action("SalaryServerSide2", "Common")
+                        </div>
+                        <div id="tabs3" ng-controller="SalaryOrganizationUnit">
+                            @Html.Action("Index", "SalaryOrganizationUnit")
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/mycustom/Salary/SalaryUntil.js"></script>
+<script src="~/Scripts/mycustom/Salary/SalaryService.js"></script>
+
+
+<script>
+    BuildTable('tableApp', 'mytable', '@(ViewBag.url)');
+    BuildTable('tableApp', 'SalaryDetail', '@(ViewBag.url2)');
+    BuildTable('tableApp', 'SalaryOrganizationUnit', '@(ViewBag.url3)');
+    $(function () {
+        $("#tabs").tabs();
+    });
+    $(document).ready(function () {
+        $('tbody').scroll(function (e) {
+            $('thead').css("left", -$("tbody").scrollLeft()); //fix the thead relative to the body scrolling
+            $('thead th:nth-child(1), thead th:nth-child(2),thead th:nth-child(3),thead th:nth-child(4)').css("left", $("tbody").scrollLeft()); //fix the first cell of the header
+            $('tbody td:nth-child(1), tbody td:nth-child(2),tbody td:nth-child(3),tbody td:nth-child(4)').css("left", $("tbody").scrollLeft()); //fix the first column of tdbody
+        });
+        $('#tbody').scroll(function (e) {
+            $('.thead').css("left", -$("#tbody").scrollLeft()); //fix the thead relative to the body scrolling
+            $('.thead th:nth-child(1), .thead th:nth-child(2),.thead th:nth-child(3),.thead th:nth-child(4)').css("left", $("#tbody").scrollLeft()); //fix the first cell of the header
+            $('#tbody td:nth-child(1), #tbody td:nth-child(2),#tbody td:nth-child(3),#tbody td:nth-child(4)').css("left", $("#tbody").scrollLeft()); //fix the first column of tdbody
+        });
+    });
+    var endYear = new Date(new Date().getFullYear(), 11, 31);
+    $("#datePicker4").datepicker({
+        autoclose: true,
+        format: "mm/yyyy",
+        startDate: "1/2013",
+        endDate: endYear,
+        startView: "months",
+        minViewMode: "months",
+        maxViewMode: "years"
+    }).datepicker("setDate", new Date());
+    $("#datePicker5").datepicker({
+        autoclose: true,
+        format: "mm/yyyy",
+        startDate: "1/2013",
+        endDate: endYear,
+        startView: "months",
+        minViewMode: "months",
+        maxViewMode: "years"
+    }).datepicker("setDate", new Date());
+</script>
+<script src="~/Scripts/directive/datePicker(NewDate)/datePicker.js"></script>
+
+

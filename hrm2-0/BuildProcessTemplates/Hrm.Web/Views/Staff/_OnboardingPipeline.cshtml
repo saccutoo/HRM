@@ -1,0 +1,54 @@
+﻿@model Hrm.Web.ViewModels.OnboardingColumnViewModel
+@using Hrm.Framework.Models
+@using Hrm.Web.ViewModels
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@{
+    Layout = null;
+    var pipelineStep = new PipelineStepModel();
+    if (Model.Onboarding != null && Model.Onboarding.Pipeline != null)
+    {
+        pipelineStep = Model.Onboarding.Pipeline;
+    }
+    var staffs = new List<StaffModel>();
+    if (Model.Onboarding != null && Model.Onboarding.Staffs != null)
+    {
+        staffs = Model.Onboarding.Staffs;
+        foreach (var item in staffs)
+        {
+            item.PipelineRule = pipelineStep.PipelineRule;
+        }
+    }
+    int indexRule = Model.Index + 1;
+}
+<div class="onboarding-pipeline-column onboarding-pipeline-column-@pipelineStep.Id" style="width:calc(100% / @Model.Total);left: calc(@Model.Index * -17px);">
+    <div class="onboarding-pipeline" style="background-color:@C(pipelineStep.PositionId.ToString()).ToString()">
+        <div class="pipeline-name">
+            @if (pipelineStep.PipelineStepSymbol != null && pipelineStep.PipelineStepSymbol.Contains("fa"))
+            {
+                <i class="@pipelineStep.PipelineStepSymbol"></i>
+            }
+            else
+            {
+                <span>@pipelineStep.PipelineStepSymbol -</span>
+            }
+            @pipelineStep.PipelineStepName
+        </div>
+        <div class="total-staff"> <i class="fas fa-circle"></i><span class="count">@staffs.Count</span><i class="fas fa-user"></i></div>
+    </div>
+    @if (Model.ViewType == Hrm.Common.ViewType.Card)
+    {
+        var panelClass = "onboarding-staff-panel";
+        if (Model.Index == Model.Total - 1)
+        {
+            panelClass = "onboarding-staff-panel-full";
+        }
+        <div class="drag-container @panelClass hrm-v2-scroll" pipeline-step-id="@pipelineStep.Id" pipeline-id="@pipelineStep.PipelineId" pipeline-staff-status-id="@pipelineStep.PipelineStaffStatusId" index-rule="@indexRule" pipeline-rule="@pipelineStep.PipelineRule">
+            @foreach (var staff in staffs)
+            {
+                staff.PipelineStepId = pipelineStep.Id;
+                @Html.Partial(UrlHelpers.View("~/Views/Staff/_OnboardingCard.cshtml"), staff)
+            }
+        </div>
+    }
+</div>

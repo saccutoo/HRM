@@ -1,0 +1,73 @@
+﻿@model Hrm.Admin.ViewModels.SalaryTypeViewModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Framework.Models
+@using Hrm.Common
+@{
+    ViewBag.Title = "salary-type";
+    Layout = "~/Views/Shared/_MenuSidebarTop.cshtml";
+}
+
+<div class="col-md-12 bread-crumb">
+    <a href="/admin" class="bread-crumb-item"> @T("Setting.Setting")</a><span class="bread-crumb-item">&nbsp; &gt; &nbsp; @T("SalaryType.SalaryType")</span>
+    <div class="pull-right">
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-plus", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "ShowFormAddSalaryType()" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-list-ul", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.SalaryType + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 0, 0)" })
+        @Html.Partial(UrlHelpers.Template("_IconButton.cshtml"), new IconButtonModel() { IconName = "fas fa-filter", BtnClass = "filter btn-bread-crumb pull-left", OnClick = "showFilter(" + "'" + TableConfig.SalaryType + "'" + "," + "'" + Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Table.TableName)) + "'" + ", 1, 0)" })
+    </div>
+</div>
+<div class="holiday-table">
+    <div id="table-salary-type">
+        @if (Model.Table != null)
+        {
+            @Html.Partial(UrlHelpers.Template("_Table.cshtml"), Model.Table)
+        }
+    </div>
+</div>
+<script>
+    function ShowFormAddSalaryType() {
+        window.location.href = "/add-salary-type";
+    }
+    function showEditFormEditSalaryType(id) {
+        window.location.href = "/add-salary-type?id=" + id;
+    }
+
+    function deleteSalaryType(id) {
+        bootbox.confirm({
+            message: '@T("Message.Delete.QuestionDelete")',
+            buttons: {
+                confirm: {
+                    label: '@T("Message.Delete.Yes")',
+                    className: 'hrm-v2-btn-save'
+                },
+                cancel: {
+                    label: '@T("Message.Delete.No")',
+                    className: 'hrm-v2-btn-close'
+                }
+            },
+            callback: function (result) {
+                if (result == true) {
+                    $.ajax(
+                    {
+                        type: "POST",
+                        url: "/Admin/SalaryType/DeleteSalaryType",
+                        data: {
+                            id: id
+                        },
+                        success: function (response) {
+                            if (response.result.Success) {
+                                ShowMessage(response.result.Success, msgSuccessful, response.responeseResources, 500, 3000);
+                                changeItemsPerpage('@TableName.TableSalaryType');
+                            }
+                            else {
+                                ShowMessage(response.result.Success, msgFalse, response.responeseResources, 500, 3000);
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
+    }
+</script>

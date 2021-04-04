@@ -1,0 +1,38 @@
+﻿@using Hrm.Framework.Models
+@using Hrm.Framework.Helper
+@model Hrm.Framework.Models.BaseModel
+<style>
+    .popover-content ul{
+        list-style:none;
+        padding-left:5px;
+    }
+     .popover-content ul li{
+        height:30px;
+        line-height:30px;
+    }
+</style>
+@{
+    var tooltip = "tooltip-history-" + Model.ValueCommon.Replace("/", "-").Replace(" ", "-").Replace(":", "-");
+    var date = Convert.ToDateTime(Model.ValueCommon);
+    <span>@T(date.ToString("dddd"))</span>
+    <span class="date-date" style="margin-left:10px">@date.ToString("dd/MM/yyyy")</span>
+    <span class="fas fa-history icon-history" id="tooltip-history-@Model.ValueCommon.Replace("/","-").Replace(" ","-").Replace(":", "-")" style="margin-left:10px" tabindex="0" data-toggle="tooltip-history-@Model.ValueCommon.Replace("/","-").Replace(" ","-").Replace(":", "-")"></span>
+}
+<script>
+    $.ajax({
+            type: "POST",
+            url: "/Workingday/GetSummaryByDate",
+            data: {
+                date: '@Convert.ToDateTime(Model.ValueCommon)',
+                staffId: '@Model.Id'
+            },
+            success: function (response) {
+                $('[data-toggle="@tooltip"]').popover({
+                    placement: 'right'
+                    ,trigger: 'hover'
+                    ,html: true
+                    ,content: response
+                });
+            }
+        });
+</script>

@@ -1,0 +1,121 @@
+﻿@model Hrm.Framework.Models.DropdownListModel
+@using Hrm.Framework.Context
+@using Newtonsoft.Json
+@using Hrm.Framework.Helper
+@using Hrm.Common
+@{
+    Layout = null;
+    var cssName = Model.Name.Replace(".", "-").Replace("[", "-").Replace("]", "");
+}
+
+
+<div class="hrm-v2-floating-form" >
+    <div class="floating-label">
+        @{
+            var multiSelect = string.Empty;
+            if (Model.IsTagsInput)
+            {
+                multiSelect = "multiple=multiple";
+            }
+        }
+        <select id="@cssName" name="@Model.Name" class="floating-select" @multiSelect @Model.Attribute>
+            @if (Model != null && Model.Data != null)
+            {
+                if (!String.IsNullOrEmpty(@Model.LabelName))
+                {
+                    <option value="0">@Model.LabelName</option>
+                }
+
+                if (Model.Data != null && Model.Data.Count > 0 && !Model.IsSelectedEmpty && String.IsNullOrEmpty(Model.Value))
+                {
+                    Model.Value = Model.Data.FirstOrDefault()[Model.ValueField];
+                }
+
+                foreach (var item in Model.Data)
+                {
+                    var selected = string.Empty;
+                    if (Model.IsTagsInput)
+                    {
+                        if(Model.ValueMultiSelect != null && Model.ValueMultiSelect.Count > 0 && Model.ValueMultiSelect.Any(x => x == item[Model.ValueField].ToString()))
+                        {
+                            selected = "selected";
+                        }
+                    }
+                    else
+                    {
+                        if (Model.Value != null && item[Model.ValueField].ToString() == Model.Value.ToString() && item.Id != 0)
+                        {
+                            selected = "selected";
+                        }
+                    }
+                    if (Model.IsMultipleLanguage)
+                    {
+                        <option value="@item[Model.ValueField]" icon="@item["Icon"]" @selected>@M(item["Id"].ToString() + ";" + Model.DataType + ";" + Model.PropertyName)</option>
+                    }
+                    else
+                    {
+                        <option value="@item[Model.ValueField]" icon="@item["Icon"]" @selected> @item[Model.DisplayField] </option>
+                    }
+                }
+            }
+        </select>
+        @if (Model.IsAnimationLabel)
+        {
+            <label>
+                @Model.LabelName@if (Model.IsRequired)
+                {<span class="star"> *</span> }
+            </label>
+        }
+        <span name="@Model.Name-error" class="hrm-v2-error" label-name="@Model.LabelName"></span>
+    </div>
+</div>
+
+<script type="text/javascript">
+    ControlModel[@Html.Raw(Json.Encode(Model.Name))] = @Html.Raw(Json.Encode(Model));
+    ControlModel[@Html.Raw(Json.Encode(Model.Name))].Data = @Html.Raw(JsonConvert.SerializeObject(Model.Data));
+    var baseUrl =  @Html.Raw(Json.Encode(CurrentContext.WebBaseUrl));
+    ControlModel[@Html.Raw(Json.Encode(Model.Name))].ControlCustomName = ControlModel[@Html.Raw(Json.Encode(Model.Name))].Name.replace(".", "-").replace("[", "-").replace("]", "");
+    ControlModel[@Html.Raw(Json.Encode(Model.Name))].IsUseIcon = '@Html.Raw(Model.IsUseIcon)';
+    ControlModel[@Html.Raw(Json.Encode(Model.Name))].SearchField = '@Html.Raw(Model.SearchField)';
+    ControlModel[@Html.Raw(Json.Encode(Model.Name))].IsTagsInput = '@Html.Raw(Model.IsTagsInput)';
+    $(document).ready(function(){
+        if(@Html.Raw(Json.Encode(Model.Disabled)) == true)
+        {
+            $('#' + ControlModel[@Html.Raw(Json.Encode(Model.Name))].ControlCustomName).prop('disabled', true);
+        }
+        DropdownOptions[@Html.Raw(Json.Encode(Model.Name))] = {
+            containerCssClass: ControlModel[@Html.Raw(Json.Encode(Model.Name))].ControlCustomName + "-custom-container",
+            dropdownCssClass: ControlModel[@Html.Raw(Json.Encode(Model.Name))].ControlCustomName + "-custom-drop",
+            dropdownAutoWidth: true
+        }
+        if (ControlModel[@Html.Raw(Json.Encode(Model.Name))].IsUseIcon == 'True')
+        {
+            DropdownOptions[@Html.Raw(Json.Encode(Model.Name))].templateResult = templateResult;
+            DropdownOptions[@Html.Raw(Json.Encode(Model.Name))].templateSelection = templateSelect;
+        }
+        /**format floating-select to select2**/
+        if(ControlModel[@Html.Raw(Json.Encode(Model.Name))].SearchField == 'False')
+        {
+            DropdownOptions[@Html.Raw(Json.Encode(Model.Name))].minimumResultsForSearch = -1;
+        }
+
+        if(ControlModel[@Html.Raw(Json.Encode(Model.Name))].IsTagsInput == 'True')
+        {
+            DropdownOptions[@Html.Raw(Json.Encode(Model.Name))].tags = true;
+            $('#' + ControlModel[@Html.Raw(Json.Encode(Model.Name))].ControlCustomName).val(@Html.Raw(Json.Encode(Model.ValueMultiSelect))).trigger('change');
+        }
+        else
+        {
+            $('#' + ControlModel[@Html.Raw(Json.Encode(Model.Name))].ControlCustomName).val(@Html.Raw(Json.Encode(Model.Value))).trigger('change');
+        }
+        DropdownOptions[@Html.Raw(Json.Encode(Model.Name))].createTag = 'function(params){return undefined;}';
+        $('#' + ControlModel[@Html.Raw(Json.Encode(Model.Name))].ControlCustomName).select2(DropdownOptions[@Html.Raw(Json.Encode(Model.Name))]);
+        $('span.select2').css("cursor", "pointer");
+        if(@Html.Raw(Json.Encode(Model.Value)) == null || @Html.Raw(Json.Encode(Model.Value)) == "0")
+        {
+            $('#select2-' + '@cssName'+'-container').css('color','#7c7c7c');
+        }
+        
+    });
+</script>
+

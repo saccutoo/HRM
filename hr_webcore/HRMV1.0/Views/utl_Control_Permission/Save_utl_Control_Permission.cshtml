@@ -1,0 +1,156 @@
+﻿@using HRM.App_LocalResources;
+<div class="container-fluid">
+    <div class="row" id="Save_utl_Control_Permission" style="margin: 0px;">
+        <form role="form" name="EditForm" ng-submit="SaveAction(tableInfo.AddUrl,EditForm)">
+            <div class="col-md-12">
+                <!-- START panel-->
+                <div class="panel">
+                    <div class="panel-heading"><h3 style="text-transform: none;"> @AppRes.Control_Permission</h3></div>
+                    <hr />
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:35px;">@AppRes.TableName </label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" chosen options="GetListTable" on-no-result="doStuff" required data-modal="modal" ng-model="EditData.TableId" ng-options="list.id as list.Note for list in GetListTable" ng-change="ChangeTable()">
+                                            <option value="" selected>@AppRes.Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.ColumnName <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" chosen options="ListTableColumnCoppy" on-no-result="doStuff" requirted data-modal="modal" ng-model="EditData.GridColumnId" ng-options="list.Id as list.DisplayName for list in ListTableColumnCoppy" ng-change="ChangeTableColumn()">
+                                            <option value="" selected>@AppRes.Select</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorTableColumn}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:35px;">@AppRes.Permission <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" chosen options="GetListTable" on-no-result="doStuff" required data-modal="modal" ng-model="EditData.PermissionType" ng-change="ChangePermissionType()">
+                                            <option value="User">User</option>
+                                            <option value="Role">Role</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorPermissionType}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6" ng-show="(EditData.PermissionType=='User')?true:false">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:35px;">@AppRes.Staff <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" chosen options="ListEmployees" on-no-result="doStuff" required data-modal="modal" ng-model="EditData.PermissionId" ng-options="list.UserID as list.FullName for list in ListEmployees" ng-change="ChangePermissionId()">
+                                            <option value="" selected>@AppRes.Select</option>
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorPermissionId}}</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6" ng-show="(EditData.PermissionType=='Role')?true:false">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:35px;">@AppRes.Role <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" chosen options="ListSecRole" on-no-result="doStuff" required data-modal="modal" ng-model="EditData.PermissionId" ng-options="list.RoleID as list.Name for list in ListSecRole" ng-change="ChangePermissionId()">
+                                            <option value="" selected>@AppRes.Select</option>
+
+                                        </select>
+                                        <span style="color:red;line-height:30px;">{{ErrorPermissionId}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:35px;">@AppRes.CustomizeHTML <span style="color:red">(*)</span></label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control" ng-model="EditData.CustomHtml" ng-change="ChangeCustomHtml()"></textarea>
+                                        <span style="color:red;line-height:30px;">{{ErrorCustomHtml}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.Data </label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control" ng-model="EditData.DataCondition"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.OrderNo </label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" ng-model="EditData.DisplayOrder" class="form-control" ng-change="ChangeDisplayOrder()" />
+                                        <span style="color:red;line-height:30px;">{{ErrorDisplayOrder}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label style="line-height:30px;"> @AppRes.isAction </label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="checkbox" ng-model="EditData.IsActive" class="form-control" />
+                                        <span style="color:red;line-height:30px;">{{ErrorIsActive}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- END panel-->
+                <center>
+                    <button type="button" class="btn btn-success btn-labeled" ng-click="Save()">
+                        <span class="btn-label">
+                            <i class="fa fa-save"></i>
+                        </span>@AppRes.btnUpdate
+                    </button>
+                    <button type="reset" class="btn btn-labeled" ng-click="CloseForm()">
+                        <span class="btn-label">
+                            <i class="fa fa-close"></i>
+                        </span>@AppRes.btnCancel
+                    </button>
+                </center>
+            </div>
+        </form>
+    </div>
+</div>

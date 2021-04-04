@@ -1,0 +1,113 @@
+﻿@using HRM.Common
+@using HRM.App_LocalResources
+<div class="container-fluid">
+
+    <div id="EditContent" class="row" style="margin: 0;">
+        <div class="col-md-12">
+            <!-- START panel-->
+            <div class="panel">
+                <div class="panel-heading">@AppRes.btnEdit</div>
+                <hr />
+                <div class="panel-body">
+                    <form name="EditForm" ng-submit="updateAction(tableInfo.EditUrl,EditForm)">
+                        <div class="row">
+                            <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="{{(EditForm.position.$invalid) ? 'has-error' : ''}}">
+                                            <div class="col-md-2">
+                                                <label>@AppRes.PositionRank <span style="color: red">*</span></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                @if (Global.CurrentLanguage == 5)
+                                                {
+                                                    <select id="ddlListPosition" class="form-control" data-modal="modal" name="position" ng-model="editData.PositionID" ng-options="position.GlobalListID as position.Name for position in getListPositionName">
+                                                        <option value="" disabled selected>--Select Position--</option>
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    <select id="ddlListPosition" class="form-control" data-modal="modal" name="position" ng-model="editData.PositionID" ng-options="position.GlobalListID as position.NameEN for position in getListPositionName">
+                                                        <option value="" disabled selected>--Select Position--</option>
+                                                    </select>
+                                                }
+
+
+                                            </div>
+                                        </div>
+                                        <div class="{{(EditForm.status.$invalid) ? 'has-error' : ''}}">
+                                            <div class="col-md-2">
+                                                <label>@AppRes.Status <span style="color: red">*</span></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                @if (Global.CurrentLanguage == 4)
+                                                {
+                                                    <select id="ddlListStatus" class="form-control" data-modal="modal" ng-model="editData.Status" ng-options="insuranceStatus.GlobalListID as insuranceStatus.NameEN for insuranceStatus in getListInsuranceStatus">
+                                                        <option value="" disabled selected>--@AppRes.Select--</option>
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    <select id="ddlListStatus" class="form-control" data-modal="modal" ng-model="editData.Status" ng-options="insuranceStatus.GlobalListID as insuranceStatus.Name for insuranceStatus in getListInsuranceStatus">
+                                                        <option value="" disabled selected>--@AppRes.Select--</option>
+                                                    </select>
+                                                }
+                                                
+                                            </div>
+                                        </div>    
+                                    </div>
+                                    <div class="space"></div>    
+                                    <div class="row">
+                                        <div class="{{(EditForm.amount.$invalid) ? 'has-error' : ''}}">
+                                            <div class="col-md-2">
+                                                <label>@AppRes.Premiumlevel <span style="color: red">*</span></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="text" data-modal="modal" name="amount" placeholder="Enter Amount" class="currency form-control" ng-model="editData.Amount">
+                                            </div>
+                                        </div>
+                                        <div class="{{(EditForm.applyDate.$invalid) ? 'has-error' : ''}}">
+                                            <div class="col-md-2">
+                                                <label>@AppRes.StartDate <span style="color: red">*</span></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="date" data-modal="modal" name="applyDate" placeholder="Enter ApplyDate" class="form-control" ng-model="editData.ApplyDate" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space"></div>    
+                                    <div class="row">
+                                    <div class="{{(EditForm.note.$invalid) ? 'has-error' : ''}}">
+                                        <div class="col-md-2">
+                                            <label>@AppRes.Note </label>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input type="text" data-modal="modal" name="note" placeholder="Enter Note" class="form-control" ng-model="editData.Note" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space"></div>    
+                            </div>
+                        </div>
+                        <center>
+                            <div class="row">
+                                <button type="submit" class="btn btn-labeled btn-success">
+                                    <span class="btn-label">
+                                        <i class="fa fa-save"></i>
+                                    </span>@AppRes.btnUpdate
+                                </button>
+                                <button type="button" class="btn btn-labeled" ng-click="CloseForm()">
+                                    <span class="btn-label">
+                                        <i class="fa fa-close"></i>
+                                    </span>@AppRes.btnCancel
+                                </button>
+                            </div>
+                        </center>
+                               
+</form>
+                </div>
+            </div>
+            <!-- END panel-->
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/MyScript/currencyConvert.js"></script>
